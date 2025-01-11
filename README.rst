@@ -38,7 +38,7 @@ or clone the repository and run ``pip install -e .``
 inside the ``ultraplot`` folder.
 
 
-.. |build-status| image::  https://github.com/ultraplot/ultraplot/actions/workflows/ultraplot.yml/badge.svg
+.. |build-status| image::  https://github.com/ultraplot/ultraplot/actions/workflows/build-ultraplot.yml/badge.svg
 
 .. |code-style| image:: https://img.shields.io/badge/code%20style-black-000000.svg
 

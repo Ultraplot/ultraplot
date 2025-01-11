@@ -1982,7 +1982,9 @@ class Axes(maxes.Axes):
             )
         ticklocation = _not_none(tickloc=tickloc, ticklocation=ticklocation)
         if ticklocation is not None and ticklocation != "bottom":
-            warnings._warn_ultraplot("Inset colorbars can only have ticks on the bottom.")
+            warnings._warn_ultraplot(
+                "Inset colorbars can only have ticks on the bottom."
+            )
         kwargs.update({"orientation": "horizontal", "ticklocation": "bottom"})
         return ax, kwargs
 
@@ -2619,20 +2621,17 @@ class Axes(maxes.Axes):
         if labels or kw:
             fig._update_super_labels(side, labels, **kw)
 
-
     @staticmethod
-    def get_center_of_axes(axes = None):
+    def get_center_of_axes(axes=None):
         positions = [ax.get_position() for ax in axes]
         # get the outermost coordinates
         box = mtransforms.Bbox.from_extents(
             min(p.bounds[0] for p in positions),
             min(p.bounds[1] for p in positions),
             max(p.bounds[0] + p.bounds[2] for p in positions),
-            max(p.bounds[1] + p.bounds[3] for p in positions)
+            max(p.bounds[1] + p.bounds[3] for p in positions),
         )
         return box
-
-
 
     def _update_share_labels(self, axes=None, target="x"):
         """Update shared axis labels for a group of axes.
@@ -2654,32 +2653,25 @@ class Axes(maxes.Axes):
         # Get the center position of the axes group
         if box := self.get_center_of_axes(axes):
             # Reuse existing label if possible
-            if target == 'x':
+            if target == "x":
                 label = axes[0].xaxis.label
                 # Update position and properties
-                label.set_position((
-                    (box.bounds[0] + box.bounds[2])/2,
-                    box.bounds[1]
-                ))
+                label.set_position(((box.bounds[0] + box.bounds[2]) / 2, box.bounds[1]))
             else:  # y-axis
                 label = axes[0].yaxis.label
                 # Update position and properties
-                label.set_position((
-                    box.bounds[0],
-                    (box.bounds[1] + box.bounds[3])/2
-                ))
+                label.set_position((box.bounds[0], (box.bounds[1] + box.bounds[3]) / 2))
 
-            label.set_ha('center')
-            label.set_va('center')
+            label.set_ha("center")
+            label.set_va("center")
 
             # Share the same label object across all axes
             # Skip first axes since we used its    label
             for ax in axes[1:]:
-                if target == 'x':
+                if target == "x":
                     ax.xaxis.label = label
                 else:
                     ax.yaxis.label = label
-
 
     @docstring._snippet_manager
     def format(
@@ -2706,8 +2698,8 @@ class Axes(maxes.Axes):
         lowercentertitle=None,
         lrtitle=None,
         lowerrighttitle=None,
-        share_xlabels = None,
-        share_ylabels = None,
+        share_xlabels=None,
+        share_ylabels=None,
         **kwargs,
     ):
         """
@@ -2751,12 +2743,11 @@ class Axes(maxes.Axes):
             if above is not None:
                 self._title_above = above  # used for future titles
 
-
             # Update a-b-c label and titles
             abc_kw = abc_kw or {}
             title_kw = title_kw or {}
-            self._update_share_labels(share_xlabels, target = 'x')
-            self._update_share_labels(share_ylabels, target = 'y')
+            self._update_share_labels(share_xlabels, target="x")
+            self._update_share_labels(share_ylabels, target="y")
             self._update_abc(**abc_kw)
             self._update_title(None, title, **title_kw)
             self._update_title(

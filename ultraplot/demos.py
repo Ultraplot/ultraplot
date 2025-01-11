@@ -1114,7 +1114,9 @@ def show_fonts(
         if opts and opts[0] in all_names:
             props.append(arg)
         else:
-            warnings._warn_ultraplot(f"Input font name {opts[:1]!r} not found. Skipping.")
+            warnings._warn_ultraplot(
+                f"Input font name {opts[:1]!r} not found. Skipping."
+            )
 
     # Add user and family FontProperties.
     user = _not_none(user, not args and family is None)

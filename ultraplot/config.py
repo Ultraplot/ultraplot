@@ -880,7 +880,9 @@ class Configurator(MutableMapping, dict):
         key = key.lower()
         if "." not in key:
             key = rcsetup._rc_nodots.get(key, key)
-        key, value = rc_ultraplot._check_key(key, value)  # may issue deprecation warning
+        key, value = rc_ultraplot._check_key(
+            key, value
+        )  # may issue deprecation warning
         return key, value
 
     @staticmethod
@@ -1621,7 +1623,9 @@ class Configurator(MutableMapping, dict):
                         value = self._validate_value(key, value)
                     except KeyError:
                         warnings.simplefilter("default", warnings.UltraplotWarning)
-                        warnings._warn_ultraplot(f"Invalid rc key {key!r} on {message}.")
+                        warnings._warn_ultraplot(
+                            f"Invalid rc key {key!r} on {message}."
+                        )
                         continue
                     except ValueError as err:
                         warnings.simplefilter("default", warnings.UltraplotWarning)
@@ -1679,7 +1683,9 @@ class Configurator(MutableMapping, dict):
             user_table = rcsetup._yaml_table(user_dict, comment=False)
             user_table = ("# Changed settings", user_table, "")
         ultraplot_dict = (
-            rcsetup._rc_ultraplot_table if description else rcsetup._rc_ultraplot_default
+            rcsetup._rc_ultraplot_table
+            if description
+            else rcsetup._rc_ultraplot_default
         )  # noqa: E501
         ultraplot_table = rcsetup._yaml_table(
             ultraplot_dict, comment=comment, description=description

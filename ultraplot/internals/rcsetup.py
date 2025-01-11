@@ -1909,7 +1909,9 @@ _rc_renamed = {  # {old_key: (new_key, version)} dictionary
 # and the original matplotlib RcParams. Also surreptitiously add ultraplot
 # font settings to the font keys list (beoolean below always evalutes to True)
 # font keys list whlie initializing.
-_rc_ultraplot_default = {key: value for key, (value, _, _) in _rc_ultraplot_table.items()}
+_rc_ultraplot_default = {
+    key: value for key, (value, _, _) in _rc_ultraplot_table.items()
+}
 _rc_ultraplot_validate = {
     key: validator
     for key, (_, validator, _) in _rc_ultraplot_table.items()
@@ -1928,6 +1930,11 @@ _rc_categories = {
 }
 _rc_nodots = {
     name.replace(".", ""): name
-    for dict_ in (_rc_ultraplot_default, _rc_matplotlib_native, _rc_renamed, _rc_removed)
+    for dict_ in (
+        _rc_ultraplot_default,
+        _rc_matplotlib_native,
+        _rc_renamed,
+        _rc_removed,
+    )
     for name in dict_.keys()
 }

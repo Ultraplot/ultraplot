@@ -372,9 +372,11 @@ def test_scatter_sizes():
         ax.text(i, 0.5, format(d, ".0f"), va="center", ha="center")
     return fig
 
+
 # Test introduced by issue #https://github.com/Ultraplot/ultraplot/issues/12#issuecomment-2576154882
 # Check for concave triangulation related functions
 from matplotlib import tri
+
 
 @pytest.mark.mpl_image_compare
 @pytest.mark.mpl_image_compare
@@ -397,7 +399,6 @@ from matplotlib import tri
         (*base_data[:3], None, False, False),
         # Test using data dictionary
         (*base_data[:3], None, False, True),
-
     ],
 )
 def test_triplot_variants(x, y, z, triangles, use_triangulation, use_datadict):
@@ -410,7 +411,7 @@ def test_triplot_variants(x, y, z, triangles, use_triangulation, use_datadict):
         triangulation = tri.Triangulation(x, y, triangles)
         ax.tricontourf(triangulation, z, levels=64, cmap="PuBu")
     elif use_datadict:
-        ax.tricontourf("x", "y", "z", data = df)
+        ax.tricontourf("x", "y", "z", data=df)
         return
     else:
         # Use direct x, y, z inputs

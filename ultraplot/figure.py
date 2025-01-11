@@ -698,7 +698,9 @@ class Figure(mfigure.Figure):
                 f"Ignoring subplotpars={pars!r}. " + self._space_message
             )
         if kwargs.pop("tight_layout", None):
-            warnings._warn_ultraplot("Ignoring tight_layout=True. " + self._tight_message)
+            warnings._warn_ultraplot(
+                "Ignoring tight_layout=True. " + self._tight_message
+            )
         if kwargs.pop("constrained_layout", None):
             warnings._warn_ultraplot(
                 "Ignoring constrained_layout=True. " + self._tight_message
@@ -2092,7 +2094,9 @@ for _attr, _msg in (
 
     @functools.wraps(_func)  # noqa: E301
     def _disable_method(self, *args, func=_func, message=_msg, **kwargs):
-        message = f"fig.{func.__name__}() has no effect on ultraplot figures. " + message
+        message = (
+            f"fig.{func.__name__}() has no effect on ultraplot figures. " + message
+        )
         if self._is_authorized:
             return func(self, *args, **kwargs)
         else:
