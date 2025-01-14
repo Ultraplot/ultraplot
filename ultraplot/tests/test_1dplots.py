@@ -379,7 +379,6 @@ from matplotlib import tri
 
 
 @pytest.mark.mpl_image_compare
-@pytest.mark.mpl_image_compare
 @pytest.mark.parametrize(
     "x, y, z, triangles, use_triangulation, use_datadict",
     [
