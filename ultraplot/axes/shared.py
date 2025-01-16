@@ -197,7 +197,7 @@ class _SharedAxes(object):
         if not isinstance(other, Axes):
             return TypeError(
                 f"Cannot share axes with {type(other).__name__}.\n"
-                f"Expected: matplotlib.axes.Axes instance\n"
+                f"Expected: ultraplot.base.Axes instance\n"
                 f"Received: {type(other).__name__}\n"
                 "Please provide a valid Axes instance to share with."
             )
