@@ -177,7 +177,7 @@ def test_reference_aspect():
 @pytest.mark.mpl_image_compare
 @pytest.mark.parametrize("share", ["limits", "labels"])
 def test_axis_sharing(share):
-    fig, ax = uplt.subplots(ncols=2, nrows=2, share=share, span = False)
+    fig, ax = uplt.subplots(ncols=2, nrows=2, share=share, span=False)
     labels = ["A", "B", "C", "D"]
     for idx, axi in enumerate(ax):
         axi.scatter(idx, idx)
@@ -191,23 +191,25 @@ def test_axis_sharing(share):
         assert all([i == j for i, j in zip(ax[0].get_ylim(), ax[1].get_ylim())])
         assert all([i == j for i, j in zip(ax[1].get_xlim(), ax[3].get_xlim())])
     elif share == "labels":
-       ax.draw(fig.canvas.get_renderer()) # forcing a draw to ensure the labels are shared
-       # columns shares x label; top row should be empty
-       assert ax[0].xaxis.get_label().get_visible() == False
-       assert ax[1].xaxis.get_label().get_visible() == False
+        ax.draw(
+            fig.canvas.get_renderer()
+        )  # forcing a draw to ensure the labels are shared
+        # columns shares x label; top row should be empty
+        assert ax[0].xaxis.get_label().get_visible() == False
+        assert ax[1].xaxis.get_label().get_visible() == False
 
-       assert ax[2].xaxis.get_label().get_visible() == True
-       assert ax[2].get_xlabel() == 'A'
-       assert ax[3].xaxis.get_label().get_visible() == True
-       assert ax[3].get_xlabel() == 'B'
+        assert ax[2].xaxis.get_label().get_visible() == True
+        assert ax[2].get_xlabel() == "A"
+        assert ax[3].xaxis.get_label().get_visible() == True
+        assert ax[3].get_xlabel() == "B"
 
-       # rows share ylabel
-       assert ax[3].yaxis.get_label().get_visible() == False
-       assert ax[1].yaxis.get_label().get_visible() == False
+        # rows share ylabel
+        assert ax[3].yaxis.get_label().get_visible() == False
+        assert ax[1].yaxis.get_label().get_visible() == False
 
-       assert ax[0].yaxis.get_label().get_visible() == True
-       assert ax[2].yaxis.get_label().get_visible() == True
-       assert ax[0].get_ylabel() == 'B'
-       assert ax[2].get_ylabel() == 'D'
+        assert ax[0].yaxis.get_label().get_visible() == True
+        assert ax[2].yaxis.get_label().get_visible() == True
+        assert ax[0].get_ylabel() == "B"
+        assert ax[2].get_ylabel() == "D"
 
     return fig
