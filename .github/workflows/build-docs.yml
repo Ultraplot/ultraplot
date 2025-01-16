@@ -17,6 +17,7 @@ jobs:
           environment-file: ./environment-dev.yml
           init-shell: bash
           create-args: --verbose
+            python=${{ inputs.python-version }}
           cache-environment: true
           cache-downloads: false
 
