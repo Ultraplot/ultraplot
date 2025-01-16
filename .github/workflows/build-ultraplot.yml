@@ -1,26 +1,25 @@
 name: Build and Test
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+  workflow_call:
+    inputs:
+      python-version:
+        required: true
+        type: string
 
 jobs:
   build-ultraplot:
+    name: Test Python ${{ inputs.python-version }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    strategy:
-      matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
-      fail-fast: false
     steps:
       - uses: actions/checkout@v3
       - uses: mamba-org/setup-micromamba@v2.0.3
         with:
           environment-file: ./environment-dev.yml
           init-shell: bash
-          create-args: --verbose
-            python=${{ matrix.python-version }}
+          create-args: >-
+            --verbose
+            python=${{ inputs.python-version }}
           cache-environment: true
           cache-downloads: false
 
