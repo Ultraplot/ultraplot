@@ -185,7 +185,7 @@ class _SharedAxes(object):
             for lab in obj.get_ticklabels():
                 lab.update(kwtext_extra)
 
-    # Override matplotlib defaults ot handle multiple axis sharing
+    # Override matplotlib defaults to handle multiple axis sharing
     def sharex(self, other):
         return self.share_axis(which="x", other=other)
 
