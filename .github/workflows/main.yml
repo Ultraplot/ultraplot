@@ -12,37 +12,57 @@ jobs:
       python-versions: ${{ steps.set-versions.outputs.python-versions }}
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install tomli
+
       - id: set-versions
         run: |
-          VERSIONS=$(python3 -c '
+          # Save the Python script to a file
+          cat > get_versions.py << 'EOF'
           import tomli
           import re
+          import json
+
           with open("pyproject.toml", "rb") as f:
               data = tomli.load(f)
           python_req = data["project"]["requires-python"]
           min_version = re.search(r">=(\d+\.\d+)", python_req)
           max_version = re.search(r"<(\d+\.\d+)", python_req)
+
+          versions = []
           if min_version and max_version:
               min_v = tuple(map(int, min_version.group(1).split(".")))
               max_v = tuple(map(int, max_version.group(1).split(".")))
-              versions = []
               current = min_v
               while current < max_v:
                   versions.append(".".join(map(str, current)))
                   current = (current[0], current[1] + 1)
-              print(str(versions).replace("\'", "\""))
-          ')
+
+          print(json.dumps(versions))
+          EOF
+
+          # Run the Python script and capture output
+          VERSIONS=$(python3 get_versions.py)
           echo "python-versions=${VERSIONS}" >> $GITHUB_OUTPUT
 
-  call-workflow:
+  build-test:
     needs: get-python-versions
-    runs-on: ubuntu-latest
     strategy:
       matrix:
         python-version: ${{ fromJson(needs.get-python-versions.outputs.python-versions) }}
-    steps:
-      - uses: actions/checkout@v3
-      - name: Call Build Workflow
-        uses: ./.github/workflows/build-ultraplot.yml
-        with:
-          python-version: ${{ matrix.python-version }}
+    uses: ./.github/workflows/build-ultraplot.yml
+    with:
+      python-version: ${{ matrix.python-version }}
+
+  build-docs:
+    needs: get-python-versions
+    strategy:
+      matrix:
+        python-version: ${{ fromJson(needs.get-python-versions.outputs.python-versions) }}
+    uses: ./.github/workflows/build-docs.yml
+    with:
+      python-version: ${{ matrix.python-version }}
