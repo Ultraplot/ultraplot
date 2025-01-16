@@ -563,7 +563,6 @@ class CartesianAxes(shared._SharedAxes, plot.PlotAxes):
             and other._panel_parent is self._panel_parent  # other is sibling panel
         )
 
-
     def _sharex_limits(self, sharex):
         """
         Safely share limits and tickers without resetting things.
