@@ -6,9 +6,13 @@ on:
     branches: [main]
 
 jobs:
-  build:
+  build-ultraplot:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    strategy:
+      matrix:
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+      fail-fast: false
     steps:
       - uses: actions/checkout@v3
       - uses: mamba-org/setup-micromamba@v2.0.3
@@ -16,6 +20,7 @@ jobs:
           environment-file: ./environment-dev.yml
           init-shell: bash
           create-args: --verbose
+            python=${{ matrix.python-version }}
           cache-environment: true
           cache-downloads: false
 
