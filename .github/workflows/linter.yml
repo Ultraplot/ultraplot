@@ -1,10 +1,9 @@
 name: Linter check
 on:
-  workflow_call:
-    inputs:
-      python-version:
-        required: true
-        type: string
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
   linter:
@@ -17,7 +16,6 @@ jobs:
           environment-file: ./environment-dev.yml
           init-shell: bash
           create-args: --verbose
-            python=${{ inputs.python-version }}
           cache-environment: true
           cache-downloads: false
 
