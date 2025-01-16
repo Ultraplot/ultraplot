@@ -3224,42 +3224,6 @@ class Axes(maxes.Axes):
         else:
             raise ValueError(f"Invalid number {num!r}. Must be integer >=1.")
 
-    # Override matplotlib defaults ot handle multiple axis sharing
-    def sharex(self, other):
-        return self.share_axis(which="x", other=other)
-
-    def sharey(self, other):
-        self.share_axis(which="y", other=other)
-
-    # Internal function to share axes
-    def share_axis(self, which, other):
-        if not isinstance(other, Axes):
-            return TypeError(
-                f"Cannot share axes with {type(other).__name__}.\n"
-                f"Expected: matplotlib.axes.Axes instance\n"
-                f"Received: {type(other).__name__}\n"
-                "Please provide a valid Axes instance to share with."
-            )
-
-        self._shared_axes[which].join(self, other)
-
-        # Get axis objects
-        this_axis = getattr(self, f"{which}axis")
-        other_axis = getattr(other, f"{which}axis")
-
-        # Set minor ticker
-        this_axis.minor = other_axis.minor
-
-        # Get and set limits
-        limits = getattr(other, f"get_{which}lim")()
-        set_lim = getattr(self, f"set_{which}lim")
-        get_autoscale = getattr(other, f"get_autoscale{which}_on")
-
-        lim0, lim1 = limits
-        set_lim(lim0, lim1, emit=False, auto=get_autoscale())
-
-        # Set scale
-        this_axis._scale = other_axis._scale
 
 
 # Apply signature obfuscation after storing previous signature
