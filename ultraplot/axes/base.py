@@ -3225,7 +3225,6 @@ class Axes(maxes.Axes):
             raise ValueError(f"Invalid number {num!r}. Must be integer >=1.")
 
 
-
 # Apply signature obfuscation after storing previous signature
 # NOTE: This is needed for __init__
 Axes._format_signatures = {Axes: inspect.signature(Axes.format)}
