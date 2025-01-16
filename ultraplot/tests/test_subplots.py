@@ -184,7 +184,10 @@ def test_axis_sharing(share):
         axi.set_xlabel(labels[idx])
         axi.set_ylabel(labels[idx])
 
-    # TODO: the labels are handled in a funky way. The plot looks fine but the label are not "shared" that is the labels still exist but they are not visible and instead there are new labels created. Need to figure this out.
+    # TODO: the labels are handled in a funky way. The plot looks fine but
+    # the label are not "shared" that is the labels still exist but they
+    # are not visible and instead there are new labels created. Need to
+    # figure this out.
     # test left hand side
     if share != "labels":
         assert all([i == j for i, j in zip(ax[0].get_xlim(), ax[2].get_xlim())])
