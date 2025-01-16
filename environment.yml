@@ -7,5 +7,5 @@ dependencies:
   - pytest
   - pytest-mpl
   - numpy>=1.20.0
-  - matplotlib>=3.9.2
+  - matplotlib>=3.9,<3.10
   - pip

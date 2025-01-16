@@ -4,7 +4,7 @@ channels:
 dependencies:
   - python>=3.8,<3.12
   - numpy>=1.20.0
-  - matplotlib>=3.9.3
+  - matplotlib>=3.9,<3.10
   - cartopy
   - xarray
   - seaborn

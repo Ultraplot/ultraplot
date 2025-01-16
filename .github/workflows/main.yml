@@ -64,6 +64,7 @@ jobs:
     strategy:
       matrix:
         python-version: ${{ fromJson(needs.get-python-versions.outputs.python-versions) }}
+        locale: ["en_US.UTF-8", "C.UTF-8"]
       fail-fast: false
     uses: ./.github/workflows/build-ultraplot.yml
     with:
