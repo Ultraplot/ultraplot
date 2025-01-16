@@ -10,6 +10,7 @@ from ..config import rc
 from ..internals import ic  # noqa: F401
 from ..internals import _pop_kwargs
 from ..utils import _fontsize_to_pt, _not_none, units
+from ..axes import Axes
 
 
 class _SharedAxes(object):
@@ -192,8 +193,8 @@ class _SharedAxes(object):
     def sharey(self, other):
         self.share_axis(which="y", other=other)
 
-    # Internal function to share axes
-    def share_axis(self, which, other):
+    # Ultraplot internal function to share axes
+    def _share_axis(self, which, other):
         if not isinstance(other, Axes):
             return TypeError(
                 f"Cannot share axes with {type(other).__name__}.\n"

@@ -563,11 +563,6 @@ class CartesianAxes(shared._SharedAxes, plot.PlotAxes):
             and other._panel_parent is self._panel_parent  # other is sibling panel
         )
 
-    def share_axis(self, which, other):
-        if not isinstance(other, plot.PlotAxes):
-            raise ValueError("other must be an Axes instance")
-        shared = getattr(self, f"get_shared_{which}_axes")()
-        self._shared_axes[which].join(self, other)
 
     def _sharex_limits(self, sharex):
         """
