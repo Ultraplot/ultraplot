@@ -563,11 +563,6 @@ class CartesianAxes(shared._SharedAxes, plot.PlotAxes):
             and other._panel_parent is self._panel_parent  # other is sibling panel
         )
 
-    def _safe_share(self, axis_name, other_axis):
-        if hasattr(self, f"_share{axis_name}"):
-            setattr(self, f"_share{axis_name}", None)
-        getattr(self, f"share{axis_name}")(other_axis)
-
     def share_axis(self, which, other):
         if not isinstance(other, plot.PlotAxes):
             raise ValueError("other must be an Axes instance")
