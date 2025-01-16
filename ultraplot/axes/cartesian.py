@@ -563,6 +563,17 @@ class CartesianAxes(shared._SharedAxes, plot.PlotAxes):
             and other._panel_parent is self._panel_parent  # other is sibling panel
         )
 
+    def _safe_share(self, axis_name, other_axis):
+        if hasattr(self, f"_share{axis_name}"):
+            setattr(self, f"_share{axis_name}", None)
+        getattr(self, f"share{axis_name}")(other_axis)
+
+    def share_axis(self, which, other):
+        if not isinstance(other, plot.PlotAxes):
+            raise ValueError("other must be an Axes instance")
+        shared = getattr(self, f"get_shared_{which}_axes")()
+        self._shared_axes[which].join(self, other)
+
     def _sharex_limits(self, sharex):
         """
         Safely share limits and tickers without resetting things.
@@ -576,7 +587,7 @@ class CartesianAxes(shared._SharedAxes, plot.PlotAxes):
             if ax1.get_autoscalex_on() and not ax2.get_autoscalex_on():
                 ax1.set_xlim(ax2.get_xlim())  # non-default limits
         # Copy non-default locators and formatters
-        self._shared_axes["x"].join(self, sharex)
+        self.sharex(sharex)
         if sharex.xaxis.isDefault_majloc and not self.xaxis.isDefault_majloc:
             sharex.xaxis.set_major_locator(self.xaxis.get_major_locator())
         if sharex.xaxis.isDefault_minloc and not self.xaxis.isDefault_minloc:
@@ -598,7 +609,7 @@ class CartesianAxes(shared._SharedAxes, plot.PlotAxes):
                 ax1.set_yscale(ax2.get_yscale())
             if ax1.get_autoscaley_on() and not ax2.get_autoscaley_on():
                 ax1.set_ylim(ax2.get_ylim())
-        self._shared_axes["y"].join(self, sharey)
+        self.sharey(sharey)
         if sharey.yaxis.isDefault_majloc and not self.yaxis.isDefault_majloc:
             sharey.yaxis.set_major_locator(self.yaxis.get_major_locator())
         if sharey.yaxis.isDefault_minloc and not self.yaxis.isDefault_minloc:
