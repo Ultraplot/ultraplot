@@ -2,7 +2,7 @@ name: ultraplot-dev
 channels:
   - conda-forge
 dependencies:
-  - python>=3.9
+  - python>=3.9, <3.13
   - numpy>=1.20.0
   - matplotlib>=3.9
   - cartopy
