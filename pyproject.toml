@@ -19,7 +19,7 @@ maintainers = [
 ]
 description = "A succinct matplotlib wrapper for making beautiful, publication-quality graphics."
 readme = "README.rst"
-requires-python = ">=3.9"
+requires-python = ">=3.9, <3.13"
 license = {text = "MIT"}
 classifiers = [
     "License :: OSI Approved :: MIT License",
