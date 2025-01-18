@@ -6,7 +6,7 @@ on:
     branches: [main]
 
 jobs:
-  build:
+  linter:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:

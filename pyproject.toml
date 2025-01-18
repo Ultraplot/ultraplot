@@ -3,7 +3,7 @@ requires = ["setuptools>=64",
             "setuptools_scm[toml]>=8",
             "wheel",
             "numpy>=1.26.0",
-            "matplotlib>=3.9.1",
+            "matplotlib>=3.9",
             ]
 build-backend = "setuptools.build_meta"
 
@@ -19,22 +19,21 @@ maintainers = [
 ]
 description = "A succinct matplotlib wrapper for making beautiful, publication-quality graphics."
 readme = "README.rst"
-requires-python = ">=3.6.0"
+requires-python = ">=3.9,<3.13"
 license = {text = "MIT"}
 classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Intended Audience :: Science/Research",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
 ]
 dependencies= [
-  'importlib-metadata; python_version>"3.8"',
-
+    "numpy>=1.26.0",
+    "matplotlib>=3.9"
 ]
 dynamic = ["version"]
 

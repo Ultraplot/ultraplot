@@ -1,12 +1,13 @@
 name: Build docs
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+  workflow_call:
+    inputs:
+      python-version:
+        required: true
+        type: string
 
 jobs:
-  build:
+  build-docs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -16,6 +17,7 @@ jobs:
           environment-file: ./environment-dev.yml
           init-shell: bash
           create-args: --verbose
+            python=${{ inputs.python-version }}
           cache-environment: true
           cache-downloads: false
 

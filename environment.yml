@@ -3,9 +3,9 @@ channels:
   - conda-forge
   - nodefaults
 dependencies:
-  - python >=3.9
+  - python >=3.9, <3.13
   - pytest
   - pytest-mpl
-  - numpy
-  - matplotlib>=3.9.2
+  - numpy>=1.20.0
+  - matplotlib>=3.9
   - pip
