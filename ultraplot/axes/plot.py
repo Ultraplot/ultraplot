@@ -2513,7 +2513,7 @@ class PlotAxes(base.Axes):
             # Cycle manual contains the mapping, so we can use that to remap. The returned dict needs to remove the internal valid keywords and update accordingly
             props = cycle.get_next()
             if cycle_manually:
-                # Map propertiesand updated kwargs
+                # Map properties and updated kwargs
                 mapped_props = {cycle_manually[k]: v for k, v in props.items()}
                 # Remove original keys
                 kwargs = {k : v for k, v in kwargs.items() if k not in cycle_manually.values()}
