@@ -2516,7 +2516,9 @@ class PlotAxes(base.Axes):
                 # Map properties and updated kwargs
                 mapped_props = {cycle_manually[k]: v for k, v in props.items()}
                 # Remove original keys
-                kwargs = {k : v for k, v in kwargs.items() if k not in cycle_manually.values()}
+                kwargs = {
+                    k: v for k, v in kwargs.items() if k not in cycle_manually.values()
+                }
                 # Update with new keys
                 kwargs.update(mapped_props)
 
