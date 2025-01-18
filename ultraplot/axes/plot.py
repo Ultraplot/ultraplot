@@ -2509,15 +2509,15 @@ class PlotAxes(base.Axes):
 
         # Get next set of properties
         if cycle is not None:
+            # We need to remap keywords to be MPL compatible
+            # Cycle manual contains the mapping, so we can use that to remap. The returned dict needs to remove the internal valid keywords and update accordingly
             props = cycle.get_next()
             if cycle_manually:
-                mapped_props = {}
-                for prop, value in props.items():
-                    if mapped_key := cycle_manually.get(prop):
-                        mapped_props[mapped_key] = value
-                for prop in props:
-                    if prop in cycle_manually:
-                        kwargs.pop(prop, None)
+                # Map propertiesand updated kwargs
+                mapped_props = {cycle_manually[k]: v for k, v in props.items()}
+                # Remove original keys
+                kwargs = {k : v for k, v in kwargs.items() if k not in cycle_manually.values()}
+                # Update with new keys
                 kwargs.update(mapped_props)
 
         if return_cycle:
