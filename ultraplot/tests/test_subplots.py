@@ -172,3 +172,47 @@ def test_reference_aspect():
     fig.auto_layout()
     assert np.isclose(refwidth, axs[fig._refnum - 1]._get_size_inches()[0])
     return fig
+
+
+@pytest.mark.mpl_image_compare
+@pytest.mark.parametrize("share", ["limits", "labels"])
+def test_axis_sharing(share):
+    fig, ax = uplt.subplots(ncols=2, nrows=2, share=share, span=False)
+    labels = ["A", "B", "C", "D"]
+    for idx, axi in enumerate(ax):
+        axi.scatter(idx, idx)
+        axi.set_xlabel(labels[idx])
+        axi.set_ylabel(labels[idx])
+
+    # TODO: the labels are handled in a funky way. The plot looks fine but
+    # the label are not "shared" that is the labels still exist but they
+    # are not visible and instead there are new labels created. Need to
+    # figure this out.
+    # test left hand side
+    if share != "labels":
+        assert all([i == j for i, j in zip(ax[0].get_xlim(), ax[2].get_xlim())])
+        assert all([i == j for i, j in zip(ax[0].get_ylim(), ax[1].get_ylim())])
+        assert all([i == j for i, j in zip(ax[1].get_xlim(), ax[3].get_xlim())])
+    elif share == "labels":
+        ax.draw(
+            fig.canvas.get_renderer()
+        )  # forcing a draw to ensure the labels are shared
+        # columns shares x label; top row should be empty
+        assert ax[0].xaxis.get_label().get_visible() == False
+        assert ax[1].xaxis.get_label().get_visible() == False
+
+        assert ax[2].xaxis.get_label().get_visible() == True
+        assert ax[2].get_xlabel() == "A"
+        assert ax[3].xaxis.get_label().get_visible() == True
+        assert ax[3].get_xlabel() == "B"
+
+        # rows share ylabel
+        assert ax[3].yaxis.get_label().get_visible() == False
+        assert ax[1].yaxis.get_label().get_visible() == False
+
+        assert ax[0].yaxis.get_label().get_visible() == True
+        assert ax[2].yaxis.get_label().get_visible() == True
+        assert ax[0].get_ylabel() == "B"
+        assert ax[2].get_ylabel() == "D"
+
+    return fig
