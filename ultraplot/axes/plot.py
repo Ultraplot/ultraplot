@@ -2503,7 +2503,6 @@ class PlotAxes(base.Axes):
                 if not return_cycle and self._current_cycler != self._active_cycle:
                     self.set_prop_cycle(cycle)
 
-
         # Use existing cycler if none specified
         if cycle is None:
             cycle = self._current_cycler
@@ -3458,8 +3457,6 @@ class PlotAxes(base.Axes):
         ys, kw = inputs._dist_reduce(ys, **kw)
         ss, kw = self._parse_markersize(ss, **kw)  # parse 's'
 
-
-
         # Only parse color if explicitly provided
         infer_rgb = True
         if cc is not None:
@@ -3482,8 +3479,8 @@ class PlotAxes(base.Axes):
             )
         # Move _parse_cycle before _parse_color
         kw = self._parse_cycle(
-                xs.shape[1] if xs.ndim > 1 else 1, cycle_manually=cycle_manually, **kw
-            )
+            xs.shape[1] if xs.ndim > 1 else 1, cycle_manually=cycle_manually, **kw
+        )
 
         guide_kw = _pop_params(kw, self._update_guide)
         objs = []

@@ -925,7 +925,7 @@ class Cycle(cycler.Cycler):
         # Build cycler with matching property lengths
         # Ensure at least a default color property exists
         if not props:
-            props = {'color': ['black']}
+            props = {"color": ["black"]}
 
         # Build cycler with matching property lengths
         lengths = [len(value) for value in props.values()]
