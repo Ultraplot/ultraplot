@@ -424,5 +424,4 @@ def test_triplot_variants(x, y, z, triangles, use_triangulation, use_datadict):
             ax.triplot("x", "y", "ko-", data=df)
         else:
             ax.triplot(x, y, "ko-")  # Without specific triangles
-
     return fig
