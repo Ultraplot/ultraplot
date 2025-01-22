@@ -30,6 +30,7 @@ jobs:
           pip install .
 
       - name: Generate baseline from main
+        shell: bash -el {0}
         run: |
           mkdir -p baseline
           micromamba activate ultraplot-dev
