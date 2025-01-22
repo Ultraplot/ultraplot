@@ -31,10 +31,11 @@ jobs:
 
       - name: Generate baseline from main
         run: |
-          git checkout main
           mkdir -p baseline
+          git fetch origin ${{ github.event.pull_request.base.sha }}
+          git checkout ${{ github.event.pull_request.base.sha }}
           pytest --mpl-generate-path=baseline_images
-          git checkout ${GITHUB_SHA}  # Return to PR branch
+          git checkout ${{ github.sha }}  # Return to PR branch
 
       - name: Test Ultraplot
         shell: bash -el {0}
