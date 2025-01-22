@@ -23,9 +23,29 @@ jobs:
           cache-environment: true
           cache-downloads: false
 
-      - name: Test Ultraplot
+      - name: Build Ultraplot
         shell: bash -el {0}
         run: |
           micromamba activate ultraplot-dev
           pip install .
-          python -m pytest
+
+      - name: Generate baseline from main
+        run: |
+          git checkout main
+          mkdir -p baseline
+          pytest --mpl-generate-path=baseline_images
+          git checkout ${GITHUB_SHA}  # Return to PR branch
+
+      - name: Test Ultraplot
+        shell: bash -el {0}
+        run: |
+          micromamba activate ultraplot-dev
+          pytest --mpl --mpl-baseline-path=baseline_images
+
+      # return the images that failed
+      - name: Upload comparison failures
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: failed-comparisons
+          path: result_images
