@@ -44,6 +44,7 @@ jobs:
         run: |
           micromamba activate ultraplot-dev
           pytest --mpl --mpl-baseline-path=baseline_images
+          pytest
 
       # return the images that failed
       - name: Upload comparison failures
