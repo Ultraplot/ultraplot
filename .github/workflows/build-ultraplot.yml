@@ -28,4 +28,4 @@ jobs:
         run: |
           micromamba activate ultraplot-dev
           pip install .
-          python -m pytest
+          python -m pytest --mpl
