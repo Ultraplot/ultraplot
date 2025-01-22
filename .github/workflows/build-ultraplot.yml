@@ -32,6 +32,7 @@ jobs:
       - name: Generate baseline from main
         run: |
           mkdir -p baseline
+          micromamba activate ultra-dev
           git fetch origin ${{ github.event.pull_request.base.sha }}
           git checkout ${{ github.event.pull_request.base.sha }}
           pytest --mpl-generate-path=baseline_images
