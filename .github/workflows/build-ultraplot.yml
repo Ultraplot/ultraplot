@@ -1,12 +1,14 @@
 name: Build and Test
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+  workflow_call:
+    inputs:
+      python-version:
+        required: true
+        type: string
 
 jobs:
-  build:
+  build-ultraplot:
+    name: Test Python ${{ inputs.python-version }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -15,7 +17,9 @@ jobs:
         with:
           environment-file: ./environment-dev.yml
           init-shell: bash
-          create-args: --verbose
+          create-args: >-
+            --verbose
+            python=${{ inputs.python-version }}
           cache-environment: true
           cache-downloads: false
 
@@ -24,4 +28,4 @@ jobs:
         run: |
           micromamba activate ultraplot-dev
           pip install .
-          python -m pytest
+          python -m pytest --mpl

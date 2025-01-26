@@ -30,7 +30,13 @@ from . import scale as pscale
 from . import ticker as pticker
 from .config import rc
 from .internals import ic  # noqa: F401
-from .internals import _not_none, _pop_props, _version_cartopy, _version_mpl, warnings
+from .internals import (
+    _not_none,
+    _pop_props,
+    _version_cartopy,
+    _version_mpl,
+    warnings,
+)
 from .utils import get_colors, to_hex, to_rgba
 
 try:
@@ -235,7 +241,12 @@ PROJ_DEFAULTS = {
         "height": 15000e3,
     },
     "tmerc": {"lon_0": 0, "lat_0": 0, "width": 10000e3, "height": 10000e3},
-    "merc": {"llcrnrlat": -80, "urcrnrlat": 84, "llcrnrlon": -180, "urcrnrlon": 180},
+    "merc": {
+        "llcrnrlat": -80,
+        "urcrnrlat": 84,
+        "llcrnrlon": -180,
+        "urcrnrlon": 180,
+    },
     "omerc": {
         "lat_0": 0,
         "lon_0": 0,
@@ -762,9 +773,9 @@ def Colormap(
     return cmap
 
 
-def Cycle(*args, N=None, samples=None, name=None, **kwargs):
+class Cycle(cycler.Cycler):
     """
-    Generate and merge `~cycler.Cycler` instances in a variety of ways.
+    Generate and merge `~cycler.Cycler` instances in a variety of ways. The new generated class can be used to internally map keywords to the properties of the `~cycler.Cycler` instance. It is used by various plot functions to cycle through colors, linestyles, markers, etc.
 
     Parameters
     ----------
@@ -777,12 +788,12 @@ def Cycle(*args, N=None, samples=None, name=None, **kwargs):
         * If a `~cycler.Cycler`, nothing more is done.
         * If a sequence of RGB tuples or color strings, these colors are used.
         * If a `~ultraplot.colors.DiscreteColormap`, colors from the ``colors``
-          attribute are used.
+        attribute are used.
         * If a string cycle name, that `~ultraplot.colors.DiscreteColormap`
-          is looked up and its ``colors`` are used.
+        is looked up and its ``colors`` are used.
         * In all other cases, the argument is passed to `Colormap`, and
-          colors from the resulting `~ultraplot.colors.ContinuousColormap`
-          are used. See the `samples` argument.
+        colors from the resulting `~ultraplot.colors.ContinuousColormap`
+        are used. See the `samples` argument.
 
         If the last positional argument is numeric, it is used for the
         `samples` keyword argument.
@@ -830,12 +841,6 @@ markeredgecolors, markerfacecolors
         to `Colormap` and used to build the `~ultraplot.colors.DiscreteColormap`
         from which the cycler will draw its colors.
 
-    Returns
-    -------
-    cycler.Cycler
-        A `~cycler.Cycler` instance that can be passed
-        to `~matplotlib.axes.Axes.set_prop_cycle`.
-
     See also
     --------
     cycler.cycler
@@ -845,65 +850,103 @@ markeredgecolors, markerfacecolors
     ultraplot.constructor.Norm
     ultraplot.utils.get_colors
     """
-    # Parse keyword arguments that rotate through other properties
-    # besides color cycles.
-    props = _pop_props(kwargs, "line")
-    if "sizes" in kwargs:  # special case, gets translated back by scatter()
-        props.setdefault("markersize", kwargs.pop("sizes"))
-    samples = _not_none(samples=samples, N=N)  # trigger Colormap default
-    for key, value in tuple(props.items()):  # permit in-place modification
-        if value is None:
-            return
-        elif not np.iterable(value) or isinstance(value, str):
-            value = (value,)
-        props[key] = list(value)  # ensure mutable list
 
-    # If args is non-empty, means we want color cycle; otherwise is black
-    if not args:
-        props.setdefault("color", ["black"])
+    def __init__(self, *args, N=None, samples=None, name=None, **kwargs):
+        self.name = "_no_name"  # default value
+        cycler_props = self._parse_basic_properties(kwargs)
+        samples = _not_none(samples=samples, N=N)  # trigger Colormap default
+        if not args:
+            self._handle_empty_args(cycler_props, kwargs)
+        elif self._is_all_cyclers(args):
+            self._handle_cycler_args(args, cycler_props, kwargs)
+        else:
+            self._handle_colormap_args(args, cycler_props, kwargs, samples, name)
+
+        self._iterator = None  # internal reference for cycle
+
+    def _parse_basic_properties(self, kwargs):
+        """Parse and validate basic properties from kwargs."""
+        props = _pop_props(kwargs, "line")
+        if "sizes" in kwargs:
+            props.setdefault("markersize", kwargs.pop("sizes"))
+
+        for key, value in tuple(props.items()):
+            if value is None:
+                props[key] = ["black"]  # default instead of early return
+            elif not np.iterable(value) or isinstance(value, str):
+                props[key] = [value]
+            else:
+                props[key] = list(value)  # ensure mutable list
+        return props
+
+    def _handle_empty_args(self, props, kwargs):
+        """Handle case when no positional arguments are provided."""
+        props.setdefault("color", "black")
         if kwargs:
             warnings._warn_ultraplot(f"Ignoring Cycle() keyword arg(s) {kwargs}.")
-        dicts = ()
+        self._build_cycler(())
 
-    # Merge cycler objects and/or update cycler objects with input kwargs
-    elif all(isinstance(arg, cycler.Cycler) for arg in args):
+    def _handle_cycler_args(self, args, props, kwargs):
+        """Handle case when arguments are cycler objects."""
         if kwargs:
             warnings._warn_ultraplot(f"Ignoring Cycle() keyword arg(s) {kwargs}.")
         if len(args) == 1 and not props:
-            return args[0]
-        dicts = tuple(arg.by_key() for arg in args)
+            self._build_cycler((args[0].by_key(),))
+        else:
+            dicts = tuple(arg.by_key() for arg in args)
+            self._build_cycler(dicts + (props,))
 
-    # Get a cycler from a colormap
-    # NOTE: Passing discrete=True does not imply default_luminance=90 because
-    # someone might be trying to make qualitative colormap for use in 2D plot
-    else:
+    def _handle_colormap_args(self, args, props, kwargs, samples, name):
+        """Handle case when arguments are for creating a colormap."""
         if isinstance(args[-1], Number):
             args, samples = args[:-1], _not_none(
                 samples_positional=args[-1], samples=samples
-            )  # noqa: #501
+            )
+
+        cmap = self._create_colormap(args, name, samples, kwargs)
+        dict_ = {"color": [c if isinstance(c, str) else to_hex(c) for c in cmap.colors]}
+        self._build_cycler((dict_, props))
+        self.name = _not_none(name, cmap.name)
+
+    def _create_colormap(self, args, name, samples, kwargs):
+        """Create a colormap from the given arguments."""
         kwargs.setdefault("listmode", "discrete")
         kwargs.setdefault("filemode", "discrete")
-        kwargs["discrete"] = True  # triggers application of default 'samples'
+        kwargs["discrete"] = True
         kwargs["default_luminance"] = DEFAULT_CYCLE_LUMINANCE
-        cmap = Colormap(*args, name=name, samples=samples, **kwargs)
-        name = _not_none(name, cmap.name)
-        dict_ = {"color": [c if isinstance(c, str) else to_hex(c) for c in cmap.colors]}
-        dicts = (dict_,)
+        return Colormap(*args, name=name, samples=samples, **kwargs)
 
-    # Update the cyler property
-    dicts = dicts + (props,)
-    props = {}
-    for dict_ in dicts:
-        for key, value in dict_.items():
-            props.setdefault(key, []).extend(value)
+    def _is_all_cyclers(self, args):
+        """Check if all arguments are Cycler objects."""
+        return all(isinstance(arg, cycler.Cycler) for arg in args)
 
-    # Build cycler with matching property lengths
-    maxlen = np.lcm.reduce([len(value) for value in props.values()])
-    props = {key: value * (maxlen // len(value)) for key, value in props.items()}
-    cycle = cycler.cycler(**props)
-    cycle.name = _not_none(name, "_no_name")
+    def _build_cycler(self, dicts):
+        """Build the final cycler from the given dictionaries."""
+        props = {}
+        for dict_ in dicts:
+            for key, value in dict_.items():
+                props.setdefault(key, []).extend(value)
+        # Build cycler with matching property lengths
+        # Ensure at least a default color property exists
+        if not props:
+            props = {"color": ["black"]}
 
-    return cycle
+        # Build cycler with matching property lengths
+        lengths = [len(value) for value in props.values()]
+        maxlen = np.lcm.reduce(lengths)
+        props = {key: value * (maxlen // len(value)) for key, value in props.items()}
+        mcycler = cycler.cycler(**props)
+        super().__init__(mcycler)
+
+    def get_next(self):
+        # Get the next set of properties
+        if self._iterator is None:
+            self._iterator = iter(self)
+        try:
+            return next(self._iterator)
+        except StopIteration:
+            self._iterator = iter(self)
+            return next(self._iterator)
 
 
 def Norm(norm, *args, **kwargs):

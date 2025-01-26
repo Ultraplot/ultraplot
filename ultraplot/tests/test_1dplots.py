@@ -222,11 +222,9 @@ def test_pie_charts():
     labels = ["foo", "bar", "baz", "biff", "buzz"]
     array = np.arange(1, 6)
     data = pd.Series(array, index=labels)
-    fig = uplt.figure()
-    ax = fig.subplot(121)
-    ax.pie(array, edgefix=True, labels=labels, ec="k", cycle="reds")
-    ax = fig.subplot(122)
-    ax.pie(data, ec="k", cycle="blues")
+    fig, ax = uplt.subplots(ncols=2)
+    ax[0].pie(array, edgefix=True, labels=labels, ec="k", cycle="reds")
+    ax[1].pie(data, ec="k", cycle="blues")
     return fig
 
 
@@ -239,7 +237,11 @@ def test_parametric_labels():
     uplt.rc.inlinefmt = "svg"
     fig, ax = uplt.subplots()
     ax.parametric(
-        state.rand(5), c=list("abcde"), lw=20, colorbar="b", cmap_kw={"left": 0.2}
+        state.rand(5),
+        c=list("abcde"),
+        lw=20,
+        colorbar="b",
+        cmap_kw={"left": 0.2},
     )
     return fig
 
@@ -328,7 +330,10 @@ def test_scatter_cycle():
     """
     fig, ax = uplt.subplots()
     cycle = uplt.Cycle(
-        "538", marker=["X", "o", "s", "d"], sizes=[20, 100], edgecolors=["r", "k"]
+        "538",
+        marker=["X", "o", "s", "d"],
+        sizes=[20, 100],
+        edgecolors=["r", "k"],
     )
     ax.scatter(
         state.rand(10, 4),
