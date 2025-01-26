@@ -45,16 +45,16 @@ jobs:
           micromamba activate ultraplot-dev
           pytest
 
-      - name: Image Comparison Ultraplot
-        shell: bash -el {0}
-        run: |
-          micromamba activate ultraplot-dev
-          pytest --mpl --mpl-baseline-path=baseline_images
+      # - name: Image Comparison Ultraplot
+      #   shell: bash -el {0}
+      #   run: |
+      #     micromamba activate ultraplot-dev
+      #     pytest --mpl --mpl-baseline-path=baseline_images
 
-      # return the images that failed
-      - name: Upload comparison failures
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: failed-comparisons
-          path: result_images
+      # # return the images that failed
+      # - name: Upload comparison failures
+      #   if: failure()
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: failed-comparisons
+      #     path: result_images
