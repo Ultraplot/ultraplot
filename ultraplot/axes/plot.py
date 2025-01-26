@@ -2501,7 +2501,7 @@ class PlotAxes(base.Axes):
             for prop, key in cycle_manually.items():
                 if kwargs.get(key) is None and prop in current_prop:
                     value = current_prop[prop]
-                    kwargs[key] = pcolors.to_rgba(value) if key == "c" else value
+                    kwargs[key] = pcolors.to_hex(value) if key == "c" else value
        # Return or apply cycle
         if return_cycle:
             return resolved_cycle, kwargs
