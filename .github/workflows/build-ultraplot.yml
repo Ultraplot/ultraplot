@@ -29,22 +29,23 @@ jobs:
           micromamba activate ultraplot-dev
           pip install .
 
-      - name: Generate baseline from main
-        shell: bash -el {0}
-        run: |
-          mkdir -p baseline
-          micromamba activate ultraplot-dev
-          git fetch origin ${{ github.event.pull_request.base.sha }}
-          git checkout ${{ github.event.pull_request.base.sha }}
-          pytest --mpl-generate-path=baseline_images
-          git checkout ${{ github.sha }}  # Return to PR branch
-
       - name: Test Ultraplot
         shell: bash -el {0}
         run: |
           micromamba activate ultraplot-dev
           pytest
 
+      # Skip pytest-mpl for now as it removes the RC file
+      # Future should include it though! See https://github.com/matplotlib/pytest-mpl/issues/236
+      # - name: Generate baseline from main
+      #   shell: bash -el {0}
+      #   run: |
+      #     mkdir -p baseline
+      #     micromamba activate ultraplot-dev
+      #     git fetch origin ${{ github.event.pull_request.base.sha }}
+      #     git checkout ${{ github.event.pull_request.base.sha }}
+      #     pytest --mpl-generate-path=baseline_images
+      #     git checkout ${{ github.sha }}  # Return to PR branch
       # - name: Image Comparison Ultraplot
       #   shell: bash -el {0}
       #   run: |
