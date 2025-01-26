@@ -2894,10 +2894,15 @@ class Axes(maxes.Axes):
         rect = (xlim[0], ylim[0], xlim[1] - xlim[0], ylim[1] - ylim[0])
         rectpatch, connects = parent.indicate_inset(rect, self)
 
+
         # Update indicator properties
         # NOTE: Unlike matplotlib we sync zoom box properties with connection lines.
+        def remove_patch(patch):
+            if patch in patch.axes.patches:
+                patch.remove()
         if self._inset_zoom_artists:
             rectpatch_prev, connects_prev = self._inset_zoom_artists
+            rectpatch_prev._remove_method = self.axes._children.remove
             rectpatch.update_from(rectpatch_prev)
             rectpatch.set_zorder(rectpatch_prev.get_zorder())
             rectpatch_prev.remove()
