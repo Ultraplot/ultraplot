@@ -2896,10 +2896,6 @@ class Axes(maxes.Axes):
 
         # Update indicator properties
         # NOTE: Unlike matplotlib we sync zoom box properties with connection lines.
-        def remove_patch(patch):
-            if patch in patch.axes.patches:
-                patch.remove()
-
         if self._inset_zoom_artists:
             rectpatch_prev, connects_prev = self._inset_zoom_artists
             rectpatch_prev._remove_method = self.axes._children.remove
