@@ -2901,6 +2901,12 @@ class Axes(maxes.Axes):
 
         if version.parse(mpl.__version__) >= version.parse("3.10"):
             # Implementation for matplotlib >= 3.10
+            # TODO: Remove this block when support for matplotlib < 3.10 is dropped
+            if version.parse(mpl.__version__) >= version.parse("3.12"):
+                warnings._warn_ultraplot(
+                "Support for matplotlib < 3.10 will be removed in a future version. "
+                "Please upgrade to matplotlib >= 3.10.",
+            )
             self.apply_aspect()
             kwargs.setdefault("label", "_indicate_inset")
             if kwargs.get("transform") is None:
