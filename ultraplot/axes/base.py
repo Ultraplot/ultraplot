@@ -2881,35 +2881,68 @@ class Axes(maxes.Axes):
         """
         %(axes.indicate_inset)s
         """
+        import matplotlib as mpl
+        from packaging import version
+
         # Add the inset indicators
         parent = self._inset_parent
         if not parent:
             raise ValueError("This command can only be called from an inset axes.")
+
         kwargs.update(_pop_props(kwargs, "patch"))  # impose alternative defaults
+
         if not self._inset_zoom_artists:
             kwargs.setdefault("zorder", 3.5)
             kwargs.setdefault("linewidth", rc["axes.linewidth"])
             kwargs.setdefault("edgecolor", rc["axes.edgecolor"])
-        xlim, ylim = self.get_xlim(), self.get_ylim()
-        rect = (xlim[0], ylim[0], xlim[1] - xlim[0], ylim[1] - ylim[0])
-        rectpatch, connects = parent.indicate_inset(rect, self)
 
-        # Update indicator properties
-        # NOTE: Unlike matplotlib we sync zoom box properties with connection lines.
-        if self._inset_zoom_artists:
-            rectpatch_prev, connects_prev = self._inset_zoom_artists
-            rectpatch.update_from(rectpatch_prev)
-            rectpatch.set_zorder(rectpatch_prev.get_zorder())
-            rectpatch_prev.remove()
-            for line, line_prev in zip(connects, connects_prev):
-                line.update_from(line_prev)
-                line.set_zorder(line_prev.get_zorder())  # not included in update_from
-                line_prev.remove()
-        rectpatch.update(kwargs)
-        for line in connects:
-            line.update(kwargs)
-        self._inset_zoom_artists = (rectpatch, connects)
-        return rectpatch, connects
+        xlim, ylim = self.get_xlim(), self.get_ylim()
+        bounds = (xlim[0], ylim[0], xlim[1] - xlim[0], ylim[1] - ylim[0])
+
+        if version.parse(mpl.__version__) >= version.parse('3.10'):
+            # Implementation for matplotlib >= 3.10
+            self.apply_aspect()
+            kwargs.setdefault('label', '_indicate_inset')
+            if kwargs.get("transform") is None:
+                kwargs["transform"] = self.transData
+
+            from matplotlib.inset import InsetIndicator
+            indicator = InsetIndicator(bounds=bounds, inset_ax=self, facecolor='none', **kwargs)
+
+            if self._inset_zoom_artists:
+                indicator = self._inset_zoom_artists
+                indicator.update(kwargs)
+                indicator.rectangle.update(kwargs)
+                [c.update(kwargs) for c in indicator.connectors]
+            else:
+                self._inset_zoom_artists = indicator
+                self.add_artist(indicator)
+
+            return (indicator.rectangle, indicator.connectors)
+
+        else:
+            # Implementation for matplotlib < 3.10
+            rectpatch, connects = parent.indicate_inset(bounds, self)
+
+            # Update indicator properties
+            if self._inset_zoom_artists:
+                rectpatch_prev, connects_prev = self._inset_zoom_artists
+                rectpatch.update_from(rectpatch_prev)
+                rectpatch.set_zorder(rectpatch_prev.get_zorder())
+                rectpatch_prev.remove()
+                for line, line_prev in zip(connects, connects_prev):
+                    line.update_from(line_prev)
+                    line.set_zorder(line_prev.get_zorder())  # not included in update_from
+                    line_prev.remove()
+
+            rectpatch.update(kwargs)
+            for line in connects:
+                line.update(kwargs)
+
+            self._inset_zoom_artists = (rectpatch, connects)
+            return rectpatch, connects
+
+
 
     @docstring._snippet_manager
     def panel(self, side=None, **kwargs):

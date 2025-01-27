@@ -852,7 +852,6 @@ markeredgecolors, markerfacecolors
     """
 
     def __init__(self, *args, N=None, samples=None, name=None, **kwargs):
-        self.name = "_no_name"  # default value
         cycler_props = self._parse_basic_properties(kwargs)
         samples = _not_none(samples=samples, N=N)  # trigger Colormap default
         if not args:
@@ -863,6 +862,7 @@ markeredgecolors, markerfacecolors
             self._handle_colormap_args(args, cycler_props, kwargs, samples, name)
 
         self._iterator = None  # internal reference for cycle
+        self.name = _not_none(name, "_no_name")
 
     def _parse_basic_properties(self, kwargs):
         """Parse and validate basic properties from kwargs."""
