@@ -2914,6 +2914,7 @@ class Axes(maxes.Axes):
 
             from matplotlib.inset import InsetIndicator
 
+            # NOTE: Explicitly set facecolor here to none, as it seems to be ignore -- not sure why as it is the default
             indicator = InsetIndicator(
                 bounds=bounds, inset_ax=self, facecolor="none", **kwargs
             )
