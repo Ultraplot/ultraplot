@@ -2904,9 +2904,9 @@ class Axes(maxes.Axes):
             # TODO: Remove this block when support for matplotlib < 3.10 is dropped
             if version.parse(mpl.__version__) >= version.parse("3.12"):
                 warnings._warn_ultraplot(
-                "Support for matplotlib < 3.10 will be removed in a future version. "
-                "Please upgrade to matplotlib >= 3.10.",
-            )
+                    "Support for matplotlib < 3.10 will be removed in a future version. "
+                    "Please upgrade to matplotlib >= 3.10.",
+                )
             self.apply_aspect()
             kwargs.setdefault("label", "_indicate_inset")
             if kwargs.get("transform") is None:
@@ -2914,8 +2914,7 @@ class Axes(maxes.Axes):
 
             from matplotlib.inset import InsetIndicator
 
-            indicator = InsetIndicator(
-                bounds=bounds, inset_ax=self, **kwargs)
+            indicator = InsetIndicator(bounds=bounds, inset_ax=self, **kwargs)
 
             if self._inset_zoom_artists:
                 indicator = self._inset_zoom_artists
