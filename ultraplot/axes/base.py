@@ -2899,15 +2899,18 @@ class Axes(maxes.Axes):
         xlim, ylim = self.get_xlim(), self.get_ylim()
         bounds = (xlim[0], ylim[0], xlim[1] - xlim[0], ylim[1] - ylim[0])
 
-        if version.parse(mpl.__version__) >= version.parse('3.10'):
+        if version.parse(mpl.__version__) >= version.parse("3.10"):
             # Implementation for matplotlib >= 3.10
             self.apply_aspect()
-            kwargs.setdefault('label', '_indicate_inset')
+            kwargs.setdefault("label", "_indicate_inset")
             if kwargs.get("transform") is None:
                 kwargs["transform"] = self.transData
 
             from matplotlib.inset import InsetIndicator
-            indicator = InsetIndicator(bounds=bounds, inset_ax=self, facecolor='none', **kwargs)
+
+            indicator = InsetIndicator(
+                bounds=bounds, inset_ax=self, facecolor="none", **kwargs
+            )
 
             if self._inset_zoom_artists:
                 indicator = self._inset_zoom_artists
@@ -2932,7 +2935,9 @@ class Axes(maxes.Axes):
                 rectpatch_prev.remove()
                 for line, line_prev in zip(connects, connects_prev):
                     line.update_from(line_prev)
-                    line.set_zorder(line_prev.get_zorder())  # not included in update_from
+                    line.set_zorder(
+                        line_prev.get_zorder()
+                    )  # not included in update_from
                     line_prev.remove()
 
             rectpatch.update(kwargs)
@@ -2941,8 +2946,6 @@ class Axes(maxes.Axes):
 
             self._inset_zoom_artists = (rectpatch, connects)
             return rectpatch, connects
-
-
 
     @docstring._snippet_manager
     def panel(self, side=None, **kwargs):
