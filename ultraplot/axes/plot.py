@@ -2491,10 +2491,6 @@ class PlotAxes(base.Axes):
         # Ignore cycle for single-column plotting
         resolved_cycle = None if ncycle == 1 else resolved_cycle
 
-        # Return or apply cycle
-        if return_cycle:
-            return resolved_cycle, kwargs
-
         if resolved_cycle and resolved_cycle != self._active_cycle:
             self.set_prop_cycle(resolved_cycle)
 
@@ -2505,8 +2501,10 @@ class PlotAxes(base.Axes):
             for prop, key in cycle_manually.items():
                 if kwargs.get(key) is None and prop in current_prop:
                     value = current_prop[prop]
-                    kwargs[key] = pcolors.to_rgba(value) if key == "c" else value
-
+                    kwargs[key] = pcolors.to_hex(value) if key == "c" else value
+        # Return or apply cycle
+        if return_cycle:
+            return resolved_cycle, kwargs
         return kwargs
 
     def _parse_level_lim(
