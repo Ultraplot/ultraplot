@@ -2914,10 +2914,9 @@ class Axes(maxes.Axes):
 
             from matplotlib.inset import InsetIndicator
 
-            # NOTE: Explicitly set facecolor here to none, as it seems to be ignore -- not sure why as it is the default
+            kwargs.setdefault("facecolor", "none")
             indicator = InsetIndicator(
-                bounds=bounds, inset_ax=self, facecolor="none", **kwargs
-            )
+                bounds=bounds, inset_ax=self, **kwargs)
 
             if self._inset_zoom_artists:
                 indicator = self._inset_zoom_artists
