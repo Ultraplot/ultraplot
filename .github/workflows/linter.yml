@@ -10,8 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v3
-      - uses: mamba-org/setup-micromamba@v2.0.3
+      - uses: actions/checkout@v4
+      - uses: mamba-org/setup-micromamba@v2.0.4
         with:
           environment-file: ./environment-dev.yml
           init-shell: bash
