@@ -3,7 +3,7 @@ channels:
   - conda-forge
   - nodefaults
 dependencies:
-  - python >=3.9, <3.12
+  - python>=3.9,<3.13
   - pytest
   - pytest-mpl
   - numpy>=1.20.0
