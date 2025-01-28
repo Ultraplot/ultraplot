@@ -1,10 +1,9 @@
 name: Build docs
 on:
-  workflow_call:
-    inputs:
-      python-version:
-        required: true
-        type: string
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
   build-docs:
@@ -15,12 +14,7 @@ jobs:
       - uses: mamba-org/setup-micromamba@v2.0.3
         with:
           environment-file: ./environment-dev.yml
-          init-shell: bash
-          create-args: --verbose
-            python=${{ inputs.python-version }}
-          cache-environment: true
-          cache-downloads: false
-
+          init-shell: bash -el {0}
       - name: "Build docs"
         shell: bash -el {0}
         run: |
