@@ -14,7 +14,6 @@ jobs:
       - uses: mamba-org/setup-micromamba@v2.0.3
         with:
           environment-file: ./environment-dev.yml
-          init-shell: bash -el {0}
       - name: "Build docs"
         shell: bash -el {0}
         run: |
