@@ -21,6 +21,6 @@ dependencies:
   - sphinx-autoapi
   - sphinx-automodapi
   - sphinx-rtd-theme
-  - basemap
+  - basemap >=1.4.1
   - pip:
       - git+https://github.com/ultraplot/UltraTheme.git
