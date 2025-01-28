@@ -13,7 +13,6 @@ dependencies:
   - pytest-mpl
   - jupyter
   - pip
-  - basemap
   - pint
   - sphinx
   - nbsphinx
@@ -23,3 +22,4 @@ dependencies:
   - sphinx-automodapi
   - pip:
       - git+https://github.com/ultraplot/UltraTheme.git
+      - basemap
