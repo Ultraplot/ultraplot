@@ -20,6 +20,7 @@ dependencies:
   - sphinx-copybutton
   - sphinx-autoapi
   - sphinx-automodapi
+  - sphinx-rtd-theme
   - pip:
       - git+https://github.com/ultraplot/UltraTheme.git
       - basemap
