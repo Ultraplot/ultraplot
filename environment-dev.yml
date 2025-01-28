@@ -2,7 +2,7 @@ name: ultraplot-dev
 channels:
   - conda-forge
 dependencies:
-  - python>=3.9,<3.12
+  - python>=3.9,<3.14
   - numpy>=2.2
   - matplotlib>=3.9.3
   - cartopy
@@ -13,13 +13,13 @@ dependencies:
   - pytest-mpl
   - jupyter
   - pip
+  - basemap
+  - pint
+  - sphinx
+  - nbsphinx
+  - jupytext
+  - sphinx-copybutton
+  - sphinx-autoapi
+  - sphinx-automodapi
   - pip:
-      - basemap
-      - pint
-      - sphinx
-      - jupytext
-      - nbsphinx
-      - sphinx-copybutton
-      - sphinx-autoapi
       - git+https://github.com/ultraplot/UltraTheme.git
-      - sphinx-automodapi
