@@ -1,4 +1,0 @@
-pytest
-pytest-mpl
-numpy
-matplotlib>=3.9.3
