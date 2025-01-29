@@ -10,20 +10,7 @@ ci:
     submodules: false
 
 repos:
-  - repo: https://github.com/asottile/pyupgrade
-    rev: v3.19.1
-    hooks:
-      - id: pyupgrade
-        args:
-          - --py310-plus
-
-  - repo: https://github.com/crate-ci/typos
-    rev: dictgen-v0.3.1
-    hooks:
-      - id: typos
-
   - repo: https://github.com/psf/black-pre-commit-mirror
     rev: 24.8.0
     hooks:
       - id: black
-        language_version: python3.10
