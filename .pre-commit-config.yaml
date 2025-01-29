@@ -10,29 +10,17 @@ ci:
     submodules: false
 
 repos:
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
-    hooks:
-      - id: end-of-file-fixer
-      - id: trailing-whitespace
-
   - repo: https://github.com/asottile/pyupgrade
     rev: v3.19.1
     hooks:
       - id: pyupgrade
         args:
-          - --py10-plus
+          - --py310-plus
 
   - repo: https://github.com/crate-ci/typos
     rev: dictgen-v0.3.1
     hooks:
       - id: typos
-
-  - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.8.6
-    hooks:
-      - id: ruff
-        args: [ --fix ]
 
   - repo: https://github.com/psf/black-pre-commit-mirror
     rev: 24.8.0
