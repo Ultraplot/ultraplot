@@ -10,7 +10,7 @@ publication-quality graphics. It builds upon ProPlot_ and transports it into the
 
 Why UltraPlot? | Write Less, Create More
 =========================================
-.. image:: ci/whyUltraPlot.svg
+.. image:: logo/whyUltraPlot.svg
     :width: 100%
     :alt: Comparison of ProPlot and UltraPlot
     :align: center
