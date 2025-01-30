@@ -8,7 +8,7 @@ build:
   tools:
     python: mambaforge-latest
 conda:
-  environment: ./environment-dev.yml
+  environment: ./environment.yml
 
 sphinx:
   configuration: ./docs/conf.py
