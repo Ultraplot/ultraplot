@@ -67,7 +67,7 @@ jobs:
         run: |
           cd $GITHUB_WORKSPACE
           micromamba activate ultraplot-dev
-          mkdir -P results
+          mkdir -p results
           python -c "import ultraplot as plt; plt.config.Configurator()._save_yaml('ultraplot.yml')"
           sed -i 's/grid.color: *black/grid.color: red/' ultraplot.yml
           pytest --mpl --mpl-baseline-path=baseline --mpl-generate-summary=html --mpl-results-path = ./results/ --mpl-default-style="./ultraplot.yml"
