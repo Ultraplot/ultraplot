@@ -1870,6 +1870,7 @@ class Figure(mfigure.Figure):
         # do not want to overwrite the matplotlib docstring.
         if isinstance(filename, str):
             filename = os.path.expanduser(filename)
+        self.canvas.draw()
         super().savefig(filename, **kwargs)
 
     @docstring._concatenate_inherited
