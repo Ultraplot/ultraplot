@@ -69,7 +69,7 @@ jobs:
           micromamba activate ultraplot-dev
           python -c "import ultraplot as plt; plt.config.Configurator()._save_yaml('ultraplot.yml')"
           sed -i 's/grid.color: *black/grid.color: red/' ultraplot.yml
-          pytest --mpl  --mpl-default-style="./ultraplot.yml"
+          pytest --mpl --mpl-baseline-path=baseline --mpl-default-style="./ultraplot.yml"
 
       # return the images that failed
       - name: Upload comparison failures
