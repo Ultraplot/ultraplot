@@ -64,9 +64,15 @@ jobs:
     strategy:
       matrix:
         python-version: ${{ fromJson(needs.get-python-versions.outputs.python-versions) }}
-        locale: ["en_US.UTF-8", "C.UTF-8"]
+        matplotlib-version: ["3.9", "3.10"]
       fail-fast: false
     uses: ./.github/workflows/build-ultraplot.yml
     with:
       python-version: ${{ matrix.python-version }}
-      locale: ${{ matrix.locale }}
+      matplotlib-version: ${{ matrix.matplotlib-version }}
+
+  build-success:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "All tests passed successfully!"
