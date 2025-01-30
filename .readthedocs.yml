@@ -1,4 +1,4 @@
- # .readthedocs.yml
+# .readthedocs.yml
 # Read the Docs configuration file
 version: 2
 
@@ -7,19 +7,21 @@ build:
   os: ubuntu-22.04
   tools:
     python: mambaforge-latest
-  jobs:
-    pre_build:
-  jobs:
-    pre_build:
-      - locale -a
-      - export LC_ALL=en_US.UTF-8
-      - export LANG=en_US.UTF-8
-      - pytest
-
-
 conda:
-  environment: ./environment.yml
+  environment: ./environment-dev.yml
 
 sphinx:
   configuration: ./docs/conf.py
   builder: html
+
+python:
+  install:
+    - method: pip
+      path: .
+
+commands:
+  pre_build:
+    - locale -a
+    - export LC_ALL=en_US.UTF-8
+    - export LANG=en_US.UTF-8
+    - pip install .
