@@ -68,6 +68,7 @@ jobs:
           cd $GITHUB_WORKSPACE
           micromamba activate ultraplot-dev
           ls -la ultraplot.yml
+          python -c "import ultraplot as plt; plt.config.Configurator()._save_yaml('ultraplot.yml')"
           pytest --mpl --mpl-generate-path=baseline --mpl-default-style="./ultraplot.yml"
 
       # return the images that failed
