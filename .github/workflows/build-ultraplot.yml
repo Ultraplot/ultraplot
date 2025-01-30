@@ -5,6 +5,9 @@ on:
       python-version:
         required: true
         type: string
+      locale:
+        required: true
+        type: string
 
 jobs:
   build-ultraplot:
@@ -63,7 +66,6 @@ jobs:
           git checkout ${{ github.sha }}  # Return to PR branch
 
       - name: Image Comparison Ultraplot
-        continue-on-error: true
         shell: bash -el {0}
         run: |
           cd $GITHUB_WORKSPACE
@@ -78,5 +80,5 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: failed-comparisons
+          name: failed-comparisons-${{ inputs.python-version }}-${{ inputs.locale }}
           path: results/*.html
