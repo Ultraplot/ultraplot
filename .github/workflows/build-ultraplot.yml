@@ -35,27 +35,41 @@ jobs:
           micromamba activate ultraplot-dev
           pytest
 
-      # Skip pytest-mpl for now as it removes the RC file
-      # Future should include it though! See https://github.com/matplotlib/pytest-mpl/issues/236
-      # - name: Generate baseline from main
-      #   shell: bash -el {0}
-      #   run: |
-      #     mkdir -p baseline
-      #     micromamba activate ultraplot-dev
-      #     git fetch origin ${{ github.event.pull_request.base.sha }}
-      #     git checkout ${{ github.event.pull_request.base.sha }}
-      #     pytest --mpl-generate-path=baseline_images
-      #     git checkout ${{ github.sha }}  # Return to PR branch
-      # - name: Image Comparison Ultraplot
-      #   shell: bash -el {0}
-      #   run: |
-      #     micromamba activate ultraplot-dev
-      #     pytest --mpl --mpl-baseline-path=baseline_images
+  compare-baseline:
+    needs: build-ultraplot
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: mamba-org/setup-micromamba@v2.0.4
+        with:
+          environment-file: ./environment.yml
+          init-shell: bash
+          create-args: >-
+            --verbose
+            python=${{ inputs.python-version }}
+          cache-environment: true
+          cache-downloads: false
 
-      # # return the images that failed
-      # - name: Upload comparison failures
-      #   if: failure()
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: failed-comparisons
-      #     path: result_images
+      - name: Generate baseline from main
+        shell: bash -el {0}
+        run: |
+          mkdir -p baseline
+          micromamba activate ultraplot-dev
+          git fetch origin ${{ github.event.pull_request.base.sha }}
+          git checkout ${{ github.event.pull_request.base.sha }}
+          pytest --mpl-generate-path=baseline_images
+          git checkout ${{ github.sha }}  # Return to PR branch
+
+      - name: Image Comparison Ultraplot
+        shell: bash -el {0}
+        run: |
+          micromamba activate ultraplot-dev
+          pytest --mpl-generate-path=baseline_images --mpl-default-style $(python -c "import ultraplot as plt; print(plt.config.Configurator())")
+
+      # return the images that failed
+      - name: Upload comparison failures
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: failed-comparisons
+          path: result_images
