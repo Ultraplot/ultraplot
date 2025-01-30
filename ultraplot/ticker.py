@@ -241,9 +241,15 @@ class DiscreteLocator(mticker.Locator):
                     step = step // i
                     break
         diff = np.abs(np.diff(locs[: step + 1 : step]))
-        (offset,) = np.where(np.isclose(locs % diff if diff.size else 0.0, 0.0))
-        offset = offset[0] if offset.size else np.argmin(np.abs(locs))
-        return locs[offset % step :: step]  # even multiples from zero or zero-close
+
+        if diff.size:
+            matches = np.where(np.isclose(locs % diff, 0.0))[0]
+            offset = matches[0] if len(matches) else np.argmin(np.abs(locs))
+        else:
+            offset = np.argmin(np.abs(locs))
+        return locs[
+            int(offset) % step :: step
+        ]  # even multiples from zero or zero-close
 
 
 class DegreeLocator(mticker.MaxNLocator):
