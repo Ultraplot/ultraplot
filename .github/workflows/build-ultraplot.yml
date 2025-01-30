@@ -5,6 +5,9 @@ on:
       python-version:
         required: true
         type: string
+      locale:
+        required: true
+        type: string
 
 jobs:
   build-ultraplot:
@@ -53,23 +56,28 @@ jobs:
       - name: Generate baseline from main
         shell: bash -el {0}
         run: |
+          cd $GITHUB_WORKSPACE
           mkdir -p baseline
           micromamba activate ultraplot-dev
           git fetch origin ${{ github.event.pull_request.base.sha }}
           git checkout ${{ github.event.pull_request.base.sha }}
-          pytest --mpl-generate-path=baseline_images
+          python -c "import ultraplot as plt; plt.config.Configurator()._save_yaml('ultraplot.yml')"
+          pytest --mpl-generate-path=baseline --mpl-default-style="./ultraplot.yml"
           git checkout ${{ github.sha }}  # Return to PR branch
 
       - name: Image Comparison Ultraplot
         shell: bash -el {0}
         run: |
+          cd $GITHUB_WORKSPACE
           micromamba activate ultraplot-dev
-          pytest --mpl-generate-path=baseline_images --mpl-default-style $(python -c "import ultraplot as plt; print(plt.config.Configurator())")
+          mkdir -p results
+          python -c "import ultraplot as plt; plt.config.Configurator()._save_yaml('ultraplot.yml')"
+          pytest --mpl --mpl-baseline-path=baseline --mpl-generate-summary=html --mpl-results-path=./results/ --mpl-default-style="./ultraplot.yml"
 
-      # return the images that failed
+      # Return the html output of the comparison even if failed
       - name: Upload comparison failures
-        if: failure()
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: failed-comparisons
-          path: result_images
+          name: failed-comparisons-${{ inputs.python-version }}-${{ inputs.locale }}
+          path: results/*
