@@ -64,7 +64,7 @@ jobs:
     strategy:
       matrix:
         python-version: ${{ fromJson(needs.get-python-versions.outputs.python-versions) }}
-        matplotlib-version: ["3.9", "3.10"]
+        matplotlib-version: ["3.9"]  # TODO: add MPL 3.10 once basemap has support
       fail-fast: false
     uses: ./.github/workflows/build-ultraplot.yml
     with:
