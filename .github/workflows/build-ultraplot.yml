@@ -57,7 +57,7 @@ jobs:
           micromamba activate ultraplot-dev
           git fetch origin ${{ github.event.pull_request.base.sha }}
           git checkout ${{ github.event.pull_request.base.sha }}
-          pytest --mpl-generate-path=baseline_images
+          pytest --mpl-generate-path=baseline
           git checkout ${{ github.sha }}  # Return to PR branch
 
       - name: Image Comparison Ultraplot
