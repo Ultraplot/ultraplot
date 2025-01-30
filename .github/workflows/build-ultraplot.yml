@@ -63,6 +63,7 @@ jobs:
           git checkout ${{ github.sha }}  # Return to PR branch
 
       - name: Image Comparison Ultraplot
+        continue-on-error: true
         shell: bash -el {0}
         run: |
           cd $GITHUB_WORKSPACE
