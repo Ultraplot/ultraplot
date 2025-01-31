@@ -52,41 +52,23 @@ jobs:
                   current = (current[0], current[1] + 1)
 
           # Look for Matplotlib classifiers
-          mpl_versions = []
-          for classifier in data["project"]["classifiers"]:
-              if classifier.startswith("Framework :: Matplotlib ::"):
-                  version = classifier.split("::")[-1].strip()
-                  mpl_versions.append(version)
+          mpl_versions = ["3.9"]  # Default to 3.9 for now
 
-          if not mpl_versions:
-              # Default to 3.10 if no Matplotlib versions found
-              mpl_versions = ["3.10"]
+          # Create JSON strings
+          python_json = json.dumps(python_versions)
+          mpl_json = json.dumps(mpl_versions)
 
-          # Print as compact JSON arrays without whitespace
-          print(f"PYTHON_VERSIONS={json.dumps(python_versions, separators=(',', ':'))}")
-          print(f"MPL_VERSIONS={json.dumps(mpl_versions, separators=(',', ':'))}")
+          print(f"::set-output name=python-versions::{python_json}")
+          print(f"::set-output name=matplotlib-versions::{mpl_json}")
           EOF
 
-          # Run the script and capture output
-          while IFS= read -r line; do
-            if [[ $line == PYTHON_VERSIONS=* ]]; then
-              PYTHON_VERSIONS=${line#PYTHON_VERSIONS=}
-              echo "python-versions=${PYTHON_VERSIONS}" >> $GITHUB_OUTPUT
-            elif [[ $line == MPL_VERSIONS=* ]]; then
-              MPL_VERSIONS=${line#MPL_VERSIONS=}
-              echo "matplotlib-versions=${MPL_VERSIONS}" >> $GITHUB_OUTPUT
-            fi
-          done < <(python3 get_versions.py)
-
-          # Debug info
-          echo "Detected Python versions: ${PYTHON_VERSIONS}"
-          echo "Detected Matplotlib versions: ${MPL_VERSIONS}"
+          python3 get_versions.py >> $GITHUB_OUTPUT
 
   build:
     needs: get-versions
     strategy:
       matrix:
-        python-version: ${{ fromJson(needs.get-python-versions.outputs.python-versions) }}
+        python-version: ${{ fromJson(needs.get-versions.outputs.python-versions) }}
         matplotlib-version: ${{ fromJson(needs.get-versions.outputs.matplotlib-versions) }}
       fail-fast: false
     uses: ./.github/workflows/build-ultraplot.yml
