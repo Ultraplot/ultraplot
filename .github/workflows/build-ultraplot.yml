@@ -87,10 +87,3 @@ jobs:
         with:
           name: failed-comparisons-${{ inputs.python-version }}-${{ inputs.matplotlib-version }}
           path: results/*
-
-  build-success:
-    needs: [build-ultraplot, compare-baseline]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Build succeeded
-        run: echo "All builds and tests passed successfully!"
