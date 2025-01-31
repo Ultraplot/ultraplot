@@ -1,25 +1,24 @@
- # .readthedocs.yml
+# .readthedocs.yml
 # Read the Docs configuration file
 version: 2
 
-# Python config
+# Set the OS and build tools
 build:
   os: ubuntu-22.04
   tools:
-    python: mambaforge-latest
-  jobs:
-    pre_build:
-  jobs:
-    pre_build:
-      - locale -a
-      - export LC_ALL=en_US.UTF-8
-      - export LANG=en_US.UTF-8
-      - pytest
+    python: "mambaforge-latest"
 
-
+# Conda settings
 conda:
   environment: ./environment.yml
 
+# Sphinx settings
 sphinx:
   configuration: ./docs/conf.py
   builder: html
+
+# Python settings
+python:
+  install:
+    - method: pip
+      path: .

@@ -32,6 +32,7 @@ jobs:
 
   publish-prod:
     name: Publish to PyPI
+    needs: publish-pypi-test
     environment:
       name: prod
       url: https://pypi.org/project/ultraplot/
