@@ -52,15 +52,30 @@ jobs:
                   current = (current[0], current[1] + 1)
 
 
-          # Look for Matplotlib classifiers
-          mpl_versions = []
-          for classifier in data["project"]["classifiers"]:
-              if classifier.startswith("Framework :: Matplotlib ::"):
-                  version = classifier.split("::")[-1].strip()
-                  mpl_versions.append(version)
+          # parse MPL versions
+          mpl_req = None
+          for d in data["project"]["dependencies"]:
+            if d.startswith("matplotlib"):
+              mpl_req = d
+              break
+          assert mpl_req is not None, "matplotlib version not found in dependencies"
+          min_version = re.search(r">=(\d+\.\d+)", mpl_req)
+          max_version = re.search(r"<(\d+\.\d+)", mpl_req)
 
+          mpl_versions = []
+          if min_version and max_version:
+              # Convert version strings to tuples
+              min_v = tuple(map(int, min_version.group(1).split(".")))
+              max_v = tuple(map(int, max_version.group(1).split(".")))
+
+              # Generate version list
+              current = min_v
+              while current < max_v:
+                  mpl_versions.append(".".join(map(str, current)))
+                  current = (current[0], current[1] + 1)
+
+          # If no versions found, default to 3.9
           if not mpl_versions:
-              # Default to 3.9 if no Matplotlib versions found
               mpl_versions = ["3.9"]
 
           # Create output dictionary
