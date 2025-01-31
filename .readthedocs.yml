@@ -6,7 +6,7 @@ version: 2
 build:
   os: ubuntu-22.04
   tools:
-    python: miniforge-latest
+    python: mambaforge-latest
 conda:
   environment: ./environment.yml
 
