@@ -30,10 +30,12 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Framework :: Matplotlib :: 3.9",
+    # "Framework :: Matplotlib :: 3.10" # add when basemap is updated
 ]
 dependencies= [
     "numpy>=1.26.0",
-    "matplotlib>=3.9"
+    "matplotlib>=3.9,<3.10"  # bump to 3.11 when basemap is updated
 ]
 dynamic = ["version"]
 

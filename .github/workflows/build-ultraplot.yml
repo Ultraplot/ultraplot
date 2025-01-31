@@ -5,13 +5,17 @@ on:
       python-version:
         required: true
         type: string
-      locale:
+      matplotlib-version:
         required: true
         type: string
 
+env:
+  LC_ALL: en_US.UTF-8
+  LANG: en_US.UTF-8
+
 jobs:
   build-ultraplot:
-    name: Test Python ${{ inputs.python-version }}
+    name: Test Python ${{ inputs.python-version }} with ${{ inputs.matplotlib-version }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -23,6 +27,7 @@ jobs:
           create-args: >-
             --verbose
             python=${{ inputs.python-version }}
+            matplotlib=${{ inputs.matplotlib-version }}
           cache-environment: true
           cache-downloads: false
 
@@ -50,6 +55,7 @@ jobs:
           create-args: >-
             --verbose
             python=${{ inputs.python-version }}
+            matplotlib=${{ inputs.matplotlib-version }}
           cache-environment: true
           cache-downloads: false
 
@@ -79,7 +85,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: failed-comparisons-${{ inputs.python-version }}-${{ inputs.locale }}
+          name: failed-comparisons-${{ inputs.python-version }}-${{ inputs.matplotlib-version }}
           path: results/*
 
   build-success:

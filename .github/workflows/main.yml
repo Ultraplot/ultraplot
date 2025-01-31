@@ -6,10 +6,11 @@ on:
     branches: [main, devel]
 
 jobs:
-  get-python-versions:
+  get-versions:
     runs-on: ubuntu-latest
     outputs:
       python-versions: ${{ steps.set-versions.outputs.python-versions }}
+      matplotlib-versions: ${{ steps.set-versions.outputs.matplotlib-versions }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -38,7 +39,7 @@ jobs:
           min_version = re.search(r">=(\d+\.\d+)", python_req)
           max_version = re.search(r"<(\d+\.\d+)", python_req)
 
-          versions = []
+          python_versions = []
           if min_version and max_version:
               # Convert version strings to tuples
               min_v = tuple(map(int, min_version.group(1).split(".")))
@@ -47,26 +48,70 @@ jobs:
               # Generate version list
               current = min_v
               while current < max_v:
-                  versions.append(".".join(map(str, current)))
+                  python_versions.append(".".join(map(str, current)))
                   current = (current[0], current[1] + 1)
 
-          # Print as JSON array
-          print(json.dumps(versions))
+
+          # parse MPL versions
+          mpl_req = None
+          for d in data["project"]["dependencies"]:
+            if d.startswith("matplotlib"):
+              mpl_req = d
+              break
+          assert mpl_req is not None, "matplotlib version not found in dependencies"
+          min_version = re.search(r">=(\d+\.\d+)", mpl_req)
+          max_version = re.search(r"<(\d+\.\d+)", mpl_req)
+
+          mpl_versions = []
+          if min_version and max_version:
+              # Convert version strings to tuples
+              min_v = tuple(map(int, min_version.group(1).split(".")))
+              max_v = tuple(map(int, max_version.group(1).split(".")))
+
+              # Generate version list
+              current = min_v
+              while current < max_v:
+                  mpl_versions.append(".".join(map(str, current)))
+                  current = (current[0], current[1] + 1)
+
+          # If no versions found, default to 3.9
+          if not mpl_versions:
+              mpl_versions = ["3.9"]
+
+          # Create output dictionary
+          output = {
+              "python_versions": python_versions,
+              "matplotlib_versions": mpl_versions
+          }
+
+          # Print as JSON
+          print(json.dumps(output))
           EOF
 
           # Run the script and capture output
-          VERSIONS=$(python3 get_versions.py)
-          echo "Detected versions: ${VERSIONS}"  # Debug output
-          echo "python-versions=${VERSIONS}" >> $GITHUB_OUTPUT
+          OUTPUT=$(python3 get_versions.py)
+          PYTHON_VERSIONS=$(echo $OUTPUT | jq -r '.python_versions')
+          MPL_VERSIONS=$(echo $OUTPUT | jq -r '.matplotlib_versions')
+
+          echo "Detected Python versions: ${PYTHON_VERSIONS}"
+          echo "Detected Matplotlib versions: ${MPL_VERSIONS}"
+          echo "python-versions=$(echo $PYTHON_VERSIONS | jq -c)" >> $GITHUB_OUTPUT
+          echo "matplotlib-versions=$(echo $MPL_VERSIONS | jq -c)" >> $GITHUB_OUTPUT
 
   build:
-    needs: get-python-versions
+    needs: get-versions
     strategy:
       matrix:
-        python-version: ${{ fromJson(needs.get-python-versions.outputs.python-versions) }}
-        locale: ["en_US.UTF-8", "C.UTF-8"]
+        python-version: ${{ fromJson(needs.get-versions.outputs.python-versions) }}
+        matplotlib-version: ${{ fromJson(needs.get-versions.outputs.matplotlib-versions) }}
       fail-fast: false
     uses: ./.github/workflows/build-ultraplot.yml
     with:
       python-version: ${{ matrix.python-version }}
-      locale: ${{ matrix.locale }}
+      matplotlib-version: ${{ matrix.matplotlib-version }}
+
+  build-success:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "All tests passed successfully!"
