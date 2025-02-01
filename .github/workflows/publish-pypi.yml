@@ -38,7 +38,7 @@ jobs:
       name: prod
       url: https://pypi.org/project/ultraplot/
     runs-on: ubuntu-latest
-    if: github.event_name == 'release' || github.event_name == 'push'
+    if: github.event_name == 'release'
     permissions:
       id-token: write
       contents: read
