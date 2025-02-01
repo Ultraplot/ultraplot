@@ -12,7 +12,6 @@ jobs:
       name: test
       url: https://test.pypi.org/project/ultraplot/
     runs-on: ubuntu-latest
-    if: github.event_name == 'push'
     permissions:
       id-token: write
       contents: read
@@ -39,7 +38,7 @@ jobs:
       name: prod
       url: https://pypi.org/project/ultraplot/
     runs-on: ubuntu-latest
-    if: github.event_name == 'release' || (github.event_name == 'push' && needs.publish-pypi-test.result == 'success')
+    if: github.event_name == 'release' || github.event_name == 'push'
     permissions:
       id-token: write
       contents: read
