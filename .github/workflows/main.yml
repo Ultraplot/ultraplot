@@ -62,21 +62,7 @@ jobs:
           min_version = re.search(r">=(\d+\.\d+)", mpl_req)
           max_version = re.search(r"<(\d+\.\d+)", mpl_req)
 
-          mpl_versions = []
-          if min_version and max_version:
-              # Convert version strings to tuples
-              min_v = tuple(map(int, min_version.group(1).split(".")))
-              max_v = tuple(map(int, max_version.group(1).split(".")))
-
-              # Generate version list
-              current = min_v
-              while current < max_v:
-                  mpl_versions.append(".".join(map(str, current)))
-                  current = (current[0], current[1] + 1)
-
-          # If no versions found, default to 3.9
-          if not mpl_versions:
-              mpl_versions = ["3.9"]
+          mpl_versions = data.get("tool", {}).get("ultraplot", {}).get("supported-versions", {}).get("matplotlib", ["3.9"])
 
           # Create output dictionary
           output = {
