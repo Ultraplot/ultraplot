@@ -49,11 +49,6 @@ dynamic = ["version"]
 setuptools_scm = "setuptools_scm._integration.setuptools:infer_version"
 
 
-[tool.ultraplot.supported-versions]
-matplotlib = ["3.9",
-            # "3.10" # add when basemap is updated
-            ]
-
 [tool.setuptools]
 packages = ["ultraplot"]
 include-package-data = true
