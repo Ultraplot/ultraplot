@@ -22,6 +22,8 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Get tags
         run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
@@ -29,7 +31,7 @@ jobs:
 
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.x"
+          python-version: "3.12"
 
       - name: Build package
         run: |
@@ -45,6 +47,14 @@ jobs:
         run: |
           pushd dist
           python -m pip install ultraplot*.whl
+
+          version=$(python -c "import ultraplot; print(ultraplot.__version__)")
+          echo "Version: $version"
+          if [[ "$version" == "0."* ]]; then
+            echo "Version is not set correctly!"
+            exit 1
+          fi
+
           python -m twine check *
           popd
         shell: bash
@@ -76,7 +86,7 @@ jobs:
 
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.x"
+          python-version: "3.12"
 
       - name: Build package
         run: |
