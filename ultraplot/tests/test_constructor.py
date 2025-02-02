@@ -101,16 +101,10 @@ def test_manual_cycle():
 
 def test_pass_on_cycle():
     colors = ["red", "green", "black"]
-    cycle = uplt.Cycle(
-        colors,
-        marker=["X", "o"],
-        sizes=[20, 100],
-        edgecolors=["r", "k"],
-    )
+    cycle = uplt.Cycle(colors)
     fig, ax = uplt.subplots()
     ax.set_prop_cycle(cycle)
     active_cycle = ax.axes._active_cycle
     for color in colors:
-        print(colors)
         assert color == active_cycle.get_next()["color"]
         assert color == cycle.get_next()["color"]
