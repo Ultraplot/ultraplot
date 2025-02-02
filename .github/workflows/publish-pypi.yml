@@ -7,7 +7,7 @@ on:
     tags: ["v*"]
 
 concurrency:
-  group: publish-pypi
+  group: publish-pypi-{{ github.sha }}
   cancel-in-progress: false
 
 jobs:
