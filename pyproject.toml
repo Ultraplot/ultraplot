@@ -1,10 +1,9 @@
 [build-system]
-requires = ["setuptools>=64",
-            "setuptools_scm[toml]>=8",
-            "wheel",
-            "numpy>=1.26.0",
-            "matplotlib>=3.9",
-            ]
+requires = [
+    "setuptools>=64",
+    "setuptools_scm[toml]>=8",
+    "wheel",
+]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -13,7 +12,6 @@ authors = [
     {name = "Casper van Elteren", email = "caspervanelteren@gmail.com"},
     {name = "Luke Davis", email = "lukelbd@gmail.com"},
 ]
-
 maintainers = [
     {name = "Casper van Elteren", email = "caspervanelteren@gmail.com"},
 ]
@@ -38,21 +36,15 @@ dependencies= [
 ]
 dynamic = ["version"]
 
-
 [project.urls]
 "Documentation" = "https://ultraplot.readthedocs.io"
 "Issue Tracker" = "https://github.com/ultraplot/ultraplot/issues"
 "Source Code" = "https://github.com/ultraplot/ultraplot"
 
-[project.entry-points."setuptools.finalize_distribution_options"]
-setuptools_scm = "setuptools_scm._integration.setuptools:infer_version"
-
-
-
 [tool.setuptools]
-packages = ["ultraplot"]
+packages = {find = {exclude=["docs*", "baseline*", "logo*"]}}
 include-package-data = true
 
 [tool.setuptools_scm]
-version_scheme = "post-release"
-local_scheme = "dirty-tag"
+write_to = "ultraplot/_version.py"
+write_to_template = "__version__ = '{version}'\n"

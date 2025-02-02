@@ -5,6 +5,10 @@ on:
   push:
     tags: ["v*"]
 
+concurrency:
+  group: publish-pypi
+  cancel-in-progress: false
+
 jobs:
   publish-pypi-test:
     name: Publish to TestPyPI
@@ -17,15 +21,33 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+
+      - name: Get tags
+        run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+        shell: bash
+
       - uses: actions/setup-python@v5
         with:
           python-version: "3.x"
+
       - name: Build package
         run: |
-          python -m pip install build
-          python -m build
+          python -m pip install --upgrade pip wheel setuptools setuptools_scm build twine
+          python -m build --sdist --wheel . --outdir dist
+
+      - name: CheckFiles
+        run: |
+          ls dist
+        shell: bash
+
+      - name: Test wheels
+        run: |
+          pushd dist
+          python -m pip install ultraplot*.whl
+          python -m twine check *
+          popd
+        shell: bash
+
       - name: Publish to TestPyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
@@ -45,15 +67,33 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+
+      - name: Get tags
+        run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+        shell: bash
+
       - uses: actions/setup-python@v5
         with:
           python-version: "3.x"
+
       - name: Build package
         run: |
-          python -m pip install build
-          python -m build
+          python -m pip install --upgrade pip wheel setuptools setuptools_scm build twine
+          python -m build --sdist --wheel . --outdir dist
+
+      - name: CheckFiles
+        run: |
+          ls dist
+        shell: bash
+
+      - name: Test wheels
+        run: |
+          pushd dist
+          python -m pip install ultraplot*.whl
+          python -m twine check *
+          popd
+        shell: bash
+
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:

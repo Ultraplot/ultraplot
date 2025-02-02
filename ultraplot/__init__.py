@@ -6,13 +6,11 @@ A succinct matplotlib wrapper for making beautiful, publication-quality graphics
 name = "ultraplot"
 
 try:
-    from importlib.metadata import version as get_version
-except ImportError:  # for Python < 3.8
-    from importlib_metadata import version as get_version
-try:
-    version = __version__ = get_version(name)
-except Exception:
-    version = __version__ = "unknown"
+    from ._version import __version__
+except ImportError:
+    __version__ = "unknown"
+
+version = __version__
 
 # Import dependencies early to isolate import times
 from . import internals, externals, tests  # noqa: F401
