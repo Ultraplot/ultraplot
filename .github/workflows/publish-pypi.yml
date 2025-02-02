@@ -65,6 +65,9 @@ jobs:
         with:
           repository-url: https://test.pypi.org/legacy/
           verbose: true
+          # releases generate both release and tag events so
+          # we get a race condition if we don't skip existing
+          skip-existing: true
 
   publish-prod:
     name: Publish to PyPI
