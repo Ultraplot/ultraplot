@@ -2486,7 +2486,7 @@ class PlotAxes(base.Axes):
             case str() | int():
                 resolved_cycle = constructor.Cycle(cycle, **cycle_kw)
             case constructor.Cycle():
-                resolved_cycle = constructor.Cyce(cycle, *cycle_kw)
+                resolved_cycle = constructor.Cycle(cycle, *cycle_kw)
             case _:
                 resolved_cycle = None
 
