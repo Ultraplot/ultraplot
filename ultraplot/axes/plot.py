@@ -2485,6 +2485,8 @@ class PlotAxes(base.Axes):
                 resolved_cycle = None
             case str() | int():
                 resolved_cycle = constructor.Cycle(cycle, **cycle_kw)
+            case constructor.Cycle():
+                resolved_cycle = cycle
             case _:
                 resolved_cycle = None
 
@@ -3740,7 +3742,7 @@ class PlotAxes(base.Axes):
         )
         kw = self._parse_cycle(x.size, **kw)
         objs = self._call_native(
-            "pie", x, explode, labeldistance=pad, wedgeprops=wedge_kw, **kw
+            "pie", x, explode = explode, labeldistance=pad, wedgeprops=wedge_kw, **kw
         )
         objs = tuple(cbook.silent_list(type(seq[0]).__name__, seq) for seq in objs)
         self._fix_patch_edges(objs[0], **edgefix_kw, **wedge_kw)
@@ -3828,6 +3830,7 @@ class PlotAxes(base.Axes):
             x, y, autoy=False, autoguide=False, vert=vert, **kw
         )
         kw = self._parse_cycle(x.size, **kw)  # possibly apply cycle
+        print(kw)
         if fill and fillcolor is None:
             parser = self._get_patches_for_fill
             fillcolor = [parser.get_next_color() for _ in range(x.size)]
@@ -3844,7 +3847,14 @@ class PlotAxes(base.Axes):
         if hatch is None:
             hatch = [None for _ in range(x.size)]
 
-        artists = self._call_native("boxplot", y, vert=vert, **kw)
+        orientation = "vertical" if vert else "horizontal"
+
+        # Mpl>=3.10 renames labels to tick_labels
+        # _parse_1d_args will generate the 'labels' key, we remap it here as other functions still rely on the 'labels'
+        tick_labels = kw.pop("labels", None)
+        if tick_labels is not None:
+            kw["tick_labels"] = tick_labels
+        artists = self._call_native("boxplot", y, orientation=orientation, **kw)
         artists = artists or {}  # necessary?
         artists = {
             key: cbook.silent_list(type(objs[0]).__name__, objs) if objs else objs
@@ -3992,10 +4002,11 @@ class PlotAxes(base.Axes):
         elif len(hatches) != len(y):
             raise ValueError(f"Retrieved {len(hatches)} hatches but need {len(y)}")
 
+        orientation = "vertical" if vert else "horizontal"
         artists = self._call_native(
             "violinplot",
             y,
-            vert=vert,
+            orientation=orientation,
             showmeans=False,
             showmedians=False,
             showextrema=False,

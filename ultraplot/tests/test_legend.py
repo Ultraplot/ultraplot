@@ -119,7 +119,7 @@ def test_histogram_legend():
     """
     Support complex histogram legends.
     """
-    uplt.rc.inlinefmt = "svg"
+    uplt.rc.inlineformat = "svg"
     fig, ax = uplt.subplots()
     res = ax.hist(
         state.rand(500, 2), 4, labels=("label", "other"), edgefix=True, legend="b"

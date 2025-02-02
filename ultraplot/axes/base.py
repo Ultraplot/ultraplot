@@ -3188,7 +3188,7 @@ class Axes(maxes.Axes):
         else:
             transform = self._get_transform(transform)
         with warnings.catch_warnings():  # ignore duplicates (internal issues?)
-            warnings.simplefilter("ignore", warnings.UltraplotWarning)
+            warnings.simplefilter("ignore", warnings.UltraPlotWarning)
             kwargs.update(_pop_props(kwargs, "text"))
 
         # Update the text object using a monkey patch
