@@ -76,10 +76,11 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: dist-${{ github.sha }}-${{ github.run_id }}-${{ github.run_number }}
+          path: dist
 
       - name: CheckFiles
         run: |
-          ls -lah
+          ls dist
         shell: bash
 
       - name: Publish to TestPyPI
