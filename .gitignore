@@ -38,3 +38,6 @@ __pycache__
 tmp
 trash
 garbage
+
+# version file
+ultraplot/_version.py

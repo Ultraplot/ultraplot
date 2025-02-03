@@ -97,3 +97,14 @@ def test_manual_cycle():
     props = ax._active_cycle.get_next()
     assert cycled_pos == parser._idx
     assert props == parser._cycler_items[parser._idx]
+
+
+def test_pass_on_cycle():
+    colors = ["red", "green", "black"]
+    cycle = uplt.Cycle(colors)
+    fig, ax = uplt.subplots()
+    ax.set_prop_cycle(cycle)
+    active_cycle = ax.axes._active_cycle
+    for color in colors:
+        assert color == active_cycle.get_next()["color"]
+        assert color == cycle.get_next()["color"]
