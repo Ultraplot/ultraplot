@@ -79,7 +79,7 @@ jobs:
 
       - name: CheckFiles
         run: |
-          ls dist
+          ls -lah
         shell: bash
 
       - name: Publish to TestPyPI
