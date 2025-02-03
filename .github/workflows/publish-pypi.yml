@@ -60,7 +60,7 @@ jobs:
         shell: bash
 
       - name: Publish to TestPyPI
-        if: github.event_name != 'pull_request'
+        # if: github.event_name != 'pull_request'
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           repository-url: https://test.pypi.org/legacy/
