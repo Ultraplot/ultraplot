@@ -32,7 +32,7 @@ jobs:
           python -m pip install --upgrade pip wheel setuptools setuptools_scm build twine
           python -m build --sdist --wheel . --outdir dist
 
-      - name: CheckFiles
+      - name: Check files
         run: |
           ls dist
         shell: bash
@@ -78,7 +78,7 @@ jobs:
           name: dist-${{ github.sha }}-${{ github.run_id }}-${{ github.run_number }}
           path: dist
 
-      - name: CheckFiles
+      - name: Check files
         run: |
           ls dist
         shell: bash
@@ -92,7 +92,7 @@ jobs:
           # we get a race condition if we don't skip existing
           skip-existing: ${{ github.event_name == 'release' && 'true' || 'false' }}
 
-  publish-prod:
+  publish-pypi:
     name: Publish to PyPI
     needs: publish-pypi-test
     environment:
@@ -109,7 +109,7 @@ jobs:
         with:
           name: dist-${{ github.sha }}-${{ github.run_id }}-${{ github.run_number }}
 
-      - name: CheckFiles
+      - name: Check files
         run: |
           ls dist
         shell: bash
