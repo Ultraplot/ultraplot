@@ -11,15 +11,9 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  publish-pypi-test:
-    name: Publish to TestPyPI
-    environment:
-      name: test
-      url: https://test.pypi.org/project/ultraplot/
+  build-packages:
+    name: Build packages
     runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read
     steps:
       - uses: actions/checkout@v4
         with:
@@ -59,8 +53,36 @@ jobs:
           popd
         shell: bash
 
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-${{ github.sha }}-${{ github.run_id }}-${{ github.run_number }}
+          path: dist/*
+          if-no-files-found: error
+
+  publish-pypi-test:
+    name: Publish to TestPyPI
+    needs: build-packages
+    # if: github.event_name != 'pull_request'
+    environment:
+      name: test
+      url: https://test.pypi.org/project/ultraplot/
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist-${{ github.sha }}-${{ github.run_id }}-${{ github.run_number }}
+
+      - name: CheckFiles
+        run: |
+          ls dist
+        shell: bash
+
       - name: Publish to TestPyPI
-        if: github.event_name != 'pull_request'
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           repository-url: https://test.pypi.org/legacy/
@@ -71,7 +93,7 @@ jobs:
 
   publish-prod:
     name: Publish to PyPI
-    needs: publish-pypi-test
+    needs: build-packages
     environment:
       name: prod
       url: https://pypi.org/project/ultraplot/
@@ -81,42 +103,14 @@ jobs:
       id-token: write
       contents: read
     steps:
-      - uses: actions/checkout@v4
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
         with:
-          fetch-depth: 0
-
-      - name: Get tags
-        run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
-        shell: bash
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-
-      - name: Build package
-        run: |
-          python -m pip install --upgrade pip wheel setuptools setuptools_scm build twine
-          python -m build --sdist --wheel . --outdir dist
+          name: dist-${{ github.sha }}-${{ github.run_id }}-${{ github.run_number }}
 
       - name: CheckFiles
         run: |
           ls dist
-        shell: bash
-
-      - name: Test wheels
-        run: |
-          pushd dist
-          python -m pip install ultraplot*.whl
-
-          version=$(python -c "import ultraplot; print(ultraplot.__version__)")
-          echo "Version: $version"
-          if [[ "$version" == "0."* ]]; then
-            echo "Version is not set correctly!"
-            exit 1
-          fi
-
-          python -m twine check *
-          popd
         shell: bash
 
       - name: Publish to PyPI
