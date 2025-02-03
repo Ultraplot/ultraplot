@@ -235,7 +235,7 @@ def test_parametric_labels():
     Test passing strings as parametric 'color values'. This is likely
     a common use case.
     """
-    uplt.rc.inlinefmt = "svg"
+    uplt.rc.inlineformat = "svg"
     fig, ax = uplt.subplots()
     ax.parametric(
         state.rand(5),

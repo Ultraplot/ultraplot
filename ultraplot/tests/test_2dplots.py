@@ -94,9 +94,11 @@ def test_colormap_mode():
     Test auto extending, auto discrete. Should issue warnings.
     """
     fig, axs = uplt.subplots(ncols=2, nrows=2, share=False)
-    axs[0].pcolor(state.rand(5, 5) % 0.3, extend="both", cyclic=True, colorbar="b")
-    axs[1].pcolor(state.rand(5, 5), sequential=True, diverging=True, colorbar="b")
-    axs[2].pcolor(state.rand(5, 5), discrete=False, qualitative=True, colorbar="b")
+    axs[0].pcolor(state.rand(5, 5) % 0.3, extend="neither", cyclic=True, colorbar="b")
+    with pytest.warns(uplt.warnings.UltraPlotWarning):
+        axs[1].pcolor(state.rand(5, 5), sequential=True, diverging=True, colorbar="b")
+    with pytest.warns(uplt.warnings.UltraPlotWarning):
+        axs[2].pcolor(state.rand(5, 5), discrete=False, qualitative=True, colorbar="b")
     uplt.rc["cmap.discrete"] = False  # should be ignored below
     axs[3].contourf(state.rand(5, 5), colorbar="b")
     return fig

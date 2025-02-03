@@ -111,6 +111,7 @@ def test_panels_suplabels_three_hor_panels():
     return fig
 
 
+@pytest.mark.mpl_image_compare
 def test_panels_suplabels_three_hor_panels_donotinlcude():
     """
     Test label sharing for `includepanels=True`.
