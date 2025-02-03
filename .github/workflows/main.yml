@@ -5,6 +5,10 @@ on:
   pull_request:
     branches: [main, devel]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   get-versions:
     runs-on: ubuntu-latest
