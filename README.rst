@@ -1,5 +1,6 @@
-.. image:: UltraPlotLogo.svg
-   :width: 100%
+.. image:: https://raw.githubusercontent.com/Ultraplot/ultraplot/refs/heads/main/UltraPlotLogo.svg
+    :alt: UltraPlot Logo
+    :width: 100%
 
 |build-status| |docs| |pypi| |code-style| |pre-commit| |pr-welcome| |license|
 
@@ -10,7 +11,7 @@ publication-quality graphics. It builds upon ProPlot_ and transports it into the
 
 Why UltraPlot? | Write Less, Create More
 =========================================
-.. image:: logo/whyUltraPlot.svg
+.. image:: https://raw.githubusercontent.com/Ultraplot/ultraplot/refs/heads/main/logo/whyUltraPlot.svg
     :width: 100%
     :alt: Comparison of ProPlot and UltraPlot
     :align: center
