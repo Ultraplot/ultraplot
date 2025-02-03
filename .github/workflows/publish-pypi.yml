@@ -63,7 +63,7 @@ jobs:
   publish-pypi-test:
     name: Publish to TestPyPI
     needs: build-packages
-    # if: github.event_name != 'pull_request'
+    if: github.event_name != 'pull_request'
     environment:
       name: test
       url: https://test.pypi.org/project/ultraplot/
