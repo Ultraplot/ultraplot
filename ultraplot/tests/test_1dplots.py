@@ -447,3 +447,13 @@ def test_norm_not_modified():
     ax.scatter(x, y, c=c, cmap=cmap, norm=norm)
     assert norm.vmin == 0
     assert norm.vmax == 10
+
+    arr = np.random.rand(20, 40) * 1000
+    xe = np.linspace(0, 1, num=40, endpoint=True)
+    ye = np.linspace(0, 1, num=20, endpoint=True)
+
+    fig, ax = uplt.subplots()
+    norm = uplt.Norm("linear", vmin=0, vmax=1)
+    ax.pcolor(xe, ye, arr, cmap="viridis", norm=norm)
+    assert norm.vmin == 0
+    assert norm.vmax == 1
