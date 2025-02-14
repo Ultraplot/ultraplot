@@ -432,6 +432,7 @@ def test_triplot_variants(x, y, z, triangles, use_triangulation, use_datadict):
     return fig
 
 
+@pytest.mark.mpl_image_compare
 def test_norm_not_modified():
     """
     Ensure that norm is correctly passed to pcolor and related functions.
@@ -443,8 +444,8 @@ def test_norm_not_modified():
     c = y
     cmap = uplt.Colormap("viridis")
     norm = uplt.Norm("linear", 0, 10)
-    fig, ax = uplt.subplots()
-    ax.scatter(x, y, c=c, cmap=cmap, norm=norm)
+    fig, (left, right) = uplt.subplots(ncols=2, share=0)
+    left.scatter(x, y, c=c, cmap=cmap, norm=norm)
     assert norm.vmin == 0
     assert norm.vmax == 10
 
@@ -452,8 +453,8 @@ def test_norm_not_modified():
     xe = np.linspace(0, 1, num=40, endpoint=True)
     ye = np.linspace(0, 1, num=20, endpoint=True)
 
-    fig, ax = uplt.subplots()
     norm = uplt.Norm("linear", vmin=0, vmax=1)
-    ax.pcolor(xe, ye, arr, cmap="viridis", norm=norm)
+    right.pcolor(xe, ye, arr, cmap="viridis", norm=norm)
     assert norm.vmin == 0
     assert norm.vmax == 1
+    return fig
