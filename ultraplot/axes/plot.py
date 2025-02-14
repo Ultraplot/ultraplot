@@ -2296,6 +2296,9 @@ class PlotAxes(base.Axes):
         cmap_kw = cmap_kw or {}
         norm_kw = norm_kw or {}
         # If norm is given we use it to set vmin and vmax
+        if (vmin is not None or vmax is not None) and norm is not None:
+            print(vmin, vmax, norm)
+            raise ValueError("If 'norm' is given, 'vmin' and 'vmax' must not be set.")
         if isinstance(norm, mcolors.Normalize):
             vmin = norm.vmin
             vmax = norm.vmax
