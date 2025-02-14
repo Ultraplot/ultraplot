@@ -2444,7 +2444,6 @@ class PlotAxes(base.Axes):
             kwargs.update({"levels": levels, "extend": extend})
         else:
             guides._add_guide_kw("colorbar", kwargs, extend=extend)
-        print(kwargs["norm"].vmax)
         return kwargs
 
     def _parse_cycle(
