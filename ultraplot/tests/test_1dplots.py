@@ -449,7 +449,7 @@ def test_norm_not_modified():
     assert norm.vmin == 0
     assert norm.vmax == 10
 
-    arr = state.random.rand(20, 40) * 1000
+    arr = state.rand(20, 40) * 1000
     xe = np.linspace(0, 1, num=40, endpoint=True)
     ye = np.linspace(0, 1, num=20, endpoint=True)
 
