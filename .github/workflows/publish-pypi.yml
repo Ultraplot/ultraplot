@@ -90,7 +90,7 @@ jobs:
           verbose: true
           # releases generate both release and tag events so
           # we get a race condition if we don't skip existing
-          skip-existing: ${{ github.event_name == 'release' && 'true' || 'false' }}
+          skip-existing: ${{ (github.event_name == 'release' || github.event_name == 'push') && 'true' || 'false' }}
 
   publish-pypi:
     name: Publish to PyPI
