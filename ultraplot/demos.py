@@ -832,12 +832,12 @@ def show_cycles(*args, **kwargs):
         ]
         ignore = ()
     else:
-        cycles = [
-            cmap
-            for cmap in pcolors._cmap_database.values()
-            if isinstance(cmap, pcolors.DiscreteColormap)
-            and not (cmap.name or "_")[:1] == "_"
-        ]
+        cycles = []
+        for key, cmap in pcolors._cmap_database.items():
+            if isinstance(cmap, pcolors.DiscreteColormap):
+                if key.startswith("_"):
+                    continue
+                cycles.append(cmap)
         ignore = None
 
     # Return figure of colorbars
