@@ -108,7 +108,7 @@ CMAP_TABLE = {
         "IceFire",
         "Vlag",
     ),
-    "ultraplot sequential": (
+    "UltraPlot sequential": (
         "Fire",
         "Stellar",
         "Glacial",
@@ -118,7 +118,7 @@ CMAP_TABLE = {
         "Sunrise",
         "Sunset",
     ),
-    "ultraplot diverging": (
+    "UltraPlot diverging": (
         "Div",
         "NegPos",
         "DryWet",
@@ -622,9 +622,9 @@ def _draw_bars(
     # Categorize the input names
     table = {unknown: []} if unknown else {}
     table.update({cat: [None] * len(names) for cat, names in source.items()})
-    for cmap in cmaps:
+    for name, cmap in cmaps.items():
         cat = None
-        name = cmap.name or "_no_name"
+        name = name or "_no_name"
         name = name.lower()
         for opt, names in source.items():
             names = list(map(str.lower, names))
@@ -634,7 +634,6 @@ def _draw_bars(
             table[cat][i] = cmap
         elif unknown:
             table[unknown].append(cmap)
-
     # Filter out certain categories
     options = set(map(str.lower, source))
     if ignore is None:
@@ -657,7 +656,6 @@ def _draw_bars(
         table[cat][:] = [cmap for cmap in table[cat] if cmap is not None]
         if not table[cat] or cat.lower() not in include and cat != unknown:
             del table[cat]
-
     # Draw figure
     # Allocate two colorbar widths for each title of sections
     naxs = 2 * len(table) + sum(map(len, table.values()))
@@ -753,25 +751,23 @@ def show_cmaps(*args, **kwargs):
     """
     # Get the list of colormaps
     if args:
-        cmaps = list(map(constructor.Colormap, args))
-        cmaps = [
-            (
-                cmap
-                if isinstance(cmap, mcolors.LinearSegmentedColormap)
-                else pcolors._get_cmap_subtype(cmap, "continuous")
-            )
-            for cmap in args
-        ]
+        cmaps = {}
+        for cmap in args:
+            name = cmap.name
+            cmap = constructor.Colormap(arg)
+            if isinstance(cmap, mcolors.LinearSegmentedColormap):
+                cmaps[name] = cmap
+            else:
+                cmaps[name] = pcolors._get_cmap_subtype(cmap, "continuous")
         ignore = ()
     else:
-        cmaps = [
-            cmap
-            for cmap in pcolors._cmap_database.values()
-            if isinstance(cmap, pcolors.ContinuousColormap)
-            and not (cmap.name or "_")[:1] == "_"
-        ]
+        cmaps = {}
+        for key, cmap in pcolors._cmap_database.items():
+            if isinstance(cmap, pcolors.ContinuousColormap):
+                if key.startswith("_"):
+                    continue
+                cmaps[key] = cmap
         ignore = None
-
     # Return figure of colorbars
     kwargs.setdefault("source", CMAP_TABLE)
     kwargs.setdefault("ignore", ignore)
@@ -816,28 +812,26 @@ def show_cycles(*args, **kwargs):
     """
     # Get the list of cycles
     if args:
-        cycles = [
-            (
-                pcolors.DiscreteColormap(
-                    cmap.by_key().get("color", ["k"]), name=getattr(cmap, "name", None)
-                )
-                if isinstance(cmap, cycler.Cycler)
-                else (
-                    cmap
-                    if isinstance(cmap, mcolors.ListedColormap)
-                    else pcolors._get_cmap_subtype(cmap, "discrete")
-                )
-            )
-            for cmap in args
-        ]
+        cycles = {}
+        for cmap in args:
+            match cmap:
+                case mcolors.ListedColormap():
+                    color = cmap.by_key().get("color", ["k"])
+                    name = getattr(cmap, "name", None)
+                    cmap = pcolors.DiscreteColormap(color, name=name)
+                case mcolors.LinearSegmentedColormap():
+                    cmap = cmap
+                case _:
+                    cmap = pcolors._get_cmap_subtype(cmap, "discrete")
+            cycles[cmap.name] = cmap
         ignore = ()
     else:
-        cycles = []
-        for key, cmap in pcolors._cmap_database.items():
+        cycles = {}
+        for name, cmap in pcolors._cmap_database.items():
             if isinstance(cmap, pcolors.DiscreteColormap):
-                if key.startswith("_"):
+                if name.startswith("_"):
                     continue
-                cycles.append(cmap)
+                cycles[name] = cmap
         ignore = None
 
     # Return figure of colorbars
