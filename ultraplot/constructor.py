@@ -938,6 +938,12 @@ markeredgecolors, markerfacecolors
         mcycler = cycler.cycler(**props)
         super().__init__(mcycler)
 
+    def __eq__(self, other: Cycle) -> bool:
+        for a, b in zip(self, other):
+            if a != b:
+                return False
+        return True
+
     def get_next(self):
         # Get the next set of properties
         if self._iterator is None:
