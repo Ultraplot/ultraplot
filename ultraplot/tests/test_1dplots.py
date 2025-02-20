@@ -489,7 +489,6 @@ def test_line_plot_cyclers():
     )
 
     # Plot all dat with both cyclers on
-    # note: capitalization is done different here on purpose
     ax[1].plot(
         (data1 + data2),
         cycle=cycle,
