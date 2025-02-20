@@ -369,3 +369,32 @@ def test_colormap_parsing():
     # Note: the ranges should not match either of the original colormaps
     with pytest.raises(ValueError):
         test_range(uplt.Colormap("blues", "reds"), reds)
+
+
+def test_input_parsing_cycle():
+    """
+    Test the potential inputs to cycle
+    """
+    # The first argument is a string or an iterable of strings
+
+    with pytest.raises(ValueError):
+        cycle = uplt.Cycle(None)
+
+    # Empty should also be handled
+    cycle = uplt.Cycle()
+
+    # Test singular string
+    cycle = uplt.Cycle("Blues")
+    target = uplt.colormaps.get_cmap("blues")
+    first_color = cycle.get_next()["color"]
+    first_color = uplt.colors.to_rgba(first_color)
+    assert np.allclose(first_color, target(0))
+
+    # test composition
+    cycle = uplt.Cycle("Blues", "Reds", N=2)
+    lower_half = uplt.colormaps.get_cmap("blues")
+    upper_half = uplt.colormaps.get_cmap("reds")
+    first_color = uplt.colors.to_rgba(cycle.get_next()["color"])
+    last_color = uplt.colors.to_rgba(cycle.get_next()["color"])
+    assert np.allclose(first_color, lower_half(0.0))
+    assert np.allclose(last_color, upper_half(1.0))
