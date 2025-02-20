@@ -2488,7 +2488,7 @@ class PlotAxes(base.Axes):
                 resolved_cycle = constructor.Cycle(rc["axes.prop_cycle"])
             case str() if cycle.lower() == "none":
                 resolved_cycle = None
-            case str() | int():
+            case str() | int() | tuple():
                 resolved_cycle = constructor.Cycle(cycle, **cycle_kw)
             case constructor.Cycle():
                 resolved_cycle = constructor.Cycle(cycle)
