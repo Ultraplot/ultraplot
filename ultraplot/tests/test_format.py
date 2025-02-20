@@ -374,7 +374,6 @@ def test_input_parsing_cycle():
     Test the potential inputs to cycle
     """
     # The first argument is a string or an iterable of strings
-
     with pytest.raises(ValueError):
         cycle = uplt.Cycle(None)
 
@@ -388,7 +387,7 @@ def test_input_parsing_cycle():
     first_color = uplt.colors.to_rgba(first_color)
     assert np.allclose(first_color, target(0))
 
-    # test composition
+    # Test composition
     cycle = uplt.Cycle("Blues", "Reds", N=2)
     lower_half = uplt.colormaps.get_cmap("blues")
     upper_half = uplt.colormaps.get_cmap("reds")
