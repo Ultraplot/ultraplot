@@ -938,7 +938,7 @@ markeredgecolors, markerfacecolors
         mcycler = cycler.cycler(**props)
         super().__init__(mcycler)
 
-    def __eq__(self, other: Cycle) -> bool:
+    def __eq__(self, other):
         for a, b in zip(self, other):
             if a != b:
                 return False
