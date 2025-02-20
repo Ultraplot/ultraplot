@@ -359,7 +359,6 @@ def test_colormap_parsing():
             d = np.sqrt((np.array(a(i)) - np.array(b(i))) ** 2).sum()
             if d >= threshold:
                 raise ValueError(f"Colormaps differ! Failed at {i} with {d}")
-            print(d)
 
     # Test if the colormaps are the same
     test_range(uplt.Colormap("blues"), blues)
