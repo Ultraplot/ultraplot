@@ -2497,10 +2497,9 @@ class PlotAxes(base.Axes):
                 resolved_cycle = None
 
         # Ignore cycle for single-column plotting
-        resolved_cycle = None if ncycle == 1 else resolved_cycle
-
         if resolved_cycle and resolved_cycle != self._active_cycle:
             self.set_prop_cycle(resolved_cycle)
+
 
         # Apply manual cycle properties
         if cycle_manually:
