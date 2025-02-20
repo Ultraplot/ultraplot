@@ -340,3 +340,32 @@ def test_label_settings():
     ax.format(xlabel="xlabel", ylabel="ylabel")
     ax.format(labelcolor="red")
     return fig
+
+
+def test_colormap_parsing():
+    """Test colormaps merging"""
+    reds = uplt.colormaps.get_cmap("reds")
+    blues = uplt.colormaps.get_cmap("blues")
+
+    # helper function to test specific values in the colormaps
+    # threshold is used due to rounding errors
+    def test_range(
+        a: uplt.Colormap,
+        b: uplt.Colormap,
+        threshold=1e-10,
+        ranges=[0.0, 1.0],
+    ):
+        for i in ranges:
+            d = np.sqrt((np.array(a(i)) - np.array(b(i))) ** 2).sum()
+            if d >= threshold:
+                raise ValueError(f"Colormaps differ! Failed at {i} with {d}")
+            print(d)
+
+    # Test if the colormaps are the same
+    test_range(uplt.Colormap("blues"), blues)
+    test_range(uplt.Colormap("reds"), reds)
+    # For joint colormaps, the lower value should be the lower of the first cmap and the highest should be the highest of the second cmap
+    test_range(uplt.Colormap("blues", "reds"), reds, ranges=[1.0])
+    # Note: the ranges should not match either of the original colormaps
+    with pytest.raises(ValueError):
+        test_range(uplt.Colormap("blues", "reds"), reds)
