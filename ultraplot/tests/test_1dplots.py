@@ -2,7 +2,6 @@
 """
 Test 1D plotting overrides.
 """
-from matplotlib.dates import WE
 import numpy as np
 import numpy.ma as ma
 import pandas as pd
