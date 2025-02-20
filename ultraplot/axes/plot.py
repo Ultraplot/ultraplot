@@ -2496,7 +2496,7 @@ class PlotAxes(base.Axes):
             case _:
                 resolved_cycle = None
 
-        # Ignore cycle for single-column plotting
+        # Ignore cycle for single-column plotting unless cycle is different
         if resolved_cycle and resolved_cycle != self._active_cycle:
             self.set_prop_cycle(resolved_cycle)
 
