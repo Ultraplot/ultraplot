@@ -498,7 +498,6 @@ def test_line_plot_cyclers():
     # Test cyclers separately
     cycle = uplt.Cycle(*cmaps)
     for idx in range(0, N):
-        print(idx)
         ax[2].plot(
             (data1[..., idx] + data2[..., idx]),
             cycle=cycle,
