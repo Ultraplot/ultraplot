@@ -2,6 +2,7 @@
 """
 Test 1D plotting overrides.
 """
+from matplotlib.dates import WE
 import numpy as np
 import numpy.ma as ma
 import pandas as pd
@@ -457,4 +458,53 @@ def test_norm_not_modified():
     right.pcolor(xe, ye, arr, cmap="viridis", norm=norm)
     assert norm.vmin == 0
     assert norm.vmax == 1
+    return fig
+
+
+@pytest.mark.mpl_image_compare
+def test_line_plot_cyclers():
+    # Sample data
+    M, N = 50, 10
+    state = np.random.RandomState(51423)
+    data1 = (state.rand(M, N) - 0.48).cumsum(axis=1).cumsum(axis=0)
+    data2 = (state.rand(M, N) - 0.48).cumsum(axis=1).cumsum(axis=0) * 1.5
+    data1 += state.rand(M, N)
+    data2 += state.rand(M, N)
+    data1 *= 2
+
+    cmaps = ("Blues", "Reds")
+    cycle = uplt.Cycle(*cmaps)
+
+    # Use property cycle for columns of 2D input data
+    fig, ax = uplt.subplots(ncols=3, sharey=True)
+
+    # Intention of subplots
+    ax[0].set_title("Property cycle")
+    ax[1].set_title("Joined cycle")
+    ax[2].set_title("Separate cycles")
+
+    ax[0].plot(
+        data1 + data2,
+        cycle="black",  # cycle from monochromatic colormap
+        cycle_kw={"ls": ("-", "--", "-.", ":")},
+    )
+
+    # Plot all dat with both cyclers on
+    # note: capitalization is done different here on purpose
+    ax[1].plot(
+        (data1 + data2),
+        cycle=cycle,
+    )
+
+    # Test cyclers separately
+    cycle = uplt.Cycle(*cmaps)
+    for idx in range(0, N):
+        print(idx)
+        ax[2].plot(
+            (data1[..., idx] + data2[..., idx]),
+            cycle=cycle,
+            cycle_kw={"N": N, "left": 0.3},
+        )
+
+    fig.format(xlabel="xlabel", ylabel="ylabel", suptitle="On-the-fly property cycles")
     return fig
