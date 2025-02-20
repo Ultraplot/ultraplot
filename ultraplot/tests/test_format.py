@@ -357,7 +357,7 @@ def test_colormap_parsing():
     ):
         for i in ranges:
             if not np.allclose(a(i), b(i)):
-                raise ValueError(f"Colormaps differ! Failed at {i} with {d}")
+                raise ValueError(f"Colormaps differ !")
 
     # Test if the colormaps are the same
     test_range(uplt.Colormap("blues"), blues)
