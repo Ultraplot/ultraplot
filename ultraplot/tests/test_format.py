@@ -356,8 +356,7 @@ def test_colormap_parsing():
         ranges=[0.0, 1.0],
     ):
         for i in ranges:
-            d = np.sqrt((np.array(a(i)) - np.array(b(i))) ** 2).sum()
-            if d >= threshold:
+            if not np.allclose(a(i), b(i)):
                 raise ValueError(f"Colormaps differ! Failed at {i} with {d}")
 
     # Test if the colormaps are the same
