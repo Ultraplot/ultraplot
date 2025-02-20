@@ -2500,7 +2500,6 @@ class PlotAxes(base.Axes):
         if resolved_cycle and resolved_cycle != self._active_cycle:
             self.set_prop_cycle(resolved_cycle)
 
-
         # Apply manual cycle properties
         if cycle_manually:
             current_prop = self._get_lines._cycler_items[self._get_lines._idx]
