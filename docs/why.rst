@@ -900,7 +900,7 @@ parent directories can be useful when working in projects with lots of subfolder
 UltraPlot also automatically registers colormaps, color cycles, colors, and font
 files stored in subfolders named ``cmaps``,  ``cycles``, ``colors``, and ``fonts``
 in the location given by :func:`~ultraplot.config.Configurator.user_folder` (this is usually
-``$HOME/.UltraPlot``), as well as loose subfolders named ``ultraplot_cmaps``,
+``$HOME/.ultraplot``), as well as loose subfolders named ``ultraplot_cmaps``,
 ``ultraplot_cycles``, ``ultraplot_colors``, and ``ultraplot_fonts`` in the current
 directory or an arbitrary parent directory. You can save colormaps and color cycles to
 :func:`~ultraplot.config.Configurator.user_folder` simply by passing ``save=True`` to
