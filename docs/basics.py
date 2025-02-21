@@ -24,7 +24,7 @@
 # Creating figures
 # ----------------
 #
-# ultraplot works by `subclassing
+# UltraPlot works by `subclassing
 # <https://docs.python.org/3/tutorial/classes.html#inheritance>`__
 # three fundamental matplotlib classes: :class:`ultraplot.figure.Figure` replaces
 # :class:`matplotlib.figure.Figure`, :class:`ultraplot.axes.Axes` replaces :class:`matplotlib.axes.Axes`,
@@ -44,11 +44,11 @@
 # %% [raw] raw_mimetype="text/restructuredtext"
 # .. note::
 #
-#    ultraplot changes the default :rcraw:`figure.facecolor`
+#    UltraPlot changes the default :rcraw:`figure.facecolor`
 #    so that the figure backgrounds shown by the `matplotlib backend
 #    <https://matplotlib.org/faq/usage_faq#what-is-a-backend>`__ are light gray
 #    (the :rcraw:`savefig.facecolor` applied to saved figures is still white).
-#    ultraplot also controls the appearance of figures in Jupyter notebooks
+#    UltraPlot also controls the appearance of figures in Jupyter notebooks
 #    using the new :rcraw:`inlineformat` setting, which is passed to
 #    `~ultraplot.config.config_inline_backend` on import. This
 #    imposes a higher-quality default `"inline" format
@@ -57,7 +57,7 @@
 #    ``InlineBackend.print_figure_kwargs``, ensuring that the figures you save
 #    look like the figures displayed by the backend.
 #
-#    ultraplot also changes the default :rcraw:`savefig.format`
+#    UltraPlot also changes the default :rcraw:`savefig.format`
 #    from PNG to PDF for the following reasons:
 #
 #        #. Vector graphic formats are infinitely scalable.
@@ -67,7 +67,7 @@
 #        #. The EPS format is outdated and does not support transparent graphic
 #           elements.
 #
-#    In case you *do* need a raster format like PNG, ultraplot increases the
+#    In case you *do* need a raster format like PNG, UltraPlot increases the
 #    default :rcraw:`savefig.dpi` to 1000 dots per inch, which is
 #    `recommended <https://www.pnas.org/page/authors/format>`__ by most journals
 #    as the minimum resolution for figures containing lines and text. See the
@@ -98,7 +98,7 @@ ax.plot(data, lw=2)
 # `ultraplot.axes.Axes`. To add subplots all at once, use
 # `ultraplot.figure.Figure.add_subplots` (or its shorthand,
 # `ultraplot.figure.Figure.subplots`). Note that under the hood, the top-level
-# ultraplot command `~ultraplot.ui.subplots` simply calls `~ultraplot.ui.figure`
+# UltraPlot command `~ultraplot.ui.subplots` simply calls `~ultraplot.ui.figure`
 # followed by `ultraplot.figure.Figure.add_subplots`.
 #
 # * With no arguments, `~ultraplot.figure.Figure.add_subplots` returns a subplot
@@ -135,7 +135,7 @@ ax.plot(data, lw=2)
 #
 # .. warning::
 #
-#    ultraplot employs :ref:`automatic axis sharing <ug_share>` by default. This lets
+#    UltraPlot employs :ref:`automatic axis sharing <ug_share>` by default. This lets
 #    subplots in the same row or column share the same axis limits, scales, ticks,
 #    and labels. This is often convenient, but may be annoying for some users. To
 #    keep this feature turned off, simply :ref:`change the default settings <ug_rc>`
@@ -232,7 +232,7 @@ fig.format(
 # -----------------
 #
 # If you create subplots all-at-once with e.g. `~ultraplot.ui.subplots`,
-# ultraplot returns a `~ultraplot.gridspec.SubplotGrid` of subplots. This list-like,
+# UltraPlot returns a `~ultraplot.gridspec.SubplotGrid` of subplots. This list-like,
 # array-like object provides some useful features and unifies the behavior of the
 # three possible return types used by `matplotlib.pyplot.subplots`:
 #
@@ -307,8 +307,8 @@ axs[0].plot((state.rand(50, 10) - 0.5).cumsum(axis=0), cycle="Grays_r", lw=2)
 # a python-style object-oriented interface with axes-level commands
 # like `matplotlib.axes.Axes.plot`, and a MATLAB-style `~matplotlib.pyplot` interface
 # with global commands like `matplotlib.pyplot.plot` that track the "current" axes.
-# ultraplot builds upon the python-style interface using the `ultraplot.axes.PlotAxes`
-# class. Since every axes used by ultraplot is a child of `~ultraplot.axes.PlotAxes`, we
+# UltraPlot builds upon the python-style interface using the `ultraplot.axes.PlotAxes`
+# class. Since every axes used by UltraPlot is a child of `~ultraplot.axes.PlotAxes`, we
 # are able to add features directly to the axes-level commands rather than relying
 # on a separate library of commands  (note that while some of these features may be
 # accessible via `~matplotlib.pyplot` commands, this is not officially supported).
@@ -368,7 +368,7 @@ fig.colorbar(m, loc="b", label="label")
 # that tracks current axes and provides global commands like
 # `matplotlib.pyplot.title`.
 #
-# ultraplot provides the ``format`` command as an
+# UltraPlot provides the ``format`` command as an
 # alternative "python-style" command for formatting a variety of plot elements.
 # While matplotlib's one-liner commands still work, ``format`` only needs to be
 # called once and tends to cut down on boilerplate code. You can call
@@ -477,7 +477,7 @@ axs.format(
 # :ref:`ultraplot settings <ug_rcultraplot>`. The matplotlib-specific settings are
 # stored in `~ultraplot.config.rc_matplotlib` (our name for `matplotlib.rcParams`) and
 # the ultraplot-specific settings are stored in `~ultraplot.config.rc_ultraplot`.
-# ultraplot also includes a :rcraw:`style` setting that can be used to
+# UltraPlot also includes a :rcraw:`style` setting that can be used to
 # switch between `matplotlib stylesheets
 # <https://matplotlib.org/stable/gallery/style_sheets/style_sheets_reference.html>`__.
 # See the :ref:`configuration section <ug_config>` for details.

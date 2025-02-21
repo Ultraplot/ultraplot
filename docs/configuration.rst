@@ -72,7 +72,7 @@ Matplotlib settings
 -------------------
 
 Matplotlib settings are natively stored in the `~matplotlib.rcParams`
-dictionary. ultraplot makes this dictionary available in the top-level namespace as
+dictionary. UltraPlot makes this dictionary available in the top-level namespace as
 `~ultraplot.config.rc_matplotlib`. All matplotlib settings can also be changed with
 `~ultraplot.config.rc`. Details on the matplotlib settings can be found on
 `this page <ug_rcmpl_>`_.
@@ -116,8 +116,8 @@ Here's a broad overview of the new settings:
 Meta-settings
 -------------
 
-Some ultraplot settings may be more accurately described as "meta-settings",
-as they change several matplotlib and ultraplot settings at once (note that settings
+Some UltraPlot settings may be more accurately described as "meta-settings",
+as they change several matplotlib and UltraPlot settings at once (note that settings
 are only synced when they are changed on the `~ultraplot.config.rc` object rather than
 the `~ultraplot.config.rc_ultraplot` and `~ultraplot.config.rc_matplotlib` dictionaries).
 Here's a broad overview of the "meta-settings":
@@ -154,7 +154,7 @@ Here's a broad overview of the "meta-settings":
 Table of settings
 -----------------
 
-A comprehensive table of the new ultraplot settings is shown below.
+A comprehensive table of the new UltraPlot settings is shown below.
 
 .. include:: _static/rctable.rst
 
@@ -163,9 +163,9 @@ A comprehensive table of the new ultraplot settings is shown below.
 The ultraplotrc file
 ------------------
 
-When you import ultraplot for the first time, a ``ultraplotrc`` file is generated with
+When you import UltraPlot for the first time, a ``ultraplotrc`` file is generated with
 all lines commented out. This file is just like `matplotlibrc <ug_mplrc_>`_,
-except it controls both matplotlib *and* ultraplot settings. The syntax is essentially
+except it controls both matplotlib *and* UltraPlot settings. The syntax is essentially
 the same as matplotlibrc, and the file path is very similar to matplotlibrc. On most
 platforms it is found in ``~/.ultraplot/ultraplotrc``, but a loose hidden file in the
 home directory named ``~/.ultraplotrc`` is also allowed (use

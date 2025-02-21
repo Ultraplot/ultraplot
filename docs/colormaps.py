@@ -31,15 +31,15 @@
 # Colormaps
 # =========
 #
-# ultraplot defines **continuous colormaps** as color palettes that sample some
+# UltraPlot defines **continuous colormaps** as color palettes that sample some
 # *continuous function* between two end colors. They are generally used
 # to encode data values on a pseudo-third dimension. They are implemented
-# in ultraplot with the `~ultraplot.colors.ContinuousColormap` and
+# in UltraPlot with the `~ultraplot.colors.ContinuousColormap` and
 # `~ultraplot.colors.PerceptualColormap` classes, which are
 # :ref:`subclassed from <ug_cmaps_new>`
 # `matplotlib.colors.LinearSegmentedColormap`.
 #
-# ultraplot :ref:`adds several features <why_colormaps_cycles>` to help you use
+# UltraPlot :ref:`adds several features <why_colormaps_cycles>` to help you use
 # colormaps effectively in your figures. This section documents the new registered
 # colormaps, explains how to make and modify colormaps, and shows how to apply them
 # to your plots.
@@ -51,7 +51,7 @@
 # Included colormaps
 # ------------------
 #
-# On import, ultraplot registers a few sample
+# On import, UltraPlot registers a few sample
 # :ref:`perceptually uniform colormaps <ug_perceptual>`, plus several
 # colormaps from other online data viz projects. Use `~ultraplot.demos.show_cmaps`
 # to generate a table of registered colormaps. The figure is broken down into
@@ -60,7 +60,7 @@
 # * "User" colormaps created with `~ultraplot.constructor.Colormap`
 #   or loaded from `~ultraplot.config.Configurator.user_folder`.
 # * `Matplotlib <matplotlib_>`_ and `seaborn <seaborn_>`_ original colormaps.
-# * ultraplot original :ref:`perceptually uniform colormaps <ug_perceptual>`.
+# * UltraPlot original :ref:`perceptually uniform colormaps <ug_perceptual>`.
 # * The `cmOcean <cmocean_>`_ colormaps, designed for
 #   oceanographic data but useful for everyone.
 # * Fabio Crameri's `"scientific colour maps" <fabio_>`_.
@@ -156,7 +156,7 @@ for cmaps in (("magma", "rocket"), ("fire", "dusk")):
 # Making colormaps
 # ----------------
 #
-# ultraplot includes tools for merging colormaps, modifying existing colormaps,
+# UltraPlot includes tools for merging colormaps, modifying existing colormaps,
 # making new :ref:`perceptually uniform colormaps <ug_perceptual>`, and
 # saving colormaps for future use. Most of these features can be accessed via the
 # `~ultraplot.constructor.Colormap` :ref:`constructor function <why_constructor>`.
@@ -314,7 +314,7 @@ for ax, cmap, title in zip(axs, (cmap1, cmap2, cmap3), (title1, title2, title3))
 # Modifying colormaps
 # -------------------
 #
-# ultraplot lets you create modified versions of *existing* colormaps
+# UltraPlot lets you create modified versions of *existing* colormaps
 # using the `~ultraplot.constructor.Colormap` constructor function and the
 # new `~ultraplot.colors.ContinuousColormap` and
 # `~ultraplot.colors.DiscreteColormap` classes, which replace the native
@@ -333,7 +333,7 @@ for ax, cmap, title in zip(axs, (cmap1, cmap2, cmap3), (title1, title2, title3))
 #   `cut` is negative) to expand the "neutral" region of the colormap.
 # * To rotate a cyclic colormap,  pass `shift` to
 #   `~ultraplot.constructor.Colormap`. This calls the
-#   `~ultraplot.colors.ContinuousColormap.shifted` method. ultraplot ensures
+#   `~ultraplot.colors.ContinuousColormap.shifted` method. UltraPlot ensures
 #   the colors at the ends of "shifted" colormaps are *distinct* so that
 #   levels never blur together.
 # * To change the opacity of a colormap or add an opacity *gradation*, pass

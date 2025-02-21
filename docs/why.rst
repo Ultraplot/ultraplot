@@ -244,7 +244,7 @@ column boundaries.
 Changes
 -------
 
-By default, ultraplot fixes the physical dimensions of a *reference subplot* rather
+By default, UltraPlot fixes the physical dimensions of a *reference subplot* rather
 than the figure. The reference subplot dimensions are controlled with the `refwidth`,
 `refheight`, and `refaspect` `~ultraplot.figure.Figure` keywords, with a default
 behavior of ``refaspect=1`` and ``refwidth=2.5`` (inches). If the `data aspect ratio
@@ -260,7 +260,7 @@ when preparing figures for submission to a publication. To request figure
 dimensions suitable for submission to a :ref:`specific publication <journal_table>`,
 use the `journal` keyword.
 
-By default, ultraplot also uses :ref:`its own tight layout algorithm <ug_tight>` --
+By default, UltraPlot also uses :ref:`its own tight layout algorithm <ug_tight>` --
 preventing text labels from overlapping with subplots. This algorithm works with the
 `ultraplot.gridspec.GridSpec` subclass rather than `matplotlib.gridspec.GridSpec`, which
 provides the following advantages:
@@ -632,7 +632,7 @@ objects, it updates the axis tick labels, axis labels, subplot title, and
 colorbar and legend labels from the metadata. For `~pint.Quantity` arrays (including
 `~pint.Quantity` those stored inside `~xarray.DataArray` containers), a unit string
 is generated from the `pint.Unit` according to the :rcraw:`unitformat` setting
-(note ultraplot also automatically calls `pint.UnitRegistry.setup_matplotlib`
+(note UltraPlot also automatically calls `pint.UnitRegistry.setup_matplotlib`
 whenever a `~pint.Quantity` is used for *x* and *y* coordinates and removes the
 units from *z* coordinates to avoid the stripped-units warning message).
 These features can be disabled by setting :rcraw:`autoformat` to ``False``
@@ -686,7 +686,7 @@ Changes
 ultraplot adds new colormaps, colors, and fonts to help you make more
 aesthetically pleasing figures.
 
-* ultraplot adds colormaps from the `seaborn <seacolor_>`_, `cmocean <cmocean_>`_,
+* UltraPlot adds colormaps from the `seaborn <seacolor_>`_, `cmocean <cmocean_>`_,
   `SciVisColor <sciviscolor_>`_, and `Scientific Colour Maps <fabio_>`_ projects.
   It also defines a few default :ref:`perceptually uniform colormaps <ug_perceptual>`
   and includes a `~ultraplot.colors.PerceptualColormap` class for generating
@@ -694,13 +694,13 @@ aesthetically pleasing figures.
   :ref:`color cycles <ug_cycles_included>` can be shown using
   `~ultraplot.demos.show_cmaps` and `~ultraplot.demos.show_cycles`.
   Colormaps like ``'jet'`` can still be accessed, but this is discouraged.
-* ultraplot adds colors from the `open color <opencolor_>`_ project and adds
+* UltraPlot adds colors from the `open color <opencolor_>`_ project and adds
   `XKCD color survey <xkcd_>`_ names without the ``'xkcd:'`` prefix after
   *filtering* them to exclude perceptually-similar colors and *normalizing* the
   naming pattern to make them more self-consistent. Old X11/CSS4 colors can still be
   accessed, but this is discouraged. A :ref:`table of color names <ug_colors_included>`
   can be shown using `~ultraplot.demos.show_colors`.
-* ultraplot comes packaged with several additional :ref:`sans-serif fonts
+* UltraPlot comes packaged with several additional :ref:`sans-serif fonts
   <ug_fonts_included>` and the entire `TeX Gyre <texgyre_>`_ font series. TeX Gyre
   consists of open-source fonts designed to resemble more popular, commonly-used fonts
   like Helvetica and Century. They are used as the new default serif, sans-serif,
@@ -745,7 +745,7 @@ Changes
 
 ultraplot tries to make it easy to manipulate colormaps and property cycles.
 
-* All colormaps in ultraplot are replaced with the `~ultraplot.colors.ContinuousColormap`
+* All colormaps in UltraPlot are replaced with the `~ultraplot.colors.ContinuousColormap`
   and `~ultraplot.colors.DiscreteColormap` subclasses of
   `~matplotlib.colors.LinearSegmentedColormap` and `~matplotlib.colors.ListedColormap`.
   These classes include several useful features leveraged by the
@@ -807,7 +807,7 @@ ultraplot uses physical units for the `~ultraplot.gridspec.GridSpec` keywords
 `innerpad`. The default unit (assumed when a numeric argument is passed) is
 `em-widths <https://en.wikipedia.org/wiki/Em_(typography)>`__. Em-widths are
 particularly appropriate for this context, as plot text can be a useful "ruler"
-when figuring out the amount of space you need. ultraplot also permits arbitrary
+when figuring out the amount of space you need. UltraPlot also permits arbitrary
 string units for these keywords, for the `~ultraplot.figure.Figure` keywords
 `figsize`, `figwidth`, `figheight`, `refwidth`, and `refheight`, and in a
 few other places. This is powered by the physical units engine `~ultraplot.utils.units`.
@@ -866,7 +866,7 @@ Links
   see :ref:`this page <ug_rc>`.
 * For more on changing settings,
   see :ref:`this page <ug_config>`.
-* For more on ultraplot settings,
+* For more on UltraPlot settings,
   see :ref:`this page <ug_rcultraplot>`.
 * For more on meta settings,
   see :ref:`this page <ug_rcmeta>`.

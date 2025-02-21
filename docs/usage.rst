@@ -35,7 +35,7 @@ classes, check out `this guide <https://matplotlib.org/stable/api/index.html>`__
 Directly working with matplotlib classes tends to be more clear and concise than
 `~matplotlib.pyplot`, makes things easier when working with multiple figures and axes,
 and is certainly more "`pythonic <https://www.python.org/dev/peps/pep-0020/>`__".
-Therefore, although many ultraplot features may still work, we do not officially
+Therefore, although many UltraPlot features may still work, we do not officially
 support the `~matplotlib.pyplot` interface.
 
 .. _usage_import:
@@ -43,18 +43,18 @@ support the `~matplotlib.pyplot` interface.
 Importing ultraplot
 =================
 
-Importing ultraplot immediately adds several
+Importing UltraPlot immediately adds several
 new :ref:`colormaps <ug_cmaps>`, :ref:`property cycles <ug_cycles>`,
 :ref:`color names <ug_colors>`, and :ref:`fonts <ug_fonts>` to matplotlib.
 If you are only interested in these features, you may want to
-import ultraplot at the top of your script and do nothing else!
-We recommend importing ultraplot as follows:
+import UltraPlot at the top of your script and do nothing else!
+We recommend importing UltraPlot as follows:
 
 .. code-block:: python
 
    import ultraplot as uplt
 
-This differentiates ultraplot from the usual ``plt`` abbreviation reserved for
+This differentiates UltraPlot from the usual ``plt`` abbreviation reserved for
 the `~matplotlib.pyplot` module.
 
 .. _usage_classes:
@@ -62,7 +62,7 @@ the `~matplotlib.pyplot` module.
 Figure and axes classes
 =======================
 
-Creating figures with ultraplot is very similar to
+Creating figures with UltraPlot is very similar to
 matplotlib. You can either create the figure and
 all of its subplots at once:
 
@@ -93,10 +93,10 @@ and images). All sizing arguments take :ref:`arbitrary units <ug_units>`,
 including metric units like ``cm`` and ``mm``.
 
 Instead of the native `matplotlib.figure.Figure` and `matplotlib.axes.Axes`
-classes, ultraplot uses the `ultraplot.figure.Figure`, `ultraplot.axes.Axes`, and
-`ultraplot.axes.PlotAxes` subclasses. ultraplot figures are saved with
+classes, UltraPlot uses the `ultraplot.figure.Figure`, `ultraplot.axes.Axes`, and
+`ultraplot.axes.PlotAxes` subclasses. UltraPlot figures are saved with
 `~ultraplot.figure.Figure.save` or `~matplotlib.figure.Figure.savefig`,
-and ultraplot axes belong to one of the following three child classes:
+and UltraPlot axes belong to one of the following three child classes:
 
 * `ultraplot.axes.CartesianAxes`:
   For ordinary plots with *x* and *y* coordinates.
@@ -121,7 +121,7 @@ functionality to existing figure and axes methods.
   commands draw colorbars or legends along the edges of figures (aligned by subplot
   boundaries). These commands considerably :ref:`simplify <ug_guides>` the
   process of drawing colorbars and legends.
-* The `ultraplot.axes.PlotAxes` subclass (used for all ultraplot axes)
+* The `ultraplot.axes.PlotAxes` subclass (used for all UltraPlot axes)
   adds many, many useful features to virtually every plotting command
   (including `~ultraplot.axes.PlotAxes.plot`, `~ultraplot.axes.PlotAxes.scatter`,
   `~ultraplot.axes.PlotAxes.bar`, `~ultraplot.axes.PlotAxes.area`,
@@ -164,7 +164,7 @@ Additional features
 ===================
 
 Outside of the features provided by the `ultraplot.figure.Figure` and
-`ultraplot.axes.Axes` subclasses, ultraplot includes several useful
+`ultraplot.axes.Axes` subclasses, UltraPlot includes several useful
 classes and :ref:`constructor functions <why_constructor>`.
 
 * The `~ultraplot.constructor.Colormap` and `~ultraplot.constructor.Cycle`

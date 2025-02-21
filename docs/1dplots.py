@@ -24,7 +24,7 @@
 # 1D plotting commands
 # ====================
 #
-# ultraplot adds :ref:`several new features <why_plotting>` to matplotlib's
+# UltraPlot adds :ref:`several new features <why_plotting>` to matplotlib's
 # plotting commands using the intermediate `~ultraplot.axes.PlotAxes` class.
 # For the most part, these additions represent a *superset* of matplotlib -- if
 # you are not interested, you can use the plotting commands just like you would
@@ -54,7 +54,7 @@
 # .. note::
 #
 #    By default, when choosing the *x* or *y* axis limits,
-#    ultraplot ignores out-of-bounds data along the other axis if it was explicitly
+#    UltraPlot ignores out-of-bounds data along the other axis if it was explicitly
 #    fixed by `~matplotlib.axes.Axes.set_xlim` or `~matplotlib.axes.Axes.set_ylim` (or,
 #    equivalently, by passing `xlim` or `ylim` to `ultraplot.axes.CartesianAxes.format`).
 #    This can be useful if you wish to restrict the view along a "dependent" variable
@@ -157,7 +157,7 @@ fig.format(
 #    ``ax.plot(y='y', data=dataset)`` are translated to ``ax.plot(dataset['y'])``.
 #    This is the preferred input style for most `seaborn`_ plotting commands.
 #    Also, if you pass a `pint.Quantity` or `~xarray.DataArray`
-#    containing a `pint.Quantity`, ultraplot will automatically call
+#    containing a `pint.Quantity`, UltraPlot will automatically call
 #    `~pint.UnitRegistry.setup_matplotlib` so that the axes become unit-aware.
 
 # %%
@@ -510,7 +510,7 @@ ax.colorbar(m, loc="b", locator=2, label="parametric coordinate")
 #    expressed with the `width` keyword. Note that bar widths can also be passed
 #    as a third positional argument.
 #    Additionally, matplotlib bar widths are always expressed in data units,
-#    while ultraplot bar widths are expressed in step size-relative units by
+#    while UltraPlot bar widths are expressed in step size-relative units by
 #    default. For example, ``width=1`` with a dependent coordinate step
 #    size of ``2`` fills 100% of the space between each bar rather than 50%. This
 #    can be disabled by passing ``absolute_width=True`` to `~ultraplot.axes.Axes.bar`

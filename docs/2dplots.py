@@ -24,7 +24,7 @@
 # 2D plotting commands
 # ====================
 #
-# ultraplot adds :ref:`several new features <why_plotting>` to matplotlib's
+# UltraPlot adds :ref:`several new features <why_plotting>` to matplotlib's
 # plotting commands using the intermediate `~ultraplot.axes.PlotAxes` class.
 # For the most part, these additions represent a *superset* of matplotlib -- if
 # you are not interested, you can use the plotting commands just like you would
@@ -34,7 +34,7 @@
 #
 # .. important::
 #
-#    By default, ultraplot automatically adjusts the width of
+#    By default, UltraPlot automatically adjusts the width of
 #    `~ultraplot.axes.PlotAxes.contourf` and `~ultraplot.axes.PlotAxes.pcolor` edges
 #    to eliminate the appearance of `"white lines" in saved vector graphic files
 #    <https://github.com/jklymak/contourfIssues>`__. However, this can significantly
@@ -67,7 +67,7 @@
 # .. note::
 #
 #    By default, when choosing the colormap :ref:`normalization
-#    range <ug_apply_cmap>`, ultraplot ignores data outside the *x* or *y* axis
+#    range <ug_apply_cmap>`, UltraPlot ignores data outside the *x* or *y* axis
 #    limits if they were previously fixed by `~matplotlib.axes.Axes.set_xlim` or
 #    `~matplotlib.axes.Axes.set_ylim` (or, equivalently, by passing `xlim` or
 #    `ylim` to `ultraplot.axes.CartesianAxes.format`). This can be useful if you
@@ -180,7 +180,7 @@ fig.format(
 #    ``ax.plot(y='y', data=dataset)`` are translated to ``ax.plot(dataset['y'])``.
 #    This is the preferred input style for most `seaborn`_ plotting commands.
 #    Also, if you pass a `pint.Quantity` or `~xarray.DataArray`
-#    containing a `pint.Quantity`, ultraplot will automatically call
+#    containing a `pint.Quantity`, UltraPlot will automatically call
 #    `~pint.UnitRegistry.setup_matplotlib` so that the axes become unit-aware.
 
 # %%
@@ -252,7 +252,7 @@ ax.format(xtickminor=False, yformatter="%b", ytickminor=False)
 # You can also create on-the-fly "qualitative" `~ultraplot.colors.DiscreteColormap`\ s
 # by passing lists of colors to the keyword `c`, `color`, or `colors`.
 #
-# ultraplot defines :ref:`global defaults <ug_rc>` for four different colormap
+# UltraPlot defines :ref:`global defaults <ug_rc>` for four different colormap
 # types: :ref:`sequential <ug_cmaps_included>` (setting :rcraw:`cmap.sequential`),
 # :ref:`diverging <ug_cmaps_included>` (setting :rcraw:`cmap.diverging`),
 # :ref:`cyclic <ug_cmaps_included>` (setting :rcraw:`cmap.cyclic`),
@@ -347,7 +347,7 @@ ax.pcolormesh(data, cmap="magma", norm="log", colorbar="b")
 # Special normalizers
 # -------------------
 #
-# ultraplot includes two new :ref:`"continuous" normalizers <ug_norm>`. The
+# UltraPlot includes two new :ref:`"continuous" normalizers <ug_norm>`. The
 # `~ultraplot.colors.SegmentedNorm` normalizer provides even color gradations with respect
 # to index for an arbitrary monotonically increasing or decreasing list of levels. This
 # is automatically applied if you pass unevenly spaced `levels` to a plotting command,
@@ -429,7 +429,7 @@ for data, mode, fair in zip(
 # Discrete levels
 # ---------------
 #
-# By default, ultraplot uses `~ultraplot.colors.DiscreteNorm` to "discretize"
+# By default, UltraPlot uses `~ultraplot.colors.DiscreteNorm` to "discretize"
 # the possible colormap colors for contour and pseudocolor `~ultraplot.axes.PlotAxes`
 # commands (e.g., `~ultraplot.axes.PlotAxes.contourf`, `~ultraplot.axes.PlotAxes.pcolor`).
 # This is analogous to `matplotlib.colors.BoundaryNorm`, except
@@ -529,7 +529,7 @@ for i, extend in enumerate(("min", "max", "neither", "both")):
 #
 # By default, colormaps are normalized to span from roughly the minimum
 # data value to the maximum data value. However in the presence of outliers,
-# this is not desirable. ultraplot adds the `robust` keyword to change this
+# this is not desirable. UltraPlot adds the `robust` keyword to change this
 # behavior, inspired by the `xarray keyword
 # <http://xarray.pydata.org/en/stable/user-guide/plotting.html#robust>`__
 # of the same name. Passing ``robust=True`` to a `~ultraplot.axes.PlotAxes`
@@ -543,7 +543,7 @@ for i, extend in enumerate(("min", "max", "neither", "both")):
 #
 # Additionally, `similar to xarray
 # <http://xarray.pydata.org/en/stable/user-guide/plotting.html#colormaps>`__,
-# ultraplot can automatically detect "diverging" datasets. By default,
+# UltraPlot can automatically detect "diverging" datasets. By default,
 # the 2D `~ultraplot.axes.PlotAxes` commands will apply the diverging colormap
 # :rc:`cmap.diverging` (rather than :rc:`cmap.sequential`) and the diverging
 # normalizer `~ultraplot.colors.DivergingNorm` (rather than `~matplotlib.colors.Normalize`

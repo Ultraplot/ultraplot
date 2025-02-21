@@ -50,13 +50,13 @@
 #
 # .. important::
 #
-#    ultraplot adds panel axes by allocating new rows and columns in the
+#    UltraPlot adds panel axes by allocating new rows and columns in the
 #    `~ultraplot.gridspec.GridSpec` rather than "stealing" space from the parent
 #    subplot (note that subsequently indexing the `~ultraplot.gridspec.GridSpec` will
 #    ignore the slots allocated for panels). This approach means that panels
 #    :ref:`do not affect subplot aspect ratios <ug_autosize>` and
 #    :ref:`do not affect subplot spacing <ug_tight>`, which lets
-#    ultraplot avoid relying on complicated `"constrained layout" algorithms
+#    UltraPlot avoid relying on complicated `"constrained layout" algorithms
 #    <https://matplotlib.org/stable/tutorials/intermediate/constrainedlayout_guide.html>`__
 #    and tends to improve the appearance of figures with even the
 #    most complex arrangements of subplots and panels.
