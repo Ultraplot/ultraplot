@@ -75,7 +75,7 @@ fig, axs = uplt.show_colors()
 # The ``shift`` and ``scale`` functions shift or scale the
 # hue, saturation, or luminance by the input value -- for example,
 # ``uplt.scale_luminance('color', 1.2)`` makes ``'color'`` 20% brighter. These
-# are useful for creating color gradations outside of :class::class:`~ultraplot.colors.Cycle`
+# are useful for creating color gradations outside of :class:`~ultraplot.colors.Cycle`
 # or if you simply spot a color you like and want to make it a bit
 # brighter, less vibrant, etc.
 

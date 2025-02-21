@@ -217,7 +217,7 @@ ax.plot(df, cycle=cycle, lw=3, legend="t", legend_kw={"frame": False})
 # on-the-fly and use different property cycles for different plot elements.
 # You can do so using the `cycle` and `cycle_kw` keywords, available
 # with most 1D `~ultraplot.axes.PlotAxes` commands. `cycle` and `cycle_kw` are
-# passed to the :class::class:`~ultraplot.constructor.Cycle` :ref:`constructor function
+# passed to the :class:`~ultraplot.constructor.Cycle` :ref:`constructor function
 # <why_constructor>`, and the resulting property cycle is used for the plot. You
 # can specify `cycle` once with 3D input data (in which case each column is
 # plotted in succession according to the property cycle) or call a plotting
@@ -343,7 +343,7 @@ fig.format(suptitle="Line plots demo", xlabel="xlabel", ylabel="ylabel")
 # using the `cycle` keyword argument, and unlike matplotlib it can include
 # properties like `marker` and `markersize`. The colormap `cmap` and normalizer
 # `norm` used with the optional `c` color array are now passed through the
-# :class::class:`~ultraplot.constructor.Colormap` and :class::class:`~ultraplot.constructor.Norm` constructor
+# :class:`~ultraplot.constructor.Colormap` and :class:`~ultraplot.constructor.Norm` constructor
 # functions.
 
 # .. important::

@@ -36,7 +36,7 @@
 # change the tick locator using the :func:`~ultraplot.axes.CartesianAxes.format` keyword
 # arguments `xlocator`, `ylocator`, `xminorlocator`, and `yminorlocator` (or their
 # aliases, `xticks`, `yticks`, `xminorticks`, and `yminorticks`). This is powered by
-# the :class::class:`~ultraplot.constructor.Locator` :ref:`constructor function <why_constructor>`.
+# the :class:`~ultraplot.constructor.Locator` :ref:`constructor function <why_constructor>`.
 #
 # You can use these keyword arguments to apply built-in matplotlib
 # :class:`~matplotlib.ticker.Locator`\ s by their "registered" names
@@ -110,7 +110,7 @@ uplt.rc.reset()
 # convert floating point numbers to nicely-formatted tick labels. In UltraPlot, you can
 # change the tick formatter using the :func:`~ultraplot.axes.CartesianAxes.format` keyword
 # arguments `xformatter` and `yformatter` (or their aliases, `xticklabels` and
-# `yticklabels`). This is powered by the :class::class:`~ultraplot.constructor.Formatter`
+# `yticklabels`). This is powered by the :class:`~ultraplot.constructor.Formatter`
 # :ref:`constructor function <why_constructor>`.
 #
 # You can use these keyword arguments to apply built-in matplotlib
@@ -257,8 +257,8 @@ uplt.rc.reset()
 # containing ``'%'`` (e.g. ``xformatter='%Y-%m-%d'``). By default, *x* axis datetime
 # axis labels are rotated 90 degrees, like in `pandas`_. This can be disabled by
 # passing ``xrotation=0`` to :func:`~ultraplot.axes.CartesianAxes.format` or by setting
-# :rcraw:`formatter.timerotation` to ``0``. See :class::class:`~ultraplot.constructor.Locator`
-# and :class::class:`~ultraplot.constructor.Formatter` for details.
+# :rcraw:`formatter.timerotation` to ``0``. See :class:`~ultraplot.constructor.Locator`
+# and :class:`~ultraplot.constructor.Formatter` for details.
 
 # %%
 import ultraplot as uplt
@@ -383,15 +383,15 @@ uplt.rc.reset()
 # "Axis scales" like ``'linear'`` and ``'log'`` control the *x* and *y* axis
 # coordinate system. To change the axis scale, pass e.g. ``xscale='log'`` or
 # ``yscale='log'`` to :func:`~ultraplot.axes.Axes.format`. This is powered by the
-# :class::class:`~ultraplot.constructor.Scale` :ref:`constructor function <why_constructor>`.
+# :class:`~ultraplot.constructor.Scale` :ref:`constructor function <why_constructor>`.
 # UltraPlot makes several changes to the axis scale API:
 #
 # * The `~ultraplot.ticker.AutoFormatter` formatter is now used for all axis scales
 #   by default, including ``'log'`` and ``'symlog'``. Matplotlib's behavior can
 #   be restored by passing e.g. ``xformatter='log'`` or ``yformatter='log'`` to
 #   :func:`~ultraplot.axes.CartesianAxes.format`.
-# * To make its behavior consistent with :class::class:`~ultraplot.constructor.Locator` and
-#   :class::class:`~ultraplot.constructor.Formatter`, the :class::class:`~ultraplot.constructor.Scale`
+# * To make its behavior consistent with :class:`~ultraplot.constructor.Locator` and
+#   :class:`~ultraplot.constructor.Formatter`, the :class:`~ultraplot.constructor.Scale`
 #   constructor function returns instances of `~matplotlib.scale.ScaleBase`,
 #   and :func:`~matplotlib.axes.Axes.set_xscale` and
 #   :func:`~matplotlib.axes.Axes.set_yscale` now accept these class instances in
