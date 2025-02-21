@@ -55,7 +55,7 @@
 #
 #    By default, when choosing the *x* or *y* axis limits,
 #    UltraPlot ignores out-of-bounds data along the other axis if it was explicitly
-#    fixed by :func:`~matplotlib.axes.Axes.set_xlim` or :func::func::func:`~matplotlib.axes.Axes.set_ylim` (or,
+#    fixed by :func:`~matplotlib.axes.Axes.set_xlim` or :func:`~matplotlib.axes.Axes.set_ylim` (or,
 #    equivalently, by passing `xlim` or `ylim` to :func:`ultraplot.axes.CartesianAxes.format`).
 #    This can be useful if you wish to restrict the view along a "dependent" variable
 #    axis within a large dataset. To disable this feature, pass ``inbounds=False`` to
