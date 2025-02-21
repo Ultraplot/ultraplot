@@ -18,4 +18,4 @@ repos:
     rev: 0.6.2
     hooks:
       - id: pydoclint
-        args: [--style=numpy]
+        args: [--style=numpy, --arg-type-hints-in-signature=False]
