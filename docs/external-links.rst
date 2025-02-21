@@ -74,7 +74,7 @@ Use these resources to make colormaps from scratch. Then import
 them into UltraPlot by adding files to the ``.UltraPlot/cmaps`` folder
 (see :ref:`this section <ug_cmaps_dl>` for details).
 
-* `The UltraPlot API <https://UltraPlot.readthedocs.io/en/latest/colormaps.html#Making-new-colormaps>`__ -
+* `The UltraPlot API <https://ultraplot.readthedocs.io/en/latest/colormaps.html#Making-new-colormaps>`__ -
   Namely, the :class:`~ultraplot.colors.ContinuousColormap` class and
   :class:`~ultraplot.constructor.Colormap` constructor function.
 * `HCL Wizard <http://hclwizard.org:64230/hclwizard/>`__ -
