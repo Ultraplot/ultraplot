@@ -35,7 +35,7 @@
 # this can be disabled by passing ``share=False``. To generate "stacked" panels,
 # call :func:`~ultraplot.axes.Axes.panel_axes` more than once. To generate several
 # panels at once, call :func:`~ultraplot.gridspec.SubplotGrid.panel_axes` on
-# the `~ultraplot.gridspec.SubplotGrid` returned by :func:`~ultraplot.figure.Figure.subplots`.
+# the :class:`~ultraplot.gridspec.SubplotGrid` returned by :func:`~ultraplot.figure.Figure.subplots`.
 #
 # In the first example below, the distances are automatically adjusted by the
 # :ref:`tight layout algorithm <ug_tight>` according to the `pad` keyword
@@ -155,7 +155,7 @@ for cbarloc, ploc in ("rb", "br"):
 # <https://matplotlib.org/stable/gallery/subplots_axes_and_figures/zoom_inset_axes.html>`__
 # can be generated with the :func:`~ultraplot.axes.Axes.inset_axes` command (or its
 # shorthand, :func:`~ultraplot.axes.Axes.inset`). To generate several insets at once, call
-# :func:`~ultraplot.gridspec.SubplotGrid.inset_axes` on the `~ultraplot.gridspec.SubplotGrid`
+# :func:`~ultraplot.gridspec.SubplotGrid.inset_axes` on the :class:`~ultraplot.gridspec.SubplotGrid`
 # returned by :func:`~ultraplot.figure.Figure.subplots`. By default, inset axes have the
 # same projection as the parent axes, but you can also request a :ref:`different
 # projection <ug_proj>` (e.g., ``ax.inset_axes(bounds, proj='polar')``). When

@@ -75,7 +75,7 @@ them into UltraPlot by adding files to the ``.UltraPlot/cmaps`` folder
 (see :ref:`this section <ug_cmaps_dl>` for details).
 
 * `The UltraPlot API <https://UltraPlot.readthedocs.io/en/latest/colormaps.html#Making-new-colormaps>`__ -
-  Namely, the `~ultraplot.colors.ContinuousColormap` class and
+  Namely, the :class:`~ultraplot.colors.ContinuousColormap` class and
   :class::class:`~ultraplot.constructor.Colormap` constructor function.
 * `HCL Wizard <http://hclwizard.org:64230/hclwizard/>`__ -
   An advanced interface for designing perceptually uniform colormaps,
@@ -101,7 +101,7 @@ them into UltraPlot by adding files to the ``.UltraPlot/cycles`` folder
 (see :ref:`this section <ug_cycles_dl>` for details).
 
 * `The UltraPlot API <https://UltraPlot.readthedocs.io/en/latest/cycles.html#Making-new-color-cycles>`__ -
-  Namely, the `~ultraplot.colors.DiscreteColormap` class and
+  Namely, the :class:`~ultraplot.colors.DiscreteColormap` class and
   :class:`~ultraplot.constructor.Cycle` constructor function.
 * `i want hue <http://medialab.github.io/iwanthue/>`__ -
   An advanced interface for generating perceptually distinct color sets

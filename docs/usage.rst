@@ -25,7 +25,7 @@ Background
 
 UltraPlot is an object-oriented matplotlib wrapper. The "wrapper" part means
 that UltraPlot's features are largely a *superset* of matplotlib.  You can use
-plotting commands like `~matplotlib.axes.Axes.plot`, `~matplotlib.axes.Axes.scatter`,
+plotting commands like :func:`~matplotlib.axes.Axes.plot`, `~matplotlib.axes.Axes.scatter`,
 `~matplotlib.axes.Axes.contour`, and `~matplotlib.axes.Axes.pcolor` like you always
 have. The "object-oriented" part means that UltraPlot's features are implemented with
 *subclasses* of the :class:`~matplotlib.figure.Figure` and :class:`~matplotlib.axes.Axes` classes.
@@ -172,8 +172,8 @@ classes and :ref:`constructor functions <why_constructor>`.
   and :ref:`merge <ug_cmaps_merge>` existing colormaps and color
   cycles. It can also :ref:`make new colormaps <ug_cmaps_new>`
   and :ref:`color cycles <ug_cycles_new>` from scratch.
-* The `~ultraplot.colors.ContinuousColormap` and
-  `~ultraplot.colors.DiscreteColormap` subclasses replace the default matplotlib
+* The :class:`~ultraplot.colors.ContinuousColormap` and
+  :class:`~ultraplot.colors.DiscreteColormap` subclasses replace the default matplotlib
   colormap classes and add several methods. The new
   :class:`~ultraplot.colors.PerceptualColormap` class is used to make
   colormaps with :ref:`perceptually uniform transitions <ug_perceptual>`.

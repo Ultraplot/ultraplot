@@ -23,12 +23,12 @@
 # interpolation between these colors may not make sense. Generally, color cycles are
 # used with distinct plot elements like lines and bars. Occasionally,
 # they are used with categorical data as "qualitative" colormaps. UltraPlot's
-# color cycles are registered as `~ultraplot.colors.DiscreteColormap`\ s,
+# color cycles are registered as :class:`~ultraplot.colors.DiscreteColormap`\ s,
 # and can be easily converted into `property cyclers
 # <https://matplotlib.org/stable/tutorials/intermediate/color_cycle.html>`__
 # for use with distinct plot elements using the :class:`~ultraplot.constructor.Cycle`
 # constructor function. :class:`~ultraplot.constructor.Cycle` can also
-# :ref:`extract colors <ug_cycles_new>` from `~ultraplot.colors.ContinuousColormap`\ s.
+# :ref:`extract colors <ug_cycles_new>` from :class:`~ultraplot.colors.ContinuousColormap`\ s.
 #
 # UltraPlot :ref:`adds several features <why_colormaps_cycles>` to help you use color
 # cycles effectively in your figures. This section documents the new registered
@@ -67,7 +67,7 @@ fig, axs = uplt.show_cycles(rasterized=True)
 # color cycle on-the-fly, whether plotting with successive calls to
 # :class:`~ultraplot.axes.PlotAxes` commands or a single call using 2D array(s) (see
 # the :ref:`1D plotting section <ug_1dstd>`). To change the global property
-# cycler, pass a `~ultraplot.colors.DiscreteColormap` or cycle name
+# cycler, pass a :class:`~ultraplot.colors.DiscreteColormap` or cycle name
 # to :rcraw:`cycle` or pass the result of :class:`~ultraplot.constructor.Cycle`
 # to :rcraw:`axes.prop_cycle` (see the :ref:`configuration guide <ug_config>`).
 
@@ -119,9 +119,9 @@ for i in range(data.shape[1]):
 # section <ug_apply_cycle>`).
 
 # Positional arguments passed to :class:`~ultraplot.constructor.Cycle` are interpreted
-# by the :class::class:`~ultraplot.constructor.Colormap` constructor function. If the result
-# is a `~ultraplot.colors.DiscreteColormap`, those colors are used for the resulting
-# :class:`~cycler.Cycler`. If the result is a `~ultraplot.colors.ContinuousColormap`, the
+# by the :class:`~ultraplot.constructor.Colormap` constructor function. If the result
+# is a :class:`~ultraplot.colors.DiscreteColormap`, those colors are used for the resulting
+# :class:`~cycler.Cycler`. If the result is a :class:`~ultraplot.colors.ContinuousColormap`, the
 # colormap is sampled at `N` discrete values -- for example, ``uplt.Cycle('Blues', 5)``
 # selects 5 evenly-spaced values. When building color cycles on-the-fly, for example
 # with ``ax.plot(data, cycle='Blues')``, UltraPlot automatically selects as many colors
@@ -215,6 +215,6 @@ obj = ax.plot(
 # or an arbitrary parent directory (see :func:`~ultraplot.config.Configurator.local_folders`).
 # After adding the file, call :func:`~ultraplot.config.register_cycles` or restart your python
 # session. You can also use :func:`~ultraplot.colors.DiscreteColormap.from_file` or manually
-# pass `~ultraplot.colors.DiscreteColormap` instances or file paths to
+# pass :class:`~ultraplot.colors.DiscreteColormap` instances or file paths to
 # :func:`~ultraplot.config.register_cycles`. See :func:`~ultraplot.config.register_cycles`
 # for a table of recognized data file extensions.

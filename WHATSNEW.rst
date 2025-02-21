@@ -226,7 +226,7 @@ Bug fixes
 * Fix issue where list-of-string colors passed to `~ultraplot.axes.Axes.scatter`
   are interpreted as data values (:issue:`316`).
 * Fix issue where *x* and *y* axis limits are reversed when passing to
-  `~ultraplot.axes.PlotAxes.hexbin` and `~ultraplot.axes.PlotAxes.hist2d` (:issue:`334`).
+  `~ultraplot.axes.PlotAxes.hexbin` and :func:`~ultraplot.axes.PlotAxes.hist2d` (:issue:`334`).
 * Fix regression where *x* or *y* axis limits are reversed when passing to
   `~ultraplot.axes.PlotAxes.hist` and `~ultraplot.axes.PlotAxes.histh` (:issue:`334`).
 * Fix issue where settings passed to `~ultraplot.axes.Axes.colorbar` after calling e.g.
@@ -236,11 +236,11 @@ Bug fixes
 * Fix issue where background properties like `color` and `linewidth` cannot be
   passed to `~ultraplot.axes.Axes` instantiation commands (:commit:`b67b046c`).
 * Fix issue where manual data aspect ratio passed with `~ultraplot.axes.Axes.format`
-  or `~matplotlib.axes.Axes.set_aspect` is inverted (:commit:`7cda3b23`).
+  or :func:`~matplotlib.axes.Axes.set_aspect` is inverted (:commit:`7cda3b23`).
 * Fix issue where continuous normalizer `vmin` and `vmax` are not set to min and
   max of `levels` when passed to `~ultraplot.colors.DiscreteNorm` (:commit:`e9ed16c1`).
 * Fix issue where unevenly-spaced `levels` combined with
-  `~ultraplot.colors.DiscreteColormap` incorrectly samples the color list (:issue:`299`).
+  :class:`~ultraplot.colors.DiscreteColormap` incorrectly samples the color list (:issue:`299`).
 * Fix issue where :class:`~ultraplot.axes.Axes.legend` ignores the user-input `fontsize`
   (:issue:`331`).
 * Fix issue where ``ultraplotrc`` settings are ignored if a subsequent line contains
@@ -593,7 +593,7 @@ Style changes
   e.g. ``'yellow'`` different from ``'y'`` (:commit:`01db1223`, :commit:`b90bee8c`).
 * Make default label rotation for colorbar-of-artist string labels ``0``, consistent
   with string tick labels applied with ``autoformat=True`` (:commit:`3f191f3b`).
-* Use default ``discrete=False`` for `~ultraplot.axes.PlotAxes.hist2d` plots,
+* Use default ``discrete=False`` for :func:`~ultraplot.axes.PlotAxes.hist2d` plots,
   consistent with `~ultraplot.axes.PlotAxes.hexbin` (:commit:`267dd161`). Now
   "discrete" levels are only enabled for pcolor/contour plots by default.
 * Trigger ``adjust_grays`` hue adjustments for gray-like color names passed to
@@ -711,7 +711,7 @@ Internals
   users import ultraplot for the first time (:commit:`9abc894e`).
 * Remove unused, mostly undocumented :rcraw:`axes.titleabove` setting
   (:commit:`9d9d0db7`). Users should be using :rcraw:`title.above` instead.
-* Move `~ultraplot.gridspec.SubplotGrid` from ``figure.py`` to ``gridspec.py``
+* Move :class:`~ultraplot.gridspec.SubplotGrid` from ``figure.py`` to ``gridspec.py``
   (:commit:`7b688fc8`). Makes more sense there.
 * Improve organization of internal functions, add ``data.py``, ``context.py``,
   and ``text.py`` to ``internals`` and rename and re-sort related ``PlotAxes``
@@ -837,10 +837,10 @@ Deprecated
   (:commit:`e8559f3d`). Confusing since ``get`` didn't accept a "fallback" second
   positional argument. Now ``get`` is the "dictionary-like" inherited method.
 * Rename obscure `LinearSegmentedColormap`, `PerceptuallyUniformColormap`, and
-  `ListedColormap` to more intuitive/succinct `~ultraplot.colors.ContinuousColormap`,
-  :class:`~ultraplot.colors.PerceptualColormap`, and `~ultraplot.colors.DiscreteColormap`
+  `ListedColormap` to more intuitive/succinct :class:`~ultraplot.colors.ContinuousColormap`,
+  :class:`~ultraplot.colors.PerceptualColormap`, and :class:`~ultraplot.colors.DiscreteColormap`
   (:commit:`ade787f9`). Important due to the "qualitative colormap" behaviors triggered
-  when a `~ultraplot.colors.DiscreteColormap` is passed to plot commands (see features).
+  when a :class:`~ultraplot.colors.DiscreteColormap` is passed to plot commands (see features).
 * Following above change, rename `LinearSegmentedNorm` to simpler `SegmentedNorm`,
   rename :class:`~ultraplot.constructor.Colormap` argument `to_listed` to `discrete`,
   change `listmode` options from ``'listed'``, ``'linear'`` to ``'discrete'``,
@@ -872,7 +872,7 @@ Style changes
   Controlled by the :rcraw:`axes.inbounds` property, analogous to :rcraw:`cmap.inbounds`
   used for cmap scaling. This feature leverages ultraplot's input standardization.
 * Capture `colors` passed to commands like ``contour`` and ``pcolor`` and use
-  it to build qualitative `~ultraplot.colors.DiscreteColormap` maps (:commit:`6382cf91`).
+  it to build qualitative :class:`~ultraplot.colors.DiscreteColormap` maps (:commit:`6382cf91`).
   This matches the behavior of xarray plotting utilities. No longer use `color`
   to change "edge color" of filled contours/grid boxes.
 * Add special qualitative cmap handling when ``colors=colors``, ``qualitative=True``,
@@ -1309,7 +1309,7 @@ Features
   for *horizontal* plotting commands `barh`, `plotx`, and `scatterx` (:pr:`258`).
 * Add support for ``ax.plot_command('x_key', 'y_key', data=dataset)`` for virtually
   all plotting commands using `standardize_1d` and `standardize_2d` (:pr:`258`).
-  This was an existing `~matplotlib.axes.Axes.plot` feature.
+  This was an existing :func:`~matplotlib.axes.Axes.plot` feature.
 * Add support for the plotting style ``ax.plot(x1, y1, fmt1, x2, y2, fmt2, ...)``
   as allowed by matplotlib (:pr:`258`).
 * Add `absolute_width` keyword to `~ultraplot.plot.bar_extras` to make `width`
@@ -1412,7 +1412,7 @@ Bug fixes
 * Fix issue where cannot set ``rc.style = 'default'`` (:pr:`240`) by `Pratiman Patel`_.
 * Fix issue where `get_legend` returns None even with legends present (:issue:`224`).
 * Fix issue where new child axes reset row/col label settings (:commit:`f32d9703`).
-* Fix issue where `~xarray.DataArray` string coordinates are not extracted from
+* Fix issue where :class:`~xarray.DataArray` string coordinates are not extracted from
   container before applying as tick labels (:issue:`214`).
 * Fix issue where cannot set `extend` other than ``'neither'`` for
   `~matplotlib.axes.Axes.scatter` colorbars (:issue:`206`).
@@ -1626,7 +1626,7 @@ Deprecated
   wrapper to `~ultraplot.axes.indicate_error` (:pr:`166`, :commit:`d8c50a8d`).
 * Remove ``'rgbcycle'`` setting (:pr:`166`, :commit:`6653b7f0`).
   This was complicated to implement/did not add critical functionality.
-* Deprecate support for "parametric" plots inside `~matplotlib.axes.Axes.plot`,
+* Deprecate support for "parametric" plots inside :func:`~matplotlib.axes.Axes.plot`,
   instead use `~ultraplot.axes.Axes.parametric` (:commit:`64210bce`).
 * Change `~ultraplot.utils.units` ``units`` keyword argument to more natural
   ``dest`` (:commit:`62903b48`).

@@ -13,8 +13,8 @@ both offer convenient matplotlib plotting commands.
 How does UltraPlot compare against these tools?
 
 * UltraPlot, seaborn, pandas, and xarray all offer tools for generating rigid, simple,
-  nice-looking plots from data stored in `~pandas.DataFrame`\ s and
-  `~xarray.DataArray`\ s (UltraPlot tries to apply labels from these objects, just like
+  nice-looking plots from data stored in :class:`~pandas.DataFrame`\ s and
+  :class:`~xarray.DataArray`\ s (UltraPlot tries to apply labels from these objects, just like
   pandas and xarray).
 * UltraPlot is integrated with *cartopy* and *basemap*. You will find plotting geophysical
   data in UltraPlot to be much more concise than working with cartopy and basemap

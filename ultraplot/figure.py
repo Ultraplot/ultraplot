@@ -71,7 +71,7 @@ refaspect : float or 2-tuple of float, optional
     if both `figwidth` *and* `figheight` or both `refwidth` *and* `refheight` were
     passed. The default value is ``1`` or the "data aspect ratio" if the latter
     is explicitly fixed (as with `~ultraplot.axes.PlotAxes.imshow` plots and
-    `~ultraplot.axes.Axes.GeoAxes` projections; see `~matplotlib.axes.Axes.set_aspect`).
+    `~ultraplot.axes.Axes.GeoAxes` projections; see :func:`~matplotlib.axes.Axes.set_aspect`).
 refwidth, refheight : unit-spec, default: :rc:`subplots.refwidth`
     The width, height of the reference subplot.
     %(units.in)s
@@ -2031,7 +2031,7 @@ class Figure(mfigure.Figure):
     @property
     def subplotgrid(self):
         """
-        A `~ultraplot.gridspec.SubplotGrid` containing the numbered subplots in the
+        A :class:`~ultraplot.gridspec.SubplotGrid` containing the numbered subplots in the
         figure. The subplots are ordered by increasing `~ultraplot.axes.Axes.number`.
 
         See also

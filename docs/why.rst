@@ -335,12 +335,12 @@ concise figures.
   :func:`~ultraplot.axes.Axes.number` to every new subplot.
 * The `ultraplot.gridspec.SubplotGrid.format` command can easily format multiple subplots
   at once or add colorbars, legends, panels, twin axes, or inset axes to multiple
-  subplots at once. A `~ultraplot.gridspec.SubplotGrid` is returned by
+  subplots at once. A :class:`~ultraplot.gridspec.SubplotGrid` is returned by
   `ultraplot.figure.Figure.subplots`, and can be indexed like a list or a 2D array.
 * The :func:`~ultraplot.axes.Axes.panel_axes` (shorthand :func:`~ultraplot.axes.Axes.panel`) commands
   draw :ref:`thin panels <ug_panels>` along the edges of subplots. This can be useful
   for plotting 1D summary statistics alongside 2D plots. You can also add twin axes and
-  panel axes to several subplots at once using `~ultraplot.gridspec.SubplotGrid` commands.
+  panel axes to several subplots at once using :class:`~ultraplot.gridspec.SubplotGrid` commands.
 
 Links
 -----
@@ -630,7 +630,7 @@ UltraPlot also handles metadata associated with `xarray.DataArray`, `pandas.Data
 `pandas.Series`, and `pint.Quantity` objects. When a plotting command receives these
 objects, it updates the axis tick labels, axis labels, subplot title, and
 colorbar and legend labels from the metadata. For `~pint.Quantity` arrays (including
-`~pint.Quantity` those stored inside `~xarray.DataArray` containers), a unit string
+`~pint.Quantity` those stored inside :class:`~xarray.DataArray` containers), a unit string
 is generated from the `pint.Unit` according to the :rcraw:`unitformat` setting
 (note UltraPlot also automatically calls `pint.UnitRegistry.setup_matplotlib`
 whenever a `~pint.Quantity` is used for *x* and *y* coordinates and removes the
@@ -745,8 +745,8 @@ Changes
 
 UltraPlot tries to make it easy to manipulate colormaps and property cycles.
 
-* All colormaps in UltraPlot are replaced with the `~ultraplot.colors.ContinuousColormap`
-  and `~ultraplot.colors.DiscreteColormap` subclasses of
+* All colormaps in UltraPlot are replaced with the :class:`~ultraplot.colors.ContinuousColormap`
+  and :class:`~ultraplot.colors.DiscreteColormap` subclasses of
   `~matplotlib.colors.LinearSegmentedColormap` and `~matplotlib.colors.ListedColormap`.
   These classes include several useful features leveraged by the
   :ref:`constructor functions <why_constructor>`
@@ -759,9 +759,9 @@ UltraPlot tries to make it easy to manipulate colormaps and property cycles.
   and luminance channels rather then the red, blue, and green channels.
 * The :class:`~ultraplot.constructor.Cycle` function can make property cycles from
   scratch or retrieve "registered" color cycles from their associated
-  `~ultraplot.colors.DiscreteColormap` instances. It can also make property
+  :class:`~ultraplot.colors.DiscreteColormap` instances. It can also make property
   cycles by splitting up the colors from registered or on-the-fly
-  `~ultraplot.colors.ContinuousColormap`\ s and :class:`~ultraplot.colors.PerceptualColormap`\ s.
+  :class:`~ultraplot.colors.ContinuousColormap`\ s and :class:`~ultraplot.colors.PerceptualColormap`\ s.
 
 UltraPlot also makes all colormap and color cycle names case-insensitive, and
 colormaps are automatically reversed or cyclically shifted 180 degrees if you

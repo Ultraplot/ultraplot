@@ -151,12 +151,12 @@ fig.format(
 #
 # .. note::
 #
-#    For every plotting command, you can pass a `~xarray.Dataset`, `~pandas.DataFrame`,
+#    For every plotting command, you can pass a `~xarray.Dataset`, :class:`~pandas.DataFrame`,
 #    or `dict` to the `data` keyword with strings as data arguments instead of arrays
 #    -- just like matplotlib. For example, ``ax.plot('y', data=dataset)`` and
 #    ``ax.plot(y='y', data=dataset)`` are translated to ``ax.plot(dataset['y'])``.
 #    This is the preferred input style for most `seaborn`_ plotting commands.
-#    Also, if you pass a `pint.Quantity` or `~xarray.DataArray`
+#    Also, if you pass a `pint.Quantity` or :class:`~xarray.DataArray`
 #    containing a `pint.Quantity`, UltraPlot will automatically call
 #    `~pint.UnitRegistry.setup_matplotlib` so that the axes become unit-aware.
 

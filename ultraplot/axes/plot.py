@@ -63,8 +63,8 @@ _args_1d_docstring = """
     The data passed as positional or keyword arguments. Interpreted as follows:
 
     * If only `{y}` coordinates are passed, try to infer the `{x}` coordinates
-      from the `~pandas.Series` or `~pandas.DataFrame` indices or the
-      `~xarray.DataArray` coordinates. Otherwise, the `{x}` coordinates
+      from the `~pandas.Series` or :class:`~pandas.DataFrame` indices or the
+      :class:`~xarray.DataArray` coordinates. Otherwise, the `{x}` coordinates
       are ``np.arange(0, {y}.shape[0])``.
     * If the `{y}` coordinates are a 2D array, plot each column of data in succession
       (except where each column of data represents a statistical distribution, as with
@@ -78,7 +78,7 @@ _args_1d_multi_docstring = """
     The data passed as positional or keyword arguments. Interpreted as follows:
 
     * If only `{y}` coordinates are passed, try to infer the `{x}` coordinates from
-      the `~pandas.Series` or `~pandas.DataFrame` indices or the `~xarray.DataArray`
+      the `~pandas.Series` or :class:`~pandas.DataFrame` indices or the :class:`~xarray.DataArray`
       coordinates. Otherwise, the `{x}` coordinates are ``np.arange(0, {y}2.shape[0])``.
     * If only `{x}` and `{y}2` coordinates are passed, set the `{y}1` coordinates
       to zero. This draws elements originating from the zero line.
@@ -93,7 +93,7 @@ _args_2d_docstring = """
     The data passed as positional or keyword arguments. Interpreted as follows:
 
     * If only {zvar} coordinates are passed, try to infer the `x` and `y` coordinates
-      from the `~pandas.DataFrame` indices and columns or the `~xarray.DataArray`
+      from the :class:`~pandas.DataFrame` indices and columns or the :class:`~xarray.DataArray`
       coordinates. Otherwise, the `y` coordinates are ``np.arange(0, y.shape[0])``
       and the `x` coordinates are ``np.arange(0, y.shape[1])``.
     * For ``pcolor`` and ``pcolormesh``, calculate coordinate *edges* using
@@ -123,7 +123,7 @@ docstring._snippet_manager["plot.args_2d_flow"] = _args_2d_docstring.format(
 # Shared docstrings
 _args_1d_shared_docstring = """
 data : dict-like, optional
-    A dict-like dataset container (e.g., `~pandas.DataFrame` or
+    A dict-like dataset container (e.g., :class:`~pandas.DataFrame` or
     `~xarray.Dataset`). If passed, each data argument can optionally
     be a string `key` and the arrays used for plotting are retrieved
     with ``data[key]``. This is a `native matplotlib feature
@@ -131,7 +131,7 @@ data : dict-like, optional
 autoformat : bool, default: :rc:`autoformat`
     Whether the `x` axis labels, `y` axis labels, axis formatters, axes titles,
     legend titles, and colorbar labels are automatically configured when a
-    `~pandas.Series`, `~pandas.DataFrame`, `~xarray.DataArray`, or `~pint.Quantity`
+    `~pandas.Series`, :class:`~pandas.DataFrame`, :class:`~xarray.DataArray`, or `~pint.Quantity`
     is passed to the plotting command. Formatting of `pint.Quantity`
     unit strings is controlled by :rc:`unitformat`.
 """
@@ -305,7 +305,7 @@ cmap : colormap-spec, default: \
 cmap_kw : dict-like, optional
     Passed to :class:`~ultraplot.constructor.Colormap`.
 c, color, colors : color-spec or sequence of color-spec, optional
-    The color(s) used to create a `~ultraplot.colors.DiscreteColormap`.
+    The color(s) used to create a :class:`~ultraplot.colors.DiscreteColormap`.
     If not passed, `cmap` is used.
 norm : norm-spec, default: \
 `~matplotlib.colors.Normalize` or `~ultraplot.colors.DivergingNorm`
@@ -486,7 +486,7 @@ Other parameters
 %(plot.labels_1d)s
 %(plot.guide)s
 **kwargs
-    Passed to `~matplotlib.axes.Axes.plot`.
+    Passed to :func:`~matplotlib.axes.Axes.plot`.
 
 See also
 --------

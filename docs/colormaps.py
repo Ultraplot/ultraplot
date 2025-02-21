@@ -34,7 +34,7 @@
 # UltraPlot defines **continuous colormaps** as color palettes that sample some
 # *continuous function* between two end colors. They are generally used
 # to encode data values on a pseudo-third dimension. They are implemented
-# in UltraPlot with the `~ultraplot.colors.ContinuousColormap` and
+# in UltraPlot with the :class:`~ultraplot.colors.ContinuousColormap` and
 # :class:`~ultraplot.colors.PerceptualColormap` classes, which are
 # :ref:`subclassed from <ug_cmaps_new>`
 # `matplotlib.colors.LinearSegmentedColormap`.
@@ -316,8 +316,8 @@ for ax, cmap, title in zip(axs, (cmap1, cmap2, cmap3), (title1, title2, title3))
 #
 # UltraPlot lets you create modified versions of *existing* colormaps
 # using the :class:`~ultraplot.constructor.Colormap` constructor function and the
-# new `~ultraplot.colors.ContinuousColormap` and
-# `~ultraplot.colors.DiscreteColormap` classes, which replace the native
+# new :class:`~ultraplot.colors.ContinuousColormap` and
+# :class:`~ultraplot.colors.DiscreteColormap` classes, which replace the native
 # matplotlib colormap classes. They can be modified in the following ways:
 #
 # * To remove colors from the left or right ends of a colormap, pass `left`
@@ -496,6 +496,6 @@ for ax, gamma in zip(axs, (0.7, 1.0, 1.4)):
 # or an arbitrary parent directory (see `~ultraplot.config.Configurator.local_folders`).
 # After adding the file, call :func:`~ultraplot.config.register_cmaps` or restart your python
 # session. You can also use `~ultraplot.colors.ContinuousColormap.from_file` or manually
-# pass `~ultraplot.colors.ContinuousColormap` instances or file paths to
+# pass :class:`~ultraplot.colors.ContinuousColormap` instances or file paths to
 # :func:`~ultraplot.config.register_cmaps`. See :func:`~ultraplot.config.register_cmaps`
 # for a table of recognized file extensions.

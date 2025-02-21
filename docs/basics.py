@@ -111,7 +111,7 @@ ax.plot(data, lw=2)
 #   geometry. Here `array` is a 2D array representing a "picture" of the subplot
 #   layout, where each unique integer indicates a `~matplotlib.gridspec.GridSpec`
 #   slot occupied by the corresponding subplot and ``0`` indicates an empty space.
-#   The returned subplots are contained in a `~ultraplot.gridspec.SubplotGrid`
+#   The returned subplots are contained in a :class:`~ultraplot.gridspec.SubplotGrid`
 #   (:ref:`see below <ug_subplotgrid>` for details).
 #
 # To add subplots one-by-one, use the :func:`ultraplot.figure.Figure.add_subplot`
@@ -232,24 +232,24 @@ fig.format(
 # -----------------
 #
 # If you create subplots all-at-once with e.g. :func:`~ultraplot.ui.subplots`,
-# UltraPlot returns a :class:`~ultraplot.gridspec.SubplotGrid` of subplots. This list-like,
+# UltraPlot returns a :class::class:`~ultraplot.gridspec.SubplotGrid` of subplots. This list-like,
 # array-like object provides some useful features and unifies the behavior of the
 # three possible return types used by `matplotlib.pyplot.subplots`:
 #
-# * :class:`~ultraplot.gridspec.SubplotGrid` behaves like a scalar when it is singleton.
+# * :class::class:`~ultraplot.gridspec.SubplotGrid` behaves like a scalar when it is singleton.
 #   In other words, if you make a single subplot with ``fig, axs = uplt.subplots()``,
 #   then ``axs[0].method(...)`` is equivalent to ``axs.method(...)``.
-# * :class:`~ultraplot.gridspec.SubplotGrid` permits list-like 1D indexing, e.g. ``axs[1]``
+# * :class::class:`~ultraplot.gridspec.SubplotGrid` permits list-like 1D indexing, e.g. ``axs[1]``
 #   to return the second subplot. The subplots in the grid are sorted by
 #   :func:`~ultraplot.axes.Axes.number` (see :ref:`this page <ug_abc>` for details
 #   on changing the :func:`~ultraplot.axes.Axes.number` order).
-# * `~ultraplot.gridspec.SubplotGrid` permits array-like 2D indexing, e.g.
+# * :class:`~ultraplot.gridspec.SubplotGrid` permits array-like 2D indexing, e.g.
 #   ``axs[1, 0]`` to return the subplot in the second row, first column, or
-#   ``axs[:, 0]`` to return a `~ultraplot.gridspec.SubplotGrid` of every subplot
+#   ``axs[:, 0]`` to return a :class:`~ultraplot.gridspec.SubplotGrid` of every subplot
 #   in the first column. The 2D indexing is powered by the underlying
 #   :func:`~ultraplot.gridspec.SubplotGrid.gridspec`.
 #
-# `~ultraplot.gridspec.SubplotGrid` includes methods for working
+# :class:`~ultraplot.gridspec.SubplotGrid` includes methods for working
 # simultaneously with different subplots. Currently, this includes
 # the commands :func:`~ultraplot.gridspec.SubplotGrid.format`,
 # :func:`~ultraplot.gridspec.SubplotGrid.panel_axes`,
@@ -262,9 +262,9 @@ fig.format(
 # .. note::
 #
 #    If you create subplots one-by-one with :func:`~ultraplot.figure.Figure.subplot` or
-#    :func:`~ultraplot.figure.Figure.add_subplot`, a `~ultraplot.gridspec.SubplotGrid`
+#    :func:`~ultraplot.figure.Figure.add_subplot`, a :class:`~ultraplot.gridspec.SubplotGrid`
 #    containing the numbered subplots is available via the
-#    `ultraplot.figure.Figure.subplotgrid` property. As with subplots made
+#    :class:`ultraplot.figure.Figure.subplotgrid` property. As with subplots made
 #    all-at-once, the subplots in the grid are sorted by :func:`~ultraplot.axes.Axes.number`.
 
 # %%
@@ -305,8 +305,8 @@ axs[0].plot((state.rand(50, 10) - 0.5).cumsum(axis=0), cycle="Grays_r", lw=2)
 # Matplotlib includes `two different interfaces
 # <https://matplotlib.org/stable/api/index.html>`__ for plotting stuff:
 # a python-style object-oriented interface with axes-level commands
-# like `matplotlib.axes.Axes.plot`, and a MATLAB-style :func:`~matplotlib.pyplot` interface
-# with global commands like `matplotlib.pyplot.plot` that track the "current" axes.
+# like :func:`matplotlib.axes.Axes.plot`, and a MATLAB-style :func:`~matplotlib.pyplot` interface
+# with global commands like :func:`matplotlib.pyplot.plot` that track the "current" axes.
 # UltraPlot builds upon the python-style interface using the `ultraplot.axes.PlotAxes`
 # class. Since every axes used by UltraPlot is a child of :class:`~ultraplot.axes.PlotAxes`, we
 # are able to add features directly to the axes-level commands rather than relying

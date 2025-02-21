@@ -159,8 +159,8 @@ for orientation, array in zip(("vertical", "horizontal"), (varray, harray)):
 # :func:`~ultraplot.axes.PlotAxes.boxh`, and :func:`~ultraplot.axes.PlotAxes.violinh`). The
 # UltraPlot versions employ aesthetically pleasing defaults and permit flexible
 # configuration using keywords like `color`, `barcolor`, and `fillcolor`.
-# They also automatically apply axis labels based on the `~pandas.DataFrame`
-# or `~xarray.DataArray` column labels. Violin plot error bars are controlled
+# They also automatically apply axis labels based on the :class:`~pandas.DataFrame`
+# or :class:`~xarray.DataArray` column labels. Violin plot error bars are controlled
 # with the same keywords used for :ref:`on-the-fly error bars <ug_errorbars>`.
 
 # %%
@@ -208,7 +208,7 @@ ax.format(title="Multiple colors", ymargin=0.15)
 # can be drawn by passing 2D arrays instead of 1D arrays, and the color
 # cycle used to color histograms can be changed on-the-fly using
 # the `cycle` and `cycle_kw` keywords. Likewise, 2D histograms can
-# be drawn with the `~ultraplot.axes.PlotAxes.hist2d`
+# be drawn with the :func:`~ultraplot.axes.PlotAxes.hist2d`
 # :func:`~ultraplot.axes.PlotAxes.hexbin` commands, and their colormaps can
 # be changed on-the-fly with the `cmap` and `cmap_kw` keywords (see
 # the :ref:`2D plotting section <ug_apply_cmap>`). Marginal distributions

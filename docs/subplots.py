@@ -56,7 +56,7 @@
 # in the array. But if you used the `ncols` and `nrows` keyword arguments, the
 # number order is row-major by default and can be switched to column-major by
 # passing ``order='F'`` (note the number order also determines the list order in the
-# `~ultraplot.gridspec.SubplotGrid` returned by :func:`~ultraplot.figure.Figure.add_subplots`).
+# :class:`~ultraplot.gridspec.SubplotGrid` returned by :func:`~ultraplot.figure.Figure.add_subplots`).
 #
 # To turn on "a-b-c" labels, set :rcraw:`abc` to ``True`` or pass ``abc=True``
 # to :func:`~ultraplot.axes.Axes.format` (see :ref:`the format command <ug_format>`
@@ -163,7 +163,7 @@ axs.format(
 #    * If the `data aspect ratio
 #      <https://matplotlib.org/stable/examples/pylab_examples/equal_aspect_ratio.html>`__
 #      of the reference subplot is fixed (either due to calling
-#      `~matplotlib.axes.Axes.set_aspect` or filling the subplot with a
+#      :func:`~matplotlib.axes.Axes.set_aspect` or filling the subplot with a
 #      :ref:`geographic projection <ug_geo>`, :func:`~ultraplot.axes.PlotAxes.imshow`
 #      plot, or :func:`~ultraplot.axes.PlotAxes.heatmap` plot), then this is used as
 #      the default value for the reference aspect ratio `refaspect`. This helps

@@ -174,12 +174,12 @@ fig.format(
 #
 # .. note::
 #
-#    For every plotting command, you can pass a `~xarray.Dataset`, `~pandas.DataFrame`,
+#    For every plotting command, you can pass a `~xarray.Dataset`, :class:`~pandas.DataFrame`,
 #    or `dict` to the `data` keyword with strings as data arguments instead of arrays
 #    -- just like matplotlib. For example, ``ax.plot('y', data=dataset)`` and
 #    ``ax.plot(y='y', data=dataset)`` are translated to ``ax.plot(dataset['y'])``.
 #    This is the preferred input style for most `seaborn`_ plotting commands.
-#    Also, if you pass a `pint.Quantity` or `~xarray.DataArray`
+#    Also, if you pass a `pint.Quantity` or :class:`~xarray.DataArray`
 #    containing a `pint.Quantity`, UltraPlot will automatically call
 #    `~pint.UnitRegistry.setup_matplotlib` so that the axes become unit-aware.
 
@@ -249,7 +249,7 @@ ax.format(xtickminor=False, yformatter="%b", ytickminor=False)
 # and `cmap_kw` keywords, available with most :class:`~ultraplot.axes.PlotAxes` 2D plot
 # commands. For example, to create and apply a monochromatic colormap, you can use
 # ``cmap='color_name'`` (see the :ref:`colormaps section <ug_cmaps_new>` for more info).
-# You can also create on-the-fly "qualitative" `~ultraplot.colors.DiscreteColormap`\ s
+# You can also create on-the-fly "qualitative" :class:`~ultraplot.colors.DiscreteColormap`\ s
 # by passing lists of colors to the keyword `c`, `color`, or `colors`.
 #
 # UltraPlot defines :ref:`global defaults <ug_rc>` for four different colormap

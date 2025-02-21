@@ -37,7 +37,7 @@ OPPOSITE_SIDE = {
 # Format docstring
 _format_docstring = """
 aspect : {'auto', 'equal'} or float, optional
-    The data aspect ratio. See `~matplotlib.axes.Axes.set_aspect`
+    The data aspect ratio. See :func:`~matplotlib.axes.Axes.set_aspect`
     for details.
 xlabel, ylabel : str, optional
     The x and y axis labels. Applied with `~matplotlib.axes.Axes.set_xlabel`
