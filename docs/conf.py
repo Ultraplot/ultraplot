@@ -109,6 +109,10 @@ extensions = [
     "nbsphinx",  # parse rst books
 ]
 
+<<<<<<< HEAD
+=======
+autoapi_dirs = ["../ultraplot/"]
+>>>>>>> a00c50c9 (update docs to build with ultraplot rather than UltraPlot)
 
 # The master toctree document.
 master_doc = "index"
