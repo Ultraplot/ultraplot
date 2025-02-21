@@ -65,7 +65,7 @@
 # emulates the more conventional and (in our opinion) aesthetically pleasing
 # font `Helvetica <https://en.wikipedia.org/wiki/Helvetica>`__. The default font
 # family lists are shown in the :ref:`default ultraplotrc file <ug_ultraplotrc>`.
-# To compare different fonts, use the :func:`~ultraplot.demos.show_fonts` command with the
+# To compare different fonts, use the :func::func:`~ultraplot.demos.show_fonts` command with the
 # `family` keyword (default behavior is ``family='sans-serif'``). Tables of the TeX
 # Gyre and sans-serif fonts packaged with UltraPlot are shown below.
 
@@ -103,7 +103,7 @@ fig, axs = uplt.show_fonts(family="tex-gyre")
 # A table of math text containing the sans-serif fonts packaged with UltraPlot is shown
 # below. The dummy glyph "¤" is shown where a given math character is unavailable
 # for a particular font (in practice, the fallback font :rc:`mathtext.fallback` is used
-# whenever a math character is unavailable, but :func:`~ultraplot.demos.show_fonts` disables
+# whenever a math character is unavailable, but :func::func:`~ultraplot.demos.show_fonts` disables
 # this fallback font in order to highlight the missing characters).
 #
 # .. note::
@@ -131,10 +131,10 @@ fig, axs = uplt.show_fonts(family="sans-serif", math=True)
 # --------------------
 #
 # You can register your own fonts by adding files to the ``fonts`` subfolder
-# inside :func:`~ultraplot.config.Configurator.user_folder` and calling
-# :func:`~ultraplot.config.register_fonts`. This command is called on import. You can
-# also manually pass file paths to :func:`~ultraplot.config.register_fonts`.
-# To change the default font, use the :func:`~ultraplot.config.rc`
+# inside :func::func:`~ultraplot.config.Configurator.user_folder` and calling
+# :func::func:`~ultraplot.config.register_fonts`. This command is called on import. You can
+# also manually pass file paths to :func::func:`~ultraplot.config.register_fonts`.
+# To change the default font, use the :func::func:`~ultraplot.config.rc`
 # object or modify your ``ultraplotrc``. See the
 # :ref:`configuration section <ug_config>` for details.
 #

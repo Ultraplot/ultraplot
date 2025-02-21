@@ -84,12 +84,12 @@ Changes
 
 UltraPlot includes the `ultraplot.axes.Axes.format` command to resolve this.
 Think of this as an expanded and thoroughly documented version of the
-`matplotlib.artist.Artist.update` command. :func:`~ultraplot.axes.Axes.format` can modify things
+`matplotlib.artist.Artist.update` command. :func::func:`~ultraplot.axes.Axes.format` can modify things
 like axis labels and titles and apply new :ref:`"rc" settings <why_rc>` to existing
 axes. It also integrates with various :ref:`constructor functions <why_constructor>`
 to help keep things succinct. Further, the `ultraplot.figure.Figure.format`
 and `ultraplot.gridspec.SubplotGrid.format` commands can be used to
-:func:`~ultraplot.axes.Axes.format` several subplots at once.
+:func::func:`~ultraplot.axes.Axes.format` several subplots at once.
 
 Together, these features significantly reduce the amount of code needed to create
 highly customized figures. As an example, it is trivial to see that...
@@ -180,10 +180,10 @@ The below table lists the constructor functions and the keyword arguments that u
 ================================  ============================================================  ==============================================================================  ================================================================================================================================================================================================
 Function                          Return type                                                   Used by                                                                         Keyword argument(s)
 ================================  ============================================================  ==============================================================================  ================================================================================================================================================================================================
-:class:`~ultraplot.constructor.Proj`       `~cartopy.crs.Projection` or `~mpl_toolkits.basemap.Basemap`  :func:`~ultraplot.figure.Figure.add_subplot` and :func:`~ultraplot.figure.Figure.add_subplots`  ``proj=``
-:class:`~ultraplot.constructor.Locator`    :class:`~matplotlib.ticker.Locator`                                  :func:`~ultraplot.axes.Axes.format` and :func:`~ultraplot.axes.Axes.colorbar`                   ``locator=``, ``xlocator=``, ``ylocator=``, ``minorlocator=``, ``xminorlocator=``, ``yminorlocator=``, ``ticks=``, ``xticks=``, ``yticks=``, ``minorticks=``, ``xminorticks=``, ``yminorticks=``
-:class:`~ultraplot.constructor.Formatter`  :class:`~matplotlib.ticker.Formatter`                                :func:`~ultraplot.axes.Axes.format` and :func:`~ultraplot.axes.Axes.colorbar`                   ``formatter=``, ``xformatter=``, ``yformatter=``, ``ticklabels=``, ``xticklabels=``, ``yticklabels=``
-:class:`~ultraplot.constructor.Scale`      `~matplotlib.scale.ScaleBase`                                 :func:`~ultraplot.axes.Axes.format`                                                     ``xscale=``, ``yscale=``
+:class:`~ultraplot.constructor.Proj`       `~cartopy.crs.Projection` or `~mpl_toolkits.basemap.Basemap`  :func::func:`~ultraplot.figure.Figure.add_subplot` and :func::func:`~ultraplot.figure.Figure.add_subplots`  ``proj=``
+:class:`~ultraplot.constructor.Locator`    :class:`~matplotlib.ticker.Locator`                                  :func::func:`~ultraplot.axes.Axes.format` and :func::func:`~ultraplot.axes.Axes.colorbar`                   ``locator=``, ``xlocator=``, ``ylocator=``, ``minorlocator=``, ``xminorlocator=``, ``yminorlocator=``, ``ticks=``, ``xticks=``, ``yticks=``, ``minorticks=``, ``xminorticks=``, ``yminorticks=``
+:class:`~ultraplot.constructor.Formatter`  :class:`~matplotlib.ticker.Formatter`                                :func::func:`~ultraplot.axes.Axes.format` and :func::func:`~ultraplot.axes.Axes.colorbar`                   ``formatter=``, ``xformatter=``, ``yformatter=``, ``ticklabels=``, ``xticklabels=``, ``yticklabels=``
+:class:`~ultraplot.constructor.Scale`      `~matplotlib.scale.ScaleBase`                                 :func::func:`~ultraplot.axes.Axes.format`                                                     ``xscale=``, ``yscale=``
 :class:`~ultraplot.constructor.Colormap`   :class:`~matplotlib.colors.Colormap`                                 2D `~ultraplot.axes.PlotAxes` commands                                            ``cmap=``
 :class:`~ultraplot.constructor.Norm`       :class:`~matplotlib.colors.Normalize`                                2D `~ultraplot.axes.PlotAxes` commands                                            ``norm=``
 :class:`~ultraplot.constructor.Cycle`      :class:`~cycler.Cycler`                                              1D `~ultraplot.axes.PlotAxes` commands                                            ``cycle=``
@@ -251,7 +251,7 @@ behavior of ``refaspect=1`` and ``refwidth=2.5`` (inches). If the `data aspect r
 <https://matplotlib.org/stable/gallery/subplots_axes_and_figures/axis_equal_demo.html>`__
 of the reference subplot is fixed (as with :ref:`geographic <ug_geo>`,
 :ref:`polar <ug_polar>`, `~matplotlib.axes.Axes.imshow`, and
-:func:`~ultraplot.axes.Axes.heatmap` plots) then this is used instead of `refaspect`.
+:func::func:`~ultraplot.axes.Axes.heatmap` plots) then this is used instead of `refaspect`.
 
 Alternatively, you can independently specify the width or height of the *figure*
 with the `figwidth` and `figheight` parameters. If only one is specified, the
@@ -280,12 +280,12 @@ provides the following advantages:
 * You can :ref:`override <ug_tight>` particular spacing parameters
   and leave the tight layout algorithm to adjust the
   unspecified spacing parameters. For example, passing ``right=1`` to
-  :func:`~ultraplot.figure.Figure.add_subplots` fixes the right margin
+  :func::func:`~ultraplot.figure.Figure.add_subplots` fixes the right margin
   at 1 font size-width while the others are adjusted automatically.
 * Only one `ultraplot.gridspec.GridSpec` is permitted per figure,
   considerably simplifying the tight layout algorithm calculations.
   This restriction is enforced by requiring successive
-  :func:`~ultraplot.figure.Figure.add_subplot` calls to imply the same geometry and
+  :func::func:`~ultraplot.figure.Figure.add_subplot` calls to imply the same geometry and
   include only subplot specs generated from the same `~ultraplot.gridspec.GridSpec`.
 
 Links
@@ -331,13 +331,13 @@ concise figures.
   :ref:`next section <why_colorbars_legends>` for details.
 * A-b-c labels can be added to subplots simply using the :rcraw:`abc`
   setting -- for example, ``uplt.rc['abc'] = 'A.'`` or ``axs.format(abc='A.')``.
-  This is possible because :func:`~ultraplot.figure.Figure.add_subplot` assigns a unique
-  :func:`~ultraplot.axes.Axes.number` to every new subplot.
+  This is possible because :func::func:`~ultraplot.figure.Figure.add_subplot` assigns a unique
+  :func::func:`~ultraplot.axes.Axes.number` to every new subplot.
 * The `ultraplot.gridspec.SubplotGrid.format` command can easily format multiple subplots
   at once or add colorbars, legends, panels, twin axes, or inset axes to multiple
   subplots at once. A `~ultraplot.gridspec.SubplotGrid` is returned by
   `ultraplot.figure.Figure.subplots`, and can be indexed like a list or a 2D array.
-* The :func:`~ultraplot.axes.Axes.panel_axes` (shorthand :func:`~ultraplot.axes.Axes.panel`) commands
+* The :func::func:`~ultraplot.axes.Axes.panel_axes` (shorthand :func::func:`~ultraplot.axes.Axes.panel`) commands
   draw :ref:`thin panels <ug_panels>` along the edges of subplots. This can be useful
   for plotting 1D summary statistics alongside 2D plots. You can also add twin axes and
   panel axes to several subplots at once using `~ultraplot.gridspec.SubplotGrid` commands.
@@ -428,8 +428,8 @@ UltraPlot uses the `~ultraplot.axes.PlotAxes` subclass to add various `seaborn`_
 along with several additional features designed to make things easier.
 
 The following features are relevant for "1D" `~ultraplot.axes.PlotAxes` commands
-like :func:`~ultraplot.axes.PlotAxes.line` (equivalent to :func:`~ultraplot.axes.PlotAxes.plot`)
-and :func:`~ultraplot.axes.PlotAxes.scatter`:
+like :func::func:`~ultraplot.axes.PlotAxes.line` (equivalent to :func::func:`~ultraplot.axes.PlotAxes.plot`)
+and :func::func:`~ultraplot.axes.PlotAxes.scatter`:
 
 * The treatment of data arguments passed to the 1D `~ultraplot.axes.PlotAxes`
   commands is :ref:`standardized <ug_1dstd>`. This makes them more flexible
@@ -445,35 +445,35 @@ and :func:`~ultraplot.axes.PlotAxes.scatter`:
   adjusted to exclude out-of-bounds data. This can be useful when "zooming in" on
   a dependent variable axis but can be disabled by setting :rcraw:`axes.inbounds`
   to ``False`` or passing ``inbounds=False`` to `~ultraplot.axes.PlotAxes` commands.
-* The :func:`~ultraplot.axes.PlotAxes.bar` and :func:`~ultraplot.axes.PlotAxes.barh` commands accept 2D
+* The :func::func:`~ultraplot.axes.PlotAxes.bar` and :func::func:`~ultraplot.axes.PlotAxes.barh` commands accept 2D
   arrays and can :ref:`stack or group <ug_bar>` successive columns. Likewise, the
-  :func:`~ultraplot.axes.PlotAxes.area` and :func:`~ultraplot.axes.PlotAxes.areax` commands (shorthands
-  for :func:`~ultraplot.axes.PlotAxes.fill_between` and :func:`~ultraplot.axes.PlotAxes.fill_betweenx`)
+  :func::func:`~ultraplot.axes.PlotAxes.area` and :func::func:`~ultraplot.axes.PlotAxes.areax` commands (shorthands
+  for :func::func:`~ultraplot.axes.PlotAxes.fill_between` and :func::func:`~ultraplot.axes.PlotAxes.fill_betweenx`)
   accept 2D arrays and can :ref:`stack or overlay <ug_bar>` successive columns.
-* The :func:`~ultraplot.axes.PlotAxes.bar`, :func:`~ultraplot.axes.PlotAxes.barh`,
-  :func:`~ultraplot.axes.PlotAxes.vlines`, :func:`~ultraplot.axes.PlotAxes.hlines`,
-  :func:`~ultraplot.axes.PlotAxes.area`, and :func:`~ultraplot.axes.PlotAxes.areax`
+* The :func::func:`~ultraplot.axes.PlotAxes.bar`, :func::func:`~ultraplot.axes.PlotAxes.barh`,
+  :func::func:`~ultraplot.axes.PlotAxes.vlines`, :func::func:`~ultraplot.axes.PlotAxes.hlines`,
+  :func::func:`~ultraplot.axes.PlotAxes.area`, and :func::func:`~ultraplot.axes.PlotAxes.areax`
   commands accept a `negpos` keyword argument that :ref:`assigns different
   colors <ug_negpos>` to "negative" and "positive" regions.
-* The :func:`~ultraplot.axes.PlotAxes.linex` and :func:`~ultraplot.axes.PlotAxes.scatterx` commands
-  are just like :func:`~ultraplot.axes.PlotAxes.line` and :func:`~ultraplot.axes.PlotAxes.scatter`,
+* The :func::func:`~ultraplot.axes.PlotAxes.linex` and :func::func:`~ultraplot.axes.PlotAxes.scatterx` commands
+  are just like :func::func:`~ultraplot.axes.PlotAxes.line` and :func::func:`~ultraplot.axes.PlotAxes.scatter`,
   but positional arguments are interpreted as *x* coordinates or (*y*, *x*) pairs.
-  There are also the related commands :func:`~ultraplot.axes.PlotAxes.stemx`,
-  :func:`~ultraplot.axes.PlotAxes.stepx`, :func:`~ultraplot.axes.PlotAxes.boxh` (shorthand for
-  :func:`~ultraplot.axes.PlotAxes.boxploth`), and :func:`~ultraplot.axes.PlotAxes.violinh` (shorthand
-  for :func:`~ultraplot.axes.PlotAxes.violinploth`).
-* The :func:`~ultraplot.axes.PlotAxes.line`, :func:`~ultraplot.axes.PlotAxes.linex`,
-  :func:`~ultraplot.axes.PlotAxes.scatter`, :func:`~ultraplot.axes.PlotAxes.scatterx`,
-  :func:`~ultraplot.axes.PlotAxes.bar`, and :func:`~ultraplot.axes.PlotAxes.barh` commands can
+  There are also the related commands :func::func:`~ultraplot.axes.PlotAxes.stemx`,
+  :func::func:`~ultraplot.axes.PlotAxes.stepx`, :func::func:`~ultraplot.axes.PlotAxes.boxh` (shorthand for
+  :func::func:`~ultraplot.axes.PlotAxes.boxploth`), and :func::func:`~ultraplot.axes.PlotAxes.violinh` (shorthand
+  for :func::func:`~ultraplot.axes.PlotAxes.violinploth`).
+* The :func::func:`~ultraplot.axes.PlotAxes.line`, :func::func:`~ultraplot.axes.PlotAxes.linex`,
+  :func::func:`~ultraplot.axes.PlotAxes.scatter`, :func::func:`~ultraplot.axes.PlotAxes.scatterx`,
+  :func::func:`~ultraplot.axes.PlotAxes.bar`, and :func::func:`~ultraplot.axes.PlotAxes.barh` commands can
   draw vertical or horizontal :ref:`error bars or "shading" <ug_errorbars>` using a
   variety of keyword arguments. This is often more convenient than working directly
   with `~matplotlib.axes.Axes.errorbar` or `~matplotlib.axes.Axes.fill_between`.
-* The :func:`~ultraplot.axes.PlotAxes.parametric` command draws clean-looking
+* The :func::func:`~ultraplot.axes.PlotAxes.parametric` command draws clean-looking
   :ref:`parametric lines <ug_parametric>` by encoding the parametric
   coordinate using colormap colors rather than text annotations.
 
 The following features are relevant for "2D" `~ultraplot.axes.PlotAxes` commands
-like :func:`~ultraplot.axes.PlotAxes.pcolor` and :func:`~ultraplot.axes.PlotAxes.contour`:
+like :func::func:`~ultraplot.axes.PlotAxes.pcolor` and :func::func:`~ultraplot.axes.PlotAxes.contour`:
 
 * The treatment of data arguments passed to the 2D `~ultraplot.axes.PlotAxes`
   commands is :ref:`standardized <ug_2dstd>`. This makes them more flexible
@@ -485,8 +485,8 @@ like :func:`~ultraplot.axes.PlotAxes.pcolor` and :func:`~ultraplot.axes.PlotAxes
 * The `colorbar` keyword draws :ref:`on-the-fly colorbars <ug_guides_plot>` using the
   result of the plotting command. Note that :ref:`"inset" colorbars <ug_guides_loc>` can
   also be drawn, analogous to "inset" legends.
-* The :func:`~ultraplot.axes.PlotAxes.contour`, :func:`~ultraplot.axes.PlotAxes.contourf`,
-  :func:`~ultraplot.axes.PlotAxes.pcolormesh`, and :func:`~ultraplot.axes.PlotAxes.pcolor` commands
+* The :func::func:`~ultraplot.axes.PlotAxes.contour`, :func::func:`~ultraplot.axes.PlotAxes.contourf`,
+  :func::func:`~ultraplot.axes.PlotAxes.pcolormesh`, and :func::func:`~ultraplot.axes.PlotAxes.pcolor` commands
   all accept a `labels` keyword. This draws :ref:`contour and grid box labels
   <ug_labels>` on-the-fly. Labels are automatically colored black or white
   according to the luminance of the underlying grid box or filled contour.
@@ -502,17 +502,17 @@ like :func:`~ultraplot.axes.PlotAxes.pcolor` and :func:`~ultraplot.axes.PlotAxes
   :ref:`natural midpoint <ug_norm>` and offers both "fair" and "unfair" scaling.
   The `~ultraplot.colors.SegmentedNorm` normalizer can generate
   uneven color gradations useful for :ref:`unusual data distributions <ug_norm>`.
-* The :func:`~ultraplot.axes.PlotAxes.heatmap` command invokes
-  :func:`~ultraplot.axes.PlotAxes.pcolormesh` then applies an `equal axes apect ratio
+* The :func::func:`~ultraplot.axes.PlotAxes.heatmap` command invokes
+  :func::func:`~ultraplot.axes.PlotAxes.pcolormesh` then applies an `equal axes apect ratio
   <https://matplotlib.org/stable/gallery/subplots_axes_and_figures/axis_equal_demo.html>`__,
   adds ticks to the center of each gridbox, and disables minor ticks and gridlines.
   This can be convenient for things like covariance matrices.
-* Coordinate centers passed to commands like :func:`~ultraplot.axes.PlotAxes.pcolor` are
+* Coordinate centers passed to commands like :func::func:`~ultraplot.axes.PlotAxes.pcolor` are
   automatically translated to "edges", and coordinate edges passed to commands like
-  :func:`~ultraplot.axes.PlotAxes.contour` are automatically translated to "centers". In
+  :func::func:`~ultraplot.axes.PlotAxes.contour` are automatically translated to "centers". In
   matplotlib, ``pcolor`` simply truncates and offsets the data when it receives centers.
-* Commands like :func:`~ultraplot.axes.PlotAxes.pcolor`, :func:`~ultraplot.axes.PlotAxes.contourf`
-  and :func:`~ultraplot.axes.Axes.colorbar` automatically fix an irritating issue where
+* Commands like :func::func:`~ultraplot.axes.PlotAxes.pcolor`, :func::func:`~ultraplot.axes.PlotAxes.contourf`
+  and :func::func:`~ultraplot.axes.Axes.colorbar` automatically fix an irritating issue where
   saved vector graphics appear to have thin white lines between `filled contours
   <https://stackoverflow.com/q/8263769/4970632>`__, `grid boxes
   <https://stackoverflow.com/q/27092991/4970632>`__, and `colorbar segments
@@ -576,7 +576,7 @@ the "default" coordinate system by passing ``transform=ccrs.PlateCarree()``
 or ``latlon=True`` to `~ultraplot.axes.PlotAxes` commands (depending on whether cartopy
 or basemap is the backend). And to enforce global coverage over the poles and across
 longitude seams, you can pass ``globe=True`` to 2D `~ultraplot.axes.PlotAxes` commands
-like :func:`~ultraplot.axes.PlotAxes.contour` and :func:`~ultraplot.axes.PlotAxes.pcolormesh`.
+like :func::func:`~ultraplot.axes.PlotAxes.contour` and :func::func:`~ultraplot.axes.PlotAxes.pcolormesh`.
 
 Links
 -----
@@ -692,21 +692,21 @@ aesthetically pleasing figures.
   and includes a `~ultraplot.colors.PerceptualColormap` class for generating
   new ones. A :ref:`table of colormap <ug_cmaps_included>` and
   :ref:`color cycles <ug_cycles_included>` can be shown using
-  :func:`~ultraplot.demos.show_cmaps` and :func:`~ultraplot.demos.show_cycles`.
+  :func::func:`~ultraplot.demos.show_cmaps` and :func::func:`~ultraplot.demos.show_cycles`.
   Colormaps like ``'jet'`` can still be accessed, but this is discouraged.
 * UltraPlot adds colors from the `open color <opencolor_>`_ project and adds
   `XKCD color survey <xkcd_>`_ names without the ``'xkcd:'`` prefix after
   *filtering* them to exclude perceptually-similar colors and *normalizing* the
   naming pattern to make them more self-consistent. Old X11/CSS4 colors can still be
   accessed, but this is discouraged. A :ref:`table of color names <ug_colors_included>`
-  can be shown using :func:`~ultraplot.demos.show_colors`.
+  can be shown using :func::func:`~ultraplot.demos.show_colors`.
 * UltraPlot comes packaged with several additional :ref:`sans-serif fonts
   <ug_fonts_included>` and the entire `TeX Gyre <texgyre_>`_ font series. TeX Gyre
   consists of open-source fonts designed to resemble more popular, commonly-used fonts
   like Helvetica and Century. They are used as the new default serif, sans-serif,
   monospace, cursive, and "fantasy" fonts, and they are available on all workstations.
   A :ref:`table of font names <ug_fonts_included>` can be shown
-  using :func:`~ultraplot.demos.show_fonts`.
+  using :func::func:`~ultraplot.demos.show_fonts`.
 
 Links
 -----
@@ -810,12 +810,12 @@ particularly appropriate for this context, as plot text can be a useful "ruler"
 when figuring out the amount of space you need. UltraPlot also permits arbitrary
 string units for these keywords, for the :class:`~ultraplot.figure.Figure` keywords
 `figsize`, `figwidth`, `figheight`, `refwidth`, and `refheight`, and in a
-few other places. This is powered by the physical units engine :func:`~ultraplot.utils.units`.
+few other places. This is powered by the physical units engine :func::func:`~ultraplot.utils.units`.
 Acceptable units include inches, centimeters, millimeters,
 pixels, `points <https://en.wikipedia.org/wiki/Point_(typography)>`__, and `picas
 <https://en.wikipedia.org/wiki/Pica_(typography)>`__ (a table of acceptable
-units is found :ref:`here <units_table>`). Note the :func:`~ultraplot.utils.units` engine
-also translates rc settings assigned to :func:`~ultraplot.config.rc_matplotlib` and
+units is found :ref:`here <units_table>`). Note the :func::func:`~ultraplot.utils.units` engine
+also translates rc settings assigned to :func::func:`~ultraplot.config.rc_matplotlib` and
 `~ultraplot.config.rc_UltraPlot`, e.g. :rcraw:`subplots.refwidth`,
 :rcraw:`legend.columnspacing`, and :rcraw:`axes.labelpad`.
 
@@ -847,8 +847,8 @@ than globally.
 Changes
 -------
 
-In UltraPlot, you can use the :func:`~ultraplot.config.rc` object to change both native
-matplotlib settings (found in :func:`~ultraplot.config.rc_matplotlib`) and added UltraPlot
+In UltraPlot, you can use the :func::func:`~ultraplot.config.rc` object to change both native
+matplotlib settings (found in :func::func:`~ultraplot.config.rc_matplotlib`) and added UltraPlot
 settings (found in `~ultraplot.config.rc_UltraPlot`). Assigned settings are always
 validated, and "meta" settings like ``meta.edgecolor``, ``meta.linewidth``, and
 ``font.smallsize`` can be used to update many settings all at once. Settings can
@@ -856,7 +856,7 @@ be changed with ``uplt.rc.key = value``, ``uplt.rc[key] = value``,
 ``uplt.rc.update(key=value)``, using `ultraplot.axes.Axes.format`, or using
 `ultraplot.config.Configurator.context`. Settings that have changed during the
 python session can be saved to a file with `ultraplot.config.Configurator.save`
-(see :func:`~ultraplot.config.Configurator.changed`), and settings can be loaded from
+(see :func::func:`~ultraplot.config.Configurator.changed`), and settings can be loaded from
 files with `ultraplot.config.Configurator.load`.
 
 Links
@@ -892,22 +892,22 @@ Changes
 -------
 
 UltraPlot settings can be changed persistently by editing the default ``ultraplotrc``
-file in the location given by :func:`~ultraplot.config.Configurator.user_file` (this is
+file in the location given by :func::func:`~ultraplot.config.Configurator.user_file` (this is
 usually ``$HOME/.UltraPlot/ultraplotrc``) or by adding loose ``ultraplotrc`` files to
 either the current directory or an arbitrary parent directory. Adding files to
 parent directories can be useful when working in projects with lots of subfolders.
 
 UltraPlot also automatically registers colormaps, color cycles, colors, and font
 files stored in subfolders named ``cmaps``,  ``cycles``, ``colors``, and ``fonts``
-in the location given by :func:`~ultraplot.config.Configurator.user_folder` (this is usually
+in the location given by :func::func:`~ultraplot.config.Configurator.user_folder` (this is usually
 ``$HOME/.UltraPlot``), as well as loose subfolders named ``ultraplot_cmaps``,
 ``ultraplot_cycles``, ``ultraplot_colors``, and ``ultraplot_fonts`` in the current
 directory or an arbitrary parent directory. You can save colormaps and color cycles to
-:func:`~ultraplot.config.Configurator.user_folder` simply by passing ``save=True`` to
+:func::func:`~ultraplot.config.Configurator.user_folder` simply by passing ``save=True`` to
 :class:`~ultraplot.constructor.Colormap` and :class:`~ultraplot.constructor.Cycle`. To re-register
 these files during an active python session, or to register arbitrary input arguments,
-you can use :func:`~ultraplot.config.register_cmaps`, :func:`~ultraplot.config.register_cycles`,
-:func:`~ultraplot.config.register_colors`, or :func:`~ultraplot.config.register_fonts`.
+you can use :func::func:`~ultraplot.config.register_cmaps`, :func::func:`~ultraplot.config.register_cycles`,
+:func::func:`~ultraplot.config.register_colors`, or :func::func:`~ultraplot.config.register_fonts`.
 
 Links
 -----

@@ -33,7 +33,7 @@
 # Matplotlib `tick locators
 # <https://matplotlib.org/stable/gallery/ticks_and_spines/tick-locators.html>`__
 # select sensible tick locations based on the axis data limits. In UltraPlot, you can
-# change the tick locator using the `~ultraplot.axes.CartesianAxes.format` keyword
+# change the tick locator using the :func:`~ultraplot.axes.CartesianAxes.format` keyword
 # arguments `xlocator`, `ylocator`, `xminorlocator`, and `yminorlocator` (or their
 # aliases, `xticks`, `yticks`, `xminorticks`, and `yminorticks`). This is powered by
 # the :class::class:`~ultraplot.constructor.Locator` :ref:`constructor function <why_constructor>`.
@@ -48,7 +48,7 @@
 # top-level namespace (e.g., ``xlocator=uplt.MultipleLocator(...)`` is allowed).
 #
 # To generate lists of tick locations, we recommend using UltraPlot's
-# `~ultraplot.utils.arange` function -- it’s basically an endpoint-inclusive
+# :func:`~ultraplot.utils.arange` function -- it’s basically an endpoint-inclusive
 # version of `numpy.arange`, which is usually what you'll want in this context.
 
 # %%
@@ -108,7 +108,7 @@ uplt.rc.reset()
 # Matplotlib `tick formatters
 # <https://matplotlib.org/stable/gallery/ticks_and_spines/tick-formatters.html>`__
 # convert floating point numbers to nicely-formatted tick labels. In UltraPlot, you can
-# change the tick formatter using the `~ultraplot.axes.CartesianAxes.format` keyword
+# change the tick formatter using the :func:`~ultraplot.axes.CartesianAxes.format` keyword
 # arguments `xformatter` and `yformatter` (or their aliases, `xticklabels` and
 # `yticklabels`). This is powered by the :class::class:`~ultraplot.constructor.Formatter`
 # :ref:`constructor function <why_constructor>`.
@@ -248,7 +248,7 @@ uplt.rc.reset()
 # --------------
 #
 # The above examples all assumed typical "numeric" axes. However
-# `~ultraplot.axes.CartesianAxes.format` can also modify the tick locations and tick
+# :func:`~ultraplot.axes.CartesianAxes.format` can also modify the tick locations and tick
 # labels for "datetime" axes. To draw ticks on each occurence of some particular time
 # unit, use a unit string (e.g., ``xlocator='month'``). To draw ticks every ``N`` time
 # units, use a (unit, N) tuple (e.g., ``xlocator=('day', 5)``). For `% style formatting
@@ -256,7 +256,7 @@ uplt.rc.reset()
 # of datetime tick labels with `~datetime.datetime.strftime`, you can use a string
 # containing ``'%'`` (e.g. ``xformatter='%Y-%m-%d'``). By default, *x* axis datetime
 # axis labels are rotated 90 degrees, like in `pandas`_. This can be disabled by
-# passing ``xrotation=0`` to `~ultraplot.axes.CartesianAxes.format` or by setting
+# passing ``xrotation=0`` to :func:`~ultraplot.axes.CartesianAxes.format` or by setting
 # :rcraw:`formatter.timerotation` to ``0``. See :class::class:`~ultraplot.constructor.Locator`
 # and :class::class:`~ultraplot.constructor.Formatter` for details.
 
@@ -382,14 +382,14 @@ uplt.rc.reset()
 #
 # "Axis scales" like ``'linear'`` and ``'log'`` control the *x* and *y* axis
 # coordinate system. To change the axis scale, pass e.g. ``xscale='log'`` or
-# ``yscale='log'`` to `~ultraplot.axes.Axes.format`. This is powered by the
+# ``yscale='log'`` to :func:`~ultraplot.axes.Axes.format`. This is powered by the
 # :class::class:`~ultraplot.constructor.Scale` :ref:`constructor function <why_constructor>`.
 # UltraPlot makes several changes to the axis scale API:
 #
 # * The `~ultraplot.ticker.AutoFormatter` formatter is now used for all axis scales
 #   by default, including ``'log'`` and ``'symlog'``. Matplotlib's behavior can
 #   be restored by passing e.g. ``xformatter='log'`` or ``yformatter='log'`` to
-#   `~ultraplot.axes.CartesianAxes.format`.
+#   :func:`~ultraplot.axes.CartesianAxes.format`.
 # * To make its behavior consistent with :class::class:`~ultraplot.constructor.Locator` and
 #   :class::class:`~ultraplot.constructor.Formatter`, the :class::class:`~ultraplot.constructor.Scale`
 #   constructor function returns instances of `~matplotlib.scale.ScaleBase`,
@@ -548,11 +548,11 @@ ax.format(ymin=0.05, yscale=("power", 0.5), title=title)
 # The `matplotlib.axes.Axes` class includes :func:`~matplotlib.axes.Axes.twinx`
 # and :func:`~matplotlib.axes.Axes.twiny` commands for drawing "twin" *x* and
 # *y* axes in the same subplot. UltraPlot expands on these commands and adds
-# the arguably more intuitive `~ultraplot.axes.CartesianAxes.altx` and
-# `~ultraplot.axes.CartesianAxes.alty` options. Here `~ultraplot.axes.CartesianAxes.altx`
-# is equivalent to `~ultraplot.axes.CartesianAxes.twiny` (makes an alternate *x*
-# axes and an identical twin *y* axes) and `~ultraplot.axes.CartesianAxes.alty`
-# is equivalent to `~ultraplot.axes.CartesianAxes.twinx` (makes an alternate *y*
+# the arguably more intuitive :func:`~ultraplot.axes.CartesianAxes.altx` and
+# :func:`~ultraplot.axes.CartesianAxes.alty` options. Here :func:`~ultraplot.axes.CartesianAxes.altx`
+# is equivalent to :func:`~ultraplot.axes.CartesianAxes.twiny` (makes an alternate *x*
+# axes and an identical twin *y* axes) and :func:`~ultraplot.axes.CartesianAxes.alty`
+# is equivalent to :func:`~ultraplot.axes.CartesianAxes.twinx` (makes an alternate *y*
 # axes and an identical twin *x* axes). The UltraPlot versions can be quickly
 # formatted by passing `ultraplot.axes.CartesianAxes.format` keyword arguments
 # to the commands (e.g., ``ax.alty(ycolor='red')`` or, since the ``y`` prefix in
@@ -604,13 +604,13 @@ fig.format(xlabel="xlabel", ylabel="ylabel", suptitle="Alternate axes demo")
 # Dual unit axes
 # --------------
 #
-# The `~ultraplot.axes.CartesianAxes.dualx` and
-# `~ultraplot.axes.CartesianAxes.dualy` methods can be used to draw duplicate *x* and
+# The :func:`~ultraplot.axes.CartesianAxes.dualx` and
+# :func:`~ultraplot.axes.CartesianAxes.dualy` methods can be used to draw duplicate *x* and
 # *y* axes meant to represent *alternate units* in the same coordinate range as the
 # "parent" axis. This feature is powered by the `~ultraplot.scale.FuncScale` class.
-# `~ultraplot.axes.CartesianAxes.dualx` and `~ultraplot.axes.CartesianAxes.dualy` accept
-# the same axis formatting keyword arguments as `~ultraplot.axes.CartesianAxes.altx`
-# and `~ultraplot.axes.CartesianAxes.alty`. The alternate units are specified with
+# :func:`~ultraplot.axes.CartesianAxes.dualx` and :func:`~ultraplot.axes.CartesianAxes.dualy` accept
+# the same axis formatting keyword arguments as :func:`~ultraplot.axes.CartesianAxes.altx`
+# and :func:`~ultraplot.axes.CartesianAxes.alty`. The alternate units are specified with
 # either of the following three positional arguments:
 #
 # #. A single linear forward function.
@@ -622,7 +622,7 @@ fig.format(xlabel="xlabel", ylabel="ylabel", suptitle="Alternate axes demo")
 # for the default dual axis locators and formatters. In the below examples,
 # we generate dual axes with each of these three methods. Note that the
 # "parent" axis scale is arbitrary -- in the first example, we create
-# a `~ultraplot.axes.CartesianAxes.dualx` axis for a `symlog-scaled
+# a :func:`~ultraplot.axes.CartesianAxes.dualx` axis for a `symlog-scaled
 # <https://matplotlib.org/stable/gallery/scales/symlog_demo.html>`__ axis.
 
 # %%

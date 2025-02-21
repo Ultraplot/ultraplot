@@ -50,9 +50,9 @@ didn't contribute to the matplotlib project directly.
   permitting *fluid figure dimensions*, and the new `~ultraplot.gridspec.GridSpec` class
   permits *variable spacing* between rows and columns and uses *physical units* rather
   than figure-relative and axes-relative units.
-* Certain features are arguably too redundant. For example, :func:`~ultraplot.axes.Axes.format`
+* Certain features are arguably too redundant. For example, :func::func:`~ultraplot.axes.Axes.format`
   is convenient, but the same tasks can be accomplished with existing axes and axis
-  "setter" methods. Also, some of the functionality of :func:`~ultraplot.ui.subplots` can be
+  "setter" methods. Also, some of the functionality of :func::func:`~ultraplot.ui.subplots` can be
   replicated with `axes_grid1
   <https://matplotlib.org/mpl_toolkits/axes_grid1/index.html>`__. Following `TOOWTDI
   <https://wiki.python.org/moin/TOOWTDI>`__ philosophy, these features should probably

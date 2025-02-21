@@ -42,12 +42,12 @@
 # Included color cycles
 # ---------------------
 #
-# Use `~ultraplot.demos.show_cycles` to generate a table of registered color
+# Use :func:`~ultraplot.demos.show_cycles` to generate a table of registered color
 # cycles. The table includes the default color cycles registered by UltraPlot and
 # "user" color cycles created with the :class::class:`~ultraplot.constructor.Cycle` constructor
-# function or loaded from `~ultraplot.config.Configurator.user_folder`. If you need
+# function or loaded from :func:`~ultraplot.config.Configurator.user_folder`. If you need
 # the list of colors associated with a registered or on-the-fly color cycle,
-# simply use `~ultraplot.utils.get_colors`.
+# simply use :func:`~ultraplot.utils.get_colors`.
 
 # %%
 import ultraplot as uplt
@@ -61,8 +61,8 @@ fig, axs = uplt.show_cycles(rasterized=True)
 # Changing the color cycle
 # ------------------------
 #
-# Most 1D `~ultraplot.axes.PlotAxes` commands like `~ultraplot.axes.PlotAxes.line`
-# and `~ultraplot.axes.PlotAxes.scatter` accept a `cycle` keyword (see the
+# Most 1D `~ultraplot.axes.PlotAxes` commands like :func:`~ultraplot.axes.PlotAxes.line`
+# and :func:`~ultraplot.axes.PlotAxes.scatter` accept a `cycle` keyword (see the
 # :ref:`1D plotting section <ug_apply_cycle>`). This can be used to change the
 # color cycle on-the-fly, whether plotting with successive calls to
 # `~ultraplot.axes.PlotAxes` commands or a single call using 2D array(s) (see
@@ -166,7 +166,7 @@ ax.format(title="Cycle from merged colormaps", suptitle="Color cycles from color
 # --------------------------
 #
 # :class::class:`~ultraplot.constructor.Cycle` can generate :class:`~cycler.Cycler` instances that
-# change `~ultraplot.axes.PlotAxes.line` and `~ultraplot.axes.PlotAxes.scatter`
+# change :func:`~ultraplot.axes.PlotAxes.line` and :func:`~ultraplot.axes.PlotAxes.scatter`
 # properties other than `color`. In the below example, a single-color line
 # property cycler is constructed and applied to the axes locally using the
 # line properties `lw` and `dashes` (the aliases `linewidth` or `linewidths`
@@ -210,11 +210,11 @@ obj = ax.plot(
 # and `Color Drop <https://colordrop.io/>`__.
 
 # To add color cycles downloaded from any of these sources, save the color data file
-# to the ``cycles`` subfolder inside `~ultraplot.config.Configurator.user_folder`,
+# to the ``cycles`` subfolder inside :func:`~ultraplot.config.Configurator.user_folder`,
 # or to a folder named ``ultraplot_cycles`` in the same directory as your python session
-# or an arbitrary parent directory (see `~ultraplot.config.Configurator.local_folders`).
-# After adding the file, call `~ultraplot.config.register_cycles` or restart your python
-# session. You can also use `~ultraplot.colors.DiscreteColormap.from_file` or manually
+# or an arbitrary parent directory (see :func:`~ultraplot.config.Configurator.local_folders`).
+# After adding the file, call :func:`~ultraplot.config.register_cycles` or restart your python
+# session. You can also use :func:`~ultraplot.colors.DiscreteColormap.from_file` or manually
 # pass `~ultraplot.colors.DiscreteColormap` instances or file paths to
-# `~ultraplot.config.register_cycles`. See `~ultraplot.config.register_cycles`
+# :func:`~ultraplot.config.register_cycles`. See :func:`~ultraplot.config.register_cycles`
 # for a table of recognized data file extensions.

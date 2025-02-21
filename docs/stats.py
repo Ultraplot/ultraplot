@@ -39,11 +39,11 @@
 # ----------------------
 #
 # Error bars and error shading can be quickly added on-the-fly to
-# :func:`~ultraplot.axes.PlotAxes.line`, :func:`~ultraplot.axes.PlotAxes.linex`
-# (equivalently, :func:`~ultraplot.axes.PlotAxes.plot`,
-# :func:`~ultraplot.axes.PlotAxes.plotx`), :func:`~ultraplot.axes.PlotAxes.scatter`,
-# :func:`~ultraplot.axes.PlotAxes.scatterx`, :func:`~ultraplot.axes.PlotAxes.bar`, and
-# :func:`~ultraplot.axes.PlotAxes.barh` plots using any of several keyword arguments.
+# :func::func:`~ultraplot.axes.PlotAxes.line`, :func::func:`~ultraplot.axes.PlotAxes.linex`
+# (equivalently, :func::func:`~ultraplot.axes.PlotAxes.plot`,
+# :func::func:`~ultraplot.axes.PlotAxes.plotx`), :func::func:`~ultraplot.axes.PlotAxes.scatter`,
+# :func::func:`~ultraplot.axes.PlotAxes.scatterx`, :func::func:`~ultraplot.axes.PlotAxes.bar`, and
+# :func::func:`~ultraplot.axes.PlotAxes.barh` plots using any of several keyword arguments.
 #
 # If you pass 2D arrays to these commands with ``mean=True``, ``means=True``,
 # ``median=True``, or ``medians=True``, the means or medians of each column are
@@ -153,10 +153,10 @@ for orientation, array in zip(("vertical", "horizontal"), (varray, harray)):
 # --------------------------
 #
 # Vertical and horizontal box and violin plots can be drawn using
-# :func:`~ultraplot.axes.PlotAxes.boxplot`, :func:`~ultraplot.axes.PlotAxes.violinplot`,
-# :func:`~ultraplot.axes.PlotAxes.boxploth`, and :func:`~ultraplot.axes.PlotAxes.violinploth` (or
-# their new shorthands, :func:`~ultraplot.axes.PlotAxes.box`, :func:`~ultraplot.axes.PlotAxes.violin`,
-# :func:`~ultraplot.axes.PlotAxes.boxh`, and :func:`~ultraplot.axes.PlotAxes.violinh`). The
+# :func::func:`~ultraplot.axes.PlotAxes.boxplot`, :func::func:`~ultraplot.axes.PlotAxes.violinplot`,
+# :func::func:`~ultraplot.axes.PlotAxes.boxploth`, and :func::func:`~ultraplot.axes.PlotAxes.violinploth` (or
+# their new shorthands, :func::func:`~ultraplot.axes.PlotAxes.box`, :func::func:`~ultraplot.axes.PlotAxes.violin`,
+# :func::func:`~ultraplot.axes.PlotAxes.boxh`, and :func::func:`~ultraplot.axes.PlotAxes.violinh`). The
 # UltraPlot versions employ aesthetically pleasing defaults and permit flexible
 # configuration using keywords like `color`, `barcolor`, and `fillcolor`.
 # They also automatically apply axis labels based on the `~pandas.DataFrame`
@@ -203,13 +203,13 @@ ax.format(title="Multiple colors", ymargin=0.15)
 # -----------------------------
 #
 # Vertical and horizontal histograms can be drawn with
-# :func:`~ultraplot.axes.PlotAxes.hist` and :func:`~ultraplot.axes.PlotAxes.histh`.
+# :func::func:`~ultraplot.axes.PlotAxes.hist` and :func::func:`~ultraplot.axes.PlotAxes.histh`.
 # As with the other 1D `~ultraplot.axes.PlotAxes` commands, multiple histograms
 # can be drawn by passing 2D arrays instead of 1D arrays, and the color
 # cycle used to color histograms can be changed on-the-fly using
 # the `cycle` and `cycle_kw` keywords. Likewise, 2D histograms can
 # be drawn with the `~ultraplot.axes.PlotAxes.hist2d`
-# :func:`~ultraplot.axes.PlotAxes.hexbin` commands, and their colormaps can
+# :func::func:`~ultraplot.axes.PlotAxes.hexbin` commands, and their colormaps can
 # be changed on-the-fly with the `cmap` and `cmap_kw` keywords (see
 # the :ref:`2D plotting section <ug_apply_cmap>`). Marginal distributions
 # for the 2D histograms can be added using :ref:`panel axes <ug_panels>`.
@@ -217,7 +217,7 @@ ax.format(title="Multiple colors", ymargin=0.15)
 # In the future, UltraPlot will include options for adding "smooth" kernel density
 # estimations to histograms plots using a `kde` keyword. It will also include
 # separate `ultraplot.axes.PlotAxes.kde` and `ultraplot.axes.PlotAxes.kde2d` commands.
-# The :func:`~ultraplot.axes.PlotAxes.violin` and :func:`~ultraplot.axes.PlotAxes.violinh` commands
+# The :func::func:`~ultraplot.axes.PlotAxes.violin` and :func::func:`~ultraplot.axes.PlotAxes.violinh` commands
 # will use the same algorithm for kernel density estimation as the `kde` commands.
 
 # %%
