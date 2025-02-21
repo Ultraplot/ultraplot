@@ -26,8 +26,8 @@
 #
 # UltraPlot works by `subclassing
 # <https://docs.python.org/3/tutorial/classes.html#inheritance>`__
-# three fundamental matplotlib classes: `ultraplot.figure.Figure` replaces
-# `matplotlib.figure.Figure`, `ultraplot.axes.Axes` replaces `matplotlib.axes.Axes`,
+# three fundamental matplotlib classes: :class:`ultraplot.figure.Figure` replaces
+# :class:`matplotlib.figure.Figure`, :class:`ultraplot.axes.Axes` replaces :class:`matplotlib.axes.Axes`,
 # and `ultraplot.gridspec.GridSpec` replaces `matplotlib.gridspec.GridSpec`
 # (see this `tutorial
 # <https://matplotlib.org/stable/tutorials/intermediate/gridspec.html>`__

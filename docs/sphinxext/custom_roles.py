@@ -7,7 +7,7 @@ import os
 from docutils import nodes
 from matplotlib import rcParams
 
-from UltraPlot.internals import rcsetup
+from ultraplot.internals import rcsetup
 
 
 def _node_list(rawtext, text, inliner):

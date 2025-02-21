@@ -45,7 +45,7 @@ release = ""
 # -- Create files --------------------------------------------------------------
 
 # Create RST table and sample ultraplotrc file
-from UltraPlot.config import rc
+from ultraplot.config import rc
 
 folder = (Path(__file__).parent / "_static").absolute()
 if not folder.is_dir():
@@ -107,7 +107,7 @@ extensions = [
     "nbsphinx",  # parse rst books
 ]
 
-autoapi_dirs = ["../UltraPlot/"]
+autoapi_dirs = ["../ultraplot/"]
 
 # The master toctree document.
 master_doc = "index"
@@ -170,9 +170,9 @@ copybutton_remove_prompts = True
 
 # Links for What's New github commits, issues, and pull requests
 extlinks = {
-    "issue": ("https://github.com/UltraPlot/UltraPlot/issues/%s", "GH#%s"),
-    "commit": ("https://github.com/UltraPlot/UltraPlot/commit/%s", "@%s"),
-    "pr": ("https://github.com/UltraPlot/ultralpot/pull/%s", "GH#%s"),
+    "issue": ("https://github.com/ultraplot/ultraplot/issues/%s", "GH#%s"),
+    "commit": ("https://github.com/ultraPlot/ultraplot/commit/%s", "@%s"),
+    "pr": ("https://github.com/ultraPlot/ultraplot/pull/%s", "GH#%s"),
 }
 
 # Set up mapping for other projects' docs
@@ -221,13 +221,13 @@ napoleon_type_aliases = {
     "path-like": ":term:`path-like <path-like object>`",
     "array-like": ":term:`array-like <array_like>`",
     # UltraPlot defined terms
-    "unit-spec": ":py:func:`unit-spec <UltraPlot.utils.units>`",
-    "locator-spec": ":py:func:`locator-spec <UltraPlot.constructor.Locator>`",
-    "formatter-spec": ":py:func:`formatter-spec <UltraPlot.constructor.Formatter>`",
-    "scale-spec": ":py:func:`scale-spec <UltraPlot.constructor.Scale>`",
-    "colormap-spec": ":py:func:`colormap-spec <UltraPlot.constructor.Colormap>`",
-    "cycle-spec": ":py:func:`cycle-spec <UltraPlot.constructor.Cycle>`",
-    "norm-spec": ":py:func:`norm-spec <UltraPlot.constructor.Norm>`",
+    "unit-spec": ":py:func:`unit-spec <ultraplot.utils.units>`",
+    "locator-spec": ":py:func:`locator-spec <ultraplot.constructor.Locator>`",
+    "formatter-spec": ":py:func:`formatter-spec <ultraplot.constructor.Formatter>`",
+    "scale-spec": ":py:func:`scale-spec <ultraplot.constructor.Scale>`",
+    "colormap-spec": ":py:func:`colormap-spec <ultraplot.constructor.Colormap>`",
+    "cycle-spec": ":py:func:`cycle-spec <ultraplot.constructor.Cycle>`",
+    "norm-spec": ":py:func:`norm-spec <ultraplot.constructor.Norm>`",
     "color-spec": ":py:func:`color-spec <matplotlib.colors.is_color_like>`",
     "artist": ":py:func:`artist <matplotlib.artist.Artist>`",
 }

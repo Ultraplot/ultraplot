@@ -25,18 +25,18 @@ until the first major release (version 1.0.0).
 Figure class
 ============
 
-.. automodule:: UltraPlot.figure
+.. automodule:: ultraplot.figure
 
-.. automodsumm:: UltraPlot.figure
+.. automodsumm:: ultraplot.figure
    :toctree: api
 
 
 Grid classes
 ============
 
-.. automodule:: UltraPlot.gridspec
+.. automodule:: ultraplot.gridspec
 
-.. automodsumm:: UltraPlot.gridspec
+.. automodsumm:: ultraplot.gridspec
    :toctree: api
    :skip: SubplotsContainer
 
@@ -44,27 +44,27 @@ Grid classes
 Axes classes
 ============
 
-.. automodule:: UltraPlot.axes
+.. automodule:: ultraplot.axes
 
-.. automodsumm:: UltraPlot.axes
+.. automodsumm:: ultraplot.axes
    :toctree: api
 
 
 Top-level functions
 ===================
 
-.. automodule:: UltraPlot.ui
+.. automodule:: ultraplot.ui
 
-.. automodsumm:: UltraPlot.ui
+.. automodsumm:: ultraplot.ui
    :toctree: api
 
 
 Configuration tools
 ===================
 
-.. automodule:: UltraPlot.config
+.. automodule:: ultraplot.config
 
-.. automodsumm:: UltraPlot.config
+.. automodsumm:: ultraplot.config
    :toctree: api
    :skip: inline_backend_fmt, RcConfigurator
 
@@ -72,9 +72,9 @@ Configuration tools
 Constructor functions
 =====================
 
-.. automodule:: UltraPlot.constructor
+.. automodule:: ultraplot.constructor
 
-.. automodsumm:: UltraPlot.constructor
+.. automodsumm:: ultraplot.constructor
    :toctree: api
    :skip: Colors
 
@@ -82,27 +82,27 @@ Constructor functions
 Locators and formatters
 =======================
 
-.. automodule:: UltraPlot.ticker
+.. automodule:: ultraplot.ticker
 
-.. automodsumm:: UltraPlot.ticker
+.. automodsumm:: ultraplot.ticker
    :toctree: api
 
 
 Axis scale classes
 ==================
 
-.. automodule:: UltraPlot.scale
+.. automodule:: ultraplot.scale
 
-.. automodsumm:: UltraPlot.scale
+.. automodsumm:: ultraplot.scale
    :toctree: api
 
 
 Colormaps and normalizers
 =========================
 
-.. automodule:: UltraPlot.colors
+.. automodule:: ultraplot.colors
 
-.. automodsumm:: UltraPlot.colors
+.. automodsumm:: ultraplot.colors
    :toctree: api
    :skip: ListedColormap, LinearSegmentedColormap, PerceptuallyUniformColormap, LinearSegmentedNorm
 
@@ -110,26 +110,26 @@ Colormaps and normalizers
 Projection classes
 ==================
 
-.. automodule:: UltraPlot.proj
+.. automodule:: ultraplot.proj
 
-.. automodsumm:: UltraPlot.proj
+.. automodsumm:: ultraplot.proj
    :toctree: api
 
 
 Demo functions
 ==============
 
-.. automodule:: UltraPlot.demos
+.. automodule:: ultraplot.demos
 
-.. automodsumm:: UltraPlot.demos
+.. automodsumm:: ultraplot.demos
    :toctree: api
 
 
 Miscellaneous functions
 =======================
 
-.. automodule:: UltraPlot.utils
+.. automodule:: ultraplot.utils
 
-.. automodsumm:: UltraPlot.utils
+.. automodsumm:: ultraplot.utils
    :toctree: api
    :skip: shade, saturate
