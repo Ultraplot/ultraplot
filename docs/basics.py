@@ -128,7 +128,7 @@ ax.plot(data, lw=2)
 #   subplot at the corresponding location. Note that unlike matplotlib, only
 #   one :func:`~ultraplot.figure.Figure.gridspec` can be used with each figure.
 #
-# As in matplotlib, to save figures, use `~matplotlib.figure.Figure.savefig` (or its
+# As in matplotlib, to save figures, use :func:`~matplotlib.figure.Figure.savefig` (or its
 # shorthand :func:`~ultraplot.figure.Figure.save`). User paths in the filename are expanded
 # with :func:`~os.path.expanduser`. In the following examples, we add subplots to figures
 # with a variety of methods and then save the results to the home directory.
@@ -231,15 +231,15 @@ fig.format(
 # Multiple subplots
 # -----------------
 #
-# If you create subplots all-at-once with e.g. `~ultraplot.ui.subplots`,
-# UltraPlot returns a `~ultraplot.gridspec.SubplotGrid` of subplots. This list-like,
+# If you create subplots all-at-once with e.g. :func:`~ultraplot.ui.subplots`,
+# UltraPlot returns a :class:`~ultraplot.gridspec.SubplotGrid` of subplots. This list-like,
 # array-like object provides some useful features and unifies the behavior of the
 # three possible return types used by `matplotlib.pyplot.subplots`:
 #
-# * `~ultraplot.gridspec.SubplotGrid` behaves like a scalar when it is singleton.
+# * :class:`~ultraplot.gridspec.SubplotGrid` behaves like a scalar when it is singleton.
 #   In other words, if you make a single subplot with ``fig, axs = uplt.subplots()``,
 #   then ``axs[0].method(...)`` is equivalent to ``axs.method(...)``.
-# * `~ultraplot.gridspec.SubplotGrid` permits list-like 1D indexing, e.g. ``axs[1]``
+# * :class:`~ultraplot.gridspec.SubplotGrid` permits list-like 1D indexing, e.g. ``axs[1]``
 #   to return the second subplot. The subplots in the grid are sorted by
 #   `~ultraplot.axes.Axes.number` (see :ref:`this page <ug_abc>` for details
 #   on changing the `~ultraplot.axes.Axes.number` order).
