@@ -26,8 +26,8 @@
 # color cycles are registered as `~ultraplot.colors.DiscreteColormap`\ s,
 # and can be easily converted into `property cyclers
 # <https://matplotlib.org/stable/tutorials/intermediate/color_cycle.html>`__
-# for use with distinct plot elements using the :class:`~ultraplot.constructor.Cycle`
-# constructor function. :class:`~ultraplot.constructor.Cycle` can also
+# for use with distinct plot elements using the :class::class:`~ultraplot.constructor.Cycle`
+# constructor function. :class::class:`~ultraplot.constructor.Cycle` can also
 # :ref:`extract colors <ug_cycles_new>` from `~ultraplot.colors.ContinuousColormap`\ s.
 #
 # UltraPlot :ref:`adds several features <why_colormaps_cycles>` to help you use color
@@ -44,7 +44,7 @@
 #
 # Use `~ultraplot.demos.show_cycles` to generate a table of registered color
 # cycles. The table includes the default color cycles registered by UltraPlot and
-# "user" color cycles created with the :class:`~ultraplot.constructor.Cycle` constructor
+# "user" color cycles created with the :class::class:`~ultraplot.constructor.Cycle` constructor
 # function or loaded from `~ultraplot.config.Configurator.user_folder`. If you need
 # the list of colors associated with a registered or on-the-fly color cycle,
 # simply use `~ultraplot.utils.get_colors`.
@@ -68,7 +68,7 @@ fig, axs = uplt.show_cycles(rasterized=True)
 # `~ultraplot.axes.PlotAxes` commands or a single call using 2D array(s) (see
 # the :ref:`1D plotting section <ug_1dstd>`). To change the global property
 # cycler, pass a `~ultraplot.colors.DiscreteColormap` or cycle name
-# to :rcraw:`cycle` or pass the result of :class:`~ultraplot.constructor.Cycle`
+# to :rcraw:`cycle` or pass the result of :class::class:`~ultraplot.constructor.Cycle`
 # to :rcraw:`axes.prop_cycle` (see the :ref:`configuration guide <ug_config>`).
 
 # %%
@@ -110,7 +110,7 @@ for i in range(data.shape[1]):
 #
 # UltraPlot includes tools for merging color cycles, modifying existing color
 # cycles, making new color cycles, and saving color cycles for future use.
-# Most of these features can be accessed via the :class:`~ultraplot.constructor.Cycle`
+# Most of these features can be accessed via the :class::class:`~ultraplot.constructor.Cycle`
 # :ref:`constructor function <why_constructor>`. This command returns
 # :class:`~cycler.Cycler` instances whose `color` properties are determined by the
 # positional arguments (see :ref:`below <ug_cycles_other>` for changing other
@@ -118,8 +118,8 @@ for i in range(data.shape[1]):
 # `cycle` keyword passes it through this function (see the :ref:`1D plotting
 # section <ug_apply_cycle>`).
 
-# Positional arguments passed to :class:`~ultraplot.constructor.Cycle` are interpreted
-# by the :class:`~ultraplot.constructor.Colormap` constructor function. If the result
+# Positional arguments passed to :class::class:`~ultraplot.constructor.Cycle` are interpreted
+# by the :class::class:`~ultraplot.constructor.Colormap` constructor function. If the result
 # is a `~ultraplot.colors.DiscreteColormap`, those colors are used for the resulting
 # :class:`~cycler.Cycler`. If the result is a `~ultraplot.colors.ContinuousColormap`, the
 # colormap is sampled at `N` discrete values -- for example, ``uplt.Cycle('Blues', 5)``
@@ -128,7 +128,7 @@ for i in range(data.shape[1]):
 # as there are columns in the 2D array (i.e., if we are drawing 10 lines using an array
 # with 10 columns, UltraPlot will select 10 evenly-spaced values from the colormap).
 # To exclude near-white colors on the end of a colormap, pass e.g. ``left=x``
-# to :class:`~ultraplot.constructor.Cycle`, or supply a plotting command with e.g.
+# to :class::class:`~ultraplot.constructor.Cycle`, or supply a plotting command with e.g.
 # ``cycle_kw={'left': x}``. See the :ref:`colormaps section <ug_cmaps>` for details.
 #
 # In the below example, several color cycles are constructed from scratch, and
@@ -165,7 +165,7 @@ ax.format(title="Cycle from merged colormaps", suptitle="Color cycles from color
 # Cycles of other properties
 # --------------------------
 #
-# :class:`~ultraplot.constructor.Cycle` can generate :class:`~cycler.Cycler` instances that
+# :class::class:`~ultraplot.constructor.Cycle` can generate :class:`~cycler.Cycler` instances that
 # change `~ultraplot.axes.PlotAxes.line` and `~ultraplot.axes.PlotAxes.scatter`
 # properties other than `color`. In the below example, a single-color line
 # property cycler is constructed and applied to the axes locally using the

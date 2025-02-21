@@ -311,8 +311,8 @@ for ax, title in zip(axs, ("2D {} #1", "2D {} #2", "Line {} #1", "Line {} #2")):
 # Similar to `ultraplot.axes.CartesianAxes.format`, you can flexibly specify
 # major tick locations, minor tick locations, and major tick labels using the
 # `locator`, `minorlocator`, `formatter`, `ticks`, `minorticks`, and `ticklabels`
-# keywords. These arguments are passed through the `~ultraplot.constructor.Locator` and
-# `~ultraplot.constructor.Formatter` :ref:`constructor functions <why_constructor>`.
+# keywords. These arguments are passed through the :class:`~ultraplot.constructor.Locator` and
+# :class:`~ultraplot.constructor.Formatter` :ref:`constructor functions <why_constructor>`.
 # Unlike matplotlib, the default ticks for :ref:`discrete colormaps <ug_discrete>`
 # are restricted based on the axis length using `~ultraplot.ticker.DiscreteLocator`.
 # You can easily toggle minor ticks using ``tickminor=True``.

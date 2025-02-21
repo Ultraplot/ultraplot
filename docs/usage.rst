@@ -167,7 +167,7 @@ Outside of the features provided by the `ultraplot.figure.Figure` and
 `ultraplot.axes.Axes` subclasses, UltraPlot includes several useful
 classes and :ref:`constructor functions <why_constructor>`.
 
-* The `~ultraplot.constructor.Colormap` and `~ultraplot.constructor.Cycle`
+* The :class:`~ultraplot.constructor.Colormap` and :class:`~ultraplot.constructor.Cycle`
   constructor functions can be used to :ref:`slice <ug_cmaps_mod>`,
   and :ref:`merge <ug_cmaps_merge>` existing colormaps and color
   cycles. It can also :ref:`make new colormaps <ug_cmaps_new>`
@@ -183,19 +183,19 @@ classes and :ref:`constructor functions <why_constructor>`.
   functions are used to visualize your :ref:`color scheme <ug_colors>`
   and :ref:`font options <ug_fonts>` and
   :ref:`inspect individual colormaps <ug_perceptual>`.
-* The `~ultraplot.constructor.Norm` constructor function generates colormap
+* The :class:`~ultraplot.constructor.Norm` constructor function generates colormap
   normalizers from shorthand names. The new
   `~ultraplot.colors.SegmentedNorm` normalizer scales colors evenly
   w.r.t. index for arbitrarily spaced monotonic levels, and the new
   `~ultraplot.colors.DiscreteNorm` meta-normalizer is used to
   :ref:`break up colormap colors into discrete levels <ug_discrete>`.
-* The `~ultraplot.constructor.Locator`, `~ultraplot.constructor.Formatter`, and
-  `~ultraplot.constructor.Scale` constructor functions return corresponding class
+* The :class:`~ultraplot.constructor.Locator`, :class:`~ultraplot.constructor.Formatter`, and
+  :class:`~ultraplot.constructor.Scale` constructor functions return corresponding class
   instances from flexible input types. These are used to interpret keyword
   arguments passed to :func:`~ultraplot.axes.Axes.format`, and can be used to quickly
   and easily modify :ref:`x and y axis settings <ug_cartesian>`.
 * The :func:`~ultraplot.config.rc` object, an instance of
-  `~ultraplot.config.Configurator`, is used for
+  :class:`~ultraplot.config.Configurator`, is used for
   :ref:`modifying individual settings, changing settings in bulk, and
   temporarily changing settings in context blocks <ug_rc>`.
   It also introduces several :ref:`new setings <ug_config>`

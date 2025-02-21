@@ -20,8 +20,8 @@ How does UltraPlot compare against these tools?
   data in UltraPlot to be much more concise than working with cartopy and basemap
   directly.
 * UltraPlot *expands upon* the seaborn tools for working with color and global settings.
-  For example, see `~ultraplot.constructor.Colormap`,
-  `~ultraplot.colors.PerceptualColormap`, and `~ultraplot.config.Configurator`.
+  For example, see :class:`~ultraplot.constructor.Colormap`,
+  `~ultraplot.colors.PerceptualColormap`, and :class:`~ultraplot.config.Configurator`.
 * UltraPlot *expands upon* matplotlib by fixing various quirks, developing a more
   advanced automatic layout algorithm, simplifying the process of drawing outer
   colorbars and legends, and much more.
@@ -89,7 +89,7 @@ the document.
 UltraPlot helps you get your figure sizes *correct* for embedding them as vector graphics
 inside publications.  It uses a slightly smaller default font size, calculates the
 default figure size from the number of subplot rows and columns, and adds the `journal`
-keyword argument to `~ultraplot.figure.Figure` which can be used to employ figure
+keyword argument to :class:`~ultraplot.figure.Figure` which can be used to employ figure
 dimensions from a particular journal standard.  To keep the inline figures legible,
 UltraPlot also employs a *higher quality* default inline backend.
 

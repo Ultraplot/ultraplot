@@ -116,7 +116,7 @@ axs[2].format(
 # To create geographic axes, pass ``proj='name'`` to an axes-creation command like
 # `ultraplot.figure.Figure.add_subplot`, where ``name`` is any valid :ref:`PROJ projection
 # name <proj_table>`. Alternatively, you can pass a `cartopy.crs.Projection` or
-# `~mpl_toolkits.basemap.Basemap` instance returned by the `~ultraplot.constructor.Proj`
+# `~mpl_toolkits.basemap.Basemap` instance returned by the :class:`~ultraplot.constructor.Proj`
 # :ref:`constructor function <why_constructor>` to `proj` (see below for details). If
 # you want to create your subplots :ref:`all-at-once <ug_subplot>` with e.g.
 # :func:`~ultraplot.ui.subplots` but need different projections for each subplot, you can pass
@@ -207,7 +207,7 @@ axs.format(
 #      from the cartopy website). To disable this feature, set :rcraw:`geo.round` to
 #      ``False`` or pass ``round=False` to :func:`~ultraplot.axes.GeoAxes.format`. Please note
 #      that older versions of cartopy cannot add gridlines to maps bounded by circles.
-#    * To make things more consistent, the `~ultraplot.constructor.Proj` constructor
+#    * To make things more consistent, the :class:`~ultraplot.constructor.Proj` constructor
 #      function lets you supply native `PROJ <https://proj.org>`__ keyword names
 #      for the cartopy `~cartopy.crs.Projection` classes (e.g., `lon0` instead
 #      of `central_longitude`) and instantiates `~mpl_toolkits.basemap.Basemap`
@@ -435,9 +435,9 @@ fig.format(
 # To zoom into basemap projections, pass any of the `boundinglat`,
 # `llcrnrlon`, `llcrnrlat`, `urcrnrlon`, `urcrnrlat`, `llcrnrx`, `llcrnry`,
 # `urcrnrx`, `urcrnry`, `width`, or `height` keyword arguments to
-# the `~ultraplot.constructor.Proj` constructor function either directly or via
+# the :class:`~ultraplot.constructor.Proj` constructor function either directly or via
 # the `proj_kw` :func:`~ultraplot.ui.subplots` keyword argument. You can also pass
-# `lonlim` and `latlim` to `~ultraplot.constructor.Proj` and these arguments
+# `lonlim` and `latlim` to :class:`~ultraplot.constructor.Proj` and these arguments
 # will be used for `llcrnrlon`, `llcrnrlat`, etc. You cannot zoom into basemap
 # projections with `format` after they have already been created.
 

@@ -164,11 +164,11 @@ by defining "constructor functions" and passing various keyword arguments throug
 these functions.
 
 The constructor functions also accept intuitive inputs alongside "registered"
-names. For example, a scalar passed to `~ultraplot.constructor.Locator`
+names. For example, a scalar passed to :class:`~ultraplot.constructor.Locator`
 returns a `~matplotlib.ticker.MultipleLocator`, a
-lists of strings passed to `~ultraplot.constructor.Formatter` returns a
-`~matplotlib.ticker.FixedFormatter`, and `~ultraplot.constructor.Cycle`
-and `~ultraplot.constructor.Colormap` accept colormap names, individual colors, and
+lists of strings passed to :class:`~ultraplot.constructor.Formatter` returns a
+`~matplotlib.ticker.FixedFormatter`, and :class:`~ultraplot.constructor.Cycle`
+and :class:`~ultraplot.constructor.Colormap` accept colormap names, individual colors, and
 lists of colors. Passing the relevant class instance to a constructor function
 simply returns it, and all the registered classes are available in the top-level
 namespace -- so class instances can be directly created with e.g.
@@ -180,13 +180,13 @@ The below table lists the constructor functions and the keyword arguments that u
 ================================  ============================================================  ==============================================================================  ================================================================================================================================================================================================
 Function                          Return type                                                   Used by                                                                         Keyword argument(s)
 ================================  ============================================================  ==============================================================================  ================================================================================================================================================================================================
-`~ultraplot.constructor.Proj`       `~cartopy.crs.Projection` or `~mpl_toolkits.basemap.Basemap`  :func:`~ultraplot.figure.Figure.add_subplot` and :func:`~ultraplot.figure.Figure.add_subplots`  ``proj=``
-`~ultraplot.constructor.Locator`    :class:`~matplotlib.ticker.Locator`                                  :func:`~ultraplot.axes.Axes.format` and :func:`~ultraplot.axes.Axes.colorbar`                   ``locator=``, ``xlocator=``, ``ylocator=``, ``minorlocator=``, ``xminorlocator=``, ``yminorlocator=``, ``ticks=``, ``xticks=``, ``yticks=``, ``minorticks=``, ``xminorticks=``, ``yminorticks=``
-`~ultraplot.constructor.Formatter`  :class:`~matplotlib.ticker.Formatter`                                :func:`~ultraplot.axes.Axes.format` and :func:`~ultraplot.axes.Axes.colorbar`                   ``formatter=``, ``xformatter=``, ``yformatter=``, ``ticklabels=``, ``xticklabels=``, ``yticklabels=``
-`~ultraplot.constructor.Scale`      `~matplotlib.scale.ScaleBase`                                 :func:`~ultraplot.axes.Axes.format`                                                     ``xscale=``, ``yscale=``
-`~ultraplot.constructor.Colormap`   :class:`~matplotlib.colors.Colormap`                                 2D `~ultraplot.axes.PlotAxes` commands                                            ``cmap=``
-`~ultraplot.constructor.Norm`       :class:`~matplotlib.colors.Normalize`                                2D `~ultraplot.axes.PlotAxes` commands                                            ``norm=``
-`~ultraplot.constructor.Cycle`      :class:`~cycler.Cycler`                                              1D `~ultraplot.axes.PlotAxes` commands                                            ``cycle=``
+:class:`~ultraplot.constructor.Proj`       `~cartopy.crs.Projection` or `~mpl_toolkits.basemap.Basemap`  :func:`~ultraplot.figure.Figure.add_subplot` and :func:`~ultraplot.figure.Figure.add_subplots`  ``proj=``
+:class:`~ultraplot.constructor.Locator`    :class:`~matplotlib.ticker.Locator`                                  :func:`~ultraplot.axes.Axes.format` and :func:`~ultraplot.axes.Axes.colorbar`                   ``locator=``, ``xlocator=``, ``ylocator=``, ``minorlocator=``, ``xminorlocator=``, ``yminorlocator=``, ``ticks=``, ``xticks=``, ``yticks=``, ``minorticks=``, ``xminorticks=``, ``yminorticks=``
+:class:`~ultraplot.constructor.Formatter`  :class:`~matplotlib.ticker.Formatter`                                :func:`~ultraplot.axes.Axes.format` and :func:`~ultraplot.axes.Axes.colorbar`                   ``formatter=``, ``xformatter=``, ``yformatter=``, ``ticklabels=``, ``xticklabels=``, ``yticklabels=``
+:class:`~ultraplot.constructor.Scale`      `~matplotlib.scale.ScaleBase`                                 :func:`~ultraplot.axes.Axes.format`                                                     ``xscale=``, ``yscale=``
+:class:`~ultraplot.constructor.Colormap`   :class:`~matplotlib.colors.Colormap`                                 2D `~ultraplot.axes.PlotAxes` commands                                            ``cmap=``
+:class:`~ultraplot.constructor.Norm`       :class:`~matplotlib.colors.Normalize`                                2D `~ultraplot.axes.PlotAxes` commands                                            ``norm=``
+:class:`~ultraplot.constructor.Cycle`      :class:`~cycler.Cycler`                                              1D `~ultraplot.axes.PlotAxes` commands                                            ``cycle=``
 ================================  ============================================================  ==============================================================================  ================================================================================================================================================================================================
 
 Links
@@ -246,7 +246,7 @@ Changes
 
 By default, UltraPlot fixes the physical dimensions of a *reference subplot* rather
 than the figure. The reference subplot dimensions are controlled with the `refwidth`,
-`refheight`, and `refaspect` `~ultraplot.figure.Figure` keywords, with a default
+`refheight`, and `refaspect` :class:`~ultraplot.figure.Figure` keywords, with a default
 behavior of ``refaspect=1`` and ``refwidth=2.5`` (inches). If the `data aspect ratio
 <https://matplotlib.org/stable/gallery/subplots_axes_and_figures/axis_equal_demo.html>`__
 of the reference subplot is fixed (as with :ref:`geographic <ug_geo>`,
@@ -392,7 +392,7 @@ Since `~ultraplot.gridspec.GridSpec` permits variable spacing between subplot
 rows and columns, "outer" colorbars and legends do not alter subplot
 spacing or add whitespace. This is critical e.g. if you have a
 colorbar between columns 1 and 2 but nothing between columns 2 and 3.
-Also, `~ultraplot.figure.Figure` and `~ultraplot.axes.Axes` colorbar widths are
+Also, :class:`~ultraplot.figure.Figure` and :class:`~ultraplot.axes.Axes` colorbar widths are
 now specified in *physical* units rather than relative units, which makes
 colorbar thickness independent of subplot size and easier to get just right.
 
@@ -434,7 +434,7 @@ and :func:`~ultraplot.axes.PlotAxes.scatter`:
 * The treatment of data arguments passed to the 1D `~ultraplot.axes.PlotAxes`
   commands is :ref:`standardized <ug_1dstd>`. This makes them more flexible
   and arguably more intuitive to use than their matplotlib counterparts.
-* The `cycle` keyword is interpreted by the `~ultraplot.constructor.Cycle`
+* The `cycle` keyword is interpreted by the :class:`~ultraplot.constructor.Cycle`
   :ref:`constructor function <why_constructor>` and applies
   :ref:`property cyclers <ug_apply_cycle>` on-the-fly. This permits succinct
   and flexible property cycler declaration.
@@ -479,7 +479,7 @@ like :func:`~ultraplot.axes.PlotAxes.pcolor` and :func:`~ultraplot.axes.PlotAxes
   commands is :ref:`standardized <ug_2dstd>`. This makes them more flexible
   and arguably more intuitive to use than their matplotlib counterparts.
 * The `cmap` and `norm` :ref:`keyword arguments <ug_apply_cmap>` are interpreted
-  by the `~ultraplot.constructor.Colormap` and `~ultraplot.constructor.Norm`
+  by the :class:`~ultraplot.constructor.Colormap` and :class:`~ultraplot.constructor.Norm`
   :ref:`constructor functions <why_constructor>`. This permits succinct
   and flexible colormap and normalizer application.
 * The `colorbar` keyword draws :ref:`on-the-fly colorbars <ug_guides_plot>` using the
@@ -561,7 +561,7 @@ basemap as "backends". By default, cartopy is used, but basemap can be used by p
 ``'basemap'``. To create a geographic plot, simply pass the `PROJ <https://proj.org>`__
 name to an axes-creation command, e.g. ``fig, ax = uplt.subplots(proj='pcarree')``
 or ``fig.add_subplot(proj='pcarree')``. Alternatively, use the
-`~ultraplot.constructor.Proj` constructor function to quickly generate
+:class:`~ultraplot.constructor.Proj` constructor function to quickly generate
 a `cartopy.crs.Projection` or `~mpl_toolkits.basemap.Basemap` instance.
 
 Requesting geographic projections creates a `ultraplot.axes.GeoAxes`
@@ -750,14 +750,14 @@ UltraPlot tries to make it easy to manipulate colormaps and property cycles.
   `~matplotlib.colors.LinearSegmentedColormap` and `~matplotlib.colors.ListedColormap`.
   These classes include several useful features leveraged by the
   :ref:`constructor functions <why_constructor>`
-  `~ultraplot.constructor.Colormap` and `~ultraplot.constructor.Cycle`.
-* The `~ultraplot.constructor.Colormap` function can merge, truncate, and
+  :class:`~ultraplot.constructor.Colormap` and :class:`~ultraplot.constructor.Cycle`.
+* The :class:`~ultraplot.constructor.Colormap` function can merge, truncate, and
   modify existing colormaps or generate brand new colormaps. It can also
   create new `~ultraplot.colors.PerceptualColormap`\ s -- a type of
   `ultraplot.colors.ContinuousColormap` with linear transitions in the
   :ref:`perceptually uniform-like <ug_perceptual>` hue, saturation,
   and luminance channels rather then the red, blue, and green channels.
-* The `~ultraplot.constructor.Cycle` function can make property cycles from
+* The :class:`~ultraplot.constructor.Cycle` function can make property cycles from
   scratch or retrieve "registered" color cycles from their associated
   `~ultraplot.colors.DiscreteColormap` instances. It can also make property
   cycles by splitting up the colors from registered or on-the-fly
@@ -808,7 +808,7 @@ UltraPlot uses physical units for the `~ultraplot.gridspec.GridSpec` keywords
 `em-widths <https://en.wikipedia.org/wiki/Em_(typography)>`__. Em-widths are
 particularly appropriate for this context, as plot text can be a useful "ruler"
 when figuring out the amount of space you need. UltraPlot also permits arbitrary
-string units for these keywords, for the `~ultraplot.figure.Figure` keywords
+string units for these keywords, for the :class:`~ultraplot.figure.Figure` keywords
 `figsize`, `figwidth`, `figheight`, `refwidth`, and `refheight`, and in a
 few other places. This is powered by the physical units engine :func:`~ultraplot.utils.units`.
 Acceptable units include inches, centimeters, millimeters,
@@ -904,7 +904,7 @@ in the location given by :func:`~ultraplot.config.Configurator.user_folder` (thi
 ``ultraplot_cycles``, ``ultraplot_colors``, and ``ultraplot_fonts`` in the current
 directory or an arbitrary parent directory. You can save colormaps and color cycles to
 :func:`~ultraplot.config.Configurator.user_folder` simply by passing ``save=True`` to
-`~ultraplot.constructor.Colormap` and `~ultraplot.constructor.Cycle`. To re-register
+:class:`~ultraplot.constructor.Colormap` and :class:`~ultraplot.constructor.Cycle`. To re-register
 these files during an active python session, or to register arbitrary input arguments,
 you can use :func:`~ultraplot.config.register_cmaps`, :func:`~ultraplot.config.register_cycles`,
 :func:`~ultraplot.config.register_colors`, or :func:`~ultraplot.config.register_fonts`.

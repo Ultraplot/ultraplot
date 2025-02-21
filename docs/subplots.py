@@ -121,7 +121,7 @@ axs.format(
 # respect the physical size of a "reference" subplot and the geometry of the
 # :func:`~ultraplot.figure.Figure.gridspec`. The "reference" subplot is the subplot whose
 # :func:`~ultraplot.axes.Axes.number` matches the `refnum` that was passed to
-# `~ultraplot.figure.Figure` (the default `refnum` of ``1`` usually matches the subplot
+# :class:`~ultraplot.figure.Figure` (the default `refnum` of ``1`` usually matches the subplot
 # in the upper-left corner -- see :ref:`this section <ug_abc>` for more on subplot
 # numbers). Alternatively, you can request a fixed figure width (height), and the
 # algorithm will automatically adjusts the figure height (width) to respect
@@ -129,7 +129,7 @@ axs.format(
 
 # This algorithm is extremely powerful and generally produces more aesthetically
 # pleasing subplot grids out-of-the-box, especially when they contain images or map
-# projections (see below). It is constrained by the following `~ultraplot.figure.Figure`
+# projections (see below). It is constrained by the following :class:`~ultraplot.figure.Figure`
 # keyword arguments:
 #
 # * `refwidth` and `refheight` set the physical width and height of the reference
@@ -241,9 +241,9 @@ uplt.rc.reset()
 # figure size <ug_autosize>` and permits variable spacing between each subplot
 # row and column (see `ultraplot.gridspec.GridSpec` for details).
 # This algorithm can be disabled entirely by passing ``tight=False`` to
-# `~ultraplot.figure.Figure` or by setting :rcraw:`subplots.tight` to ``False``, or
+# :class:`~ultraplot.figure.Figure` or by setting :rcraw:`subplots.tight` to ``False``, or
 # it can be partly overridden by passing any of the spacing arguments `left`, `right`,
-# `top`, `bottom`, `wspace`, or `hspace` to `~ultraplot.figure.Figure` or
+# `top`, `bottom`, `wspace`, or `hspace` to :class:`~ultraplot.figure.Figure` or
 # `~ultraplot.gridspec.GridSpec`. For example:
 #
 # * ``left=2`` fixes the left margin at 2 em-widths, while the right,
@@ -256,7 +256,7 @@ uplt.rc.reset()
 #
 # The padding between the tight layout extents (rather than the absolute spaces
 # between subplot edges) can also be changed by passing `outerpad`, `innerpad`,
-# or `panelpad` to `~ultraplot.figure.Figure` or `~ultraplot.gridspec.GridSpec`.
+# or `panelpad` to :class:`~ultraplot.figure.Figure` or `~ultraplot.gridspec.GridSpec`.
 # This padding can be set locally by passing an array of values to `wpad`
 # and `hpad` (analogous to `wspace` and `hspace`), or by passing the `pad`
 # keyword when creating :ref:`panel axes <ug_panels>` or :ref:`outer
@@ -361,12 +361,12 @@ for (name1, equal), (name2, group) in zip(equals, groups):
 #    works for :ref:`aribtrarily complex subplot grids <ug_layout>`. It also works
 #    for subplots generated one-by-one with :func:`~ultraplot.figure.Figure.add_subplot`
 #    rather than :func:`~ultraplot.figure.Figure.subplots`. It is controlled by the `sharex`
-#    and `sharey` `~ultraplot.figure.Figure` keywords (default is :rc:`subplots.share`).
+#    and `sharey` :class:`~ultraplot.figure.Figure` keywords (default is :rc:`subplots.share`).
 #    Use the `share` keyword as a shorthand to set both `sharex` and `sharey`.
 # #. Automatically sharing labels across subplots and :ref:`panels <ug_panels>`
 #    with edges along the same row or column of the `~ultraplot.gridspec.GridSpec`.
 #    This also works for complex subplot grids and subplots generated one-by-one.
-#    It is controlled by the `spanx` and `spany` `~ultraplot.figure.Figure`
+#    It is controlled by the `spanx` and `spany` :class:`~ultraplot.figure.Figure`
 #    keywords (default is :rc:`subplots.span`). Use the `span` keyword
 #    as a shorthand to set both `spanx` and `spany`. Note that unlike
 #    `~matplotlib.figure.Figure.supxlabel` and `~matplotlib.figure.Figure.supylabel`,

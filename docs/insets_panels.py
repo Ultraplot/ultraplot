@@ -40,13 +40,13 @@
 # In the first example below, the distances are automatically adjusted by the
 # :ref:`tight layout algorithm <ug_tight>` according to the `pad` keyword
 # (the default is :rcraw:`subplots.panelpad` -- this can be changed for an entire
-# figure by passing `panelpad` to `~ultraplot.figure.Figure`). In the second example,
+# figure by passing `panelpad` to :class:`~ultraplot.figure.Figure`). In the second example,
 # the tight layout algorithm is overriden by manually setting the `space` to ``0``.
 # Panel widths are specified in physical units, with the default controlled
 # by :rcraw:`subplots.panelwidth`. This helps preserve the look of the
 # figure if the figure size changes. Note that by default, panels are excluded
 # when centering :ref:`spanning axis labels <ug_share>` and super titles --
-# to include the panels, pass ``includepanels=True`` to `~ultraplot.figure.Figure`.
+# to include the panels, pass ``includepanels=True`` to :class:`~ultraplot.figure.Figure`.
 #
 # .. important::
 #
