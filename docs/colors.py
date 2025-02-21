@@ -19,7 +19,7 @@
 # Color names
 # ===========
 #
-# ultraplot registers several new color names and includes tools for defining
+# UltraPlot registers several new color names and includes tools for defining
 # your own color names. These features are described below.
 
 
@@ -29,7 +29,7 @@
 # Included colors
 # ---------------
 #
-# ultraplot adds new color names from the `XKCD color survey
+# UltraPlot adds new color names from the `XKCD color survey
 # <https://blog.xkcd.com/2010/05/03/color-survey-results/>`__  and
 # the `Open Color <https://github.com/yeun/open-color>`__ UI design color
 # palettes. You can use `~ultraplot.demos.show_colors` to generate a table of these
@@ -39,12 +39,12 @@
 # and we encourage choosing colors from the below tables instead. XKCD colors
 # are `available in matplotlib
 # <https://matplotlib.org/stable/tutorials/colors/colors.html>`__ under the
-# ``xkcd:`` prefix, but ultraplot doesn't require this prefix because the XKCD
+# ``xkcd:`` prefix, but UltraPlot doesn't require this prefix because the XKCD
 # selection is larger and the names are generally more likely to match your
 # intuition for what a color "should" look like.
 #
-# For all colors, ultraplot ensures that ``'grey'`` is a synonym of ``'gray'``
-# (for example, ``'grey5'`` and ``'gray5'`` are both valid). ultraplot also
+# For all colors, UltraPlot ensures that ``'grey'`` is a synonym of ``'gray'``
+# (for example, ``'grey5'`` and ``'gray5'`` are both valid). UltraPlot also
 # retricts the available XKCD colors with a filtering algorithm so they are
 # "distinct" in :ref:`perceptually uniform space <ug_perceptual>`. This
 # makes it a bit easier to pick out colors from the table generated with
@@ -65,7 +65,7 @@ fig, axs = uplt.show_colors()
 # Modifying colors
 # ----------------
 #
-# ultraplot provides the top-level `~ultraplot.utils.set_alpha`,
+# UltraPlot provides the top-level `~ultraplot.utils.set_alpha`,
 # `~ultraplot.utils.set_hue`, `~ultraplot.utils.set_saturation`,
 # `~ultraplot.utils.set_luminance`, `~ultraplot.utils.shift_hue`,
 # `~ultraplot.utils.scale_saturation`, and `~ultraplot.utils.scale_luminance`

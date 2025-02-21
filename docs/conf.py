@@ -45,7 +45,7 @@ release = ""
 # -- Create files --------------------------------------------------------------
 
 # Create RST table and sample ultraplotrc file
-from ultraplot.config import rc
+from UltraPlot.config import rc
 
 folder = (Path(__file__).parent / "_static").absolute()
 if not folder.is_dir():
@@ -107,7 +107,7 @@ extensions = [
     "nbsphinx",  # parse rst books
 ]
 
-autoapi_dirs = ["../ultraplot/"]
+autoapi_dirs = ["../UltraPlot/"]
 
 # The master toctree document.
 master_doc = "index"
@@ -141,7 +141,7 @@ default_role = "py:obj"
 
 # If true, the current module name will be prepended to all description
 # unit titles (such as .. function::).
-add_module_names = False  # ultraplot imports everything in top-level namespace
+add_module_names = False  # UltraPlot imports everything in top-level namespace
 
 # Autodoc configuration. Here we concatenate class and __init__ docstrings
 # See: http://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html
@@ -170,9 +170,9 @@ copybutton_remove_prompts = True
 
 # Links for What's New github commits, issues, and pull requests
 extlinks = {
-    "issue": ("https://github.com/ultraplot/ultraplot/issues/%s", "GH#%s"),
-    "commit": ("https://github.com/ultraplot/ultraplot/commit/%s", "@%s"),
-    "pr": ("https://github.com/ultraplot/ultralpot/pull/%s", "GH#%s"),
+    "issue": ("https://github.com/UltraPlot/UltraPlot/issues/%s", "GH#%s"),
+    "commit": ("https://github.com/UltraPlot/UltraPlot/commit/%s", "@%s"),
+    "pr": ("https://github.com/UltraPlot/ultralpot/pull/%s", "GH#%s"),
 }
 
 # Set up mapping for other projects' docs
@@ -220,14 +220,14 @@ napoleon_type_aliases = {
     "dict-like": ":term:`dict-like <mapping>`",
     "path-like": ":term:`path-like <path-like object>`",
     "array-like": ":term:`array-like <array_like>`",
-    # ultraplot defined terms
-    "unit-spec": ":py:func:`unit-spec <ultraplot.utils.units>`",
-    "locator-spec": ":py:func:`locator-spec <ultraplot.constructor.Locator>`",
-    "formatter-spec": ":py:func:`formatter-spec <ultraplot.constructor.Formatter>`",
-    "scale-spec": ":py:func:`scale-spec <ultraplot.constructor.Scale>`",
-    "colormap-spec": ":py:func:`colormap-spec <ultraplot.constructor.Colormap>`",
-    "cycle-spec": ":py:func:`cycle-spec <ultraplot.constructor.Cycle>`",
-    "norm-spec": ":py:func:`norm-spec <ultraplot.constructor.Norm>`",
+    # UltraPlot defined terms
+    "unit-spec": ":py:func:`unit-spec <UltraPlot.utils.units>`",
+    "locator-spec": ":py:func:`locator-spec <UltraPlot.constructor.Locator>`",
+    "formatter-spec": ":py:func:`formatter-spec <UltraPlot.constructor.Formatter>`",
+    "scale-spec": ":py:func:`scale-spec <UltraPlot.constructor.Scale>`",
+    "colormap-spec": ":py:func:`colormap-spec <UltraPlot.constructor.Colormap>`",
+    "cycle-spec": ":py:func:`cycle-spec <UltraPlot.constructor.Cycle>`",
+    "norm-spec": ":py:func:`norm-spec <UltraPlot.constructor.Norm>`",
     "color-spec": ":py:func:`color-spec <matplotlib.colors.is_color_like>`",
     "artist": ":py:func:`artist <matplotlib.artist.Artist>`",
 }
@@ -308,7 +308,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, "ultraplot.tex", "UltraPlot Documentation", "UltraPlot", "manual"),
+    (master_doc, "UltraPlot.tex", "UltraPlot Documentation", "UltraPlot", "manual"),
 ]
 
 
@@ -316,7 +316,7 @@ latex_documents = [
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [(master_doc, "ultraplot", "UltraPlot Documentation", [author], 1)]
+man_pages = [(master_doc, "UltraPlot", "UltraPlot Documentation", [author], 1)]
 
 
 # -- Options for Texinfo output ----------------------------------------------
@@ -327,10 +327,10 @@ man_pages = [(master_doc, "ultraplot", "UltraPlot Documentation", [author], 1)]
 texinfo_documents = [
     (
         master_doc,
-        "ultraplot",
-        "ultraplot Documentation",
+        "UltraPlot",
+        "UltraPlot Documentation",
         author,
-        "ultraplot",
+        "UltraPlot",
         "A succinct matplotlib wrapper for making beautiful, "
         "publication-quality graphics.",
         "Miscellaneous",

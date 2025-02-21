@@ -29,7 +29,7 @@
 # This section documents several useful features for working with `polar`_ plots
 # and :ref:`geographic projections <ug_geo>`. The geographic features are powered by
 # `cartopy`_ (or, optionally, `basemap`_). Note that these features are *optional* --
-# installation of cartopy or basemap are not required to use ultraplot.
+# installation of cartopy or basemap are not required to use UltraPlot.
 #
 # %% [raw] raw_mimetype="text/restructuredtext"
 # .. _ug_polar:
@@ -194,14 +194,14 @@ axs.format(
 #
 # .. important::
 #
-#    * By default, ultraplot bounds polar cartopy projections like
+#    * By default, UltraPlot bounds polar cartopy projections like
 #      `~cartopy.crs.NorthPolarStereo` at the equator and gives non-polar cartopy
 #      projections global extent by calling `~cartopy.mpl.geoaxes.GeoAxes.set_global`.
 #      This is a deviation from cartopy, which determines map boundaries automatically
 #      based on the coordinates of the plotted content. To revert to cartopy's
 #      default behavior, set :rcraw:`geo.extent` to ``'auto`` or pass ``extent='auto'``
 #      to `~ultraplot.axes.GeoAxes.format`.
-#    * By default, ultraplot gives circular boundaries to polar cartopy and basemap
+#    * By default, UltraPlot gives circular boundaries to polar cartopy and basemap
 #      projections like `~cartopy.crs.NorthPolarStereo` (see `this example
 #      <https://scitools.org.uk/cartopy/docs/latest/gallery/lines_and_polygons/always_circular_stereo.html>`__
 #      from the cartopy website). To disable this feature, set :rcraw:`geo.round` to
@@ -221,7 +221,7 @@ axs.format(
 #    and will not work with matplotlib versions more recent than 3.2.2. We originally
 #    included basemap support because its gridline labeling was more powerful
 #    than cartopy gridline labeling. However, as cartopy gridline labeling has
-#    significantly improved since version 0.18, ultraplot may deprecate basemap support
+#    significantly improved since version 0.18, UltraPlot may deprecate basemap support
 #    in a future release and fully remove basemap support by version 1.0.0.
 
 # %%
@@ -257,8 +257,8 @@ uplt.rc.reset()
 # Plotting in projections
 # -----------------------
 #
-# In ultraplot, plotting with `~ultraplot.axes.GeoAxes` is just like plotting
-# with `~ultraplot.axes.CartesianAxes`. ultraplot makes longitude-latitude
+# In UltraPlot, plotting with `~ultraplot.axes.GeoAxes` is just like plotting
+# with `~ultraplot.axes.CartesianAxes`. UltraPlot makes longitude-latitude
 # (i.e., Plate Carrée) coordinates the *default* coordinate system for all plotting
 # commands by internally passing ``transform=ccrs.PlateCarree()`` to cartopy commands
 # and ``latlon=True`` to basemap commands. And again, when `basemap`_ is the backend,
@@ -341,7 +341,7 @@ for globe in (False, True):
 # and latitudes with `lonlim` and `latlim` (analogous to `xlim` and `ylim`), set the
 # latitude bound for circular polar projections using `boundinglat`, and toggle and
 # configure geographic features like land masses, coastlines, and administrative
-# borders using :ref:`settings <rc_ultraplot>` like `land`, `landcolor`, `coast`,
+# borders using :ref:`settings <rc_UltraPlot>` like `land`, `landcolor`, `coast`,
 # `coastcolor`, and `coastlinewidth`. Finally, since `ultraplot.axes.GeoAxes.format`
 # calls `ultraplot.axes.Axes.format`, it can be used to add axes titles, a-b-c labels,
 # and figure titles, just like `ultraplot.axes.CartesianAxes.format`.
@@ -426,7 +426,7 @@ fig.format(
 # `latlim`, or `boundinglat` to `~ultraplot.axes.GeoAxes.format`. The `boundinglat`
 # keyword controls the circular latitude boundary for North Polar and
 # South Polar Stereographic, Azimuthal Equidistant, Lambert Azimuthal
-# Equal-Area, and Gnomonic projections. By default, ultraplot tries to use the
+# Equal-Area, and Gnomonic projections. By default, UltraPlot tries to use the
 # degree-minute-second cartopy locators and formatters made available in cartopy
 # 0.18. You can switch from minute-second subintervals to traditional decimal
 # subintervals by passing ``dms=False`` to `~ultraplot.axes.GeoAxes.format`
@@ -514,7 +514,7 @@ uplt.rc.reset()
 # plotted below. The full table of projection names with links to the relevant
 # `PROJ <https://proj.org>`__ documentation is found :ref:`here <proj_table>`.
 #
-# ultraplot uses the cartopy API to add the Aitoff, Hammer, Winkel Tripel, and
+# UltraPlot uses the cartopy API to add the Aitoff, Hammer, Winkel Tripel, and
 # Kavrayskiy VII projections (i.e., ``'aitoff'``, ``'hammer'``, ``'wintri'``,
 # and ``'kav7'``), as well as North and South polar versions of the Azimuthal
 # Equidistant, Lambert Azimuthal Equal-Area, and Gnomonic projections (i.e.,

@@ -31,7 +31,7 @@
 .. _why:
 
 ============
-Why ultraplot?
+Why UltraPlot?
 ============
 
 Matplotlib is an extremely versatile plotting package used by
@@ -42,9 +42,9 @@ matplotlib can be cumbersome or repetitive for users who...
 * Want to finely tune their annotations and aesthetics.
 * Need to make new figures nearly every day.
 
-ultraplot's core mission is to provide a smoother plotting experience for
+UltraPlot's core mission is to provide a smoother plotting experience for
 matplotlib's most demanding users. We accomplish this by *expanding upon*
-matplotlib's :ref:`object-oriented interface <usage_background>`. ultraplot
+matplotlib's :ref:`object-oriented interface <usage_background>`. UltraPlot
 makes changes that would be hard to justify or difficult to incorporate
 into matplotlib itself, owing to differing design choices and backwards
 compatibility considerations.
@@ -82,7 +82,7 @@ settings without sacrificing the advantages of object-oriented design.
 Changes
 -------
 
-ultraplot includes the `ultraplot.axes.Axes.format` command to resolve this.
+UltraPlot includes the `ultraplot.axes.Axes.format` command to resolve this.
 Think of this as an expanded and thoroughly documented version of the
 `matplotlib.artist.Artist.update` command. `~ultraplot.axes.Axes.format` can modify things
 like axis labels and titles and apply new :ref:`"rc" settings <why_rc>` to existing
@@ -158,7 +158,7 @@ So, why not "register" everything else?
 Changes
 -------
 
-In ultraplot, tick locators, tick formatters, axis scales, property cycles, colormaps,
+In UltraPlot, tick locators, tick formatters, axis scales, property cycles, colormaps,
 normalizers, and `cartopy`_ projections are all "registered". This is accomplished
 by defining "constructor functions" and passing various keyword arguments through
 these functions.
@@ -244,7 +244,7 @@ column boundaries.
 Changes
 -------
 
-By default, ultraplot fixes the physical dimensions of a *reference subplot* rather
+By default, UltraPlot fixes the physical dimensions of a *reference subplot* rather
 than the figure. The reference subplot dimensions are controlled with the `refwidth`,
 `refheight`, and `refaspect` `~ultraplot.figure.Figure` keywords, with a default
 behavior of ``refaspect=1`` and ``refwidth=2.5`` (inches). If the `data aspect ratio
@@ -260,7 +260,7 @@ when preparing figures for submission to a publication. To request figure
 dimensions suitable for submission to a :ref:`specific publication <journal_table>`,
 use the `journal` keyword.
 
-By default, ultraplot also uses :ref:`its own tight layout algorithm <ug_tight>` --
+By default, UltraPlot also uses :ref:`its own tight layout algorithm <ug_tight>` --
 preventing text labels from overlapping with subplots. This algorithm works with the
 `ultraplot.gridspec.GridSpec` subclass rather than `matplotlib.gridspec.GridSpec`, which
 provides the following advantages:
@@ -318,7 +318,7 @@ matplotlib has no built-in way of doing this.
 Changes
 -------
 
-ultraplot makes it easier to work with multiple subplots and create clear,
+UltraPlot makes it easier to work with multiple subplots and create clear,
 concise figures.
 
 * Axis tick labels and axis labels are automatically
@@ -372,7 +372,7 @@ with consistent widths (i.e., not too "skinny" or "fat").
 Changes
 -------
 
-ultraplot includes a simple framework for drawing colorbars and legends
+UltraPlot includes a simple framework for drawing colorbars and legends
 that reference :ref:`individual subplots <ug_guides_loc>` and
 :ref:`multiple contiguous subplots <ug_guides_multi>`.
 
@@ -423,7 +423,7 @@ have this functionality built right into matplotlib's interface.
 Changes
 -------
 
-ultraplot uses the `~ultraplot.axes.PlotAxes` subclass to add various `seaborn`_,
+UltraPlot uses the `~ultraplot.axes.PlotAxes` subclass to add various `seaborn`_,
 `xarray`_, and `pandas`_ features to existing matplotlib plotting commands
 along with several additional features designed to make things easier.
 
@@ -555,7 +555,7 @@ longitude-latitude (i.e., "Plate Carrée") coordinates.
 Changes
 -------
 
-ultraplot can succinctly create detailed geographic plots using either cartopy or
+UltraPlot can succinctly create detailed geographic plots using either cartopy or
 basemap as "backends". By default, cartopy is used, but basemap can be used by passing
 ``backend='basemap'`` to axes-creation commands or by setting :rcraw:`geo.backend` to
 ``'basemap'``. To create a geographic plot, simply pass the `PROJ <https://proj.org>`__
@@ -616,7 +616,7 @@ in their own right, without requiring special containers and a separate interfac
 Changes
 -------
 
-ultraplot reproduces many of the `xarray.DataArray.plot`,
+UltraPlot reproduces many of the `xarray.DataArray.plot`,
 `pandas.DataFrame.plot`, and `pandas.Series.plot`
 features directly on the `~ultraplot.axes.PlotAxes` commands.
 This includes :ref:`grouped or stacked <ug_bar>` bar plots
@@ -626,13 +626,13 @@ application of diverging colormaps and normalizers, and
 :ref:`on-the-fly colorbars and legends <ug_guides_loc>` using `colorbar`
 and `legend` keywords.
 
-ultraplot also handles metadata associated with `xarray.DataArray`, `pandas.DataFrame`,
+UltraPlot also handles metadata associated with `xarray.DataArray`, `pandas.DataFrame`,
 `pandas.Series`, and `pint.Quantity` objects. When a plotting command receives these
 objects, it updates the axis tick labels, axis labels, subplot title, and
 colorbar and legend labels from the metadata. For `~pint.Quantity` arrays (including
 `~pint.Quantity` those stored inside `~xarray.DataArray` containers), a unit string
 is generated from the `pint.Unit` according to the :rcraw:`unitformat` setting
-(note ultraplot also automatically calls `pint.UnitRegistry.setup_matplotlib`
+(note UltraPlot also automatically calls `pint.UnitRegistry.setup_matplotlib`
 whenever a `~pint.Quantity` is used for *x* and *y* coordinates and removes the
 units from *z* coordinates to avoid the stripped-units warning message).
 These features can be disabled by setting :rcraw:`autoformat` to ``False``
@@ -678,15 +678,15 @@ Finally, matplotlib comes packaged with ``DejaVu Sans`` as the default font.
 This font is open source and include glyphs for a huge variety of characters.
 However in our opinion, it is not very aesthetically pleasing. It is also
 difficult to switch to other fonts on limited systems or systems with fonts
-stored in incompatible file formats (see :ref:`below <why_dotultraplot>`).
+stored in incompatible file formats (see :ref:`below <why_dotUltraPlot>`).
 
 Changes
 -------
 
-ultraplot adds new colormaps, colors, and fonts to help you make more
+UltraPlot adds new colormaps, colors, and fonts to help you make more
 aesthetically pleasing figures.
 
-* ultraplot adds colormaps from the `seaborn <seacolor_>`_, `cmocean <cmocean_>`_,
+* UltraPlot adds colormaps from the `seaborn <seacolor_>`_, `cmocean <cmocean_>`_,
   `SciVisColor <sciviscolor_>`_, and `Scientific Colour Maps <fabio_>`_ projects.
   It also defines a few default :ref:`perceptually uniform colormaps <ug_perceptual>`
   and includes a `~ultraplot.colors.PerceptualColormap` class for generating
@@ -694,13 +694,13 @@ aesthetically pleasing figures.
   :ref:`color cycles <ug_cycles_included>` can be shown using
   `~ultraplot.demos.show_cmaps` and `~ultraplot.demos.show_cycles`.
   Colormaps like ``'jet'`` can still be accessed, but this is discouraged.
-* ultraplot adds colors from the `open color <opencolor_>`_ project and adds
+* UltraPlot adds colors from the `open color <opencolor_>`_ project and adds
   `XKCD color survey <xkcd_>`_ names without the ``'xkcd:'`` prefix after
   *filtering* them to exclude perceptually-similar colors and *normalizing* the
   naming pattern to make them more self-consistent. Old X11/CSS4 colors can still be
   accessed, but this is discouraged. A :ref:`table of color names <ug_colors_included>`
   can be shown using `~ultraplot.demos.show_colors`.
-* ultraplot comes packaged with several additional :ref:`sans-serif fonts
+* UltraPlot comes packaged with several additional :ref:`sans-serif fonts
   <ug_fonts_included>` and the entire `TeX Gyre <texgyre_>`_ font series. TeX Gyre
   consists of open-source fonts designed to resemble more popular, commonly-used fonts
   like Helvetica and Century. They are used as the new default serif, sans-serif,
@@ -718,7 +718,7 @@ Links
 * For more on fonts,
   see :ref:`this page <ug_fonts>`.
 * For importing custom colormaps, colors, and fonts,
-  see :ref:`this page <why_dotultraplot>`.
+  see :ref:`this page <why_dotUltraPlot>`.
 
 .. _why_colormaps_cycles:
 
@@ -743,9 +743,9 @@ integrated more closely with matplotlib's colormap and property cycle constructs
 Changes
 -------
 
-ultraplot tries to make it easy to manipulate colormaps and property cycles.
+UltraPlot tries to make it easy to manipulate colormaps and property cycles.
 
-* All colormaps in ultraplot are replaced with the `~ultraplot.colors.ContinuousColormap`
+* All colormaps in UltraPlot are replaced with the `~ultraplot.colors.ContinuousColormap`
   and `~ultraplot.colors.DiscreteColormap` subclasses of
   `~matplotlib.colors.LinearSegmentedColormap` and `~matplotlib.colors.ListedColormap`.
   These classes include several useful features leveraged by the
@@ -763,7 +763,7 @@ ultraplot tries to make it easy to manipulate colormaps and property cycles.
   cycles by splitting up the colors from registered or on-the-fly
   `~ultraplot.colors.ContinuousColormap`\ s and `~ultraplot.colors.PerceptualColormap`\ s.
 
-ultraplot also makes all colormap and color cycle names case-insensitive, and
+UltraPlot also makes all colormap and color cycle names case-insensitive, and
 colormaps are automatically reversed or cyclically shifted 180 degrees if you
 append ``'_r'`` or ``'_s'`` to any colormap name. These features are powered by
 `~ultraplot.colors.ColormapDatabase`, which replaces matplotlib's native
@@ -802,12 +802,12 @@ This may be confusing for users outside of the United States.
 Changes
 -------
 
-ultraplot uses physical units for the `~ultraplot.gridspec.GridSpec` keywords
+UltraPlot uses physical units for the `~ultraplot.gridspec.GridSpec` keywords
 `left`, `right`, `top`, `bottom`, `wspace`, `hspace`, `pad`, `outerpad`, and
 `innerpad`. The default unit (assumed when a numeric argument is passed) is
 `em-widths <https://en.wikipedia.org/wiki/Em_(typography)>`__. Em-widths are
 particularly appropriate for this context, as plot text can be a useful "ruler"
-when figuring out the amount of space you need. ultraplot also permits arbitrary
+when figuring out the amount of space you need. UltraPlot also permits arbitrary
 string units for these keywords, for the `~ultraplot.figure.Figure` keywords
 `figsize`, `figwidth`, `figheight`, `refwidth`, and `refheight`, and in a
 few other places. This is powered by the physical units engine `~ultraplot.utils.units`.
@@ -816,7 +816,7 @@ pixels, `points <https://en.wikipedia.org/wiki/Point_(typography)>`__, and `pica
 <https://en.wikipedia.org/wiki/Pica_(typography)>`__ (a table of acceptable
 units is found :ref:`here <units_table>`). Note the `~ultraplot.utils.units` engine
 also translates rc settings assigned to `~ultraplot.config.rc_matplotlib` and
-`~ultraplot.config.rc_ultraplot`, e.g. :rcraw:`subplots.refwidth`,
+`~ultraplot.config.rc_UltraPlot`, e.g. :rcraw:`subplots.refwidth`,
 :rcraw:`legend.columnspacing`, and :rcraw:`axes.labelpad`.
 
 Links
@@ -847,9 +847,9 @@ than globally.
 Changes
 -------
 
-In ultraplot, you can use the `~ultraplot.config.rc` object to change both native
-matplotlib settings (found in `~ultraplot.config.rc_matplotlib`) and added ultraplot
-settings (found in `~ultraplot.config.rc_ultraplot`). Assigned settings are always
+In UltraPlot, you can use the `~ultraplot.config.rc` object to change both native
+matplotlib settings (found in `~ultraplot.config.rc_matplotlib`) and added UltraPlot
+settings (found in `~ultraplot.config.rc_UltraPlot`). Assigned settings are always
 validated, and "meta" settings like ``meta.edgecolor``, ``meta.linewidth``, and
 ``font.smallsize`` can be used to update many settings all at once. Settings can
 be changed with ``uplt.rc.key = value``, ``uplt.rc[key] = value``,
@@ -866,14 +866,14 @@ Links
   see :ref:`this page <ug_rc>`.
 * For more on changing settings,
   see :ref:`this page <ug_config>`.
-* For more on ultraplot settings,
-  see :ref:`this page <ug_rcultraplot>`.
+* For more on UltraPlot settings,
+  see :ref:`this page <ug_rcUltraPlot>`.
 * For more on meta settings,
   see :ref:`this page <ug_rcmeta>`.
 * For a table of the new settings,
   see :ref:`this page <ug_rctable>`.
 
-.. _why_dotultraplot:
+.. _why_dotUltraPlot:
 
 Loading stuff
 =============
@@ -891,16 +891,16 @@ Linux servers with limited font selections.
 Changes
 -------
 
-ultraplot settings can be changed persistently by editing the default ``ultraplotrc``
+UltraPlot settings can be changed persistently by editing the default ``ultraplotrc``
 file in the location given by `~ultraplot.config.Configurator.user_file` (this is
-usually ``$HOME/.ultraplot/ultraplotrc``) or by adding loose ``ultraplotrc`` files to
+usually ``$HOME/.UltraPlot/ultraplotrc``) or by adding loose ``ultraplotrc`` files to
 either the current directory or an arbitrary parent directory. Adding files to
 parent directories can be useful when working in projects with lots of subfolders.
 
-ultraplot also automatically registers colormaps, color cycles, colors, and font
+UltraPlot also automatically registers colormaps, color cycles, colors, and font
 files stored in subfolders named ``cmaps``,  ``cycles``, ``colors``, and ``fonts``
 in the location given by `~ultraplot.config.Configurator.user_folder` (this is usually
-``$HOME/.ultraplot``), as well as loose subfolders named ``ultraplot_cmaps``,
+``$HOME/.UltraPlot``), as well as loose subfolders named ``ultraplot_cmaps``,
 ``ultraplot_cycles``, ``ultraplot_colors``, and ``ultraplot_fonts`` in the current
 directory or an arbitrary parent directory. You can save colormaps and color cycles to
 `~ultraplot.config.Configurator.user_folder` simply by passing ``save=True`` to

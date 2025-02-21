@@ -8,8 +8,8 @@ The comprehensive API reference. All of the below objects are imported
 into the top-level namespace. Use ``help(uplt.object)`` to read
 the docs during a python session.
 
-Please note that ultraplot removes the associated documentation when functionality
-is deprecated (see :ref:`What's New <whats_new>`). However, ultraplot adheres to
+Please note that UltraPlot removes the associated documentation when functionality
+is deprecated (see :ref:`What's New <whats_new>`). However, UltraPlot adheres to
 `semantic versioning <https://semver.org>`__, which means old code that uses
 deprecated functionality will still work and issue warnings rather than errors
 until the first major release (version 1.0.0).
@@ -17,26 +17,26 @@ until the first major release (version 1.0.0).
 .. important::
 
    The documentation for "wrapper" functions like `standardize_1d` and `cmap_changer`
-   from ultraplot < 0.8.0 can now be found under individual `~ultraplot.axes.PlotAxes`
+   from UltraPlot < 0.8.0 can now be found under individual `~ultraplot.axes.PlotAxes`
    methods like `~ultraplot.axes.PlotAxes.plot` and `~ultraplot.axes.PlotAxes.pcolor`. Note
-   that calling ``help(ax.method)`` in a python session will show both the ultraplot
+   that calling ``help(ax.method)`` in a python session will show both the UltraPlot
    documentation and the original matplotlib documentation.
 
 Figure class
 ============
 
-.. automodule:: ultraplot.figure
+.. automodule:: UltraPlot.figure
 
-.. automodsumm:: ultraplot.figure
+.. automodsumm:: UltraPlot.figure
    :toctree: api
 
 
 Grid classes
 ============
 
-.. automodule:: ultraplot.gridspec
+.. automodule:: UltraPlot.gridspec
 
-.. automodsumm:: ultraplot.gridspec
+.. automodsumm:: UltraPlot.gridspec
    :toctree: api
    :skip: SubplotsContainer
 
@@ -44,27 +44,27 @@ Grid classes
 Axes classes
 ============
 
-.. automodule:: ultraplot.axes
+.. automodule:: UltraPlot.axes
 
-.. automodsumm:: ultraplot.axes
+.. automodsumm:: UltraPlot.axes
    :toctree: api
 
 
 Top-level functions
 ===================
 
-.. automodule:: ultraplot.ui
+.. automodule:: UltraPlot.ui
 
-.. automodsumm:: ultraplot.ui
+.. automodsumm:: UltraPlot.ui
    :toctree: api
 
 
 Configuration tools
 ===================
 
-.. automodule:: ultraplot.config
+.. automodule:: UltraPlot.config
 
-.. automodsumm:: ultraplot.config
+.. automodsumm:: UltraPlot.config
    :toctree: api
    :skip: inline_backend_fmt, RcConfigurator
 
@@ -72,9 +72,9 @@ Configuration tools
 Constructor functions
 =====================
 
-.. automodule:: ultraplot.constructor
+.. automodule:: UltraPlot.constructor
 
-.. automodsumm:: ultraplot.constructor
+.. automodsumm:: UltraPlot.constructor
    :toctree: api
    :skip: Colors
 
@@ -82,27 +82,27 @@ Constructor functions
 Locators and formatters
 =======================
 
-.. automodule:: ultraplot.ticker
+.. automodule:: UltraPlot.ticker
 
-.. automodsumm:: ultraplot.ticker
+.. automodsumm:: UltraPlot.ticker
    :toctree: api
 
 
 Axis scale classes
 ==================
 
-.. automodule:: ultraplot.scale
+.. automodule:: UltraPlot.scale
 
-.. automodsumm:: ultraplot.scale
+.. automodsumm:: UltraPlot.scale
    :toctree: api
 
 
 Colormaps and normalizers
 =========================
 
-.. automodule:: ultraplot.colors
+.. automodule:: UltraPlot.colors
 
-.. automodsumm:: ultraplot.colors
+.. automodsumm:: UltraPlot.colors
    :toctree: api
    :skip: ListedColormap, LinearSegmentedColormap, PerceptuallyUniformColormap, LinearSegmentedNorm
 
@@ -110,26 +110,26 @@ Colormaps and normalizers
 Projection classes
 ==================
 
-.. automodule:: ultraplot.proj
+.. automodule:: UltraPlot.proj
 
-.. automodsumm:: ultraplot.proj
+.. automodsumm:: UltraPlot.proj
    :toctree: api
 
 
 Demo functions
 ==============
 
-.. automodule:: ultraplot.demos
+.. automodule:: UltraPlot.demos
 
-.. automodsumm:: ultraplot.demos
+.. automodsumm:: UltraPlot.demos
    :toctree: api
 
 
 Miscellaneous functions
 =======================
 
-.. automodule:: ultraplot.utils
+.. automodule:: UltraPlot.utils
 
-.. automodsumm:: ultraplot.utils
+.. automodsumm:: UltraPlot.utils
    :toctree: api
    :skip: shade, saturate

@@ -30,7 +30,7 @@
 # <ug_1dplots>` section for details). Some of these tools will be expanded in the
 # future, but for a more comprehensive suite of statistical plotting utilities, you
 # may be interested in `seaborn`_ (we try to ensure that seaborn plotting commands
-# are compatible with ultraplot figures and axes).
+# are compatible with UltraPlot figures and axes).
 
 # %% [raw] raw_mimetype="text/restructuredtext"
 # .. _ug_errorbars:
@@ -157,7 +157,7 @@ for orientation, array in zip(("vertical", "horizontal"), (varray, harray)):
 # `~ultraplot.axes.PlotAxes.boxploth`, and `~ultraplot.axes.PlotAxes.violinploth` (or
 # their new shorthands, `~ultraplot.axes.PlotAxes.box`, `~ultraplot.axes.PlotAxes.violin`,
 # `~ultraplot.axes.PlotAxes.boxh`, and `~ultraplot.axes.PlotAxes.violinh`). The
-# ultraplot versions employ aesthetically pleasing defaults and permit flexible
+# UltraPlot versions employ aesthetically pleasing defaults and permit flexible
 # configuration using keywords like `color`, `barcolor`, and `fillcolor`.
 # They also automatically apply axis labels based on the `~pandas.DataFrame`
 # or `~xarray.DataArray` column labels. Violin plot error bars are controlled
@@ -214,7 +214,7 @@ ax.format(title="Multiple colors", ymargin=0.15)
 # the :ref:`2D plotting section <ug_apply_cmap>`). Marginal distributions
 # for the 2D histograms can be added using :ref:`panel axes <ug_panels>`.
 #
-# In the future, ultraplot will include options for adding "smooth" kernel density
+# In the future, UltraPlot will include options for adding "smooth" kernel density
 # estimations to histograms plots using a `kde` keyword. It will also include
 # separate `ultraplot.axes.PlotAxes.kde` and `ultraplot.axes.PlotAxes.kde2d` commands.
 # The `~ultraplot.axes.PlotAxes.violin` and `~ultraplot.axes.PlotAxes.violinh` commands

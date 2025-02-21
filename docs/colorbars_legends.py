@@ -18,7 +18,7 @@
 # Colorbars and legends
 # =====================
 #
-# ultraplot includes some useful changes to the matplotlib API that make
+# UltraPlot includes some useful changes to the matplotlib API that make
 # working with colorbars and legends :ref:`easier <why_colorbars_legends>`.
 # Notable features include "inset" colorbars, "outer" legends,
 # on-the-fly colorbars and legends, colorbars built from artists,
@@ -36,7 +36,7 @@
 # posssible using the somewhat opaque `bbox_to_anchor` keyword (see `here
 # <https://matplotlib.org/stable/tutorials/intermediate/legend_guide.html#legend-location>`__)
 # and "inset" colorbars are not possible without manually creating and positioning
-# the associated axes. ultraplot tries to improve this behavior:
+# the associated axes. UltraPlot tries to improve this behavior:
 #
 # * `ultraplot.axes.Axes.legend` can draw both "inset" legends when you request an inset
 #   location (e.g., ``loc='upper right'`` or the shorthand ``loc='ur'``) and "outer"
@@ -45,7 +45,7 @@
 #   or colorbars on one side, they are "stacked" on top of each other. Unlike using
 #   `bbox_to_anchor`, the "outer" legend position is adjusted automatically when the
 #   :ref:`tight layout algorithm <ug_tight>` is active.
-# * ultraplot adds the axes command `ultraplot.axes.Axes.colorbar`,
+# * UltraPlot adds the axes command `ultraplot.axes.Axes.colorbar`,
 #   analogous to `ultraplot.axes.Axes.legend` and equivalent to
 #   calling `ultraplot.figure.Figure.colorbar` with an `ax` keyword.
 #   `~ultraplot.axes.Axes.colorbar` can draw both "outer" colorbars when you request
@@ -65,14 +65,14 @@
 #
 # .. important::
 #
-#    Unlike matplotlib, ultraplot adds "outer" colorbars and legends by allocating
+#    Unlike matplotlib, UltraPlot adds "outer" colorbars and legends by allocating
 #    new rows and columns in the `~ultraplot.gridspec.GridSpec` rather than
 #    "stealing" space from the parent subplot (note that subsequently indexing
 #    the `~ultraplot.gridspec.GridSpec` will ignore the slots allocated for
 #    colorbars and legends). This approach means that "outer" colorbars and
 #    legends :ref:`do not affect subplot aspect ratios <ug_autosize>`
 #    and :ref:`do not affect subplot spacing <ug_tight>`, which lets
-#    ultraplot avoid relying on complicated `"constrained layout" algorithms
+#    UltraPlot avoid relying on complicated `"constrained layout" algorithms
 #    <https://matplotlib.org/stable/tutorials/intermediate/constrainedlayout_guide.html>`__
 #    and tends to improve the appearance of figures with even the most
 #    complex arrangements of subplots, colorbars, and legends.
@@ -112,7 +112,7 @@ fig.format(
 # On-the-fly colorbars and legends
 # --------------------------------
 #
-# In ultraplot, you can add colorbars and legends on-the-fly by supplying keyword
+# In UltraPlot, you can add colorbars and legends on-the-fly by supplying keyword
 # arguments to various `~ultraplot.axes.PlotAxes` commands. To plot data and
 # draw a colorbar or legend in one go, pass a location (e.g., ``colorbar='r'``
 # or ``legend='b'``) to the plotting command (e.g., `~ultraplot.axes.PlotAxes.plot`
@@ -217,7 +217,7 @@ for j, ax in enumerate(axs):
 # Figure-wide colorbars and legends
 # ---------------------------------
 #
-# In ultraplot, colorbars and legends can be added to the edge of figures using the
+# In UltraPlot, colorbars and legends can be added to the edge of figures using the
 # figure methods `ultraplot.figure.Figure.colorbar` and `ultraplot.figure.Figure.legend`.
 # These methods align colorbars and legends between the edges
 # of the `~ultraplot.figure.Figure.gridspec` rather than the figure.
@@ -293,7 +293,7 @@ for ax, title in zip(axs, ("2D {} #1", "2D {} #2", "Line {} #1", "Line {} #2")):
 #
 # The `ultraplot.axes.Axes.colorbar` and `ultraplot.figure.Figure.colorbar` commands are
 # somehwat more flexible than their matplotlib counterparts. The following core
-# features are unique to ultraplot:
+# features are unique to UltraPlot:
 
 # * Calling ``colorbar`` with a list of `~matplotlib.artist.Artist`\ s,
 #   a `~matplotlib.colors.Colormap` name or object, or a list of colors
@@ -302,12 +302,12 @@ for ax, title in zip(axs, ("2D {} #1", "2D {} #2", "Line {} #1", "Line {} #2")):
 #   keyword with :ref:`1D commands <ug_1dplots>` like `~ultraplot.axes.PlotAxes.plot`.
 # * The associated :ref:`colormap normalizer <ug_norm>` can be specified with the
 #   `vmin`, `vmax`, `norm`, and `norm_kw` keywords. The `~ultraplot.colors.DiscreteNorm`
-#   levels can be specified with `values`, or ultraplot will infer them from the
+#   levels can be specified with `values`, or UltraPlot will infer them from the
 #   `~matplotlib.artist.Artist` labels (non-numeric labels will be applied to
 #   the colorbar as tick labels). This can be useful for labeling discrete plot
 #   elements that bear some numeric relationship to each other.
 #
-# ultraplot also includes improvements for adding ticks and tick labels to colorbars.
+# UltraPlot also includes improvements for adding ticks and tick labels to colorbars.
 # Similar to `ultraplot.axes.CartesianAxes.format`, you can flexibly specify
 # major tick locations, minor tick locations, and major tick labels using the
 # `locator`, `minorlocator`, `formatter`, `ticks`, `minorticks`, and `ticklabels`
@@ -317,7 +317,7 @@ for ax, title in zip(axs, ("2D {} #1", "2D {} #2", "Line {} #1", "Line {} #2")):
 # are restricted based on the axis length using `~ultraplot.ticker.DiscreteLocator`.
 # You can easily toggle minor ticks using ``tickminor=True``.
 #
-# Similar to :ref:`axes panels <ug_panels>`, the geometry of ultraplot colorbars is
+# Similar to :ref:`axes panels <ug_panels>`, the geometry of UltraPlot colorbars is
 # specified with :ref:`physical units <ug_units>` (this helps avoid the common issue
 # where colorbars appear "too skinny" or "too fat" and preserves their appearance
 # when the figure size changes). You can specify the colorbar width locally using the
@@ -393,7 +393,7 @@ fig.format(
 #   passing two positional arguments to ``legend`` (where the first argument is the
 #   "handle" list and the second is the "label" list).
 
-# The following core features are unique to ultraplot:
+# The following core features are unique to UltraPlot:
 
 # * Legend labels can be assigned for each column of a
 #   :ref:`2D array passed to a 1D plotting command <ug_1dstd>`

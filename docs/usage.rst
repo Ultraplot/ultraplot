@@ -11,23 +11,23 @@
 .. _usage:
 
 =============
-Using ultraplot
+Using UltraPlot
 =============
 
-This page offers a condensed overview of ultraplot's features. It is populated
+This page offers a condensed overview of UltraPlot's features. It is populated
 with links to the :ref:`API reference` and :ref:`User Guide <ug_basics>`.
-For a more in-depth discussion, see :ref:`Why ultraplot?`.
+For a more in-depth discussion, see :ref:`Why UltraPlot?`.
 
 .. _usage_background:
 
 Background
 ==========
 
-ultraplot is an object-oriented matplotlib wrapper. The "wrapper" part means
-that ultraplot's features are largely a *superset* of matplotlib.  You can use
+UltraPlot is an object-oriented matplotlib wrapper. The "wrapper" part means
+that UltraPlot's features are largely a *superset* of matplotlib.  You can use
 plotting commands like `~matplotlib.axes.Axes.plot`, `~matplotlib.axes.Axes.scatter`,
 `~matplotlib.axes.Axes.contour`, and `~matplotlib.axes.Axes.pcolor` like you always
-have. The "object-oriented" part means that ultraplot's features are implemented with
+have. The "object-oriented" part means that UltraPlot's features are implemented with
 *subclasses* of the `~matplotlib.figure.Figure` and `~matplotlib.axes.Axes` classes.
 
 If you tend to use `~matplotlib.pyplot` and are not familiar with the figure and axes
@@ -35,26 +35,26 @@ classes, check out `this guide <https://matplotlib.org/stable/api/index.html>`__
 Directly working with matplotlib classes tends to be more clear and concise than
 `~matplotlib.pyplot`, makes things easier when working with multiple figures and axes,
 and is certainly more "`pythonic <https://www.python.org/dev/peps/pep-0020/>`__".
-Therefore, although many ultraplot features may still work, we do not officially
+Therefore, although many UltraPlot features may still work, we do not officially
 support the `~matplotlib.pyplot` interface.
 
 .. _usage_import:
 
-Importing ultraplot
+Importing UltraPlot
 =================
 
-Importing ultraplot immediately adds several
+Importing UltraPlot immediately adds several
 new :ref:`colormaps <ug_cmaps>`, :ref:`property cycles <ug_cycles>`,
 :ref:`color names <ug_colors>`, and :ref:`fonts <ug_fonts>` to matplotlib.
 If you are only interested in these features, you may want to
-import ultraplot at the top of your script and do nothing else!
-We recommend importing ultraplot as follows:
+import UltraPlot at the top of your script and do nothing else!
+We recommend importing UltraPlot as follows:
 
 .. code-block:: python
 
    import ultraplot as uplt
 
-This differentiates ultraplot from the usual ``plt`` abbreviation reserved for
+This differentiates UltraPlot from the usual ``plt`` abbreviation reserved for
 the `~matplotlib.pyplot` module.
 
 .. _usage_classes:
@@ -62,7 +62,7 @@ the `~matplotlib.pyplot` module.
 Figure and axes classes
 =======================
 
-Creating figures with ultraplot is very similar to
+Creating figures with UltraPlot is very similar to
 matplotlib. You can either create the figure and
 all of its subplots at once:
 
@@ -93,10 +93,10 @@ and images). All sizing arguments take :ref:`arbitrary units <ug_units>`,
 including metric units like ``cm`` and ``mm``.
 
 Instead of the native `matplotlib.figure.Figure` and `matplotlib.axes.Axes`
-classes, ultraplot uses the `ultraplot.figure.Figure`, `ultraplot.axes.Axes`, and
-`ultraplot.axes.PlotAxes` subclasses. ultraplot figures are saved with
+classes, UltraPlot uses the `ultraplot.figure.Figure`, `ultraplot.axes.Axes`, and
+`ultraplot.axes.PlotAxes` subclasses. UltraPlot figures are saved with
 `~ultraplot.figure.Figure.save` or `~matplotlib.figure.Figure.savefig`,
-and ultraplot axes belong to one of the following three child classes:
+and UltraPlot axes belong to one of the following three child classes:
 
 * `ultraplot.axes.CartesianAxes`:
   For ordinary plots with *x* and *y* coordinates.
@@ -105,7 +105,7 @@ and ultraplot axes belong to one of the following three child classes:
 * `ultraplot.axes.PolarAxes`:
   For polar plots with *azimuth* and *radius* coordinates.
 
-Most of ultraplot's features are implemented using these subclasses.
+Most of UltraPlot's features are implemented using these subclasses.
 They include several new figure and axes methods and added
 functionality to existing figure and axes methods.
 
@@ -121,7 +121,7 @@ functionality to existing figure and axes methods.
   commands draw colorbars or legends along the edges of figures (aligned by subplot
   boundaries). These commands considerably :ref:`simplify <ug_guides>` the
   process of drawing colorbars and legends.
-* The `ultraplot.axes.PlotAxes` subclass (used for all ultraplot axes)
+* The `ultraplot.axes.PlotAxes` subclass (used for all UltraPlot axes)
   adds many, many useful features to virtually every plotting command
   (including `~ultraplot.axes.PlotAxes.plot`, `~ultraplot.axes.PlotAxes.scatter`,
   `~ultraplot.axes.PlotAxes.bar`, `~ultraplot.axes.PlotAxes.area`,
@@ -135,7 +135,7 @@ functionality to existing figure and axes methods.
 Integration features
 ====================
 
-ultraplot includes *optional* integration features with four external
+UltraPlot includes *optional* integration features with four external
 packages: the `pandas`_ and `xarray`_ packages, used for working with annotated
 tables and arrays, and the `cartopy`_ and `basemap`_ geographic
 plotting packages.
@@ -156,7 +156,7 @@ plotting packages.
   <ug_1dintegration>` and :ref:`2D plotting <ug_2dintegration>` for a demonstration.
 
 Since these features are optional,
-ultraplot can be used without installing any of these packages.
+UltraPlot can be used without installing any of these packages.
 
 .. _usage_features:
 
@@ -164,7 +164,7 @@ Additional features
 ===================
 
 Outside of the features provided by the `ultraplot.figure.Figure` and
-`ultraplot.axes.Axes` subclasses, ultraplot includes several useful
+`ultraplot.axes.Axes` subclasses, UltraPlot includes several useful
 classes and :ref:`constructor functions <why_constructor>`.
 
 * The `~ultraplot.constructor.Colormap` and `~ultraplot.constructor.Cycle`

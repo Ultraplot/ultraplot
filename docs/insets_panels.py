@@ -26,7 +26,7 @@
 #
 # It is often useful to have narrow "panels" along the edge of a larger
 # subplot for plotting secondary 1-dimensional datasets or summary statistics.
-# In ultraplot, you can generate panels using the `~ultraplot.axes.Axes.panel_axes`
+# In UltraPlot, you can generate panels using the `~ultraplot.axes.Axes.panel_axes`
 # command (or its shorthand, `~ultraplot.axes.Axes.panel`). The panel location
 # is specified with a string, e.g. ``ax.panel('r')`` or ``ax.panel('right')``
 # for a right-hand side panel, and the resulting panels are instances of
@@ -50,13 +50,13 @@
 #
 # .. important::
 #
-#    ultraplot adds panel axes by allocating new rows and columns in the
+#    UltraPlot adds panel axes by allocating new rows and columns in the
 #    `~ultraplot.gridspec.GridSpec` rather than "stealing" space from the parent
 #    subplot (note that subsequently indexing the `~ultraplot.gridspec.GridSpec` will
 #    ignore the slots allocated for panels). This approach means that panels
 #    :ref:`do not affect subplot aspect ratios <ug_autosize>` and
 #    :ref:`do not affect subplot spacing <ug_tight>`, which lets
-#    ultraplot avoid relying on complicated `"constrained layout" algorithms
+#    UltraPlot avoid relying on complicated `"constrained layout" algorithms
 #    <https://matplotlib.org/stable/tutorials/intermediate/constrainedlayout_guide.html>`__
 #    and tends to improve the appearance of figures with even the
 #    most complex arrangements of subplots and panels.

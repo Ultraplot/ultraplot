@@ -32,7 +32,7 @@
 #
 # Matplotlib `tick locators
 # <https://matplotlib.org/stable/gallery/ticks_and_spines/tick-locators.html>`__
-# select sensible tick locations based on the axis data limits. In ultraplot, you can
+# select sensible tick locations based on the axis data limits. In UltraPlot, you can
 # change the tick locator using the `~ultraplot.axes.CartesianAxes.format` keyword
 # arguments `xlocator`, `ylocator`, `xminorlocator`, and `yminorlocator` (or their
 # aliases, `xticks`, `yticks`, `xminorticks`, and `yminorticks`). This is powered by
@@ -47,7 +47,7 @@
 # If you want to work with the locator classes directly, they are available in the
 # top-level namespace (e.g., ``xlocator=uplt.MultipleLocator(...)`` is allowed).
 #
-# To generate lists of tick locations, we recommend using ultraplot's
+# To generate lists of tick locations, we recommend using UltraPlot's
 # `~ultraplot.utils.arange` function -- it’s basically an endpoint-inclusive
 # version of `numpy.arange`, which is usually what you'll want in this context.
 
@@ -107,7 +107,7 @@ uplt.rc.reset()
 #
 # Matplotlib `tick formatters
 # <https://matplotlib.org/stable/gallery/ticks_and_spines/tick-formatters.html>`__
-# convert floating point numbers to nicely-formatted tick labels. In ultraplot, you can
+# convert floating point numbers to nicely-formatted tick labels. In UltraPlot, you can
 # change the tick formatter using the `~ultraplot.axes.CartesianAxes.format` keyword
 # arguments `xformatter` and `yformatter` (or their aliases, `xticklabels` and
 # `yticklabels`). This is powered by the `~ultraplot.constructor.Formatter`
@@ -118,7 +118,7 @@ uplt.rc.reset()
 # (e.g., ``xformatter='log'``), to apply a ``%``-style format directive with
 # `~matplotlib.ticker.FormatStrFormatter` (e.g., ``xformatter='%.0f'``), or
 # to apply custom tick labels with `~matplotlib.ticker.FixedFormatter` (just
-# like `~matplotlib.axes.Axes.set_xticklabels`). You can also apply one of ultraplot's
+# like `~matplotlib.axes.Axes.set_xticklabels`). You can also apply one of UltraPlot's
 # new tick formatters -- for example, ``xformatter='deglat'`` to label ticks
 # as geographic latitude coordinates, ``xformatter='pi'`` to label ticks as
 # fractions of :math:`\pi`, or ``xformatter='sci'`` to label ticks with
@@ -126,7 +126,7 @@ uplt.rc.reset()
 # directly, they are available in the top-level namespace
 # (e.g., ``xformatter=uplt.SciFormatter(...)`` is allowed).
 #
-# ultraplot also changes the default tick formatter to
+# UltraPlot also changes the default tick formatter to
 # `~ultraplot.ticker.AutoFormatter`. This class trims trailing zeros by
 # default, can optionally omit or wrap tick values within particular
 # number ranges, and can add prefixes and suffixes to each label. See
@@ -152,7 +152,7 @@ axs.format(
 # Formatter comparison
 locator = [0, 0.25, 0.5, 0.75, 1]
 axs[0].format(xformatter="scalar", yformatter="scalar", title="Matplotlib formatter")
-axs[1].format(title="ultraplot formatter")
+axs[1].format(title="UltraPlot formatter")
 axs[:2].format(xlocator=locator, ylocator=locator)
 
 # Limiting the tick range
@@ -384,7 +384,7 @@ uplt.rc.reset()
 # coordinate system. To change the axis scale, pass e.g. ``xscale='log'`` or
 # ``yscale='log'`` to `~ultraplot.axes.Axes.format`. This is powered by the
 # `~ultraplot.constructor.Scale` :ref:`constructor function <why_constructor>`.
-# ultraplot makes several changes to the axis scale API:
+# UltraPlot makes several changes to the axis scale API:
 #
 # * The `~ultraplot.ticker.AutoFormatter` formatter is now used for all axis scales
 #   by default, including ``'log'`` and ``'symlog'``. Matplotlib's behavior can
@@ -398,14 +398,14 @@ uplt.rc.reset()
 #   addition to "registered" names like ``'log'``.
 # * While matplotlib axis scales must be instantiated with an
 #   `~matplotlib.axis.Axis` instance (for backwards compatibility reasons),
-#   ultraplot axis scales can be instantiated without the axis instance
+#   UltraPlot axis scales can be instantiated without the axis instance
 #   (e.g., ``uplt.LogScale()`` instead of ``uplt.LogScale(ax.xaxis)``).
 # * The default `subs` for the ``'symlog'`` axis scale is now ``np.arange(1, 10)``,
 #   and the default `linthresh` is now ``1``. Also the ``'log'`` and ``'symlog'``
 #   axis scales now accept the keywords `base`, `linthresh`, `linscale`, and
 #   `subs` rather than keywords with trailing ``x`` or ``y``.
 #
-# ultraplot also includes a few new axis scales. The ``'cutoff'`` scale
+# UltraPlot also includes a few new axis scales. The ``'cutoff'`` scale
 # `~ultraplot.scale.CutoffScale` is useful when the statistical distribution
 # of your data is very unusual. The ``'sine'`` scale `~ultraplot.scale.SineLatitudeScale`
 # scales the axis with a sine function (resulting in an area-weighted spherical latitude
@@ -547,13 +547,13 @@ ax.format(ymin=0.05, yscale=("power", 0.5), title=title)
 #
 # The `matplotlib.axes.Axes` class includes `~matplotlib.axes.Axes.twinx`
 # and `~matplotlib.axes.Axes.twiny` commands for drawing "twin" *x* and
-# *y* axes in the same subplot. ultraplot expands on these commands and adds
+# *y* axes in the same subplot. UltraPlot expands on these commands and adds
 # the arguably more intuitive `~ultraplot.axes.CartesianAxes.altx` and
 # `~ultraplot.axes.CartesianAxes.alty` options. Here `~ultraplot.axes.CartesianAxes.altx`
 # is equivalent to `~ultraplot.axes.CartesianAxes.twiny` (makes an alternate *x*
 # axes and an identical twin *y* axes) and `~ultraplot.axes.CartesianAxes.alty`
 # is equivalent to `~ultraplot.axes.CartesianAxes.twinx` (makes an alternate *y*
-# axes and an identical twin *x* axes). The ultraplot versions can be quickly
+# axes and an identical twin *x* axes). The UltraPlot versions can be quickly
 # formatted by passing `ultraplot.axes.CartesianAxes.format` keyword arguments
 # to the commands (e.g., ``ax.alty(ycolor='red')`` or, since the ``y`` prefix in
 # this context is redundant, just ``ax.alty(color='red')``). They also enforce
@@ -562,13 +562,13 @@ ax.format(ymin=0.05, yscale=("power", 0.5), title=title)
 #
 # .. note::
 #
-#    Unlike matplotlib, ultraplot adds alternate axes as `children
+#    Unlike matplotlib, UltraPlot adds alternate axes as `children
 #    <https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.add_child_axes.html>`__
 #    of the original axes. This helps simplify the :ref:`tight layout algorithm
 #    <ug_tight>` but means that the drawing order is controlled by the difference
 #    between the zorders of the alternate axes and the content *inside* the original
 #    axes rather than the zorder of the original axes itself (see `this issue page
-#    <https://github.com/ultraplot-dev/ultraplot/issues/303>`__ for details).
+#    <https://github.com/UltraPlot-dev/UltraPlot/issues/303>`__ for details).
 
 # %%
 import ultraplot as uplt
