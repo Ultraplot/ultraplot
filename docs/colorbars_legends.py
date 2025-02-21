@@ -55,7 +55,7 @@
 #   colorbars have optional background "frames" that can be configured
 #   with various :func:`~ultraplot.axes.Axes.colorbar` keywords.
 
-# :func:`~ultraplot.axes.Axes.colorbar` and :func:`~ultraplot.axes.Axes.legend` also both accept
+# :func:`~ultraplot.axes.Axes.colorbar` and :func::class:`~ultraplot.axes.Axes.legend` also both accept
 # `space` and `pad` keywords. `space` controls the absolute separation of the
 # "outer" colorbar or legend from the parent subplot edge and `pad` controls the
 # :ref:`tight layout <ug_tight>` padding relative to the subplot's tick and axis labels
@@ -66,9 +66,9 @@
 # .. important::
 #
 #    Unlike matplotlib, UltraPlot adds "outer" colorbars and legends by allocating
-#    new rows and columns in the `~ultraplot.gridspec.GridSpec` rather than
+#    new rows and columns in the :class:`~ultraplot.gridspec.GridSpec` rather than
 #    "stealing" space from the parent subplot (note that subsequently indexing
-#    the `~ultraplot.gridspec.GridSpec` will ignore the slots allocated for
+#    the :class:`~ultraplot.gridspec.GridSpec` will ignore the slots allocated for
 #    colorbars and legends). This approach means that "outer" colorbars and
 #    legends :ref:`do not affect subplot aspect ratios <ug_autosize>`
 #    and :ref:`do not affect subplot spacing <ug_tight>`, which lets
@@ -113,7 +113,7 @@ fig.format(
 # --------------------------------
 #
 # In UltraPlot, you can add colorbars and legends on-the-fly by supplying keyword
-# arguments to various `~ultraplot.axes.PlotAxes` commands. To plot data and
+# arguments to various :class:`~ultraplot.axes.PlotAxes` commands. To plot data and
 # draw a colorbar or legend in one go, pass a location (e.g., ``colorbar='r'``
 # or ``legend='b'``) to the plotting command (e.g., :func:`~ultraplot.axes.PlotAxes.plot`
 # or :func:`~ultraplot.axes.PlotAxes.contour`). To pass keyword arguments to the colorbar
@@ -218,7 +218,7 @@ for j, ax in enumerate(axs):
 # ---------------------------------
 #
 # In UltraPlot, colorbars and legends can be added to the edge of figures using the
-# figure methods `ultraplot.figure.Figure.colorbar` and `ultraplot.figure.Figure.legend`.
+# figure methods `ultraplot.figure.Figure.colorbar` and :class:`ultraplot.figure.Figure.legend`.
 # These methods align colorbars and legends between the edges
 # of the :func:`~ultraplot.figure.Figure.gridspec` rather than the figure.
 # As with :ref:`axes colorbars and legends <ug_guides_loc>`, if you
@@ -380,14 +380,14 @@ fig.format(
 # Added legend features
 # ---------------------
 #
-# The `ultraplot.axes.Axes.legend` and `ultraplot.figure.Figure.legend` commands are
+# The `ultraplot.axes.Axes.legend` and :class:`ultraplot.figure.Figure.legend` commands are
 # somewhat more flexible than their matplotlib counterparts. The following core
 # features are the same as matplotlib:
 
 # * Calling ``legend`` without positional arguments will
 #   automatically fill the legend with the labeled artist in the
 #   the parent axes (when using `ultraplot.axes.Axes.legend`) or
-#   or the parent figure (when using `ultraplot.figure.Figure.legend`).
+#   or the parent figure (when using :class:`ultraplot.figure.Figure.legend`).
 # * Legend labels can be assigned early by calling plotting comamnds with
 #   the `label` keyword (e.g., ``ax.plot(..., label='label')``) or on-the-fly by
 #   passing two positional arguments to ``legend`` (where the first argument is the
@@ -405,8 +405,8 @@ fig.format(
 #   positional argument and the labels will be automatically inferred
 #   using `~matplotlib.artist.Artist.get_label`. Valid "handles" include
 #   `~matplotlib.lines.Line2D`\ s returned by :func:`~ultraplot.axes.PlotAxes.plot`,
-#   `~matplotlib.container.BarContainer`\ s returned by :func:`~ultraplot.axes.PlotAxes.bar`,
-#   and `~matplotlib.collections.PolyCollection`\ s
+#   :class:`~matplotlib.container.BarContainer`\ s returned by :func:`~ultraplot.axes.PlotAxes.bar`,
+#   and :class:`~matplotlib.collections.PolyCollection`\ s
 #   returned by :func:`~ultraplot.axes.PlotAxes.fill_between`.
 # * A composite handle can be created by grouping the "handle"
 #   list objects into tuples (see this `matplotlib guide
@@ -415,7 +415,7 @@ fig.format(
 #   inferred from the objects in the group. If multiple distinct
 #   labels are found then the group is automatically expanded.
 #
-# `ultraplot.axes.Axes.legend` and `ultraplot.figure.Figure.legend` include a few other
+# `ultraplot.axes.Axes.legend` and :class:`ultraplot.figure.Figure.legend` include a few other
 # useful features. To draw legends with centered rows, pass ``center=True`` or
 # a list of lists of "handles" to ``legend`` (this stacks several single-row,
 # horizontally centered legends and adds an encompassing frame behind them).

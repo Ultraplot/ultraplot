@@ -26,7 +26,7 @@
 #
 # This section documents a few basic additions to matplotlib's plotting commands
 # that can be useful for statistical analysis. These features are implemented
-# using the intermediate `~ultraplot.axes.PlotAxes` subclass (see the :ref:`1D plotting
+# using the intermediate :class:`~ultraplot.axes.PlotAxes` subclass (see the :ref:`1D plotting
 # <ug_1dplots>` section for details). Some of these tools will be expanded in the
 # future, but for a more comprehensive suite of statistical plotting utilities, you
 # may be interested in `seaborn`_ (we try to ensure that seaborn plotting commands
@@ -55,7 +55,7 @@
 # these bars (the ``box`` keywords; think of them as miniature boxplots), a
 # transparent primary shading region (the ``shade`` keywords), and a more
 # transparent secondary shading region (the ``fade`` keywords). See the
-# documentation on the `~ultraplot.axes.PlotAxes` commands for details.
+# documentation on the :class:`~ultraplot.axes.PlotAxes` commands for details.
 
 
 # %%
@@ -204,7 +204,7 @@ ax.format(title="Multiple colors", ymargin=0.15)
 #
 # Vertical and horizontal histograms can be drawn with
 # :func:`~ultraplot.axes.PlotAxes.hist` and :func:`~ultraplot.axes.PlotAxes.histh`.
-# As with the other 1D `~ultraplot.axes.PlotAxes` commands, multiple histograms
+# As with the other 1D :class:`~ultraplot.axes.PlotAxes` commands, multiple histograms
 # can be drawn by passing 2D arrays instead of 1D arrays, and the color
 # cycle used to color histograms can be changed on-the-fly using
 # the `cycle` and `cycle_kw` keywords. Likewise, 2D histograms can

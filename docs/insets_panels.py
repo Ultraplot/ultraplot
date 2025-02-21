@@ -51,8 +51,8 @@
 # .. important::
 #
 #    UltraPlot adds panel axes by allocating new rows and columns in the
-#    `~ultraplot.gridspec.GridSpec` rather than "stealing" space from the parent
-#    subplot (note that subsequently indexing the `~ultraplot.gridspec.GridSpec` will
+#    :class:`~ultraplot.gridspec.GridSpec` rather than "stealing" space from the parent
+#    subplot (note that subsequently indexing the :class:`~ultraplot.gridspec.GridSpec` will
 #    ignore the slots allocated for panels). This approach means that panels
 #    :ref:`do not affect subplot aspect ratios <ug_autosize>` and
 #    :ref:`do not affect subplot spacing <ug_tight>`, which lets

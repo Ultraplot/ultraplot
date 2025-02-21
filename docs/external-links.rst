@@ -33,7 +33,7 @@ dependencies of UltraPlot, or are distributed with UltraPlot:
   It is not generally suitable for geophysical data.
 * `hsluv-python <https://github.com/hsluv/hsluv-python/blob/master/hsluv.py>`__ -
   A python implementation of `HSLuv <https://www.hsluv.org>`__ used for
-  the hue, saturation, luminance math required by `~ultraplot.colors.PerceptualColormap`.
+  the hue, saturation, luminance math required by :class:`~ultraplot.colors.PerceptualColormap`.
 * `TeX Gyre <https://ctan.org/pkg/tex-gyre?lang=en>`__ -
   An open source re-implementation of popular fonts like
   `Helvetica <https://en.wikipedia.org/wiki/Helvetica>`__
@@ -76,7 +76,7 @@ them into UltraPlot by adding files to the ``.UltraPlot/cmaps`` folder
 
 * `The UltraPlot API <https://UltraPlot.readthedocs.io/en/latest/colormaps.html#Making-new-colormaps>`__ -
   Namely, the `~ultraplot.colors.ContinuousColormap` class and
-  :class:`~ultraplot.constructor.Colormap` constructor function.
+  :class::class:`~ultraplot.constructor.Colormap` constructor function.
 * `HCL Wizard <http://hclwizard.org:64230/hclwizard/>`__ -
   An advanced interface for designing perceptually uniform colormaps,
   with example plots, channel plots, and lots of sliders.

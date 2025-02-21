@@ -87,7 +87,7 @@ proj, projection : \
 str, `cartopy.crs.Projection`, or `~mpl_toolkits.basemap.Basemap`, optional
     The map projection specification(s). If ``'cart'`` or ``'cartesian'``
     (the default), a `~ultraplot.axes.CartesianAxes` is created. If ``'polar'``,
-    a `~ultraplot.axes.PolarAxes` is created. Otherwise, the argument is
+    a :class:`~ultraplot.axes.PolarAxes` is created. Otherwise, the argument is
     interpreted by `~ultraplot.constructor.Proj`, and the result is used
     to make a `~ultraplot.axes.GeoAxes` (in this case the argument can be
     a `cartopy.crs.Projection` instance, a `~mpl_toolkits.basemap.Basemap`

@@ -177,9 +177,9 @@ legend : bool, int, or str, optional
     resulting object(s). If ``True``, the default :rc:`legend.loc` is used.
     If the same location is used in successive plotting calls, object(s)
     will be added to existing legend in that location. Valid locations
-    are shown in `~ultraplot.axes.Axes.legend`.
+    are shown in :class:`~ultraplot.axes.Axes.legend`.
 legend_kw : dict-like, optional
-    Extra keyword args for the call to `~ultraplot.axes.Axes.legend`.
+    Extra keyword args for the call to :class:`~ultraplot.axes.Axes.legend`.
 """
 docstring._snippet_manager["plot.guide"] = _guide_docstring
 
@@ -298,12 +298,12 @@ cycle_kw : dict-like, optional
 _cmap_norm_docstring = """
 cmap : colormap-spec, default: \
 :rc:`cmap.sequential` or :rc:`cmap.diverging`
-    The colormap specifer, passed to the `~ultraplot.constructor.Colormap` constructor
+    The colormap specifer, passed to the :class:`~ultraplot.constructor.Colormap` constructor
     function. If :rcraw:`cmap.autodiverging` is ``True`` and the normalization
     range contains negative and positive values then :rcraw:`cmap.diverging` is used.
     Otherwise :rcraw:`cmap.sequential` is used.
 cmap_kw : dict-like, optional
-    Passed to `~ultraplot.constructor.Colormap`.
+    Passed to :class:`~ultraplot.constructor.Colormap`.
 c, color, colors : color-spec or sequence of color-spec, optional
     The color(s) used to create a `~ultraplot.colors.DiscreteColormap`.
     If not passed, `cmap` is used.

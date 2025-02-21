@@ -131,7 +131,7 @@ fig, axs = uplt.show_fonts(family="sans-serif", math=True)
 # --------------------
 #
 # You can register your own fonts by adding files to the ``fonts`` subfolder
-# inside :func:`~ultraplot.config.Configurator.user_folder` and calling
+# inside :func::func:`~ultraplot.config.Configurator.user_folder` and calling
 # :func:`~ultraplot.config.register_fonts`. This command is called on import. You can
 # also manually pass file paths to :func:`~ultraplot.config.register_fonts`.
 # To change the default font, use the :func:`~ultraplot.config.rc`

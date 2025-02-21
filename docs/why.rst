@@ -124,7 +124,7 @@ Links
 * For an introduction, see :ref:`this page <ug_format>`.
 * For `~ultraplot.axes.CartesianAxes` formatting,
   see :ref:`this page <ug_cartesian>`.
-* For `~ultraplot.axes.PolarAxes` formatting,
+* For :class:`~ultraplot.axes.PolarAxes` formatting,
   see :ref:`this page <ug_polar>`.
 * For `~ultraplot.axes.GeoAxes` formatting,
   see :ref:`this page <ug_geoformat>`.
@@ -168,7 +168,7 @@ names. For example, a scalar passed to :class:`~ultraplot.constructor.Locator`
 returns a `~matplotlib.ticker.MultipleLocator`, a
 lists of strings passed to :class:`~ultraplot.constructor.Formatter` returns a
 `~matplotlib.ticker.FixedFormatter`, and :class:`~ultraplot.constructor.Cycle`
-and :class:`~ultraplot.constructor.Colormap` accept colormap names, individual colors, and
+and :class::class:`~ultraplot.constructor.Colormap` accept colormap names, individual colors, and
 lists of colors. Passing the relevant class instance to a constructor function
 simply returns it, and all the registered classes are available in the top-level
 namespace -- so class instances can be directly created with e.g.
@@ -184,9 +184,9 @@ Function                          Return type                                   
 :class:`~ultraplot.constructor.Locator`    :class:`~matplotlib.ticker.Locator`                                  :func:`~ultraplot.axes.Axes.format` and :func:`~ultraplot.axes.Axes.colorbar`                   ``locator=``, ``xlocator=``, ``ylocator=``, ``minorlocator=``, ``xminorlocator=``, ``yminorlocator=``, ``ticks=``, ``xticks=``, ``yticks=``, ``minorticks=``, ``xminorticks=``, ``yminorticks=``
 :class:`~ultraplot.constructor.Formatter`  :class:`~matplotlib.ticker.Formatter`                                :func:`~ultraplot.axes.Axes.format` and :func:`~ultraplot.axes.Axes.colorbar`                   ``formatter=``, ``xformatter=``, ``yformatter=``, ``ticklabels=``, ``xticklabels=``, ``yticklabels=``
 :class:`~ultraplot.constructor.Scale`      `~matplotlib.scale.ScaleBase`                                 :func:`~ultraplot.axes.Axes.format`                                                     ``xscale=``, ``yscale=``
-:class:`~ultraplot.constructor.Colormap`   :class:`~matplotlib.colors.Colormap`                                 2D `~ultraplot.axes.PlotAxes` commands                                            ``cmap=``
-:class:`~ultraplot.constructor.Norm`       :class:`~matplotlib.colors.Normalize`                                2D `~ultraplot.axes.PlotAxes` commands                                            ``norm=``
-:class:`~ultraplot.constructor.Cycle`      :class:`~cycler.Cycler`                                              1D `~ultraplot.axes.PlotAxes` commands                                            ``cycle=``
+:class::class:`~ultraplot.constructor.Colormap`   :class:`~matplotlib.colors.Colormap`                                 2D :class:`~ultraplot.axes.PlotAxes` commands                                            ``cmap=``
+:class:`~ultraplot.constructor.Norm`       :class:`~matplotlib.colors.Normalize`                                2D :class:`~ultraplot.axes.PlotAxes` commands                                            ``norm=``
+:class:`~ultraplot.constructor.Cycle`      :class:`~cycler.Cycler`                                              1D :class:`~ultraplot.axes.PlotAxes` commands                                            ``cycle=``
 ================================  ============================================================  ==============================================================================  ================================================================================================================================================================================================
 
 Links
@@ -286,7 +286,7 @@ provides the following advantages:
   considerably simplifying the tight layout algorithm calculations.
   This restriction is enforced by requiring successive
   :func:`~ultraplot.figure.Figure.add_subplot` calls to imply the same geometry and
-  include only subplot specs generated from the same `~ultraplot.gridspec.GridSpec`.
+  include only subplot specs generated from the same :class:`~ultraplot.gridspec.GridSpec`.
 
 Links
 -----
@@ -323,9 +323,9 @@ concise figures.
 
 * Axis tick labels and axis labels are automatically
   :ref:`shared and aligned <ug_share>` between subplot in the same
-  `~ultraplot.gridspec.GridSpec` row or column. This is controlled by the `sharex`,
+  :class:`~ultraplot.gridspec.GridSpec` row or column. This is controlled by the `sharex`,
   `sharey`, `spanx`, `spany`, `alignx`, and `aligny` figure keywords.
-* The figure `ultraplot.figure.Figure.colorbar` and `ultraplot.figure.Figure.legend`
+* The figure `ultraplot.figure.Figure.colorbar` and :class:`ultraplot.figure.Figure.legend`
   commands can easily draw colorbars and legends intended to reference more than
   one subplot in arbitrary contiguous rows and columns. See the
   :ref:`next section <why_colorbars_legends>` for details.
@@ -383,12 +383,12 @@ that reference :ref:`individual subplots <ug_guides_loc>` and
   "inner" location (e.g. ``loc='ur'`` or ``loc='upper right'``)
   to `ultraplot.axes.Axes.colorbar` or `ultraplot.axes.Axes.legend`.
 * To draw a colorbar or legend along the edge of the figure, use
-  `ultraplot.figure.Figure.colorbar` and `ultraplot.figure.Figure.legend`.
+  `ultraplot.figure.Figure.colorbar` and :class:`ultraplot.figure.Figure.legend`.
   The `col`, `row`, and `span` keywords control which
-  `~ultraplot.gridspec.GridSpec` rows and columns are spanned
+  :class:`~ultraplot.gridspec.GridSpec` rows and columns are spanned
   by the colorbar or legend.
 
-Since `~ultraplot.gridspec.GridSpec` permits variable spacing between subplot
+Since :class:`~ultraplot.gridspec.GridSpec` permits variable spacing between subplot
 rows and columns, "outer" colorbars and legends do not alter subplot
 spacing or add whitespace. This is critical e.g. if you have a
 colorbar between columns 1 and 2 but nothing between columns 2 and 3.
@@ -423,15 +423,15 @@ have this functionality built right into matplotlib's interface.
 Changes
 -------
 
-UltraPlot uses the `~ultraplot.axes.PlotAxes` subclass to add various `seaborn`_,
+UltraPlot uses the :class:`~ultraplot.axes.PlotAxes` subclass to add various `seaborn`_,
 `xarray`_, and `pandas`_ features to existing matplotlib plotting commands
 along with several additional features designed to make things easier.
 
-The following features are relevant for "1D" `~ultraplot.axes.PlotAxes` commands
+The following features are relevant for "1D" :class:`~ultraplot.axes.PlotAxes` commands
 like :func:`~ultraplot.axes.PlotAxes.line` (equivalent to :func:`~ultraplot.axes.PlotAxes.plot`)
 and :func:`~ultraplot.axes.PlotAxes.scatter`:
 
-* The treatment of data arguments passed to the 1D `~ultraplot.axes.PlotAxes`
+* The treatment of data arguments passed to the 1D :class:`~ultraplot.axes.PlotAxes`
   commands is :ref:`standardized <ug_1dstd>`. This makes them more flexible
   and arguably more intuitive to use than their matplotlib counterparts.
 * The `cycle` keyword is interpreted by the :class:`~ultraplot.constructor.Cycle`
@@ -439,12 +439,12 @@ and :func:`~ultraplot.axes.PlotAxes.scatter`:
   :ref:`property cyclers <ug_apply_cycle>` on-the-fly. This permits succinct
   and flexible property cycler declaration.
 * The `legend` and `colorbar` keywords draw :ref:`on-the-fly legends and colorbars
-  <ug_guides_plot>` using the result of the `~ultraplot.axes.PlotAxes` command.
+  <ug_guides_plot>` using the result of the :class:`~ultraplot.axes.PlotAxes` command.
   Note that colorbars can be drawn from :ref:`lists of artists <ug_colorbars>`.
 * The default `ylim` (`xlim`) in the presence of a fixed `xlim` (`ylim`) is now
   adjusted to exclude out-of-bounds data. This can be useful when "zooming in" on
   a dependent variable axis but can be disabled by setting :rcraw:`axes.inbounds`
-  to ``False`` or passing ``inbounds=False`` to `~ultraplot.axes.PlotAxes` commands.
+  to ``False`` or passing ``inbounds=False`` to :class:`~ultraplot.axes.PlotAxes` commands.
 * The :func:`~ultraplot.axes.PlotAxes.bar` and :func:`~ultraplot.axes.PlotAxes.barh` commands accept 2D
   arrays and can :ref:`stack or group <ug_bar>` successive columns. Likewise, the
   :func:`~ultraplot.axes.PlotAxes.area` and :func:`~ultraplot.axes.PlotAxes.areax` commands (shorthands
@@ -472,14 +472,14 @@ and :func:`~ultraplot.axes.PlotAxes.scatter`:
   :ref:`parametric lines <ug_parametric>` by encoding the parametric
   coordinate using colormap colors rather than text annotations.
 
-The following features are relevant for "2D" `~ultraplot.axes.PlotAxes` commands
+The following features are relevant for "2D" :class:`~ultraplot.axes.PlotAxes` commands
 like :func:`~ultraplot.axes.PlotAxes.pcolor` and :func:`~ultraplot.axes.PlotAxes.contour`:
 
-* The treatment of data arguments passed to the 2D `~ultraplot.axes.PlotAxes`
+* The treatment of data arguments passed to the 2D :class:`~ultraplot.axes.PlotAxes`
   commands is :ref:`standardized <ug_2dstd>`. This makes them more flexible
   and arguably more intuitive to use than their matplotlib counterparts.
 * The `cmap` and `norm` :ref:`keyword arguments <ug_apply_cmap>` are interpreted
-  by the :class:`~ultraplot.constructor.Colormap` and :class:`~ultraplot.constructor.Norm`
+  by the :class::class:`~ultraplot.constructor.Colormap` and :class:`~ultraplot.constructor.Norm`
   :ref:`constructor functions <why_constructor>`. This permits succinct
   and flexible colormap and normalizer application.
 * The `colorbar` keyword draws :ref:`on-the-fly colorbars <ug_guides_plot>` using the
@@ -493,11 +493,11 @@ like :func:`~ultraplot.axes.PlotAxes.pcolor` and :func:`~ultraplot.axes.PlotAxes
 * The default `vmin` and `vmax` used to normalize colormaps now excludes data
   outside the *x* and *y* axis bounds `xlim` and `ylim` if they were explicitly
   fixed. This can be disabled by setting :rcraw:`cmap.inbounds` to ``False``
-  or by passing ``inbounds=False`` to `~ultraplot.axes.PlotAxes` commands.
+  or by passing ``inbounds=False`` to :class:`~ultraplot.axes.PlotAxes` commands.
 * The `~ultraplot.colors.DiscreteNorm` normalizer is paired with most colormaps by
   default. It can easily divide colormaps into distinct levels, similar to contour
   plots. This can be disabled by setting :rcraw:`cmap.discrete` to ``False`` or
-  by passing ``discrete=False`` to `~ultraplot.axes.PlotAxes` commands.
+  by passing ``discrete=False`` to :class:`~ultraplot.axes.PlotAxes` commands.
 * The `~ultraplot.colors.DivergingNorm` normalizer is perfect for data with a
   :ref:`natural midpoint <ug_norm>` and offers both "fair" and "unfair" scaling.
   The `~ultraplot.colors.SegmentedNorm` normalizer can generate
@@ -517,7 +517,7 @@ like :func:`~ultraplot.axes.PlotAxes.pcolor` and :func:`~ultraplot.axes.PlotAxes
   <https://stackoverflow.com/q/8263769/4970632>`__, `grid boxes
   <https://stackoverflow.com/q/27092991/4970632>`__, and `colorbar segments
   <https://stackoverflow.com/q/15003353/4970632>`__. This can be disabled by
-  passing ``edgefix=False`` to `~ultraplot.axes.PlotAxes` commands.
+  passing ``edgefix=False`` to :class:`~ultraplot.axes.PlotAxes` commands.
 
 Links
 -----
@@ -573,9 +573,9 @@ syntax used for `ultraplot.axes.CartesianAxes.format` and `ultraplot.axes.PolarA
 
 The `~ultraplot.axes.GeoAxes` subclass also makes longitude-latitude coordinates
 the "default" coordinate system by passing ``transform=ccrs.PlateCarree()``
-or ``latlon=True`` to `~ultraplot.axes.PlotAxes` commands (depending on whether cartopy
+or ``latlon=True`` to :class:`~ultraplot.axes.PlotAxes` commands (depending on whether cartopy
 or basemap is the backend). And to enforce global coverage over the poles and across
-longitude seams, you can pass ``globe=True`` to 2D `~ultraplot.axes.PlotAxes` commands
+longitude seams, you can pass ``globe=True`` to 2D :class:`~ultraplot.axes.PlotAxes` commands
 like :func:`~ultraplot.axes.PlotAxes.contour` and :func:`~ultraplot.axes.PlotAxes.pcolormesh`.
 
 Links
@@ -618,7 +618,7 @@ Changes
 
 UltraPlot reproduces many of the `xarray.DataArray.plot`,
 `pandas.DataFrame.plot`, and `pandas.Series.plot`
-features directly on the `~ultraplot.axes.PlotAxes` commands.
+features directly on the :class:`~ultraplot.axes.PlotAxes` commands.
 This includes :ref:`grouped or stacked <ug_bar>` bar plots
 and :ref:`layered or stacked <ug_bar>` area plots from two-dimensional
 input data, auto-detection of :ref:`diverging datasets <ug_autonorm>` for
@@ -641,9 +641,9 @@ or passing ``autoformat=False`` to any plotting command.
 Links
 -----
 
-* For integration with 1D `~ultraplot.axes.PlotAxes` commands,
+* For integration with 1D :class:`~ultraplot.axes.PlotAxes` commands,
   see :ref:`this page <ug_1dintegration>`.
-* For integration with 2D `~ultraplot.axes.PlotAxes` commands,
+* For integration with 2D :class:`~ultraplot.axes.PlotAxes` commands,
   see :ref:`this page <ug_2dintegration>`.
 * For bar and area plots,
   see :ref:`this page <ug_bar>`.
@@ -689,7 +689,7 @@ aesthetically pleasing figures.
 * UltraPlot adds colormaps from the `seaborn <seacolor_>`_, `cmocean <cmocean_>`_,
   `SciVisColor <sciviscolor_>`_, and `Scientific Colour Maps <fabio_>`_ projects.
   It also defines a few default :ref:`perceptually uniform colormaps <ug_perceptual>`
-  and includes a `~ultraplot.colors.PerceptualColormap` class for generating
+  and includes a :class:`~ultraplot.colors.PerceptualColormap` class for generating
   new ones. A :ref:`table of colormap <ug_cmaps_included>` and
   :ref:`color cycles <ug_cycles_included>` can be shown using
   :func:`~ultraplot.demos.show_cmaps` and :func:`~ultraplot.demos.show_cycles`.
@@ -750,10 +750,10 @@ UltraPlot tries to make it easy to manipulate colormaps and property cycles.
   `~matplotlib.colors.LinearSegmentedColormap` and `~matplotlib.colors.ListedColormap`.
   These classes include several useful features leveraged by the
   :ref:`constructor functions <why_constructor>`
-  :class:`~ultraplot.constructor.Colormap` and :class:`~ultraplot.constructor.Cycle`.
-* The :class:`~ultraplot.constructor.Colormap` function can merge, truncate, and
+  :class::class:`~ultraplot.constructor.Colormap` and :class:`~ultraplot.constructor.Cycle`.
+* The :class::class:`~ultraplot.constructor.Colormap` function can merge, truncate, and
   modify existing colormaps or generate brand new colormaps. It can also
-  create new `~ultraplot.colors.PerceptualColormap`\ s -- a type of
+  create new :class:`~ultraplot.colors.PerceptualColormap`\ s -- a type of
   `ultraplot.colors.ContinuousColormap` with linear transitions in the
   :ref:`perceptually uniform-like <ug_perceptual>` hue, saturation,
   and luminance channels rather then the red, blue, and green channels.
@@ -761,7 +761,7 @@ UltraPlot tries to make it easy to manipulate colormaps and property cycles.
   scratch or retrieve "registered" color cycles from their associated
   `~ultraplot.colors.DiscreteColormap` instances. It can also make property
   cycles by splitting up the colors from registered or on-the-fly
-  `~ultraplot.colors.ContinuousColormap`\ s and `~ultraplot.colors.PerceptualColormap`\ s.
+  `~ultraplot.colors.ContinuousColormap`\ s and :class:`~ultraplot.colors.PerceptualColormap`\ s.
 
 UltraPlot also makes all colormap and color cycle names case-insensitive, and
 colormaps are automatically reversed or cyclically shifted 180 degrees if you
@@ -802,7 +802,7 @@ This may be confusing for users outside of the United States.
 Changes
 -------
 
-UltraPlot uses physical units for the `~ultraplot.gridspec.GridSpec` keywords
+UltraPlot uses physical units for the :class:`~ultraplot.gridspec.GridSpec` keywords
 `left`, `right`, `top`, `bottom`, `wspace`, `hspace`, `pad`, `outerpad`, and
 `innerpad`. The default unit (assumed when a numeric argument is passed) is
 `em-widths <https://en.wikipedia.org/wiki/Em_(typography)>`__. Em-widths are
@@ -824,7 +824,7 @@ Links
 
 * For more on physical units,
   see :ref:`this page <ug_units>`.
-* For more on `~ultraplot.gridspec.GridSpec` spacing units,
+* For more on :class:`~ultraplot.gridspec.GridSpec` spacing units,
   see :ref:`this page <ug_tight>`
 * For more on colorbar width units,
   see :ref:`this page <ug_colorbars>`,
@@ -899,14 +899,14 @@ parent directories can be useful when working in projects with lots of subfolder
 
 UltraPlot also automatically registers colormaps, color cycles, colors, and font
 files stored in subfolders named ``cmaps``,  ``cycles``, ``colors``, and ``fonts``
-in the location given by :func:`~ultraplot.config.Configurator.user_folder` (this is usually
+in the location given by :func::func:`~ultraplot.config.Configurator.user_folder` (this is usually
 ``$HOME/.UltraPlot``), as well as loose subfolders named ``ultraplot_cmaps``,
 ``ultraplot_cycles``, ``ultraplot_colors``, and ``ultraplot_fonts`` in the current
 directory or an arbitrary parent directory. You can save colormaps and color cycles to
-:func:`~ultraplot.config.Configurator.user_folder` simply by passing ``save=True`` to
-:class:`~ultraplot.constructor.Colormap` and :class:`~ultraplot.constructor.Cycle`. To re-register
+:func::func:`~ultraplot.config.Configurator.user_folder` simply by passing ``save=True`` to
+:class::class:`~ultraplot.constructor.Colormap` and :class:`~ultraplot.constructor.Cycle`. To re-register
 these files during an active python session, or to register arbitrary input arguments,
-you can use :func:`~ultraplot.config.register_cmaps`, :func:`~ultraplot.config.register_cycles`,
+you can use :func::func:`~ultraplot.config.register_cmaps`, :func:`~ultraplot.config.register_cycles`,
 :func:`~ultraplot.config.register_colors`, or :func:`~ultraplot.config.register_fonts`.
 
 Links

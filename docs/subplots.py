@@ -25,7 +25,7 @@
 #
 # .. note::
 #
-#    UltraPlot only supports one `~ultraplot.gridspec.GridSpec` per figure
+#    UltraPlot only supports one :class:`~ultraplot.gridspec.GridSpec` per figure
 #    (see the section on :ref:`adding subplots <ug_subplot>`), and UltraPlot
 #    does not officially support the "nested" matplotlib structures
 #    `~matplotlib.gridspec.GridSpecFromSubplotSpec` and `~matplotlib.figure.SubFigure`.
@@ -175,7 +175,7 @@ axs.format(
 #      figure -- not just the reference subplot.
 #    * The physical widths of UltraPlot :func:`~ultraplot.axes.Axes.colorbar`\ s and
 #      :func:`~ultraplot.axes.Axes.panel`\ s are always independent of the figure size.
-#      `~ultraplot.gridspec.GridSpec` specifies their widths in physical units to help
+#      :class:`~ultraplot.gridspec.GridSpec` specifies their widths in physical units to help
 #      users avoid drawing colorbars and panels that look "too skinny" or "too fat"
 #      depending on the number of subplots in the figure.
 
@@ -244,7 +244,7 @@ uplt.rc.reset()
 # :class:`~ultraplot.figure.Figure` or by setting :rcraw:`subplots.tight` to ``False``, or
 # it can be partly overridden by passing any of the spacing arguments `left`, `right`,
 # `top`, `bottom`, `wspace`, or `hspace` to :class:`~ultraplot.figure.Figure` or
-# `~ultraplot.gridspec.GridSpec`. For example:
+# :class:`~ultraplot.gridspec.GridSpec`. For example:
 #
 # * ``left=2`` fixes the left margin at 2 em-widths, while the right,
 #   bottom, and top margin widths are determined by the tight layout algorithm.
@@ -256,7 +256,7 @@ uplt.rc.reset()
 #
 # The padding between the tight layout extents (rather than the absolute spaces
 # between subplot edges) can also be changed by passing `outerpad`, `innerpad`,
-# or `panelpad` to :class:`~ultraplot.figure.Figure` or `~ultraplot.gridspec.GridSpec`.
+# or `panelpad` to :class:`~ultraplot.figure.Figure` or :class:`~ultraplot.gridspec.GridSpec`.
 # This padding can be set locally by passing an array of values to `wpad`
 # and `hpad` (analogous to `wspace` and `hspace`), or by passing the `pad`
 # keyword when creating :ref:`panel axes <ug_panels>` or :ref:`outer
@@ -357,14 +357,14 @@ for (name1, equal), (name2, group) in zip(equals, groups):
 # like rows and columns of subplots. UltraPlot builds on this feature by:
 #
 # #. Automatically sharing axes between subplots and :ref:`panels <ug_panels>`
-#    occupying the same rows or columns of the `~ultraplot.gridspec.GridSpec`. This
+#    occupying the same rows or columns of the :class:`~ultraplot.gridspec.GridSpec`. This
 #    works for :ref:`aribtrarily complex subplot grids <ug_layout>`. It also works
 #    for subplots generated one-by-one with :func:`~ultraplot.figure.Figure.add_subplot`
 #    rather than :func:`~ultraplot.figure.Figure.subplots`. It is controlled by the `sharex`
 #    and `sharey` :class:`~ultraplot.figure.Figure` keywords (default is :rc:`subplots.share`).
 #    Use the `share` keyword as a shorthand to set both `sharex` and `sharey`.
 # #. Automatically sharing labels across subplots and :ref:`panels <ug_panels>`
-#    with edges along the same row or column of the `~ultraplot.gridspec.GridSpec`.
+#    with edges along the same row or column of the :class:`~ultraplot.gridspec.GridSpec`.
 #    This also works for complex subplot grids and subplots generated one-by-one.
 #    It is controlled by the `spanx` and `spany` :class:`~ultraplot.figure.Figure`
 #    keywords (default is :rc:`subplots.span`). Use the `span` keyword
@@ -458,9 +458,9 @@ for span, share, title in zip(spans, shares, titles):
 # the gridspec spacing and tight layout padding keywords `left`, `right`, `bottom`,
 # `top`, `wspace`, `hspace`, `outerpad`, `innerpad`, `panelpad`, `wpad`, and `hpad`;
 # the :func:`~ultraplot.axes.Axes.colorbar` and :func:`~ultraplot.axes.Axes.panel` widths;
-# various :func:`~ultraplot.axes.Axes.legend` spacing and padding arguments; various
+# various :func::class:`~ultraplot.axes.Axes.legend` spacing and padding arguments; various
 # :func:`~ultraplot.axes.Axes.format` font size and padding arguments; the line width and
-# marker size arguments passed to `~ultraplot.axes.PlotAxes` commands; and all
+# marker size arguments passed to :class:`~ultraplot.axes.PlotAxes` commands; and all
 # applicable :func:`~ultraplot.config.rc` settings, e.g. :rcraw:`subplots.refwidth`,
 # :rcraw:`legend.columnspacing`, and :rcraw:`axes.labelpad`. This feature is
 # powered by the physical units engine :func:`~ultraplot.utils.units`.

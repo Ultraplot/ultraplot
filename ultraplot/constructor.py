@@ -404,7 +404,7 @@ def Colormap(
 ):
     """
     Generate, retrieve, modify, and/or merge instances of
-    `~ultraplot.colors.PerceptualColormap`,
+    :class:`~ultraplot.colors.PerceptualColormap`,
     `~ultraplot.colors.ContinuousColormap`, and
     `~ultraplot.colors.DiscreteColormap`.
 
@@ -425,16 +425,16 @@ def Colormap(
           `ultraplot.colors.DiscreteColormap.from_file` depending on the value of
           `filemode` (see below). Default behavior is to load a
           `~ultraplot.colors.ContinuousColormap`.
-        * If RGB tuple or color string, a `~ultraplot.colors.PerceptualColormap`
+        * If RGB tuple or color string, a :class:`~ultraplot.colors.PerceptualColormap`
           is generated with `~ultraplot.colors.PerceptualColormap.from_color`.
           If the string ends in ``'_r'``, the monochromatic map will be
           *reversed*, i.e. will go from dark to light instead of light to dark.
         * If sequence of RGB tuples or color strings, a
-          `~ultraplot.colors.DiscreteColormap`, `~ultraplot.colors.PerceptualColormap`,
+          `~ultraplot.colors.DiscreteColormap`, :class:`~ultraplot.colors.PerceptualColormap`,
           or `~ultraplot.colors.ContinuousColormap` is generated depending on
           the value of `listmode` (see below). Default behavior is to generate a
-          `~ultraplot.colors.PerceptualColormap`.
-        * If dictionary, a `~ultraplot.colors.PerceptualColormap` is
+          :class:`~ultraplot.colors.PerceptualColormap`.
+        * If dictionary, a :class:`~ultraplot.colors.PerceptualColormap` is
           generated with `~ultraplot.colors.PerceptualColormap.from_hsl`.
           The dictionary should contain the keys ``'hue'``, ``'saturation'``,
           ``'luminance'``, and optionally ``'alpha'``, or their aliases (see below).
@@ -450,7 +450,7 @@ def Colormap(
         * If ``'perceptual'`` or ``'continuous'``, a colormap is generated using
           `~ultraplot.colors.ContinuousColormap.from_file`. The resulting
           colormap may be a `~ultraplot.colors.ContinuousColormap` or
-          `~ultraplot.colors.PerceptualColormap` depending on the data file.
+          :class:`~ultraplot.colors.PerceptualColormap` depending on the data file.
         * If ``'discrete'``, a `~ultraplot.colors.DiscreteColormap` is generated
           using `~ultraplot.colors.ContinuousColormap.from_file`.
 
@@ -460,7 +460,7 @@ def Colormap(
         Controls how colormaps are generated when you input sequence(s)
         of colors. The options are as follows:
 
-        * If ``'perceptual'``, a `~ultraplot.colors.PerceptualColormap`
+        * If ``'perceptual'``, a :class:`~ultraplot.colors.PerceptualColormap`
           is generated with `~ultraplot.colors.PerceptualColormap.from_list`.
         * If ``'continuous'``, a `~ultraplot.colors.ContinuousColormap` is
           generated with `~ultraplot.colors.ContinuousColormap.from_list`.
@@ -486,7 +486,7 @@ def Colormap(
         necessary if you provide the `samples` argument.
     left, right : float or sequence of float, optional
         Truncate the left or right edges of the colormap.
-        Passed to `~ultraplot.colors.ContinuousColormap.truncate`.
+        Passed to :method:`~ultraplot.colors.ContinuousColormap.truncate`.
         If float, these apply to the final *merged* colormap. If sequence
         of float, these apply to each input colormap individually.
     cut : float or sequence of float, optional
@@ -501,7 +501,7 @@ def Colormap(
         sequence of float, these apply to each input colormap individually.
     shift : float or sequence of float, optional
         Cyclically shift the colormap.
-        Passed to `~ultraplot.colors.ContinuousColormap.shifted`.
+        Passed to :property:`~ultraplot.colors.ContinuousColormap.shifted`.
         If float, this applies to the final *merged* colormap. If sequence
         of float, these apply to each input colormap individually.
     a

@@ -41,8 +41,8 @@
 # You can use these keyword arguments to apply built-in matplotlib
 # :class:`~matplotlib.ticker.Locator`\ s by their "registered" names
 # (e.g., ``xlocator='log'``), to draw ticks every ``N`` data values with
-# `~matplotlib.ticker.MultipleLocator` (e.g., ``xlocator=2``), or to tick the
-# specific locations in a list using `~matplotlib.ticker.FixedLocator` (just
+# :class:`~matplotlib.ticker.MultipleLocator` (e.g., ``xlocator=2``), or to tick the
+# specific locations in a list using :class:`~matplotlib.ticker.FixedLocator` (just
 # like :func:`~matplotlib.axes.Axes.set_xticks` and :func:`~matplotlib.axes.Axes.set_yticks`).
 # If you want to work with the locator classes directly, they are available in the
 # top-level namespace (e.g., ``xlocator=uplt.MultipleLocator(...)`` is allowed).
@@ -127,10 +127,10 @@ uplt.rc.reset()
 # (e.g., ``xformatter=uplt.SciFormatter(...)`` is allowed).
 #
 # UltraPlot also changes the default tick formatter to
-# `~ultraplot.ticker.AutoFormatter`. This class trims trailing zeros by
+# :class:`~ultraplot.ticker.AutoFormatter`. This class trims trailing zeros by
 # default, can optionally omit or wrap tick values within particular
 # number ranges, and can add prefixes and suffixes to each label. See
-# `~ultraplot.ticker.AutoFormatter` for details. To disable the trailing
+# :class:`~ultraplot.ticker.AutoFormatter` for details. To disable the trailing
 # zero-trimming feature, set :rcraw:`formatter.zerotrim` to ``False``.
 
 # %%
@@ -253,7 +253,7 @@ uplt.rc.reset()
 # unit, use a unit string (e.g., ``xlocator='month'``). To draw ticks every ``N`` time
 # units, use a (unit, N) tuple (e.g., ``xlocator=('day', 5)``). For `% style formatting
 # <https://docs.python.org/3/library/datetime.html#strftime-strptime-behavior>`__
-# of datetime tick labels with `~datetime.datetime.strftime`, you can use a string
+# of datetime tick labels with :func:`~datetime.datetime.strftime`, you can use a string
 # containing ``'%'`` (e.g. ``xformatter='%Y-%m-%d'``). By default, *x* axis datetime
 # axis labels are rotated 90 degrees, like in `pandas`_. This can be disabled by
 # passing ``xrotation=0`` to :func:`~ultraplot.axes.CartesianAxes.format` or by setting
@@ -386,7 +386,7 @@ uplt.rc.reset()
 # :class:`~ultraplot.constructor.Scale` :ref:`constructor function <why_constructor>`.
 # UltraPlot makes several changes to the axis scale API:
 #
-# * The `~ultraplot.ticker.AutoFormatter` formatter is now used for all axis scales
+# * The :class:`~ultraplot.ticker.AutoFormatter` formatter is now used for all axis scales
 #   by default, including ``'log'`` and ``'symlog'``. Matplotlib's behavior can
 #   be restored by passing e.g. ``xformatter='log'`` or ``yformatter='log'`` to
 #   :func:`~ultraplot.axes.CartesianAxes.format`.
@@ -607,7 +607,7 @@ fig.format(xlabel="xlabel", ylabel="ylabel", suptitle="Alternate axes demo")
 # The :func:`~ultraplot.axes.CartesianAxes.dualx` and
 # :func:`~ultraplot.axes.CartesianAxes.dualy` methods can be used to draw duplicate *x* and
 # *y* axes meant to represent *alternate units* in the same coordinate range as the
-# "parent" axis. This feature is powered by the `~ultraplot.scale.FuncScale` class.
+# "parent" axis. This feature is powered by the :class:`~ultraplot.scale.FuncScale` class.
 # :func:`~ultraplot.axes.CartesianAxes.dualx` and :func:`~ultraplot.axes.CartesianAxes.dualy` accept
 # the same axis formatting keyword arguments as :func:`~ultraplot.axes.CartesianAxes.altx`
 # and :func:`~ultraplot.axes.CartesianAxes.alty`. The alternate units are specified with

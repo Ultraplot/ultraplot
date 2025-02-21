@@ -25,7 +25,7 @@
 # ====================
 #
 # UltraPlot adds :ref:`several new features <why_plotting>` to matplotlib's
-# plotting commands using the intermediate `~ultraplot.axes.PlotAxes` class.
+# plotting commands using the intermediate :class:`~ultraplot.axes.PlotAxes` class.
 # For the most part, these additions represent a *superset* of matplotlib -- if
 # you are not interested, you can use the plotting commands just like you would
 # in matplotlib. This section documents the features added for 1D plotting commands
@@ -39,7 +39,7 @@
 # Data arguments
 # --------------
 #
-# The treatment of data arguments passed to the 1D `~ultraplot.axes.PlotAxes`
+# The treatment of data arguments passed to the 1D :class:`~ultraplot.axes.PlotAxes`
 # commands is standardized. For each command, you can optionally omit
 # the dependent variable coordinates, in which case they are inferred from the data
 # (see :ref:`xarray and pandas integration <ug_1dintegration>`), or pass
@@ -134,7 +134,7 @@ fig.format(
 # Pandas and xarray integration
 # -----------------------------
 #
-# The 1D `~ultraplot.axes.PlotAxes` commands recognize `pandas`_
+# The 1D :class:`~ultraplot.axes.PlotAxes` commands recognize `pandas`_
 # and `xarray`_ data structures. If you omit dependent variable coordinates,
 # the commands try to infer them from the `pandas.Series`, `pandas.DataFrame`,
 # or `xarray.DataArray`. If you did not explicitly set the *x* or *y* axis label
@@ -216,7 +216,7 @@ ax.plot(df, cycle=cycle, lw=3, legend="t", legend_kw={"frame": False})
 # <https://matplotlib.org/stable/tutorials/intermediate/color_cycle.html#sphx-glr-tutorials-intermediate-color-cycle-py>`__
 # on-the-fly and use different property cycles for different plot elements.
 # You can do so using the `cycle` and `cycle_kw` keywords, available
-# with most 1D `~ultraplot.axes.PlotAxes` commands. `cycle` and `cycle_kw` are
+# with most 1D :class:`~ultraplot.axes.PlotAxes` commands. `cycle` and `cycle_kw` are
 # passed to the :class:`~ultraplot.constructor.Cycle` :ref:`constructor function
 # <why_constructor>`, and the resulting property cycle is used for the plot. You
 # can specify `cycle` once with 3D input data (in which case each column is
@@ -343,7 +343,7 @@ fig.format(suptitle="Line plots demo", xlabel="xlabel", ylabel="ylabel")
 # using the `cycle` keyword argument, and unlike matplotlib it can include
 # properties like `marker` and `markersize`. The colormap `cmap` and normalizer
 # `norm` used with the optional `c` color array are now passed through the
-# :class:`~ultraplot.constructor.Colormap` and :class:`~ultraplot.constructor.Norm` constructor
+# :class::class:`~ultraplot.constructor.Colormap` and :class:`~ultraplot.constructor.Norm` constructor
 # functions.
 
 # .. important::
@@ -610,7 +610,7 @@ uplt.rc.reset()
 # :func:`~ultraplot.axes.PlotAxes.bar`, or :func:`~ultraplot.axes.PlotAxes.barh` commands.
 # The default negative and positive colors are controlled with :rcraw:`negcolor` and
 # :rcraw:`poscolor` but the colors can be modified for particular plots by passing
-# ``negcolor=color`` and ``poscolor=color`` to the `~ultraplot.axes.PlotAxes` commands.
+# ``negcolor=color`` and ``poscolor=color`` to the :class:`~ultraplot.axes.PlotAxes` commands.
 
 # %%
 import ultraplot as uplt

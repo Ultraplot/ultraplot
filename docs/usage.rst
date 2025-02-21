@@ -117,7 +117,7 @@ functionality to existing figure and axes methods.
   :ref:`geographic plots <ug_geoformat>`, and :ref:`polar plots <ug_polar>`.
 * The `ultraplot.axes.Axes.colorbar` and `ultraplot.axes.Axes.legend` commands
   draw colorbars and legends inside of subplots or along the outside edges of
-  subplots. The `ultraplot.figure.Figure.colorbar` and `ultraplot.figure.Figure.legend`
+  subplots. The `ultraplot.figure.Figure.colorbar` and :class:`ultraplot.figure.Figure.legend`
   commands draw colorbars or legends along the edges of figures (aligned by subplot
   boundaries). These commands considerably :ref:`simplify <ug_guides>` the
   process of drawing colorbars and legends.
@@ -167,7 +167,7 @@ Outside of the features provided by the `ultraplot.figure.Figure` and
 `ultraplot.axes.Axes` subclasses, UltraPlot includes several useful
 classes and :ref:`constructor functions <why_constructor>`.
 
-* The :class:`~ultraplot.constructor.Colormap` and :class:`~ultraplot.constructor.Cycle`
+* The :class::class:`~ultraplot.constructor.Colormap` and :class:`~ultraplot.constructor.Cycle`
   constructor functions can be used to :ref:`slice <ug_cmaps_mod>`,
   and :ref:`merge <ug_cmaps_merge>` existing colormaps and color
   cycles. It can also :ref:`make new colormaps <ug_cmaps_new>`
@@ -175,7 +175,7 @@ classes and :ref:`constructor functions <why_constructor>`.
 * The `~ultraplot.colors.ContinuousColormap` and
   `~ultraplot.colors.DiscreteColormap` subclasses replace the default matplotlib
   colormap classes and add several methods. The new
-  `~ultraplot.colors.PerceptualColormap` class is used to make
+  :class:`~ultraplot.colors.PerceptualColormap` class is used to make
   colormaps with :ref:`perceptually uniform transitions <ug_perceptual>`.
 * The :func:`~ultraplot.demos.show_cmaps`, :func:`~ultraplot.demos.show_cycles`,
   :func:`~ultraplot.demos.show_colors`, :func:`~ultraplot.demos.show_fonts`,

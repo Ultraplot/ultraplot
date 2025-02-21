@@ -16,7 +16,7 @@ from ..axes import Axes
 class _SharedAxes(object):
     """
     Mix-in class with methods shared between `~ultraplot.axes.CartesianAxes`
-    and `~ultraplot.axes.PolarAxes`.
+    and :class:`~ultraplot.axes.PolarAxes`.
     """
 
     @staticmethod

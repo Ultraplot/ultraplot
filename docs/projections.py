@@ -39,7 +39,7 @@
 #
 # To create `polar axes <polar_>`_, pass ``proj='polar'`` to an axes-creation
 # command like `ultraplot.figure.Figure.add_subplot`. Polar axes are represented with the
-# `~ultraplot.axes.PolarAxes` subclass, which has its own :func:`~ultraplot.axes.PolarAxes.format`
+# :class:`~ultraplot.axes.PolarAxes` subclass, which has its own :func:`~ultraplot.axes.PolarAxes.format`
 # command. `ultraplot.axes.PolarAxes.format` facilitates polar-specific modifications
 # like changing the central radius `r0`, the zero azimuth location `theta0`,
 # and the positive azimuthal direction `thetadir`. It also supports toggling and
@@ -178,10 +178,10 @@ axs.format(
 #   with the standard axes plotting methods rather than the basemap methods --
 #   just like cartopy. Under the hood, invoking :func:`~ultraplot.axes.GeoAxes.format`
 #   with basemap as the backend adds major and minor gridlines using
-#   `~mpl_toolkits.basemap.Basemap.drawmeridians` and
-#   `~mpl_toolkits.basemap.Basemap.drawparallels` and adds geographic features
-#   using methods like `~mpl_toolkits.basemap.Basemap.fillcontinents`
-#   and `~mpl_toolkits.basemap.Basemap.drawcoastlines`. If you need to
+#   :func:`~mpl_toolkits.basemap.Basemap.drawmeridians` and
+#   :func:`~mpl_toolkits.basemap.Basemap.drawparallels` and adds geographic features
+#   using methods like :func:`~mpl_toolkits.basemap.Basemap.fillcontinents`
+#   and :func:`~mpl_toolkits.basemap.Basemap.drawcoastlines`. If you need to
 #   use the underlying `~mpl_toolkits.basemap.Basemap` instance, it is
 #   available as the :func:`~ultraplot.axes.GeoAxes.projection` attribute.
 #
@@ -265,12 +265,12 @@ uplt.rc.reset()
 # plotting is done "cartopy-style" by calling methods from the `ultraplot.axes.GeoAxes`
 # instance rather than the `~mpl_toolkits.basemap.Basemap` instance.
 #
-# To ensure that a 2D `~ultraplot.axes.PlotAxes` command like
+# To ensure that a 2D :class:`~ultraplot.axes.PlotAxes` command like
 # :func:`~ultraplot.axes.PlotAxes.contour` or :func:`~ultraplot.axes.PlotAxes.pcolor`
 # fills the entire globe, simply pass ``globe=True`` to the command.
 # This interpolates the data to the North and South poles and across the longitude
 # seam before plotting. This is a convenient and succinct alternative to cartopy's
-# `~cartopy.util.add_cyclic_point` and basemap's `~mpl_toolkits.basemap.addcyclic`.
+# `~cartopy.util.add_cyclic_point` and basemap's :func:`~mpl_toolkits.basemap.addcyclic`.
 #
 # To draw content above or underneath a given geographic feature, simply change
 # the `zorder <https://matplotlib.org/3.1.1/gallery/misc/zorder_demo.html>`__
