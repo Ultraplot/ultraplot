@@ -178,8 +178,8 @@ copybutton_remove_prompts = True
 # Links for What's New github commits, issues, and pull requests
 extlinks = {
     "issue": ("https://github.com/ultraplot/ultraplot/issues/%s", "GH#%s"),
-    "commit": ("https://github.com/ultraPlot/ultraplot/commit/%s", "@%s"),
-    "pr": ("https://github.com/ultraPlot/ultraplot/pull/%s", "GH#%s"),
+    "commit": ("https://github.com/Ultraplot/ultraplot/commit/%s", "@%s"),
+    "pr": ("https://github.com/Ultraplot/ultraplot/pull/%s", "GH#%s"),
 }
 
 # Set up mapping for other projects' docs
