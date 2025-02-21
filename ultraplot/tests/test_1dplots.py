@@ -507,7 +507,7 @@ def test_line_plot_cyclers():
     return fig
 
 
-@pytest.mpl_image_compare
+@pytest.mark.mpl_image_compare
 def test_heatmap_labels():
     """
     Heatmap function should show labels when asked
