@@ -569,7 +569,7 @@ with unified support for `cartopy`_ and `basemap`_ features via the
 `ultraplot.axes.GeoAxes.format` command. This lets you quickly modify geographic
 plot features like latitude and longitude gridlines, gridline labels, continents,
 coastlines, and political boundaries. The syntax is conveniently analogous to the
-syntax used for `ultraplot.axes.CartesianAxes.format` and `ultraplot.axes.PolarAxes.format`.
+syntax used for :func:`ultraplot.axes.CartesianAxes.format` and `ultraplot.axes.PolarAxes.format`.
 
 The `~ultraplot.axes.GeoAxes` subclass also makes longitude-latitude coordinates
 the "default" coordinate system by passing ``transform=ccrs.PlateCarree()``
@@ -899,14 +899,14 @@ parent directories can be useful when working in projects with lots of subfolder
 
 UltraPlot also automatically registers colormaps, color cycles, colors, and font
 files stored in subfolders named ``cmaps``,  ``cycles``, ``colors``, and ``fonts``
-in the location given by :func::func:`~ultraplot.config.Configurator.user_folder` (this is usually
+in the location given by :func:`~ultraplot.config.Configurator.user_folder` (this is usually
 ``$HOME/.UltraPlot``), as well as loose subfolders named ``ultraplot_cmaps``,
 ``ultraplot_cycles``, ``ultraplot_colors``, and ``ultraplot_fonts`` in the current
 directory or an arbitrary parent directory. You can save colormaps and color cycles to
-:func::func:`~ultraplot.config.Configurator.user_folder` simply by passing ``save=True`` to
+:func:`~ultraplot.config.Configurator.user_folder` simply by passing ``save=True`` to
 :class::class:`~ultraplot.constructor.Colormap` and :class:`~ultraplot.constructor.Cycle`. To re-register
 these files during an active python session, or to register arbitrary input arguments,
-you can use :func::func:`~ultraplot.config.register_cmaps`, :func:`~ultraplot.config.register_cycles`,
+you can use :func:`~ultraplot.config.register_cmaps`, :func:`~ultraplot.config.register_cycles`,
 :func:`~ultraplot.config.register_colors`, or :func:`~ultraplot.config.register_fonts`.
 
 Links

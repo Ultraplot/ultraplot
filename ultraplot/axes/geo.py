@@ -165,7 +165,7 @@ reso : {'lo', 'med', 'hi', 'x-hi', 'xx-hi'}, optional
     must be passed to `~ultraplot.constructor.Proj` instead.
 color : color-spec, default: :rc:`meta.color`
     The color for the axes edge. Propagates to `labelcolor` unless specified
-    otherwise (similar to `ultraplot.axes.CartesianAxes.format`).
+    otherwise (similar to :func:`ultraplot.axes.CartesianAxes.format`).
 gridcolor : color-spec, default: :rc:`grid.color`
     The color for the gridline labels.
 labelcolor : color-spec, default: `color` or :rc:`grid.labelcolor`

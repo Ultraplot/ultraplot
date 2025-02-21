@@ -45,7 +45,7 @@
 # Use :func:`~ultraplot.demos.show_cycles` to generate a table of registered color
 # cycles. The table includes the default color cycles registered by UltraPlot and
 # "user" color cycles created with the :class:`~ultraplot.constructor.Cycle` constructor
-# function or loaded from :func::func:`~ultraplot.config.Configurator.user_folder`. If you need
+# function or loaded from :func:`~ultraplot.config.Configurator.user_folder`. If you need
 # the list of colors associated with a registered or on-the-fly color cycle,
 # simply use :func:`~ultraplot.utils.get_colors`.
 
@@ -210,7 +210,7 @@ obj = ax.plot(
 # and `Color Drop <https://colordrop.io/>`__.
 
 # To add color cycles downloaded from any of these sources, save the color data file
-# to the ``cycles`` subfolder inside :func::func:`~ultraplot.config.Configurator.user_folder`,
+# to the ``cycles`` subfolder inside :func:`~ultraplot.config.Configurator.user_folder`,
 # or to a folder named ``ultraplot_cycles`` in the same directory as your python session
 # or an arbitrary parent directory (see :func:`~ultraplot.config.Configurator.local_folders`).
 # After adding the file, call :func:`~ultraplot.config.register_cycles` or restart your python

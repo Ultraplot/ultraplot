@@ -1058,7 +1058,7 @@ def Locator(locator, *args, discrete=False, **kwargs):
         ``'fixed'``              `~matplotlib.ticker.FixedLocator`             Ticks at these exact locations
         ``'discrete'``           `~ultraplot.ticker.DiscreteLocator`             Major ticks restricted to these locations but subsampled depending on the axis length
         ``'discreteminor'``      `~ultraplot.ticker.DiscreteLocator`             Minor ticks restricted to these locations but subsampled depending on the axis length
-        ``'index'``              `~ultraplot.ticker.IndexLocator`                Ticks on the non-negative integers
+        ``'index'``              :class:`~ultraplot.ticker.IndexLocator`                Ticks on the non-negative integers
         ``'linear'``             `~matplotlib.ticker.LinearLocator`            Exactly ``N`` ticks encompassing axis limits, spaced as ``numpy.linspace(lo, hi, N)``
         ``'log'``                `~matplotlib.ticker.LogLocator`               For log-scale axes
         ``'logminor'``           `~matplotlib.ticker.LogLocator`               For log-scale axes on the 1st through 9th multiples of each power of the base
@@ -1164,7 +1164,7 @@ def Formatter(formatter, *args, date=False, index=False, **kwargs):
           Returns a `~matplotlib.ticker.FuncFormatter`.
         * If sequence of strings, the ticks are labeled with these strings.
           Returns a `~matplotlib.ticker.FixedFormatter` by default or
-          an `~ultraplot.ticker.IndexFormatter` if `index` is ``True``.
+          an :class:`~ultraplot.ticker.IndexFormatter` if `index` is ``True``.
         * If a string containing ``{x}`` or ``{x:...}``, ticks will be
           formatted by calling ``string.format(x=number)``. Returns
           a `~matplotlib.ticker.StrMethodFormatter`.
@@ -1205,7 +1205,7 @@ def Formatter(formatter, *args, date=False, index=False, **kwargs):
         ``'fixed'``             `~matplotlib.ticker.FixedFormatter`             List of strings
         ``'formatstr'``         `~matplotlib.ticker.FormatStrFormatter`         From C-style ``string % format`` notation
         ``'func'``              `~matplotlib.ticker.FuncFormatter`              Use an arbitrary function
-        ``'index'``             `~ultraplot.ticker.IndexFormatter`                List of strings corresponding to non-negative integer positions
+        ``'index'``             :class:`~ultraplot.ticker.IndexFormatter`                List of strings corresponding to non-negative integer positions
         ``'log'``               `~matplotlib.ticker.LogFormatterSciNotation`    For log-scale axes with scientific notation
         ``'logit'``             `~matplotlib.ticker.LogitFormatter`             For logistic-scale axes
         ``'percent'``           `~matplotlib.ticker.PercentFormatter`           Trailing percent sign

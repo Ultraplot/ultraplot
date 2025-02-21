@@ -333,7 +333,7 @@ uplt.rc.reset()
 # The locations of `axis spines
 # <https://matplotlib.org/stable/gallery/ticks_and_spines/spines.html>`__,
 # tick marks, tick labels, and axis labels can be controlled with
-# `ultraplot.axes.CartesianAxes.format` keyword arguments like `xspineloc`
+# :func:`ultraplot.axes.CartesianAxes.format` keyword arguments like `xspineloc`
 # (shorthand `xloc`), `xtickloc`, `xticklabelloc`, and `xlabelloc`. Valid
 # locations include ``'left'``, ``'right'``, ``'top'``, ``'bottom'``, ``'neither'``,
 # ``'none'``, or ``'both'``. Spine locations can also be set to a valid
@@ -554,7 +554,7 @@ ax.format(ymin=0.05, yscale=("power", 0.5), title=title)
 # axes and an identical twin *y* axes) and :func:`~ultraplot.axes.CartesianAxes.alty`
 # is equivalent to :func:`~ultraplot.axes.CartesianAxes.twinx` (makes an alternate *y*
 # axes and an identical twin *x* axes). The UltraPlot versions can be quickly
-# formatted by passing `ultraplot.axes.CartesianAxes.format` keyword arguments
+# formatted by passing :func:`ultraplot.axes.CartesianAxes.format` keyword arguments
 # to the commands (e.g., ``ax.alty(ycolor='red')`` or, since the ``y`` prefix in
 # this context is redundant, just ``ax.alty(color='red')``). They also enforce
 # sensible default locations for the spines, ticks, and labels, and disable

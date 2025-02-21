@@ -190,7 +190,7 @@ fig.format(
 # ---------------------
 #
 # You can register your own colors by adding ``.txt`` files to the
-# ``colors`` subfolder inside :func::func:`~ultraplot.config.Configurator.user_folder`,
+# ``colors`` subfolder inside :func:`~ultraplot.config.Configurator.user_folder`,
 # or to a folder named ``ultraplot_colors`` in the same directory as your python session
 # or an arbitrary parent directory (see :func:`~ultraplot.config.Configurator.local_folders`).
 # After adding the file, call :func:`~ultraplot.config.register_colors` or restart your python

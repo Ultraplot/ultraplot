@@ -41,6 +41,9 @@ version = ""
 # The full version, including alpha/beta/rc tags
 release = ""
 
+# Faster builds
+parallel_read_safe = True
+parallel_write_safe = True
 
 # -- Create files --------------------------------------------------------------
 
@@ -348,3 +351,13 @@ texinfo_documents = [
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = True
+
+
+def autodoc_skip_member(app, what, name, obj, skip, options):
+    if name.startswith("_"):
+        return True  # Skip members starting with '_'
+    return skip
+
+
+def setup(app):
+    app.connect("autodoc-skip-member", autodoc_skip_member)

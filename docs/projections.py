@@ -46,7 +46,7 @@
 # configuring the "major" and "minor" gridline locations with `grid`, `rlocator`,
 # `thetalocator`, `gridminor`, `rminorlocator`, and `thetaminorlocator` and formatting
 # the gridline labels with `rformatter` and `thetaformatter` (analogous to `xlocator`,
-# `xformatter`, and `xminorlocator` used by `ultraplot.axes.CartesianAxes.format`),
+# `xformatter`, and `xminorlocator` used by :func:`ultraplot.axes.CartesianAxes.format`),
 # and creating "annular" or "sector" plots by changing the radial or azimuthal
 # bounds `rlim` and `thetalim`. Finally, since `ultraplot.axes.PolarAxes.format`
 # calls `ultraplot.axes.Axes.format`, it can be used to add axes titles, a-b-c
@@ -126,7 +126,7 @@ axs[2].format(
 # has its own :func:`~ultraplot.axes.GeoAxes.format` command. `ultraplot.axes.GeoAxes.format`
 # facilitates :ref:`geographic-specific modifications <ug_geoformat>` like meridional
 # and parallel gridlines and land mass outlines. The syntax is very similar to
-# `ultraplot.axes.CartesianAxes.format`. Note that the `proj` keyword and several of
+# :func:`ultraplot.axes.CartesianAxes.format`. Note that the `proj` keyword and several of
 # the :func:`~ultraplot.axes.GeoAxes.format` keywords are inspired by the basemap API.
 # In the below example, we create and format a very simple geographic plot.
 
@@ -329,7 +329,7 @@ for globe in (False, True):
 # latitude gridline locations using the `grid`, `lonlocator`, `latlocator`, `gridminor`,
 # `lonminorlocator`, and `latminorlocator` keys, and configure gridline label formatting
 # with `lonformatter` and `latformatter` (analogous to `xlocator`, `xminorlocator`,
-# and `xformatter` used by `ultraplot.axes.CartesianAxes.format`). By default, inline
+# and `xformatter` used by :func:`ultraplot.axes.CartesianAxes.format`). By default, inline
 # cartopy labels and cartopy label rotation are turned off, but inline labels can
 # be turned on using ``loninline=True``, ``latinline=True``, or ``inlinelabels=True``
 # or by setting :rcraw:`grid.inlinelabels` to ``True``, and label rotation can be
@@ -344,7 +344,7 @@ for globe in (False, True):
 # borders using :ref:`settings <rc_UltraPlot>` like `land`, `landcolor`, `coast`,
 # `coastcolor`, and `coastlinewidth`. Finally, since `ultraplot.axes.GeoAxes.format`
 # calls `ultraplot.axes.Axes.format`, it can be used to add axes titles, a-b-c labels,
-# and figure titles, just like `ultraplot.axes.CartesianAxes.format`.
+# and figure titles, just like :func:`ultraplot.axes.CartesianAxes.format`.
 #
 # For details, see the `ultraplot.axes.GeoAxes.format` documentation.
 

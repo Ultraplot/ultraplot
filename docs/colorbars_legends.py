@@ -308,7 +308,7 @@ for ax, title in zip(axs, ("2D {} #1", "2D {} #2", "Line {} #1", "Line {} #2")):
 #   elements that bear some numeric relationship to each other.
 #
 # UltraPlot also includes improvements for adding ticks and tick labels to colorbars.
-# Similar to `ultraplot.axes.CartesianAxes.format`, you can flexibly specify
+# Similar to :func:`ultraplot.axes.CartesianAxes.format`, you can flexibly specify
 # major tick locations, minor tick locations, and major tick labels using the
 # `locator`, `minorlocator`, `formatter`, `ticks`, `minorticks`, and `ticklabels`
 # keywords. These arguments are passed through the :class:`~ultraplot.constructor.Locator` and

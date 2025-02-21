@@ -53,12 +53,12 @@
 # and *y* coordinates, in which case they are inferred from the data
 # (see :ref:`xarray and pandas integration <ug_2dintegration>`). If coordinates
 # are string labels, they are converted to indices and tick labels using
-# `~ultraplot.ticker.IndexLocator` and `~ultraplot.ticker.IndexFormatter`.
+# :class:`~ultraplot.ticker.IndexLocator` and :class:`~ultraplot.ticker.IndexFormatter`.
 # If coordinates are descending and the axis limits are unset, the axis
 # direction is automatically reversed. If coordinate *centers* are passed to commands
 # like :func:`~ultraplot.axes.PlotAxes.pcolor` and :func:`~ultraplot.axes.PlotAxes.pcolormesh`, they
 # are automatically converted to edges using :func:`~ultraplot.utils.edges` or
-# `~ultraplot.utils.edges2d`, and if coordinate *edges* are passed to commands like
+# `:func:`~ultraplot.utils.edges2d``, and if coordinate *edges* are passed to commands like
 # :func:`~ultraplot.axes.PlotAxes.contour` and :func:`~ultraplot.axes.PlotAxes.contourf`, they are
 # automatically converted to centers (notice the locations of the rectangle edges
 # in the ``pcolor`` plots below). All positional arguments can also be specified
@@ -68,9 +68,9 @@
 #
 #    By default, when choosing the colormap :ref:`normalization
 #    range <ug_apply_cmap>`, UltraPlot ignores data outside the *x* or *y* axis
-#    limits if they were previously fixed by `~matplotlib.axes.Axes.set_xlim` or
-#    `~matplotlib.axes.Axes.set_ylim` (or, equivalently, by passing `xlim` or
-#    `ylim` to `ultraplot.axes.CartesianAxes.format`). This can be useful if you
+#    limits if they were previously fixed by :func:`~matplotlib.axes.Axes.set_xlim` or
+#    :func:`~matplotlib.axes.Axes.set_ylim` (or, equivalently, by passing `xlim` or
+#    `ylim` to :func:`ultraplot.axes.CartesianAxes.format`). This can be useful if you
 #    wish to restrict the view along the *x* or *y* axis within a large dataset.
 #    To disable this feature, pass ``inbounds=False`` to the plotting command or
 #    set :rcraw:`cmap.inbounds` to ``False`` (see also the :rcraw:`axes.inbounds`

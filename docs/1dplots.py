@@ -46,7 +46,7 @@
 # 2D dependent or independent variable coordinates, in which case the
 # plotting command is called for each column of the 2D array(s). If coordinates
 # are string labels, they are converted to indices and tick labels using
-# `~ultraplot.ticker.IndexLocator` and `~ultraplot.ticker.IndexFormatter`.
+# :class:`~ultraplot.ticker.IndexLocator` and :class:`~ultraplot.ticker.IndexFormatter`.
 # If coordinates are descending and the axis limits are unset, the axis
 # direction is automatically reversed. All positional arguments can also be
 # specified as keyword arguments (see the documentation for each plotting command).
@@ -55,8 +55,8 @@
 #
 #    By default, when choosing the *x* or *y* axis limits,
 #    UltraPlot ignores out-of-bounds data along the other axis if it was explicitly
-#    fixed by :func:`~matplotlib.axes.Axes.set_xlim` or :func:`~matplotlib.axes.Axes.set_ylim` (or,
-#    equivalently, by passing `xlim` or `ylim` to `ultraplot.axes.CartesianAxes.format`).
+#    fixed by :func:`~matplotlib.axes.Axes.set_xlim` or :func::func::func:`~matplotlib.axes.Axes.set_ylim` (or,
+#    equivalently, by passing `xlim` or `ylim` to :func:`ultraplot.axes.CartesianAxes.format`).
 #    This can be useful if you wish to restrict the view along a "dependent" variable
 #    axis within a large dataset. To disable this feature, pass ``inbounds=False`` to
 #    the plotting command or set :rcraw:`axes.inbounds` to ``False`` (see also
@@ -414,7 +414,7 @@ fig.format(suptitle="Scatter plot demo", xlabel="xlabel", ylabel="ylabel")
 # ----------------
 #
 # Parametric plots can be drawn using the new :func:`~ultraplot.axes.PlotAxes.parametric`
-# command. This creates `~matplotlib.collections.LineCollection`\ s that map
+# command. This creates :class:`~matplotlib.collections.LineCollection`\ s that map
 # individual line segments to individual colors, where each segment represents a
 # "parametric" coordinate (e.g., time). The parametric coordinates are specified with
 # a third positional argument or with the keywords `c`, `color`, `colors` or `values`.

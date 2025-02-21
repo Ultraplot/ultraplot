@@ -97,7 +97,7 @@ _args_2d_docstring = """
       coordinates. Otherwise, the `y` coordinates are ``np.arange(0, y.shape[0])``
       and the `x` coordinates are ``np.arange(0, y.shape[1])``.
     * For ``pcolor`` and ``pcolormesh``, calculate coordinate *edges* using
-      `~ultraplot.utils.edges` or `~ultraplot.utils.edges2d` if *centers* were provided.
+      `~ultraplot.utils.edges` or `:func:`~ultraplot.utils.edges2d`` if *centers* were provided.
       For all other methods, calculate coordinate *centers* if *edges* were provided.
     * If the `x` or `y` coordinates are `pint.Quantity`, auto-add the pint unit registry
       to matplotlib's unit registry using `~pint.UnitRegistry.setup_matplotlib`. If the
@@ -377,8 +377,8 @@ robust : bool, float, or 2-tuple, default: :rc:`cmap.robust`
     when your data has large outliers.
 inbounds : bool, default: :rc:`cmap.inbounds`
     If ``True`` and `vmin` or `vmax` were not provided, when axis limits
-    have been explicitly restricted with `~matplotlib.axes.Axes.set_xlim`
-    or `~matplotlib.axes.Axes.set_ylim`, out-of-bounds data is ignored.
+    have been explicitly restricted with :func:`~matplotlib.axes.Axes.set_xlim`
+    or :func:`~matplotlib.axes.Axes.set_ylim`, out-of-bounds data is ignored.
     See also :rcraw:`cmap.inbounds` and :rcraw:`axes.inbounds`.
 locator : locator-spec, default: `matplotlib.ticker.MaxNLocator`
     The locator used to determine level locations if `levels` or `values` were not
@@ -619,11 +619,11 @@ scalex, scaley : bool, optional
 %(plot.label)s
 %(plot.guide)s
 **kwargs
-    Valid `~matplotlib.collections.LineCollection` properties.
+    Valid :class:`~matplotlib.collections.LineCollection` properties.
 
 Returns
 -------
-`~matplotlib.collections.LineCollection`
+:class:`~matplotlib.collections.LineCollection`
     The parametric line. See `this matplotlib example \
 <https://matplotlib.org/stable/gallery/lines_bars_and_markers/multicolored_line>`__.
 

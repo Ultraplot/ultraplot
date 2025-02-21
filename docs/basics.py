@@ -389,7 +389,7 @@ fig.colorbar(m, loc="b", label="label")
 # * Cartesian axes settings (valid only for `~ultraplot.axes.CartesianAxes`).
 #   These are related to *x* and *y* axis ticks, spines, bounds, and labels --
 #   for example, ``ax.format(xlim=(0, 5))`` changes the x axis bounds.
-#   See `ultraplot.axes.CartesianAxes.format` and
+#   See :func:`ultraplot.axes.CartesianAxes.format` and
 #   :ref:`this section <ug_cartesian>` for details.
 #
 # * Polar axes settings (valid only for :class:`~ultraplot.axes.PolarAxes`).

@@ -146,7 +146,7 @@ Features
 * Add the public ultraplot class `ultraplot.ticker.IndexFormatter`, since the matplotlib
   version was entirely removed in version 3.5 (:commit:`c2dd8b2e`).
 * Replace `matplotlib.ticker.IndexLocator` with `ultraplot.ticker.IndexLocator`,
-  consistent with `~ultraplot.ticker.IndexFormatter`, and remove the limitation
+  consistent with :class:`~ultraplot.ticker.IndexFormatter`, and remove the limitation
   requiring data to be plotted on the axis (:commit:`c2dd8b2e`).
 * Permit picking the `~matplotlib.ticker.NullFormatter`, `~ultraplot.ticker.AutoFormatter`
   `~matplotlib.ticker.NullLocator`, and `~matplotlib.ticker.AutoLocator` by passing
@@ -211,7 +211,7 @@ Bug fixes
   with overlapping or identical subplotspecs (:commit:`87f098b6`).
 * Fix issue where super label settings (e.g. size) cannot be updated after they
   are initially created (:commit:`2cd72fd3`).
-* Fix issue where `ultraplot.axes.CartesianAxes.format` keyword arguments cannot be
+* Fix issue where :func:`ultraplot.axes.CartesianAxes.format` keyword arguments cannot be
   passed to `~ultraplot.axes.Axes.panel_axes` (:commit:`1b3d0d48`).
 * Fix issue where outer colorbars are drawn twice due to adding them as both
   figure-wide axes and child axes (:issue:`304`).
@@ -324,11 +324,11 @@ Features
   to version 7.0 (adds ``'bam'``, ``'bamO'``, ``'batlowK'``, ``'batlowW'``,
   ``'bukavu'``, ``'fes'``, and ``'vanimo'``) (:commit:`c172a74b`).
 * Add `[xy]labelsize`, `[xy]labelweight`, `[xy]ticklabelsize`, `[xy]ticklabelweight`
-  keywords to `ultraplot.axes.CartesianAxes.format` (:commit:`975025df`).
+  keywords to :func:`ultraplot.axes.CartesianAxes.format` (:commit:`975025df`).
 * Add `labelsize` and `labelweight` keywords to `ultraplot.axes.PolarAxes.format`,
   `ultraplot.axes.GeoAxes.format` (:commit:`975025df`).
 * Automatically set `xpineloc` and `yspineloc` to ``'bottom'`` and ``'left'``
-  when `xbounds` or `ybounds` are passed to `ultraplot.axes.CartesianAxes.format` only
+  when `xbounds` or `ybounds` are passed to :func:`ultraplot.axes.CartesianAxes.format` only
   if both spines are currently visible (:commit:`a2396afe`).
 * Automatically use the top/right spine rather than the bottom/left spine when setting
   `xspineloc` or `yspineloc` to the position ``('axes', coord)`` or ``('data', coord)``
@@ -451,11 +451,11 @@ Features
 * Permit passing `includepanels` and `mathtext_fallback` as
   `ultraplot.figure.Figure.format` keywords instead of just
   ``__init__`` keywords (:commit:`33bff576`).
-* Permit passing ``loc`` `ultraplot.axes.CartesianAxes.format` keyword argument(s) to
+* Permit passing ``loc`` :func:`ultraplot.axes.CartesianAxes.format` keyword argument(s) to
   ``alt[xy]`` (:commit:`eaab8658`). For example ``ax.alty(loc='left')`` changes the
   spine, tick mark, tick label, axis label, and offset label sides to the opposite of
   the default: *left* for the new alternate axes, *right* for the original axes.
-* Improve documentation for ``loc`` `ultraplot.axes.CartesianAxes.format` keywords
+* Improve documentation for ``loc`` :func:`ultraplot.axes.CartesianAxes.format` keywords
   (:commit:`1fa90f87`, :commit:`48dc346d`). Inheritance order is ``loc`` or
   ``spineloc`` --> ``tickloc`` --> ``ticklabelloc`` --> ``labelloc`` and ``offsetloc``,
   e.g. ``xloc='bottom'`` implies ``xtickloc='bottom'`` unless specified otherwise.
@@ -464,7 +464,7 @@ Features
   from updated rc settings, and issue error message if ``tickloc`` or ``ticklabelloc``
   are invalid (:commit:`616d81fa`, :commit:`219e4b21`, :commit:`bc5a692c`).
 * Add documentation for previously-hidden `xticklabelloc`, `yticklabelloc`, `xlabelloc`,
-  and `ylabelloc` `ultraplot.axes.CartesianAxes.format` keywords (:commit:`1fa90f87`).
+  and `ylabelloc` :func:`ultraplot.axes.CartesianAxes.format` keywords (:commit:`1fa90f87`).
 * Add `xoffsetloc`, `yoffsetloc` keywords to control position of order-of-magnitude
   indicator location for x and y axes (with large numbers) (:commit:`96a37e53`).
 * Add `xlabelcolor` and `ylabelcolor` keywords as alternatives to `xcolor` and `ycolor`
@@ -498,7 +498,7 @@ Bug fixes
 * Fix issue where default outer legend axes-relative `loc` does not take into
   account the underlying "panel" side (:commit:`2446acc1`).
 * Fix issue where axis label color is overwritten during ``__init__``
-  call to `ultraplot.axes.CartesianAxes.format` (:commit:`b454a513`).
+  call to :func:`ultraplot.axes.CartesianAxes.format` (:commit:`b454a513`).
 * Fix issue where setting `xspineloc` or `yspineloc` to invalid `tickloc`
   (e.g., ``'zero'`` or ``'center'``) also disables the ticks (:commit:`616d81fa`).
 * Fix issue where setting axis label color without specifying label
@@ -538,7 +538,7 @@ Features
 * Permit passing ``format`` keywords when instantiating figures and axes
   (:commit:`ae98378d`). For example: ``uplt.figure(suptitle='Super title')``
   or ``fig.add_subplot(111, xcolor='gray', xticks=10)`` .
-* Add back `color` as a valid `ultraplot.axes.CartesianAxes.format` keyword
+* Add back `color` as a valid :func:`ultraplot.axes.CartesianAxes.format` keyword
   arg for consistency with `xcolor` and `ycolor` (:commit:`ecb6fa3f`).
 
 Bug fixes
@@ -1088,7 +1088,7 @@ Features
 * Add `title_kw`, `suptitle_kw`, `leftlabels_kw`, `rightlabels_kw`, `toplabels_kw`,
   and `bottomlabels_kw` to `ultraplot.axes.Axes.format` for arbitrarily modifying
   label text objects -- consistent with `xlabel_kw` and `ylabel_kw` used
-  for `ultraplot.axes.CartesianAxes.format` (:commit:`6382cf91`).
+  for :func:`ultraplot.axes.CartesianAxes.format` (:commit:`6382cf91`).
 
 Bug fixes
 ---------

@@ -47,8 +47,8 @@ xlabel_kw, ylabel_kw : dict-like, optional
     and `~matplotlib.axes.Axes.set_ylabel`. See also `labelpad`, `labelcolor`,
     `labelsize`, and `labelweight` below.
 xlim, ylim : 2-tuple of floats or None, optional
-    The x and y axis data limits. Applied with `~matplotlib.axes.Axes.set_xlim`
-    and `~matplotlib.axes.Axes.set_ylim`.
+    The x and y axis data limits. Applied with :func:`~matplotlib.axes.Axes.set_xlim`
+    and :func:`~matplotlib.axes.Axes.set_ylim`.
 xmin, ymin : float, optional
     The x and y minimum data limits. Useful if you do not want
     to set the maximum limits.
