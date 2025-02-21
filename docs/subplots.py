@@ -28,7 +28,7 @@
 #    UltraPlot only supports one :class:`~ultraplot.gridspec.GridSpec` per figure
 #    (see the section on :ref:`adding subplots <ug_subplot>`), and UltraPlot
 #    does not officially support the "nested" matplotlib structures
-#    `~matplotlib.gridspec.GridSpecFromSubplotSpec` and `~matplotlib.figure.SubFigure`.
+#    :class:`~matplotlib.gridspec.GridSpecFromSubplotSpec` and :class:`~matplotlib.figure.SubFigure`.
 #    These restrictions have the advantage of 1) considerably simplifying the
 #    :ref:`tight layout <ug_tight>` and :ref:`figure size <ug_autosize>`
 #    algorithms and 2) reducing the ambiguity of :ref:`a-b-c label assignment <ug_abc>`
