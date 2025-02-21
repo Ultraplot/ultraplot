@@ -83,7 +83,7 @@ then fill it with subplots:
 
 These commands are modeled after `matplotlib.pyplot.subplots` and
 `matplotlib.pyplot.figure` and are :ref:`packed with new features <ug_layout>`.
-One highlight is the :func::func:`~ultraplot.figure.Figure.auto_layout` algorithm that
+One highlight is the :func:`~ultraplot.figure.Figure.auto_layout` algorithm that
 :ref:`automatically adjusts the space between subplots <ug_tight>` (similar to
 matplotlib's `tight layout
 <https://matplotlib.org/stable/tutorials/intermediate/tight_layout_guide.html>`__)
@@ -95,7 +95,7 @@ including metric units like ``cm`` and ``mm``.
 Instead of the native `matplotlib.figure.Figure` and `matplotlib.axes.Axes`
 classes, UltraPlot uses the `ultraplot.figure.Figure`, `ultraplot.axes.Axes`, and
 `ultraplot.axes.PlotAxes` subclasses. UltraPlot figures are saved with
-:func::func:`~ultraplot.figure.Figure.save` or `~matplotlib.figure.Figure.savefig`,
+:func:`~ultraplot.figure.Figure.save` or `~matplotlib.figure.Figure.savefig`,
 and UltraPlot axes belong to one of the following three child classes:
 
 * `ultraplot.axes.CartesianAxes`:
@@ -123,11 +123,11 @@ functionality to existing figure and axes methods.
   process of drawing colorbars and legends.
 * The `ultraplot.axes.PlotAxes` subclass (used for all UltraPlot axes)
   adds many, many useful features to virtually every plotting command
-  (including :func::func:`~ultraplot.axes.PlotAxes.plot`, :func::func:`~ultraplot.axes.PlotAxes.scatter`,
-  :func::func:`~ultraplot.axes.PlotAxes.bar`, :func::func:`~ultraplot.axes.PlotAxes.area`,
-  :func::func:`~ultraplot.axes.PlotAxes.box`, :func::func:`~ultraplot.axes.PlotAxes.violin`,
-  :func::func:`~ultraplot.axes.PlotAxes.contour`, :func::func:`~ultraplot.axes.PlotAxes.pcolor`,
-  and :func::func:`~ultraplot.axes.PlotAxes.imshow`). See the :ref:`1D plotting <ug_1dplots>`
+  (including :func:`~ultraplot.axes.PlotAxes.plot`, :func:`~ultraplot.axes.PlotAxes.scatter`,
+  :func:`~ultraplot.axes.PlotAxes.bar`, :func:`~ultraplot.axes.PlotAxes.area`,
+  :func:`~ultraplot.axes.PlotAxes.box`, :func:`~ultraplot.axes.PlotAxes.violin`,
+  :func:`~ultraplot.axes.PlotAxes.contour`, :func:`~ultraplot.axes.PlotAxes.pcolor`,
+  and :func:`~ultraplot.axes.PlotAxes.imshow`). See the :ref:`1D plotting <ug_1dplots>`
   and :ref:`2D plotting <ug_2dplots>` sections for details.
 
 .. _usage_integration:
@@ -146,7 +146,7 @@ plotting packages.
   :ref:`format projections <ug_geoformat>`. `~ultraplot.axes.GeoAxes` provides
   provides a simpler, cleaner interface than the original `cartopy`_ and `basemap`_
   interfaces. Figures can be filled with `~ultraplot.axes.GeoAxes` by passing the
-  `proj` keyword to :func::func:`~ultraplot.ui.subplots`.
+  `proj` keyword to :func:`~ultraplot.ui.subplots`.
 * If you pass a `pandas.Series`, `pandas.DataFrame`, or `xarray.DataArray`
   to any plotting command, the axis labels, tick labels, titles, colorbar
   labels, and legend labels are automatically applied from the metadata. If
@@ -177,9 +177,9 @@ classes and :ref:`constructor functions <why_constructor>`.
   colormap classes and add several methods. The new
   `~ultraplot.colors.PerceptualColormap` class is used to make
   colormaps with :ref:`perceptually uniform transitions <ug_perceptual>`.
-* The :func::func:`~ultraplot.demos.show_cmaps`, :func::func:`~ultraplot.demos.show_cycles`,
-  :func::func:`~ultraplot.demos.show_colors`, :func::func:`~ultraplot.demos.show_fonts`,
-  :func::func:`~ultraplot.demos.show_channels`, and :func::func:`~ultraplot.demos.show_colorspaces`
+* The :func:`~ultraplot.demos.show_cmaps`, :func:`~ultraplot.demos.show_cycles`,
+  :func:`~ultraplot.demos.show_colors`, :func:`~ultraplot.demos.show_fonts`,
+  :func:`~ultraplot.demos.show_channels`, and :func:`~ultraplot.demos.show_colorspaces`
   functions are used to visualize your :ref:`color scheme <ug_colors>`
   and :ref:`font options <ug_fonts>` and
   :ref:`inspect individual colormaps <ug_perceptual>`.
@@ -192,12 +192,12 @@ classes and :ref:`constructor functions <why_constructor>`.
 * The :class:`~ultraplot.constructor.Locator`, :class:`~ultraplot.constructor.Formatter`, and
   :class:`~ultraplot.constructor.Scale` constructor functions return corresponding class
   instances from flexible input types. These are used to interpret keyword
-  arguments passed to :func::func:`~ultraplot.axes.Axes.format`, and can be used to quickly
+  arguments passed to :func:`~ultraplot.axes.Axes.format`, and can be used to quickly
   and easily modify :ref:`x and y axis settings <ug_cartesian>`.
-* The :func::func:`~ultraplot.config.rc` object, an instance of
+* The :func:`~ultraplot.config.rc` object, an instance of
   :class:`~ultraplot.config.Configurator`, is used for
   :ref:`modifying individual settings, changing settings in bulk, and
   temporarily changing settings in context blocks <ug_rc>`.
   It also introduces several :ref:`new setings <ug_config>`
-  and sets up the inline plotting backend with :func::func:`~ultraplot.config.inline_backend_fmt`
+  and sets up the inline plotting backend with :func:`~ultraplot.config.inline_backend_fmt`
   so that your inline figures look the same as your saved figures.

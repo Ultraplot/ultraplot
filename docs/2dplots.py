@@ -29,13 +29,13 @@
 # For the most part, these additions represent a *superset* of matplotlib -- if
 # you are not interested, you can use the plotting commands just like you would
 # in matplotlib. This section documents the features added for 2D plotting commands
-# like :func::func:`~ultraplot.axes.PlotAxes.contour`, :func::func:`~ultraplot.axes.PlotAxes.pcolor`,
-# and :func::func:`~ultraplot.axes.PlotAxes.imshow`.
+# like :func:`~ultraplot.axes.PlotAxes.contour`, :func:`~ultraplot.axes.PlotAxes.pcolor`,
+# and :func:`~ultraplot.axes.PlotAxes.imshow`.
 #
 # .. important::
 #
 #    By default, UltraPlot automatically adjusts the width of
-#    :func::func:`~ultraplot.axes.PlotAxes.contourf` and :func::func:`~ultraplot.axes.PlotAxes.pcolor` edges
+#    :func:`~ultraplot.axes.PlotAxes.contourf` and :func:`~ultraplot.axes.PlotAxes.pcolor` edges
 #    to eliminate the appearance of `"white lines" in saved vector graphic files
 #    <https://github.com/jklymak/contourfIssues>`__. However, this can significantly
 #    slow down the drawing time for large datasets. To disable this feature,
@@ -56,10 +56,10 @@
 # `~ultraplot.ticker.IndexLocator` and `~ultraplot.ticker.IndexFormatter`.
 # If coordinates are descending and the axis limits are unset, the axis
 # direction is automatically reversed. If coordinate *centers* are passed to commands
-# like :func::func:`~ultraplot.axes.PlotAxes.pcolor` and :func::func:`~ultraplot.axes.PlotAxes.pcolormesh`, they
-# are automatically converted to edges using :func::func:`~ultraplot.utils.edges` or
+# like :func:`~ultraplot.axes.PlotAxes.pcolor` and :func:`~ultraplot.axes.PlotAxes.pcolormesh`, they
+# are automatically converted to edges using :func:`~ultraplot.utils.edges` or
 # `~ultraplot.utils.edges2d`, and if coordinate *edges* are passed to commands like
-# :func::func:`~ultraplot.axes.PlotAxes.contour` and :func::func:`~ultraplot.axes.PlotAxes.contourf`, they are
+# :func:`~ultraplot.axes.PlotAxes.contour` and :func:`~ultraplot.axes.PlotAxes.contourf`, they are
 # automatically converted to centers (notice the locations of the rectangle edges
 # in the ``pcolor`` plots below). All positional arguments can also be specified
 # as keyword arguments (see the documentation for each plotting command).
@@ -431,7 +431,7 @@ for data, mode, fair in zip(
 #
 # By default, UltraPlot uses `~ultraplot.colors.DiscreteNorm` to "discretize"
 # the possible colormap colors for contour and pseudocolor `~ultraplot.axes.PlotAxes`
-# commands (e.g., :func::func:`~ultraplot.axes.PlotAxes.contourf`, :func::func:`~ultraplot.axes.PlotAxes.pcolor`).
+# commands (e.g., :func:`~ultraplot.axes.PlotAxes.contourf`, :func:`~ultraplot.axes.PlotAxes.pcolor`).
 # This is analogous to `matplotlib.colors.BoundaryNorm`, except
 # `~ultraplot.colors.DiscreteNorm` can be paired with arbitrary
 # continuous normalizers specified by `norm` (see :ref:`above <ug_norm>`).
@@ -448,7 +448,7 @@ for data, mode, fair in zip(
 # or pass ``discrete=False`` or ``discrete=True`` to any plotting command
 # that accepts a `cmap` argument. The level edges or centers used with
 # `~ultraplot.colors.DiscreteNorm` can be explicitly specified using the `levels` or
-# `values` keywords, respectively (:func::func:`~ultraplot.utils.arange` and :func::func:`~ultraplot.utils.edges`
+# `values` keywords, respectively (:func:`~ultraplot.utils.arange` and :func:`~ultraplot.utils.edges`
 # are useful for generating `levels` and `values` lists). You can also pass an integer
 # to these keywords (or to the `N` keyword) to automatically generate approximately this
 # many level edges or centers at "nice" intervals. The algorithm used to generate levels
@@ -460,7 +460,7 @@ for data, mode, fair in zip(
 # <ug_locators>` for more on locators). You can also use the keywords `negative`,
 # `positive`, or `symmetric` to ensure that your levels are strictly negative,
 # positive, or symmetric about zero, or use the `nozero` keyword to remove
-# the zero level (useful for single-color :func::func:`~ultraplot.axes.PlotAxes.contour` plots).
+# the zero level (useful for single-color :func:`~ultraplot.axes.PlotAxes.contour` plots).
 
 # %%
 import ultraplot as uplt
@@ -592,14 +592,14 @@ uplt.rc.reset()
 # Quick labels
 # ------------
 #
-# You can now quickly add labels to :func::func:`~ultraplot.axes.PlotAxes.contour`,
-# :func::func:`~ultraplot.axes.PlotAxes.contourf`, :func::func:`~ultraplot.axes.PlotAxes.pcolor`,
-# :func::func:`~ultraplot.axes.PlotAxes.pcolormesh`, and :func::func:`~ultraplot.axes.PlotAxes.heatmap`,
+# You can now quickly add labels to :func:`~ultraplot.axes.PlotAxes.contour`,
+# :func:`~ultraplot.axes.PlotAxes.contourf`, :func:`~ultraplot.axes.PlotAxes.pcolor`,
+# :func:`~ultraplot.axes.PlotAxes.pcolormesh`, and :func:`~ultraplot.axes.PlotAxes.heatmap`,
 # plots by passing ``labels=True`` to the plotting command. The
 # label text is colored black or white depending on the luminance of the underlying
 # grid box or filled contour (see the section on :ref:`colorspaces <ug_perceptual>`).
 # Contour labels are drawn with `~matplotlib.axes.Axes.clabel` and grid box
-# labels are drawn with :func::func:`~ultraplot.axes.Axes.text`. You can pass keyword arguments
+# labels are drawn with :func:`~ultraplot.axes.Axes.text`. You can pass keyword arguments
 # to these functions by passing a dictionary to `labels_kw`, and you can
 # change the label precision using the `precision` keyword. See the plotting
 # command documentation for details.
@@ -653,13 +653,13 @@ ax.format(title="Line contours with labels")
 # Heatmap plots
 # -------------
 #
-# The :func::func:`~ultraplot.axes.PlotAxes.heatmap` command can be used to draw "heatmaps" of
+# The :func:`~ultraplot.axes.PlotAxes.heatmap` command can be used to draw "heatmaps" of
 # 2-dimensional data. This is a convenience function equivalent to
-# :func::func:`~ultraplot.axes.PlotAxes.pcolormesh`, except the axes are configured with settings
+# :func:`~ultraplot.axes.PlotAxes.pcolormesh`, except the axes are configured with settings
 # suitable for heatmaps: fixed aspect ratios (ensuring "square" grid boxes), no
 # gridlines, no minor ticks, and major ticks at the center of each box. Among other
 # things, this is useful for displaying covariance and correlation matrices, as shown
-# below. :func::func:`~ultraplot.axes.PlotAxes.heatmap` should generally only be used with
+# below. :func:`~ultraplot.axes.PlotAxes.heatmap` should generally only be used with
 # `~ultraplot.axes.CartesianAxes`.
 
 # %%
