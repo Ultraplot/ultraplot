@@ -76,7 +76,7 @@ them into UltraPlot by adding files to the ``.UltraPlot/cmaps`` folder
 
 * `The UltraPlot API <https://UltraPlot.readthedocs.io/en/latest/colormaps.html#Making-new-colormaps>`__ -
   Namely, the :class:`~ultraplot.colors.ContinuousColormap` class and
-  :class::class:`~ultraplot.constructor.Colormap` constructor function.
+  :class:`~ultraplot.constructor.Colormap` constructor function.
 * `HCL Wizard <http://hclwizard.org:64230/hclwizard/>`__ -
   An advanced interface for designing perceptually uniform colormaps,
   with example plots, channel plots, and lots of sliders.

@@ -343,7 +343,7 @@ fig.format(suptitle="Line plots demo", xlabel="xlabel", ylabel="ylabel")
 # using the `cycle` keyword argument, and unlike matplotlib it can include
 # properties like `marker` and `markersize`. The colormap `cmap` and normalizer
 # `norm` used with the optional `c` color array are now passed through the
-# :class::class:`~ultraplot.constructor.Colormap` and :class:`~ultraplot.constructor.Norm` constructor
+# :class:`~ultraplot.constructor.Colormap` and :class:`~ultraplot.constructor.Norm` constructor
 # functions.
 
 # .. important::

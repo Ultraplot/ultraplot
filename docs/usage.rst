@@ -167,7 +167,7 @@ Outside of the features provided by the `ultraplot.figure.Figure` and
 `ultraplot.axes.Axes` subclasses, UltraPlot includes several useful
 classes and :ref:`constructor functions <why_constructor>`.
 
-* The :class::class:`~ultraplot.constructor.Colormap` and :class:`~ultraplot.constructor.Cycle`
+* The :class:`~ultraplot.constructor.Colormap` and :class:`~ultraplot.constructor.Cycle`
   constructor functions can be used to :ref:`slice <ug_cmaps_mod>`,
   and :ref:`merge <ug_cmaps_merge>` existing colormaps and color
   cycles. It can also :ref:`make new colormaps <ug_cmaps_new>`

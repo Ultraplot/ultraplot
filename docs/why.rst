@@ -168,7 +168,7 @@ names. For example, a scalar passed to :class:`~ultraplot.constructor.Locator`
 returns a `~matplotlib.ticker.MultipleLocator`, a
 lists of strings passed to :class:`~ultraplot.constructor.Formatter` returns a
 `~matplotlib.ticker.FixedFormatter`, and :class:`~ultraplot.constructor.Cycle`
-and :class::class:`~ultraplot.constructor.Colormap` accept colormap names, individual colors, and
+and :class:`~ultraplot.constructor.Colormap` accept colormap names, individual colors, and
 lists of colors. Passing the relevant class instance to a constructor function
 simply returns it, and all the registered classes are available in the top-level
 namespace -- so class instances can be directly created with e.g.
@@ -184,7 +184,7 @@ Function                          Return type                                   
 :class:`~ultraplot.constructor.Locator`    :class:`~matplotlib.ticker.Locator`                                  :func:`~ultraplot.axes.Axes.format` and :func:`~ultraplot.axes.Axes.colorbar`                   ``locator=``, ``xlocator=``, ``ylocator=``, ``minorlocator=``, ``xminorlocator=``, ``yminorlocator=``, ``ticks=``, ``xticks=``, ``yticks=``, ``minorticks=``, ``xminorticks=``, ``yminorticks=``
 :class:`~ultraplot.constructor.Formatter`  :class:`~matplotlib.ticker.Formatter`                                :func:`~ultraplot.axes.Axes.format` and :func:`~ultraplot.axes.Axes.colorbar`                   ``formatter=``, ``xformatter=``, ``yformatter=``, ``ticklabels=``, ``xticklabels=``, ``yticklabels=``
 :class:`~ultraplot.constructor.Scale`      `~matplotlib.scale.ScaleBase`                                 :func:`~ultraplot.axes.Axes.format`                                                     ``xscale=``, ``yscale=``
-:class::class:`~ultraplot.constructor.Colormap`   :class:`~matplotlib.colors.Colormap`                                 2D :class:`~ultraplot.axes.PlotAxes` commands                                            ``cmap=``
+:class:`~ultraplot.constructor.Colormap`   :class:`~matplotlib.colors.Colormap`                                 2D :class:`~ultraplot.axes.PlotAxes` commands                                            ``cmap=``
 :class:`~ultraplot.constructor.Norm`       :class:`~matplotlib.colors.Normalize`                                2D :class:`~ultraplot.axes.PlotAxes` commands                                            ``norm=``
 :class:`~ultraplot.constructor.Cycle`      :class:`~cycler.Cycler`                                              1D :class:`~ultraplot.axes.PlotAxes` commands                                            ``cycle=``
 ================================  ============================================================  ==============================================================================  ================================================================================================================================================================================================
@@ -479,7 +479,7 @@ like :func:`~ultraplot.axes.PlotAxes.pcolor` and :func:`~ultraplot.axes.PlotAxes
   commands is :ref:`standardized <ug_2dstd>`. This makes them more flexible
   and arguably more intuitive to use than their matplotlib counterparts.
 * The `cmap` and `norm` :ref:`keyword arguments <ug_apply_cmap>` are interpreted
-  by the :class::class:`~ultraplot.constructor.Colormap` and :class:`~ultraplot.constructor.Norm`
+  by the :class:`~ultraplot.constructor.Colormap` and :class:`~ultraplot.constructor.Norm`
   :ref:`constructor functions <why_constructor>`. This permits succinct
   and flexible colormap and normalizer application.
 * The `colorbar` keyword draws :ref:`on-the-fly colorbars <ug_guides_plot>` using the
@@ -750,8 +750,8 @@ UltraPlot tries to make it easy to manipulate colormaps and property cycles.
   `~matplotlib.colors.LinearSegmentedColormap` and `~matplotlib.colors.ListedColormap`.
   These classes include several useful features leveraged by the
   :ref:`constructor functions <why_constructor>`
-  :class::class:`~ultraplot.constructor.Colormap` and :class:`~ultraplot.constructor.Cycle`.
-* The :class::class:`~ultraplot.constructor.Colormap` function can merge, truncate, and
+  :class:`~ultraplot.constructor.Colormap` and :class:`~ultraplot.constructor.Cycle`.
+* The :class:`~ultraplot.constructor.Colormap` function can merge, truncate, and
   modify existing colormaps or generate brand new colormaps. It can also
   create new :class:`~ultraplot.colors.PerceptualColormap`\ s -- a type of
   `ultraplot.colors.ContinuousColormap` with linear transitions in the
@@ -904,7 +904,7 @@ in the location given by :func:`~ultraplot.config.Configurator.user_folder` (thi
 ``ultraplot_cycles``, ``ultraplot_colors``, and ``ultraplot_fonts`` in the current
 directory or an arbitrary parent directory. You can save colormaps and color cycles to
 :func:`~ultraplot.config.Configurator.user_folder` simply by passing ``save=True`` to
-:class::class:`~ultraplot.constructor.Colormap` and :class:`~ultraplot.constructor.Cycle`. To re-register
+:class:`~ultraplot.constructor.Colormap` and :class:`~ultraplot.constructor.Cycle`. To re-register
 these files during an active python session, or to register arbitrary input arguments,
 you can use :func:`~ultraplot.config.register_cmaps`, :func:`~ultraplot.config.register_cycles`,
 :func:`~ultraplot.config.register_colors`, or :func:`~ultraplot.config.register_fonts`.

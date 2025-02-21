@@ -244,7 +244,7 @@ ax.format(xtickminor=False, yformatter="%b", ytickminor=False)
 # ---------------------
 #
 # It is often useful to create custom colormaps on-the-fly,
-# without explicitly calling the :class::class:`~ultraplot.constructor.Colormap`
+# without explicitly calling the :class:`~ultraplot.constructor.Colormap`
 # :ref:`constructor function <why_constructor>`. You can do so using the `cmap`
 # and `cmap_kw` keywords, available with most :class:`~ultraplot.axes.PlotAxes` 2D plot
 # commands. For example, to create and apply a monochromatic colormap, you can use

@@ -232,14 +232,14 @@ fig.format(
 # -----------------
 #
 # If you create subplots all-at-once with e.g. :func:`~ultraplot.ui.subplots`,
-# UltraPlot returns a :class::class:`~ultraplot.gridspec.SubplotGrid` of subplots. This list-like,
+# UltraPlot returns a :class:`~ultraplot.gridspec.SubplotGrid` of subplots. This list-like,
 # array-like object provides some useful features and unifies the behavior of the
 # three possible return types used by `matplotlib.pyplot.subplots`:
 #
-# * :class::class:`~ultraplot.gridspec.SubplotGrid` behaves like a scalar when it is singleton.
+# * :class:`~ultraplot.gridspec.SubplotGrid` behaves like a scalar when it is singleton.
 #   In other words, if you make a single subplot with ``fig, axs = uplt.subplots()``,
 #   then ``axs[0].method(...)`` is equivalent to ``axs.method(...)``.
-# * :class::class:`~ultraplot.gridspec.SubplotGrid` permits list-like 1D indexing, e.g. ``axs[1]``
+# * :class:`~ultraplot.gridspec.SubplotGrid` permits list-like 1D indexing, e.g. ``axs[1]``
 #   to return the second subplot. The subplots in the grid are sorted by
 #   :func:`~ultraplot.axes.Axes.number` (see :ref:`this page <ug_abc>` for details
 #   on changing the :func:`~ultraplot.axes.Axes.number` order).

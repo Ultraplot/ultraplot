@@ -20,7 +20,7 @@ How does UltraPlot compare against these tools?
   data in UltraPlot to be much more concise than working with cartopy and basemap
   directly.
 * UltraPlot *expands upon* the seaborn tools for working with color and global settings.
-  For example, see :class::class:`~ultraplot.constructor.Colormap`,
+  For example, see :class:`~ultraplot.constructor.Colormap`,
   :class:`~ultraplot.colors.PerceptualColormap`, and :class:`~ultraplot.config.Configurator`.
 * UltraPlot *expands upon* matplotlib by fixing various quirks, developing a more
   advanced automatic layout algorithm, simplifying the process of drawing outer
