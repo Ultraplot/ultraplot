@@ -1398,7 +1398,6 @@ class PlotAxes(base.Axes):
             case _:
                 raise RuntimeError(f"Not possible to add labels to object {obj!r}.")
 
-
     def _add_quadmesh_labels(
         self,
         obj,
@@ -1432,7 +1431,9 @@ class PlotAxes(base.Axes):
 
         # Apply colors and create labels
         labs = []
-        for i, ((x, y), value) in enumerate(zip(zip(x_centers.flat, y_centers.flat), array.flat)):
+        for i, ((x, y), value) in enumerate(
+            zip(zip(x_centers.flat, y_centers.flat), array.flat)
+        ):
             # Skip masked or invalid values
             if value is ma.masked or not np.isfinite(value):
                 continue
@@ -1502,7 +1503,6 @@ class PlotAxes(base.Axes):
             y = (bbox.ymin + bbox.ymax) / 2
             lab = self.text(x, y, fmt(value), color=icolor, size=fontsize, **kwargs)
             labs.append(lab)
-
         obj.set_edgecolors(edgecolors)
         return labs
 
