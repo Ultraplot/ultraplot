@@ -55,7 +55,7 @@
 #
 #    By default, when choosing the *x* or *y* axis limits,
 #    UltraPlot ignores out-of-bounds data along the other axis if it was explicitly
-#    fixed by `~matplotlib.axes.Axes.set_xlim` or `~matplotlib.axes.Axes.set_ylim` (or,
+#    fixed by :func:`~matplotlib.axes.Axes.set_xlim` or :func:`~matplotlib.axes.Axes.set_ylim` (or,
 #    equivalently, by passing `xlim` or `ylim` to `ultraplot.axes.CartesianAxes.format`).
 #    This can be useful if you wish to restrict the view along a "dependent" variable
 #    axis within a large dataset. To disable this feature, pass ``inbounds=False`` to
@@ -217,9 +217,9 @@ ax.plot(df, cycle=cycle, lw=3, legend="t", legend_kw={"frame": False})
 # on-the-fly and use different property cycles for different plot elements.
 # You can do so using the `cycle` and `cycle_kw` keywords, available
 # with most 1D `~ultraplot.axes.PlotAxes` commands. `cycle` and `cycle_kw` are
-# passed to the `~ultraplot.constructor.Cycle` :ref:`constructor function
+# passed to the :class:`~ultraplot.constructor.Cycle` :ref:`constructor function
 # <why_constructor>`, and the resulting property cycle is used for the plot. You
-# can specify `cycle` once with 2D input data (in which case each column is
+# can specify `cycle` once with 3D input data (in which case each column is
 # plotted in succession according to the property cycle) or call a plotting
 # command multiple times with the same `cycle` argument (the property
 # cycle is not reset). You can also disable property cycling with ``cycle=False``,
@@ -343,7 +343,7 @@ fig.format(suptitle="Line plots demo", xlabel="xlabel", ylabel="ylabel")
 # using the `cycle` keyword argument, and unlike matplotlib it can include
 # properties like `marker` and `markersize`. The colormap `cmap` and normalizer
 # `norm` used with the optional `c` color array are now passed through the
-# `~ultraplot.constructor.Colormap` and `~ultraplot.constructor.Norm` constructor
+# :class:`~ultraplot.constructor.Colormap` and :class:`~ultraplot.constructor.Norm` constructor
 # functions.
 
 # .. important::
@@ -505,7 +505,7 @@ ax.colorbar(m, loc="b", locator=2, label="parametric coordinate")
 
 # .. important::
 #
-#    In matplotlib, bar widths for horizontal `~matplotlib.axes.Axes.barh` plots
+#    In matplotlib, bar widths for horizontal :func:`~matplotlib.axes.Axes.barh` plots
 #    are expressed with the `height` keyword. In UltraPlot, bar widths are always
 #    expressed with the `width` keyword. Note that bar widths can also be passed
 #    as a third positional argument.

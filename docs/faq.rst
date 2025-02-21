@@ -26,7 +26,7 @@ How does UltraPlot compare against these tools?
   advanced automatic layout algorithm, simplifying the process of drawing outer
   colorbars and legends, and much more.
 * UltraPlot is *built right into the matplotlib API*, thanks to special subclasses of the
-  `~matplotlib.figure.Figure` and `~matplotlib.axes.Axes` classes, while seaborn,
+  :class:`~matplotlib.figure.Figure` and :class:`~matplotlib.axes.Axes` classes, while seaborn,
   pandas, and xarray are meant to be used separately from the matplotlib API.
 
 In a nutshell, UltraPlot is intended to *unify the convenience of seaborn, pandas, and
@@ -50,9 +50,9 @@ didn't contribute to the matplotlib project directly.
   permitting *fluid figure dimensions*, and the new `~ultraplot.gridspec.GridSpec` class
   permits *variable spacing* between rows and columns and uses *physical units* rather
   than figure-relative and axes-relative units.
-* Certain features are arguably too redundant. For example, `~ultraplot.axes.Axes.format`
+* Certain features are arguably too redundant. For example, :func:`~ultraplot.axes.Axes.format`
   is convenient, but the same tasks can be accomplished with existing axes and axis
-  "setter" methods. Also, some of the functionality of `~ultraplot.ui.subplots` can be
+  "setter" methods. Also, some of the functionality of :func:`~ultraplot.ui.subplots` can be
   replicated with `axes_grid1
   <https://matplotlib.org/mpl_toolkits/axes_grid1/index.html>`__. Following `TOOWTDI
   <https://wiki.python.org/moin/TOOWTDI>`__ philosophy, these features should probably

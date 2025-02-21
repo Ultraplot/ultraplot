@@ -46,22 +46,22 @@
 # ------------
 #
 # UltraPlot can quickly add "a-b-c" labels using the
-# `~ultraplot.axes.Axes.number` assigned to each subplot.
-# If you add subplots one-by-one with `~ultraplot.figure.Figure.add_subplot`, you can
+# :func:`~ultraplot.axes.Axes.number` assigned to each subplot.
+# If you add subplots one-by-one with :func:`~ultraplot.figure.Figure.add_subplot`, you can
 # manually specify the number with the `number` keyword. By default, the subplot number
-# is incremented by ``1`` each time you call `~ultraplot.figure.Figure.add_subplot`.
-# If you draw all of your subplots at once with `~ultraplot.figure.Figure.add_subplots`,
+# is incremented by ``1`` each time you call :func:`~ultraplot.figure.Figure.add_subplot`.
+# If you draw all of your subplots at once with :func:`~ultraplot.figure.Figure.add_subplots`,
 # the numbers depend on the input arguments. If you
 # :ref:`passed an array <ug_intro>`, the subplot numbers correspond to the numbers
 # in the array. But if you used the `ncols` and `nrows` keyword arguments, the
 # number order is row-major by default and can be switched to column-major by
 # passing ``order='F'`` (note the number order also determines the list order in the
-# `~ultraplot.gridspec.SubplotGrid` returned by `~ultraplot.figure.Figure.add_subplots`).
+# `~ultraplot.gridspec.SubplotGrid` returned by :func:`~ultraplot.figure.Figure.add_subplots`).
 #
 # To turn on "a-b-c" labels, set :rcraw:`abc` to ``True`` or pass ``abc=True``
-# to `~ultraplot.axes.Axes.format` (see :ref:`the format command <ug_format>`
+# to :func:`~ultraplot.axes.Axes.format` (see :ref:`the format command <ug_format>`
 # for details). To change the label style, set :rcraw:`abc` to e.g. ``'A.'`` or
-# pass e.g. ``abc='A.'`` to `~ultraplot.axes.Axes.format`. You can also modify
+# pass e.g. ``abc='A.'`` to :func:`~ultraplot.axes.Axes.format`. You can also modify
 # the "a-b-c" label location, weight, and size with the :rcraw:`abc.loc`,
 # :rcraw:`abc.weight`, and :rcraw:`abc.size` settings. Also note that if the
 # an "a-b-c" label and title are in the same position, they are automatically
@@ -119,13 +119,13 @@ axs.format(
 #
 # UltraPlot automatically adjusts the figure width and height by default to
 # respect the physical size of a "reference" subplot and the geometry of the
-# `~ultraplot.figure.Figure.gridspec`. The "reference" subplot is the subplot whose
-# `~ultraplot.axes.Axes.number` matches the `refnum` that was passed to
+# :func:`~ultraplot.figure.Figure.gridspec`. The "reference" subplot is the subplot whose
+# :func:`~ultraplot.axes.Axes.number` matches the `refnum` that was passed to
 # `~ultraplot.figure.Figure` (the default `refnum` of ``1`` usually matches the subplot
 # in the upper-left corner -- see :ref:`this section <ug_abc>` for more on subplot
 # numbers). Alternatively, you can request a fixed figure width (height), and the
 # algorithm will automatically adjusts the figure height (width) to respect
-# the `~ultraplot.figure.Figure.gridspec` geometry.
+# the :func:`~ultraplot.figure.Figure.gridspec` geometry.
 
 # This algorithm is extremely powerful and generally produces more aesthetically
 # pleasing subplot grids out-of-the-box, especially when they contain images or map
@@ -164,17 +164,17 @@ axs.format(
 #      <https://matplotlib.org/stable/examples/pylab_examples/equal_aspect_ratio.html>`__
 #      of the reference subplot is fixed (either due to calling
 #      `~matplotlib.axes.Axes.set_aspect` or filling the subplot with a
-#      :ref:`geographic projection <ug_geo>`, `~ultraplot.axes.PlotAxes.imshow`
-#      plot, or `~ultraplot.axes.PlotAxes.heatmap` plot), then this is used as
+#      :ref:`geographic projection <ug_geo>`, :func:`~ultraplot.axes.PlotAxes.imshow`
+#      plot, or :func:`~ultraplot.axes.PlotAxes.heatmap` plot), then this is used as
 #      the default value for the reference aspect ratio `refaspect`. This helps
 #      minimize excess space between grids of subplots with fixed aspect ratios.
 #    * For the simplest subplot grids (e.g., those created by passing integers to
-#      `~ultraplot.figure.Figure.add_subplot` or passing `ncols` or `nrows` to
-#      `~ultraplot.figure.Figure.add_subplots`) the keyword arguments `refaspect`,
+#      :func:`~ultraplot.figure.Figure.add_subplot` or passing `ncols` or `nrows` to
+#      :func:`~ultraplot.figure.Figure.add_subplots`) the keyword arguments `refaspect`,
 #      `refwidth`, and `refheight` effectively apply to every subplot in the
 #      figure -- not just the reference subplot.
-#    * The physical widths of UltraPlot `~ultraplot.axes.Axes.colorbar`\ s and
-#      `~ultraplot.axes.Axes.panel`\ s are always independent of the figure size.
+#    * The physical widths of UltraPlot :func:`~ultraplot.axes.Axes.colorbar`\ s and
+#      :func:`~ultraplot.axes.Axes.panel`\ s are always independent of the figure size.
 #      `~ultraplot.gridspec.GridSpec` specifies their widths in physical units to help
 #      users avoid drawing colorbars and panels that look "too skinny" or "too fat"
 #      depending on the number of subplots in the figure.
@@ -263,7 +263,7 @@ uplt.rc.reset()
 # colorbars or legends <ug_guides_loc>` (analogous to `space`).
 #
 # All the subplot spacing arguments can be specified with a
-# :ref:`unit string <ug_units>` interpreted by `~ultraplot.utils.units`.
+# :ref:`unit string <ug_units>` interpreted by :func:`~ultraplot.utils.units`.
 # The default unit assumed for numeric arguments is an "em-width" (i.e., a
 # :rcraw:`font.size` width -- see the :ref:`units table <units_table>` for details).
 #
@@ -359,8 +359,8 @@ for (name1, equal), (name2, group) in zip(equals, groups):
 # #. Automatically sharing axes between subplots and :ref:`panels <ug_panels>`
 #    occupying the same rows or columns of the `~ultraplot.gridspec.GridSpec`. This
 #    works for :ref:`aribtrarily complex subplot grids <ug_layout>`. It also works
-#    for subplots generated one-by-one with `~ultraplot.figure.Figure.add_subplot`
-#    rather than `~ultraplot.figure.Figure.subplots`. It is controlled by the `sharex`
+#    for subplots generated one-by-one with :func:`~ultraplot.figure.Figure.add_subplot`
+#    rather than :func:`~ultraplot.figure.Figure.subplots`. It is controlled by the `sharex`
 #    and `sharey` `~ultraplot.figure.Figure` keywords (default is :rc:`subplots.share`).
 #    Use the `share` keyword as a shorthand to set both `sharex` and `sharey`.
 # #. Automatically sharing labels across subplots and :ref:`panels <ug_panels>`
@@ -457,13 +457,13 @@ for span, share, title in zip(spans, shares, titles):
 # `figwidth` and `figheight`; the reference subplot `refwidth` and `refheight`;
 # the gridspec spacing and tight layout padding keywords `left`, `right`, `bottom`,
 # `top`, `wspace`, `hspace`, `outerpad`, `innerpad`, `panelpad`, `wpad`, and `hpad`;
-# the `~ultraplot.axes.Axes.colorbar` and `~ultraplot.axes.Axes.panel` widths;
-# various `~ultraplot.axes.Axes.legend` spacing and padding arguments; various
-# `~ultraplot.axes.Axes.format` font size and padding arguments; the line width and
+# the :func:`~ultraplot.axes.Axes.colorbar` and :func:`~ultraplot.axes.Axes.panel` widths;
+# various :func:`~ultraplot.axes.Axes.legend` spacing and padding arguments; various
+# :func:`~ultraplot.axes.Axes.format` font size and padding arguments; the line width and
 # marker size arguments passed to `~ultraplot.axes.PlotAxes` commands; and all
-# applicable `~ultraplot.config.rc` settings, e.g. :rcraw:`subplots.refwidth`,
+# applicable :func:`~ultraplot.config.rc` settings, e.g. :rcraw:`subplots.refwidth`,
 # :rcraw:`legend.columnspacing`, and :rcraw:`axes.labelpad`. This feature is
-# powered by the physical units engine `~ultraplot.utils.units`.
+# powered by the physical units engine :func:`~ultraplot.utils.units`.
 #
 # When one of these keyword arguments is numeric, a default physical unit is
 # used. For subplot and figure sizes, the defult unit is inches. For gridspec and

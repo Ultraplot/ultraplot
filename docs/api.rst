@@ -18,7 +18,7 @@ until the first major release (version 1.0.0).
 
    The documentation for "wrapper" functions like `standardize_1d` and `cmap_changer`
    from UltraPlot < 0.8.0 can now be found under individual `~ultraplot.axes.PlotAxes`
-   methods like `~ultraplot.axes.PlotAxes.plot` and `~ultraplot.axes.PlotAxes.pcolor`. Note
+   methods like :func:`~ultraplot.axes.PlotAxes.plot` and :func:`~ultraplot.axes.PlotAxes.pcolor`. Note
    that calling ``help(ax.method)`` in a python session will show both the UltraPlot
    documentation and the original matplotlib documentation.
 

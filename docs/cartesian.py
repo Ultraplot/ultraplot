@@ -36,14 +36,14 @@
 # change the tick locator using the `~ultraplot.axes.CartesianAxes.format` keyword
 # arguments `xlocator`, `ylocator`, `xminorlocator`, and `yminorlocator` (or their
 # aliases, `xticks`, `yticks`, `xminorticks`, and `yminorticks`). This is powered by
-# the `~ultraplot.constructor.Locator` :ref:`constructor function <why_constructor>`.
+# the :class:`~ultraplot.constructor.Locator` :ref:`constructor function <why_constructor>`.
 #
 # You can use these keyword arguments to apply built-in matplotlib
-# `~matplotlib.ticker.Locator`\ s by their "registered" names
+# :class:`~matplotlib.ticker.Locator`\ s by their "registered" names
 # (e.g., ``xlocator='log'``), to draw ticks every ``N`` data values with
 # `~matplotlib.ticker.MultipleLocator` (e.g., ``xlocator=2``), or to tick the
 # specific locations in a list using `~matplotlib.ticker.FixedLocator` (just
-# like `~matplotlib.axes.Axes.set_xticks` and `~matplotlib.axes.Axes.set_yticks`).
+# like :func:`~matplotlib.axes.Axes.set_xticks` and :func:`~matplotlib.axes.Axes.set_yticks`).
 # If you want to work with the locator classes directly, they are available in the
 # top-level namespace (e.g., ``xlocator=uplt.MultipleLocator(...)`` is allowed).
 #
@@ -110,15 +110,15 @@ uplt.rc.reset()
 # convert floating point numbers to nicely-formatted tick labels. In UltraPlot, you can
 # change the tick formatter using the `~ultraplot.axes.CartesianAxes.format` keyword
 # arguments `xformatter` and `yformatter` (or their aliases, `xticklabels` and
-# `yticklabels`). This is powered by the `~ultraplot.constructor.Formatter`
+# `yticklabels`). This is powered by the :class:`~ultraplot.constructor.Formatter`
 # :ref:`constructor function <why_constructor>`.
 #
 # You can use these keyword arguments to apply built-in matplotlib
-# `~matplotlib.ticker.Formatter`\ s by their "registered" names
+# :class:`~matplotlib.ticker.Formatter`\ s by their "registered" names
 # (e.g., ``xformatter='log'``), to apply a ``%``-style format directive with
 # `~matplotlib.ticker.FormatStrFormatter` (e.g., ``xformatter='%.0f'``), or
 # to apply custom tick labels with `~matplotlib.ticker.FixedFormatter` (just
-# like `~matplotlib.axes.Axes.set_xticklabels`). You can also apply one of UltraPlot's
+# like :func:`~matplotlib.axes.Axes.set_xticklabels`). You can also apply one of UltraPlot's
 # new tick formatters -- for example, ``xformatter='deglat'`` to label ticks
 # as geographic latitude coordinates, ``xformatter='pi'`` to label ticks as
 # fractions of :math:`\pi`, or ``xformatter='sci'`` to label ticks with
@@ -257,8 +257,8 @@ uplt.rc.reset()
 # containing ``'%'`` (e.g. ``xformatter='%Y-%m-%d'``). By default, *x* axis datetime
 # axis labels are rotated 90 degrees, like in `pandas`_. This can be disabled by
 # passing ``xrotation=0`` to `~ultraplot.axes.CartesianAxes.format` or by setting
-# :rcraw:`formatter.timerotation` to ``0``. See `~ultraplot.constructor.Locator`
-# and `~ultraplot.constructor.Formatter` for details.
+# :rcraw:`formatter.timerotation` to ``0``. See :class:`~ultraplot.constructor.Locator`
+# and :class:`~ultraplot.constructor.Formatter` for details.
 
 # %%
 import ultraplot as uplt
@@ -337,13 +337,13 @@ uplt.rc.reset()
 # (shorthand `xloc`), `xtickloc`, `xticklabelloc`, and `xlabelloc`. Valid
 # locations include ``'left'``, ``'right'``, ``'top'``, ``'bottom'``, ``'neither'``,
 # ``'none'``, or ``'both'``. Spine locations can also be set to a valid
-# `~matplotlib.spines.Spine.set_position` value, e.g. ``'zero'`` or
+# :func:`~matplotlib.spines.Spine.set_position` value, e.g. ``'zero'`` or
 # ``('axes', 1.5)``. The top or right spine is used when the coordinate is
 # more than halfway across the axes. This is often convenient when passing
 # e.g. `loc` to :ref:`"alternate" axes commands <ug_alt>`. These keywords
-# provide the functionality of matplotlib's `~matplotlib.axis.YAxis.tick_left`,
-# `~matplotlib.axis.YAxis.tick_right`, `~matplotlib.axis.XAxis.tick_top`, and
-# `~matplotlib.axis.XAxis.tick_bottom`, and `~matplotlib.spines.Spine.set_position`,
+# provide the functionality of matplotlib's :func:`~matplotlib.axis.YAxis.tick_left`,
+# :func:`~matplotlib.axis.YAxis.tick_right`, :func:`~matplotlib.axis.XAxis.tick_top`, and
+# :func:`~matplotlib.axis.XAxis.tick_bottom`, and :func:`~matplotlib.spines.Spine.set_position`,
 # but with additional flexibility.
 
 # %%
@@ -383,21 +383,21 @@ uplt.rc.reset()
 # "Axis scales" like ``'linear'`` and ``'log'`` control the *x* and *y* axis
 # coordinate system. To change the axis scale, pass e.g. ``xscale='log'`` or
 # ``yscale='log'`` to `~ultraplot.axes.Axes.format`. This is powered by the
-# `~ultraplot.constructor.Scale` :ref:`constructor function <why_constructor>`.
+# :class:`~ultraplot.constructor.Scale` :ref:`constructor function <why_constructor>`.
 # UltraPlot makes several changes to the axis scale API:
 #
 # * The `~ultraplot.ticker.AutoFormatter` formatter is now used for all axis scales
 #   by default, including ``'log'`` and ``'symlog'``. Matplotlib's behavior can
 #   be restored by passing e.g. ``xformatter='log'`` or ``yformatter='log'`` to
 #   `~ultraplot.axes.CartesianAxes.format`.
-# * To make its behavior consistent with `~ultraplot.constructor.Locator` and
-#   `~ultraplot.constructor.Formatter`, the `~ultraplot.constructor.Scale`
+# * To make its behavior consistent with :class:`~ultraplot.constructor.Locator` and
+#   :class:`~ultraplot.constructor.Formatter`, the :class:`~ultraplot.constructor.Scale`
 #   constructor function returns instances of `~matplotlib.scale.ScaleBase`,
-#   and `~matplotlib.axes.Axes.set_xscale` and
-#   `~matplotlib.axes.Axes.set_yscale` now accept these class instances in
+#   and :func:`~matplotlib.axes.Axes.set_xscale` and
+#   :func:`~matplotlib.axes.Axes.set_yscale` now accept these class instances in
 #   addition to "registered" names like ``'log'``.
 # * While matplotlib axis scales must be instantiated with an
-#   `~matplotlib.axis.Axis` instance (for backwards compatibility reasons),
+#   :class:`~matplotlib.axis.Axis` instance (for backwards compatibility reasons),
 #   UltraPlot axis scales can be instantiated without the axis instance
 #   (e.g., ``uplt.LogScale()`` instead of ``uplt.LogScale(ax.xaxis)``).
 # * The default `subs` for the ``'symlog'`` axis scale is now ``np.arange(1, 10)``,
@@ -545,8 +545,8 @@ ax.format(ymin=0.05, yscale=("power", 0.5), title=title)
 # Alternate axes
 # --------------
 #
-# The `matplotlib.axes.Axes` class includes `~matplotlib.axes.Axes.twinx`
-# and `~matplotlib.axes.Axes.twiny` commands for drawing "twin" *x* and
+# The `matplotlib.axes.Axes` class includes :func:`~matplotlib.axes.Axes.twinx`
+# and :func:`~matplotlib.axes.Axes.twiny` commands for drawing "twin" *x* and
 # *y* axes in the same subplot. UltraPlot expands on these commands and adds
 # the arguably more intuitive `~ultraplot.axes.CartesianAxes.altx` and
 # `~ultraplot.axes.CartesianAxes.alty` options. Here `~ultraplot.axes.CartesianAxes.altx`
