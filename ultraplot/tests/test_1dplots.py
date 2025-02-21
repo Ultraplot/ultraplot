@@ -505,3 +505,14 @@ def test_line_plot_cyclers():
 
     fig.format(xlabel="xlabel", ylabel="ylabel", suptitle="On-the-fly property cycles")
     return fig
+
+
+@pytest.mpl_image_compare
+def test_heatmap_labels():
+    """
+    Heatmap function should show labels when asked
+    """
+    fig, ax = uplt.subplots()
+    x = state.rand(10, 10)
+    ax.heatmap(x, labels=True)
+    return fig
