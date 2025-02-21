@@ -100,7 +100,7 @@ Use these resources to make color cycles from scratch. Then import
 them into UltraPlot by adding files to the ``.UltraPlot/cycles`` folder
 (see :ref:`this section <ug_cycles_dl>` for details).
 
-* `The UltraPlot API <https://UltraPlot.readthedocs.io/en/latest/cycles.html#Making-new-color-cycles>`__ -
+* `The UltraPlot API <https://ultraplot.readthedocs.io/en/latest/cycles.html#Making-new-color-cycles>`__ -
   Namely, the :class:`~ultraplot.colors.DiscreteColormap` class and
   :class:`~ultraplot.constructor.Cycle` constructor function.
 * `i want hue <http://medialab.github.io/iwanthue/>`__ -
