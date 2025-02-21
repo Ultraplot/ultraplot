@@ -29,7 +29,6 @@ Figure class
    :no-private-members:
 
 .. automodsumm:: ultraplot.figure
-   :no-private-members:
    :toctree: api
 
 
