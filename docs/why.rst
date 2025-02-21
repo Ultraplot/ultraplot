@@ -186,7 +186,7 @@ Function                          Return type                                   
 `~ultraplot.constructor.Scale`      `~matplotlib.scale.ScaleBase`                                 :func:`~ultraplot.axes.Axes.format`                                                     ``xscale=``, ``yscale=``
 `~ultraplot.constructor.Colormap`   :class:`~matplotlib.colors.Colormap`                                 2D `~ultraplot.axes.PlotAxes` commands                                            ``cmap=``
 `~ultraplot.constructor.Norm`       :class:`~matplotlib.colors.Normalize`                                2D `~ultraplot.axes.PlotAxes` commands                                            ``norm=``
-`~ultraplot.constructor.Cycle`      `~cycler.Cycler`                                              1D `~ultraplot.axes.PlotAxes` commands                                            ``cycle=``
+`~ultraplot.constructor.Cycle`      :class:`~cycler.Cycler`                                              1D `~ultraplot.axes.PlotAxes` commands                                            ``cycle=``
 ================================  ============================================================  ==============================================================================  ================================================================================================================================================================================================
 
 Links
@@ -733,7 +733,7 @@ In matplotlib, colormaps are implemented with the
 color gradations) and the `~matplotlib.colors.ListedColormap` class (representing
 "categorical" color sets). They are somewhat cumbersome to modify or create from
 scratch. Meanwhile, property cycles used for individual plot elements are implemented
-with the `~cycler.Cycler` class. They are easier to modify but they cannot be
+with the :class:`~cycler.Cycler` class. They are easier to modify but they cannot be
 "registered" by name like colormaps.
 
 The `seaborn`_ package includes "color palettes" to make working with colormaps
