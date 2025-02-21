@@ -93,7 +93,6 @@ except ImportError:
 extensions = [
     "matplotlib.sphinxext.plot_directive",  # see: https://matplotlib.org/sampledoc/extensions.html  # noqa: E501
     "sphinx.ext.autodoc",  # include documentation from docstrings
-    "autoapi.extension",
     "sphinx.ext.doctest",  # >>> examples
     "sphinx.ext.extlinks",  # for :pr:, :issue:, :commit:
     "sphinx.ext.autosectionlabel",  # use :ref:`Heading` for any heading
@@ -110,7 +109,6 @@ extensions = [
     "nbsphinx",  # parse rst books
 ]
 
-autoapi_dirs = ["../ultraplot/"]
 
 # The master toctree document.
 master_doc = "index"
@@ -351,3 +349,22 @@ texinfo_documents = [
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = True
+
+from ultraplot.internals.docstring import _snippet_manager
+
+
+def process_docstring(app, what, name, obj, options, lines):
+    if lines:
+        try:
+            # Create a proper format string
+            doc = "\n".join(lines)
+            expanded = doc % _snippet_manager  # Use dict directly
+            lines[:] = expanded.split("\n")
+        except Exception as e:
+            print(f"Warning: Could not expand docstring for {name}: {e}")
+            # Keep original lines if expansion fails
+            pass
+
+
+def setup(app):
+    app.connect("autodoc-process-docstring", process_docstring)
