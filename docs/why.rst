@@ -893,7 +893,7 @@ Changes
 
 UltraPlot settings can be changed persistently by editing the default ``ultraplotrc``
 file in the location given by :func:`~ultraplot.config.Configurator.user_file` (this is
-usually ``$HOME/.UltraPlot/ultraplotrc``) or by adding loose ``ultraplotrc`` files to
+usually ``$HOME/.ultraplot/ultraplotrc``) or by adding loose ``ultraplotrc`` files to
 either the current directory or an arbitrary parent directory. Adding files to
 parent directories can be useful when working in projects with lots of subfolders.
 
