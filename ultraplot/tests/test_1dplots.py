@@ -512,7 +512,14 @@ def test_heatmap_labels():
     """
     Heatmap function should show labels when asked
     """
-    fig, ax = uplt.subplots()
     x = state.rand(10, 10)
+    # Nans should not be shown
+    x[0, 0] = np.nan
+    x[0, -1] = np.nan
+    x[-1, 0] = np.nan
+    x[-1, -1] = np.nan
+    x[4:6, 4:6] = np.nan
+
+    fig, ax = uplt.subplots()
     ax.heatmap(x, labels=True)
     return fig
