@@ -458,3 +458,68 @@ def test_norm_not_modified():
     assert norm.vmin == 0
     assert norm.vmax == 1
     return fig
+
+
+@pytest.mark.mpl_image_compare
+def test_line_plot_cyclers():
+    # Sample data
+    M, N = 50, 10
+    state = np.random.RandomState(51423)
+    data1 = (state.rand(M, N) - 0.48).cumsum(axis=1).cumsum(axis=0)
+    data2 = (state.rand(M, N) - 0.48).cumsum(axis=1).cumsum(axis=0) * 1.5
+    data1 += state.rand(M, N)
+    data2 += state.rand(M, N)
+    data1 *= 2
+
+    cmaps = ("Blues", "Reds")
+    cycle = uplt.Cycle(*cmaps)
+
+    # Use property cycle for columns of 2D input data
+    fig, ax = uplt.subplots(ncols=3, sharey=True)
+
+    # Intention of subplots
+    ax[0].set_title("Property cycle")
+    ax[1].set_title("Joined cycle")
+    ax[2].set_title("Separate cycles")
+
+    ax[0].plot(
+        data1 + data2,
+        cycle="black",  # cycle from monochromatic colormap
+        cycle_kw={"ls": ("-", "--", "-.", ":")},
+    )
+
+    # Plot all dat with both cyclers on
+    ax[1].plot(
+        (data1 + data2),
+        cycle=cycle,
+    )
+
+    # Test cyclers separately
+    cycle = uplt.Cycle(*cmaps)
+    for idx in range(0, N):
+        ax[2].plot(
+            (data1[..., idx] + data2[..., idx]),
+            cycle=cycle,
+            cycle_kw={"N": N, "left": 0.3},
+        )
+
+    fig.format(xlabel="xlabel", ylabel="ylabel", suptitle="On-the-fly property cycles")
+    return fig
+
+
+@pytest.mark.mpl_image_compare
+def test_heatmap_labels():
+    """
+    Heatmap function should show labels when asked
+    """
+    x = state.rand(10, 10)
+    # Nans should not be shown
+    x[0, 0] = np.nan
+    x[0, -1] = np.nan
+    x[-1, 0] = np.nan
+    x[-1, -1] = np.nan
+    x[4:6, 4:6] = np.nan
+
+    fig, ax = uplt.subplots()
+    ax.heatmap(x, labels=True)
+    return fig

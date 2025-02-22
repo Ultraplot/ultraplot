@@ -10,63 +10,63 @@ There is already a great matplotlib wrapper called
 <https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.uplt.html>`__
 and `xarray <http://xarray.pydata.org/en/stable/plotting.html>`__
 both offer convenient matplotlib plotting commands.
-How does ultraplot compare against these tools?
+How does UltraPlot compare against these tools?
 
-* ultraplot, seaborn, pandas, and xarray all offer tools for generating rigid, simple,
-  nice-looking plots from data stored in `~pandas.DataFrame`\ s and
-  `~xarray.DataArray`\ s (ultraplot tries to apply labels from these objects, just like
+* UltraPlot, seaborn, pandas, and xarray all offer tools for generating rigid, simple,
+  nice-looking plots from data stored in :class:`~pandas.DataFrame`\ s and
+  :class:`~xarray.DataArray`\ s (UltraPlot tries to apply labels from these objects, just like
   pandas and xarray).
-* ultraplot is integrated with *cartopy* and *basemap*. You will find plotting geophysical
-  data in ultraplot to be much more concise than working with cartopy and basemap
+* UltraPlot is integrated with *cartopy* and *basemap*. You will find plotting geophysical
+  data in UltraPlot to be much more concise than working with cartopy and basemap
   directly.
-* ultraplot *expands upon* the seaborn tools for working with color and global settings.
-  For example, see `~ultraplot.constructor.Colormap`,
-  `~ultraplot.colors.PerceptualColormap`, and `~ultraplot.config.Configurator`.
-* ultraplot *expands upon* matplotlib by fixing various quirks, developing a more
+* UltraPlot *expands upon* the seaborn tools for working with color and global settings.
+  For example, see :class:`~ultraplot.constructor.Colormap`,
+  :class:`~ultraplot.colors.PerceptualColormap`, and :class:`~ultraplot.config.Configurator`.
+* UltraPlot *expands upon* matplotlib by fixing various quirks, developing a more
   advanced automatic layout algorithm, simplifying the process of drawing outer
   colorbars and legends, and much more.
-* ultraplot is *built right into the matplotlib API*, thanks to special subclasses of the
-  `~matplotlib.figure.Figure` and `~matplotlib.axes.Axes` classes, while seaborn,
+* UltraPlot is *built right into the matplotlib API*, thanks to special subclasses of the
+  :class:`~matplotlib.figure.Figure` and :class:`~matplotlib.axes.Axes` classes, while seaborn,
   pandas, and xarray are meant to be used separately from the matplotlib API.
 
-In a nutshell, ultraplot is intended to *unify the convenience of seaborn, pandas, and
+In a nutshell, UltraPlot is intended to *unify the convenience of seaborn, pandas, and
 xarray plotting with the power and customizability of the underlying matplotlib API*.
 
 ..
-  So while ultraplot includes similar tools, the scope and goals are largely different.
-  Indeed, parts of ultraplot were inspired by these projects -- in particular,
+  So while UltraPlot includes similar tools, the scope and goals are largely different.
+  Indeed, parts of UltraPlot were inspired by these projects -- in particular,
   ``setup.py`` and ``colortools.py`` are modeled after seaborn. However the goals and
-  scope of ultraplot are largely different:
+  scope of UltraPlot are largely different:
 
 Why didn't you add to matplotlib directly?
 ==========================================
 
-Since ultraplot is built right into the matplotlib API, you might be wondering why we
+Since UltraPlot is built right into the matplotlib API, you might be wondering why we
 didn't contribute to the matplotlib project directly.
 
-* Certain features directly conflict with matplotlib. For example, ultraplot's tight
+* Certain features directly conflict with matplotlib. For example, UltraPlot's tight
   layout algorithm conflicts with matplotlib's `tight layout
   <https://matplotlib.org/tutorials/intermediate/tight_layout_guide.html>`__ by
-  permitting *fluid figure dimensions*, and the new `~ultraplot.gridspec.GridSpec` class
+  permitting *fluid figure dimensions*, and the new :class:`~ultraplot.gridspec.GridSpec` class
   permits *variable spacing* between rows and columns and uses *physical units* rather
   than figure-relative and axes-relative units.
-* Certain features are arguably too redundant. For example, `~ultraplot.axes.Axes.format`
+* Certain features are arguably too redundant. For example, :func:`~ultraplot.axes.Axes.format`
   is convenient, but the same tasks can be accomplished with existing axes and axis
-  "setter" methods. Also, some of the functionality of `~ultraplot.ui.subplots` can be
+  "setter" methods. Also, some of the functionality of :func:`~ultraplot.ui.subplots` can be
   replicated with `axes_grid1
   <https://matplotlib.org/mpl_toolkits/axes_grid1/index.html>`__. Following `TOOWTDI
   <https://wiki.python.org/moin/TOOWTDI>`__ philosophy, these features should probably
   not be integrated.
 
 ..
-   * ultraplot design choices are made with the academic scientist working with ipython
+   * UltraPlot design choices are made with the academic scientist working with ipython
      notebooks in mind, while matplotlib has a much more diverse base of hundreds of
      thousands of users. Matplotlib developers have to focus on support and API
-     consistency, while ultraplot can make more dramatic improvements.
+     consistency, while UltraPlot can make more dramatic improvements.
 
 ..
    Nevertheless, if any core matplotlib developers think that some
-   of ultraplot's features should be added to matplotlib, please contact
+   of UltraPlot's features should be added to matplotlib, please contact
    `Luke Davis <https://github.com/lukelbd>`__ and let him know!
 
 Why do my inline figures look different?
@@ -86,12 +86,12 @@ keep them legible, matplotlib uses a fairly large default figure width of 6.5 in
 downscaled so the sizes used in your plotting code are *not* the sizes that appear in
 the document.
 
-ultraplot helps you get your figure sizes *correct* for embedding them as vector graphics
+UltraPlot helps you get your figure sizes *correct* for embedding them as vector graphics
 inside publications.  It uses a slightly smaller default font size, calculates the
 default figure size from the number of subplot rows and columns, and adds the `journal`
-keyword argument to `~ultraplot.figure.Figure` which can be used to employ figure
+keyword argument to :class:`~ultraplot.figure.Figure` which can be used to employ figure
 dimensions from a particular journal standard.  To keep the inline figures legible,
-ultraplot also employs a *higher quality* default inline backend.
+UltraPlot also employs a *higher quality* default inline backend.
 
 .. [1] `Vector graphics <https://en.wikipedia.org/wiki/Vector_graphics>`__ use physical
    units (e.g. inches, `points <https://en.wikipedia.org/wiki/Point_(typography)>`__),

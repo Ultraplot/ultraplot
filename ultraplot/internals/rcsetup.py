@@ -1108,8 +1108,8 @@ _rc_ultraplot_table = {
         64,
         _validate_int,
         "Native `~matplotlib.colors.ListedColormap`\\ s with more colors than "
-        "this are converted to `~ultraplot.colors.ContinuousColormap` rather than "
-        "`~ultraplot.colors.DiscreteColormap`. This helps translate continuous "
+        "this are converted to :class:`~ultraplot.colors.ContinuousColormap` rather than "
+        ":class:`~ultraplot.colors.DiscreteColormap`. This helps translate continuous "
         "colormaps from external projects.",
     ),
     "cmap.lut": (

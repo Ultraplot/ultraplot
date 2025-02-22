@@ -87,7 +87,7 @@ proj, projection : \
 str, `cartopy.crs.Projection`, or `~mpl_toolkits.basemap.Basemap`, optional
     The map projection specification(s). If ``'cart'`` or ``'cartesian'``
     (the default), a `~ultraplot.axes.CartesianAxes` is created. If ``'polar'``,
-    a `~ultraplot.axes.PolarAxes` is created. Otherwise, the argument is
+    a :class:`~ultraplot.axes.PolarAxes` is created. Otherwise, the argument is
     interpreted by `~ultraplot.constructor.Proj`, and the result is used
     to make a `~ultraplot.axes.GeoAxes` (in this case the argument can be
     a `cartopy.crs.Projection` instance, a `~mpl_toolkits.basemap.Basemap`
@@ -417,11 +417,11 @@ or sequence of `~matplotlib.artist.Artist`
     2. A `~matplotlib.colors.Colormap` or registered colormap name used to build a
        `~matplotlib.cm.ScalarMappable` on-the-fly. The colorbar range and ticks depend
        on the arguments `values`, `vmin`, `vmax`, and `norm`. The default for a
-       `~ultraplot.colors.ContinuousColormap` is ``vmin=0`` and ``vmax=1`` (note that
+       :class:`~ultraplot.colors.ContinuousColormap` is ``vmin=0`` and ``vmax=1`` (note that
        passing `values` will "discretize" the colormap). The default for a
-       `~ultraplot.colors.DiscreteColormap` is ``values=np.arange(0, cmap.N)``.
+       :class:`~ultraplot.colors.DiscreteColormap` is ``values=np.arange(0, cmap.N)``.
     3. A sequence of hex strings, color names, or RGB[A] tuples. A
-       `~ultraplot.colors.DiscreteColormap` will be generated from these colors and
+       :class:`~ultraplot.colors.DiscreteColormap` will be generated from these colors and
        used to build a `~matplotlib.cm.ScalarMappable` on-the-fly. The colorbar
        range and ticks depend on the arguments `values`, `norm`, and
        `norm_kw`. The default is ``values=np.arange(0, len(mappable))``.
@@ -436,7 +436,7 @@ or sequence of `~matplotlib.artist.Artist`
 values : sequence of float or str, optional
     Ignored if `mappable` is a `~matplotlib.cm.ScalarMappable`. This maps the colormap
     colors to numeric values using `~ultraplot.colors.DiscreteNorm`. If the colormap is
-    a `~ultraplot.colors.ContinuousColormap` then its colors will be "discretized".
+    a :class:`~ultraplot.colors.ContinuousColormap` then its colors will be "discretized".
     These These can also be strings, in which case the list indices are used for
     tick locations and the strings are applied as tick labels.
 """
@@ -446,7 +446,7 @@ orientation : {None, 'horizontal', 'vertical'}, optional
     or figure where the colorbar is drawn. Inset colorbars are always horizontal.
 norm : norm-spec, optional
     Ignored if `mappable` is a `~matplotlib.cm.ScalarMappable`. This is the continuous
-    normalizer used to scale the `~ultraplot.colors.ContinuousColormap` (or passed
+    normalizer used to scale the :class:`~ultraplot.colors.ContinuousColormap` (or passed
     to `~ultraplot.colors.DiscreteNorm` if `values` was passed). Passed to the
     `~ultraplot.constructor.Norm` constructor function.
 norm_kw : dict-like, optional
@@ -3247,7 +3247,7 @@ class Axes(maxes.Axes):
     def number(self):
         """
         The axes number. This controls the order of a-b-c labels and the
-        order of appearance in the `~ultraplot.gridspec.SubplotGrid` returned
+        order of appearance in the :class:`~ultraplot.gridspec.SubplotGrid` returned
         by `~ultraplot.figure.Figure.subplots`.
         """
         return self._number
