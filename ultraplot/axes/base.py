@@ -1221,7 +1221,6 @@ class Axes(maxes.Axes):
             obj.update_ticks()
         elif tickminor:
             obj.minorticks_on()
-            print(obj.minorlocator.values(0, 1))
         else:
             obj.minorticks_off()
         if getattr(norm, "descending", None):
