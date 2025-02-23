@@ -267,3 +267,4 @@ def test_minor_override():
         cax.minorlocator.tick_values(left, right),
         np.linspace(left - minor, right + minor, n * 2 + 1),
     )
+    return fig
