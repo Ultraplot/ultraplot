@@ -1160,7 +1160,6 @@ class Axes(maxes.Axes):
                 else:
                     locator = pticker.DiscreteLocator(ticks)
 
-
             if tickminor and minorlocator is None:
                 minorlocator = pticker.DiscreteLocator(ticks, minor=True)
 
