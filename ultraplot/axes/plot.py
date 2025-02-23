@@ -63,8 +63,8 @@ _args_1d_docstring = """
     The data passed as positional or keyword arguments. Interpreted as follows:
 
     * If only `{y}` coordinates are passed, try to infer the `{x}` coordinates
-      from the `~pandas.Series` or `~pandas.DataFrame` indices or the
-      `~xarray.DataArray` coordinates. Otherwise, the `{x}` coordinates
+      from the `~pandas.Series` or :class:`~pandas.DataFrame` indices or the
+      :class:`~xarray.DataArray` coordinates. Otherwise, the `{x}` coordinates
       are ``np.arange(0, {y}.shape[0])``.
     * If the `{y}` coordinates are a 2D array, plot each column of data in succession
       (except where each column of data represents a statistical distribution, as with
@@ -78,7 +78,7 @@ _args_1d_multi_docstring = """
     The data passed as positional or keyword arguments. Interpreted as follows:
 
     * If only `{y}` coordinates are passed, try to infer the `{x}` coordinates from
-      the `~pandas.Series` or `~pandas.DataFrame` indices or the `~xarray.DataArray`
+      the `~pandas.Series` or :class:`~pandas.DataFrame` indices or the :class:`~xarray.DataArray`
       coordinates. Otherwise, the `{x}` coordinates are ``np.arange(0, {y}2.shape[0])``.
     * If only `{x}` and `{y}2` coordinates are passed, set the `{y}1` coordinates
       to zero. This draws elements originating from the zero line.
@@ -93,11 +93,11 @@ _args_2d_docstring = """
     The data passed as positional or keyword arguments. Interpreted as follows:
 
     * If only {zvar} coordinates are passed, try to infer the `x` and `y` coordinates
-      from the `~pandas.DataFrame` indices and columns or the `~xarray.DataArray`
+      from the :class:`~pandas.DataFrame` indices and columns or the :class:`~xarray.DataArray`
       coordinates. Otherwise, the `y` coordinates are ``np.arange(0, y.shape[0])``
       and the `x` coordinates are ``np.arange(0, y.shape[1])``.
     * For ``pcolor`` and ``pcolormesh``, calculate coordinate *edges* using
-      `~ultraplot.utils.edges` or `~ultraplot.utils.edges2d` if *centers* were provided.
+      `~ultraplot.utils.edges` or `:func:`~ultraplot.utils.edges2d`` if *centers* were provided.
       For all other methods, calculate coordinate *centers* if *edges* were provided.
     * If the `x` or `y` coordinates are `pint.Quantity`, auto-add the pint unit registry
       to matplotlib's unit registry using `~pint.UnitRegistry.setup_matplotlib`. If the
@@ -123,7 +123,7 @@ docstring._snippet_manager["plot.args_2d_flow"] = _args_2d_docstring.format(
 # Shared docstrings
 _args_1d_shared_docstring = """
 data : dict-like, optional
-    A dict-like dataset container (e.g., `~pandas.DataFrame` or
+    A dict-like dataset container (e.g., :class:`~pandas.DataFrame` or
     `~xarray.Dataset`). If passed, each data argument can optionally
     be a string `key` and the arrays used for plotting are retrieved
     with ``data[key]``. This is a `native matplotlib feature
@@ -131,7 +131,7 @@ data : dict-like, optional
 autoformat : bool, default: :rc:`autoformat`
     Whether the `x` axis labels, `y` axis labels, axis formatters, axes titles,
     legend titles, and colorbar labels are automatically configured when a
-    `~pandas.Series`, `~pandas.DataFrame`, `~xarray.DataArray`, or `~pint.Quantity`
+    `~pandas.Series`, :class:`~pandas.DataFrame`, :class:`~xarray.DataArray`, or `~pint.Quantity`
     is passed to the plotting command. Formatting of `pint.Quantity`
     unit strings is controlled by :rc:`unitformat`.
 """
@@ -177,9 +177,9 @@ legend : bool, int, or str, optional
     resulting object(s). If ``True``, the default :rc:`legend.loc` is used.
     If the same location is used in successive plotting calls, object(s)
     will be added to existing legend in that location. Valid locations
-    are shown in `~ultraplot.axes.Axes.legend`.
+    are shown in :class:`~ultraplot.axes.Axes.legend`.
 legend_kw : dict-like, optional
-    Extra keyword args for the call to `~ultraplot.axes.Axes.legend`.
+    Extra keyword args for the call to :class:`~ultraplot.axes.Axes.legend`.
 """
 docstring._snippet_manager["plot.guide"] = _guide_docstring
 
@@ -298,14 +298,14 @@ cycle_kw : dict-like, optional
 _cmap_norm_docstring = """
 cmap : colormap-spec, default: \
 :rc:`cmap.sequential` or :rc:`cmap.diverging`
-    The colormap specifer, passed to the `~ultraplot.constructor.Colormap` constructor
+    The colormap specifer, passed to the :class:`~ultraplot.constructor.Colormap` constructor
     function. If :rcraw:`cmap.autodiverging` is ``True`` and the normalization
     range contains negative and positive values then :rcraw:`cmap.diverging` is used.
     Otherwise :rcraw:`cmap.sequential` is used.
 cmap_kw : dict-like, optional
-    Passed to `~ultraplot.constructor.Colormap`.
+    Passed to :class:`~ultraplot.constructor.Colormap`.
 c, color, colors : color-spec or sequence of color-spec, optional
-    The color(s) used to create a `~ultraplot.colors.DiscreteColormap`.
+    The color(s) used to create a :class:`~ultraplot.colors.DiscreteColormap`.
     If not passed, `cmap` is used.
 norm : norm-spec, default: \
 `~matplotlib.colors.Normalize` or `~ultraplot.colors.DivergingNorm`
@@ -377,8 +377,8 @@ robust : bool, float, or 2-tuple, default: :rc:`cmap.robust`
     when your data has large outliers.
 inbounds : bool, default: :rc:`cmap.inbounds`
     If ``True`` and `vmin` or `vmax` were not provided, when axis limits
-    have been explicitly restricted with `~matplotlib.axes.Axes.set_xlim`
-    or `~matplotlib.axes.Axes.set_ylim`, out-of-bounds data is ignored.
+    have been explicitly restricted with :func:`~matplotlib.axes.Axes.set_xlim`
+    or :func:`~matplotlib.axes.Axes.set_ylim`, out-of-bounds data is ignored.
     See also :rcraw:`cmap.inbounds` and :rcraw:`axes.inbounds`.
 locator : locator-spec, default: `matplotlib.ticker.MaxNLocator`
     The locator used to determine level locations if `levels` or `values` were not
@@ -486,7 +486,7 @@ Other parameters
 %(plot.labels_1d)s
 %(plot.guide)s
 **kwargs
-    Passed to `~matplotlib.axes.Axes.plot`.
+    Passed to :func:`~matplotlib.axes.Axes.plot`.
 
 See also
 --------
@@ -619,11 +619,11 @@ scalex, scaley : bool, optional
 %(plot.label)s
 %(plot.guide)s
 **kwargs
-    Valid `~matplotlib.collections.LineCollection` properties.
+    Valid :class:`~matplotlib.collections.LineCollection` properties.
 
 Returns
 -------
-`~matplotlib.collections.LineCollection`
+:class:`~matplotlib.collections.LineCollection`
     The parametric line. See `this matplotlib example \
 <https://matplotlib.org/stable/gallery/lines_bars_and_markers/multicolored_line>`__.
 

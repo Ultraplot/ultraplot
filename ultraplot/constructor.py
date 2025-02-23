@@ -404,9 +404,9 @@ def Colormap(
 ):
     """
     Generate, retrieve, modify, and/or merge instances of
-    `~ultraplot.colors.PerceptualColormap`,
-    `~ultraplot.colors.ContinuousColormap`, and
-    `~ultraplot.colors.DiscreteColormap`.
+    :class:`~ultraplot.colors.PerceptualColormap`,
+    :class:`~ultraplot.colors.ContinuousColormap`, and
+    :class:`~ultraplot.colors.DiscreteColormap`.
 
     Parameters
     ----------
@@ -424,17 +424,17 @@ def Colormap(
           is loaded with `ultraplot.colors.ContinuousColormap.from_file` or
           `ultraplot.colors.DiscreteColormap.from_file` depending on the value of
           `filemode` (see below). Default behavior is to load a
-          `~ultraplot.colors.ContinuousColormap`.
-        * If RGB tuple or color string, a `~ultraplot.colors.PerceptualColormap`
+          :class:`~ultraplot.colors.ContinuousColormap`.
+        * If RGB tuple or color string, a :class:`~ultraplot.colors.PerceptualColormap`
           is generated with `~ultraplot.colors.PerceptualColormap.from_color`.
           If the string ends in ``'_r'``, the monochromatic map will be
           *reversed*, i.e. will go from dark to light instead of light to dark.
         * If sequence of RGB tuples or color strings, a
-          `~ultraplot.colors.DiscreteColormap`, `~ultraplot.colors.PerceptualColormap`,
-          or `~ultraplot.colors.ContinuousColormap` is generated depending on
+          :class:`~ultraplot.colors.DiscreteColormap`, :class:`~ultraplot.colors.PerceptualColormap`,
+          or :class:`~ultraplot.colors.ContinuousColormap` is generated depending on
           the value of `listmode` (see below). Default behavior is to generate a
-          `~ultraplot.colors.PerceptualColormap`.
-        * If dictionary, a `~ultraplot.colors.PerceptualColormap` is
+          :class:`~ultraplot.colors.PerceptualColormap`.
+        * If dictionary, a :class:`~ultraplot.colors.PerceptualColormap` is
           generated with `~ultraplot.colors.PerceptualColormap.from_hsl`.
           The dictionary should contain the keys ``'hue'``, ``'saturation'``,
           ``'luminance'``, and optionally ``'alpha'``, or their aliases (see below).
@@ -449,9 +449,9 @@ def Colormap(
 
         * If ``'perceptual'`` or ``'continuous'``, a colormap is generated using
           `~ultraplot.colors.ContinuousColormap.from_file`. The resulting
-          colormap may be a `~ultraplot.colors.ContinuousColormap` or
-          `~ultraplot.colors.PerceptualColormap` depending on the data file.
-        * If ``'discrete'``, a `~ultraplot.colors.DiscreteColormap` is generated
+          colormap may be a :class:`~ultraplot.colors.ContinuousColormap` or
+          :class:`~ultraplot.colors.PerceptualColormap` depending on the data file.
+        * If ``'discrete'``, a :class:`~ultraplot.colors.DiscreteColormap` is generated
           using `~ultraplot.colors.ContinuousColormap.from_file`.
 
         Default is ``'continuous'`` when calling `Colormap` directly and
@@ -460,33 +460,33 @@ def Colormap(
         Controls how colormaps are generated when you input sequence(s)
         of colors. The options are as follows:
 
-        * If ``'perceptual'``, a `~ultraplot.colors.PerceptualColormap`
+        * If ``'perceptual'``, a :class:`~ultraplot.colors.PerceptualColormap`
           is generated with `~ultraplot.colors.PerceptualColormap.from_list`.
-        * If ``'continuous'``, a `~ultraplot.colors.ContinuousColormap` is
+        * If ``'continuous'``, a :class:`~ultraplot.colors.ContinuousColormap` is
           generated with `~ultraplot.colors.ContinuousColormap.from_list`.
-        * If ``'discrete'``, a `~ultraplot.colors.DiscreteColormap` is generated
+        * If ``'discrete'``, a :class:`~ultraplot.colors.DiscreteColormap` is generated
           by simply passing the colors to the class.
 
         Default is ``'perceptual'`` when calling `Colormap` directly and
         ``'discrete'`` when `Colormap` is called by `Cycle`.
     samples : int or sequence of int, optional
-        For `~ultraplot.colors.ContinuousColormap`\\ s, this is used to
-        generate `~ultraplot.colors.DiscreteColormap`\\ s with
+        For :class:`~ultraplot.colors.ContinuousColormap`\\ s, this is used to
+        generate :class:`~ultraplot.colors.DiscreteColormap`\\ s with
         `~ultraplot.colors.ContinuousColormap.to_discrete`. For
-        `~ultraplot.colors.DiscreteColormap`\\ s, this is used to updates the
+        :class:`~ultraplot.colors.DiscreteColormap`\\ s, this is used to updates the
         number of colors in the cycle. If `samples` is integer, it applies
         to the final *merged* colormap. If it is a sequence of integers,
         it applies to each input colormap individually.
     discrete : bool, optional
         If ``True``, when the final colormap is a
-        `~ultraplot.colors.DiscreteColormap`, we leave it alone, but when it is a
-        `~ultraplot.colors.ContinuousColormap`, we always call
+        :class:`~ultraplot.colors.DiscreteColormap`, we leave it alone, but when it is a
+        :class:`~ultraplot.colors.ContinuousColormap`, we always call
         `~ultraplot.colors.ContinuousColormap.to_discrete` with a
         default `samples` value of ``10``. This argument is not
         necessary if you provide the `samples` argument.
     left, right : float or sequence of float, optional
         Truncate the left or right edges of the colormap.
-        Passed to `~ultraplot.colors.ContinuousColormap.truncate`.
+        Passed to :method:`~ultraplot.colors.ContinuousColormap.truncate`.
         If float, these apply to the final *merged* colormap. If sequence
         of float, these apply to each input colormap individually.
     cut : float or sequence of float, optional
@@ -501,7 +501,7 @@ def Colormap(
         sequence of float, these apply to each input colormap individually.
     shift : float or sequence of float, optional
         Cyclically shift the colormap.
-        Passed to `~ultraplot.colors.ContinuousColormap.shifted`.
+        Passed to :property:`~ultraplot.colors.ContinuousColormap.shifted`.
         If float, this applies to the final *merged* colormap. If sequence
         of float, these apply to each input colormap individually.
     a
@@ -556,8 +556,8 @@ def Colormap(
     Returns
     -------
     matplotlib.colors.Colormap
-        A `~ultraplot.colors.ContinuousColormap` or
-        `~ultraplot.colors.DiscreteColormap` instance.
+        A :class:`~ultraplot.colors.ContinuousColormap` or
+        :class:`~ultraplot.colors.DiscreteColormap` instance.
 
     See also
     --------
@@ -787,12 +787,12 @@ class Cycle(cycler.Cycler):
 
         * If a `~cycler.Cycler`, nothing more is done.
         * If a sequence of RGB tuples or color strings, these colors are used.
-        * If a `~ultraplot.colors.DiscreteColormap`, colors from the ``colors``
+        * If a :class:`~ultraplot.colors.DiscreteColormap`, colors from the ``colors``
         attribute are used.
-        * If a string cycle name, that `~ultraplot.colors.DiscreteColormap`
+        * If a string cycle name, that :class:`~ultraplot.colors.DiscreteColormap`
         is looked up and its ``colors`` are used.
         * In all other cases, the argument is passed to `Colormap`, and
-        colors from the resulting `~ultraplot.colors.ContinuousColormap`
+        colors from the resulting :class:`~ultraplot.colors.ContinuousColormap`
         are used. See the `samples` argument.
 
         If the last positional argument is numeric, it is used for the
@@ -800,10 +800,10 @@ class Cycle(cycler.Cycler):
     N
         Shorthand for `samples`.
     samples : float or sequence of float, optional
-        For `~ultraplot.colors.DiscreteColormap`\\ s, this is the number of
+        For :class:`~ultraplot.colors.DiscreteColormap`\\ s, this is the number of
         colors to select. For example, ``Cycle('538', 4)`` returns the first 4
         colors of the ``'538'`` color cycle.
-        For `~ultraplot.colors.ContinuousColormap`\\ s, this is either a
+        For :class:`~ultraplot.colors.ContinuousColormap`\\ s, this is either a
         sequence of sample coordinates used to draw colors from the colormap, or
         an integer number of colors to draw. If the latter, the sample coordinates
         are ``np.linspace(0, 1, samples)``. For example, ``Cycle('Reds', 5)``
@@ -838,7 +838,7 @@ markeredgecolors, markerfacecolors
         Aliases for the above keywords.
     **kwargs
         If the input is not already a `~cycler.Cycler` instance, these are passed
-        to `Colormap` and used to build the `~ultraplot.colors.DiscreteColormap`
+        to `Colormap` and used to build the :class:`~ultraplot.colors.DiscreteColormap`
         from which the cycler will draw its colors.
 
     See also
@@ -1058,7 +1058,7 @@ def Locator(locator, *args, discrete=False, **kwargs):
         ``'fixed'``              `~matplotlib.ticker.FixedLocator`             Ticks at these exact locations
         ``'discrete'``           `~ultraplot.ticker.DiscreteLocator`             Major ticks restricted to these locations but subsampled depending on the axis length
         ``'discreteminor'``      `~ultraplot.ticker.DiscreteLocator`             Minor ticks restricted to these locations but subsampled depending on the axis length
-        ``'index'``              `~ultraplot.ticker.IndexLocator`                Ticks on the non-negative integers
+        ``'index'``              :class:`~ultraplot.ticker.IndexLocator`                Ticks on the non-negative integers
         ``'linear'``             `~matplotlib.ticker.LinearLocator`            Exactly ``N`` ticks encompassing axis limits, spaced as ``numpy.linspace(lo, hi, N)``
         ``'log'``                `~matplotlib.ticker.LogLocator`               For log-scale axes
         ``'logminor'``           `~matplotlib.ticker.LogLocator`               For log-scale axes on the 1st through 9th multiples of each power of the base
@@ -1164,7 +1164,7 @@ def Formatter(formatter, *args, date=False, index=False, **kwargs):
           Returns a `~matplotlib.ticker.FuncFormatter`.
         * If sequence of strings, the ticks are labeled with these strings.
           Returns a `~matplotlib.ticker.FixedFormatter` by default or
-          an `~ultraplot.ticker.IndexFormatter` if `index` is ``True``.
+          an :class:`~ultraplot.ticker.IndexFormatter` if `index` is ``True``.
         * If a string containing ``{x}`` or ``{x:...}``, ticks will be
           formatted by calling ``string.format(x=number)``. Returns
           a `~matplotlib.ticker.StrMethodFormatter`.
@@ -1205,7 +1205,7 @@ def Formatter(formatter, *args, date=False, index=False, **kwargs):
         ``'fixed'``             `~matplotlib.ticker.FixedFormatter`             List of strings
         ``'formatstr'``         `~matplotlib.ticker.FormatStrFormatter`         From C-style ``string % format`` notation
         ``'func'``              `~matplotlib.ticker.FuncFormatter`              Use an arbitrary function
-        ``'index'``             `~ultraplot.ticker.IndexFormatter`                List of strings corresponding to non-negative integer positions
+        ``'index'``             :class:`~ultraplot.ticker.IndexFormatter`                List of strings corresponding to non-negative integer positions
         ``'log'``               `~matplotlib.ticker.LogFormatterSciNotation`    For log-scale axes with scientific notation
         ``'logit'``             `~matplotlib.ticker.LogitFormatter`             For logistic-scale axes
         ``'percent'``           `~matplotlib.ticker.PercentFormatter`           Trailing percent sign

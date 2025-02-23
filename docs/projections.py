@@ -29,7 +29,7 @@
 # This section documents several useful features for working with `polar`_ plots
 # and :ref:`geographic projections <ug_geo>`. The geographic features are powered by
 # `cartopy`_ (or, optionally, `basemap`_). Note that these features are *optional* --
-# installation of cartopy or basemap are not required to use ultraplot.
+# installation of cartopy or basemap are not required to use UltraPlot.
 #
 # %% [raw] raw_mimetype="text/restructuredtext"
 # .. _ug_polar:
@@ -39,14 +39,14 @@
 #
 # To create `polar axes <polar_>`_, pass ``proj='polar'`` to an axes-creation
 # command like `ultraplot.figure.Figure.add_subplot`. Polar axes are represented with the
-# `~ultraplot.axes.PolarAxes` subclass, which has its own `~ultraplot.axes.PolarAxes.format`
+# :class:`~ultraplot.axes.PolarAxes` subclass, which has its own :func:`~ultraplot.axes.PolarAxes.format`
 # command. `ultraplot.axes.PolarAxes.format` facilitates polar-specific modifications
 # like changing the central radius `r0`, the zero azimuth location `theta0`,
 # and the positive azimuthal direction `thetadir`. It also supports toggling and
 # configuring the "major" and "minor" gridline locations with `grid`, `rlocator`,
 # `thetalocator`, `gridminor`, `rminorlocator`, and `thetaminorlocator` and formatting
 # the gridline labels with `rformatter` and `thetaformatter` (analogous to `xlocator`,
-# `xformatter`, and `xminorlocator` used by `ultraplot.axes.CartesianAxes.format`),
+# `xformatter`, and `xminorlocator` used by :func:`ultraplot.axes.CartesianAxes.format`),
 # and creating "annular" or "sector" plots by changing the radial or azimuthal
 # bounds `rlim` and `thetalim`. Finally, since `ultraplot.axes.PolarAxes.format`
 # calls `ultraplot.axes.Axes.format`, it can be used to add axes titles, a-b-c
@@ -116,18 +116,18 @@ axs[2].format(
 # To create geographic axes, pass ``proj='name'`` to an axes-creation command like
 # `ultraplot.figure.Figure.add_subplot`, where ``name`` is any valid :ref:`PROJ projection
 # name <proj_table>`. Alternatively, you can pass a `cartopy.crs.Projection` or
-# `~mpl_toolkits.basemap.Basemap` instance returned by the `~ultraplot.constructor.Proj`
+# `~mpl_toolkits.basemap.Basemap` instance returned by the :class:`~ultraplot.constructor.Proj`
 # :ref:`constructor function <why_constructor>` to `proj` (see below for details). If
 # you want to create your subplots :ref:`all-at-once <ug_subplot>` with e.g.
-# `~ultraplot.ui.subplots` but need different projections for each subplot, you can pass
+# :func:`~ultraplot.ui.subplots` but need different projections for each subplot, you can pass
 # a list or dictionary to the `proj` keyword (e.g., ``proj=('cartesian', 'pcarree')``
-# or ``proj={2: 'pcarree'}`` -- see `~ultraplot.figure.Figure.subplots` for details).
+# or ``proj={2: 'pcarree'}`` -- see :func:`~ultraplot.figure.Figure.subplots` for details).
 # Geographic axes are represented with the `~ultraplot.axes.GeoAxes` subclass, which
-# has its own `~ultraplot.axes.GeoAxes.format` command. `ultraplot.axes.GeoAxes.format`
+# has its own :func:`~ultraplot.axes.GeoAxes.format` command. `ultraplot.axes.GeoAxes.format`
 # facilitates :ref:`geographic-specific modifications <ug_geoformat>` like meridional
 # and parallel gridlines and land mass outlines. The syntax is very similar to
-# `ultraplot.axes.CartesianAxes.format`. Note that the `proj` keyword and several of
-# the `~ultraplot.axes.GeoAxes.format` keywords are inspired by the basemap API.
+# :func:`ultraplot.axes.CartesianAxes.format`. Note that the `proj` keyword and several of
+# the :func:`~ultraplot.axes.GeoAxes.format` keywords are inspired by the basemap API.
 # In the below example, we create and format a very simple geographic plot.
 
 # %%
@@ -158,13 +158,13 @@ axs.format(
 # * Cartopy is the default backend. When you request projection names with cartopy
 #   as the backend (or pass a `cartopy.crs.Projection` to the `proj` keyword), the
 #   returned axes is a subclass of `cartopy.mpl.geoaxes.GeoAxes`. Under the hood,
-#   invoking `~ultraplot.axes.GeoAxes.format` with cartopy as the backend changes map
+#   invoking :func:`~ultraplot.axes.GeoAxes.format` with cartopy as the backend changes map
 #   bounds using `~cartopy.mpl.geoaxes.GeoAxes.set_extent`, adds major and minor
 #   gridlines using `~cartopy.mpl.geoaxes.GeoAxes.gridlines`, and adds geographic
 #   features using `~cartopy.mpl.geoaxes.GeoAxes.add_feature`. If you prefer, you can
 #   use the standard `cartopy.mpl.geoaxes.GeoAxes` methods just like you would in
 #   cartopy. If you need to use the underlying `~cartopy.crs.Projection` instance, it
-#   is available via the `~ultraplot.axes.GeoAxes.projection` attribute. If you want
+#   is available via the :func:`~ultraplot.axes.GeoAxes.projection` attribute. If you want
 #   to work with the projection classes directly, they are available in the
 #   top-level namespace (e.g., ``proj=uplt.PlateCarre()`` is allowed).
 #
@@ -176,14 +176,14 @@ axs.format(
 #   pcolormesh, quiver, streamplot, and barb to the identically named methods on
 #   the `~mpl_toolkits.basemap.Basemap` instance. This means you can work
 #   with the standard axes plotting methods rather than the basemap methods --
-#   just like cartopy. Under the hood, invoking `~ultraplot.axes.GeoAxes.format`
+#   just like cartopy. Under the hood, invoking :func:`~ultraplot.axes.GeoAxes.format`
 #   with basemap as the backend adds major and minor gridlines using
-#   `~mpl_toolkits.basemap.Basemap.drawmeridians` and
-#   `~mpl_toolkits.basemap.Basemap.drawparallels` and adds geographic features
-#   using methods like `~mpl_toolkits.basemap.Basemap.fillcontinents`
-#   and `~mpl_toolkits.basemap.Basemap.drawcoastlines`. If you need to
+#   :func:`~mpl_toolkits.basemap.Basemap.drawmeridians` and
+#   :func:`~mpl_toolkits.basemap.Basemap.drawparallels` and adds geographic features
+#   using methods like :func:`~mpl_toolkits.basemap.Basemap.fillcontinents`
+#   and :func:`~mpl_toolkits.basemap.Basemap.drawcoastlines`. If you need to
 #   use the underlying `~mpl_toolkits.basemap.Basemap` instance, it is
-#   available as the `~ultraplot.axes.GeoAxes.projection` attribute.
+#   available as the :func:`~ultraplot.axes.GeoAxes.projection` attribute.
 #
 # Together, these features let you work with geophysical data without invoking
 # verbose cartopy classes like `~cartopy.crs.LambertAzimuthalEqualArea` or
@@ -194,20 +194,20 @@ axs.format(
 #
 # .. important::
 #
-#    * By default, ultraplot bounds polar cartopy projections like
+#    * By default, UltraPlot bounds polar cartopy projections like
 #      `~cartopy.crs.NorthPolarStereo` at the equator and gives non-polar cartopy
 #      projections global extent by calling `~cartopy.mpl.geoaxes.GeoAxes.set_global`.
 #      This is a deviation from cartopy, which determines map boundaries automatically
 #      based on the coordinates of the plotted content. To revert to cartopy's
 #      default behavior, set :rcraw:`geo.extent` to ``'auto`` or pass ``extent='auto'``
-#      to `~ultraplot.axes.GeoAxes.format`.
-#    * By default, ultraplot gives circular boundaries to polar cartopy and basemap
+#      to :func:`~ultraplot.axes.GeoAxes.format`.
+#    * By default, UltraPlot gives circular boundaries to polar cartopy and basemap
 #      projections like `~cartopy.crs.NorthPolarStereo` (see `this example
 #      <https://scitools.org.uk/cartopy/docs/latest/gallery/lines_and_polygons/always_circular_stereo.html>`__
 #      from the cartopy website). To disable this feature, set :rcraw:`geo.round` to
-#      ``False`` or pass ``round=False` to `~ultraplot.axes.GeoAxes.format`. Please note
+#      ``False`` or pass ``round=False` to :func:`~ultraplot.axes.GeoAxes.format`. Please note
 #      that older versions of cartopy cannot add gridlines to maps bounded by circles.
-#    * To make things more consistent, the `~ultraplot.constructor.Proj` constructor
+#    * To make things more consistent, the :class:`~ultraplot.constructor.Proj` constructor
 #      function lets you supply native `PROJ <https://proj.org>`__ keyword names
 #      for the cartopy `~cartopy.crs.Projection` classes (e.g., `lon0` instead
 #      of `central_longitude`) and instantiates `~mpl_toolkits.basemap.Basemap`
@@ -221,7 +221,7 @@ axs.format(
 #    and will not work with matplotlib versions more recent than 3.2.2. We originally
 #    included basemap support because its gridline labeling was more powerful
 #    than cartopy gridline labeling. However, as cartopy gridline labeling has
-#    significantly improved since version 0.18, ultraplot may deprecate basemap support
+#    significantly improved since version 0.18, UltraPlot may deprecate basemap support
 #    in a future release and fully remove basemap support by version 1.0.0.
 
 # %%
@@ -257,20 +257,20 @@ uplt.rc.reset()
 # Plotting in projections
 # -----------------------
 #
-# In ultraplot, plotting with `~ultraplot.axes.GeoAxes` is just like plotting
-# with `~ultraplot.axes.CartesianAxes`. ultraplot makes longitude-latitude
+# In UltraPlot, plotting with `~ultraplot.axes.GeoAxes` is just like plotting
+# with `~ultraplot.axes.CartesianAxes`. UltraPlot makes longitude-latitude
 # (i.e., Plate Carrée) coordinates the *default* coordinate system for all plotting
 # commands by internally passing ``transform=ccrs.PlateCarree()`` to cartopy commands
 # and ``latlon=True`` to basemap commands. And again, when `basemap`_ is the backend,
 # plotting is done "cartopy-style" by calling methods from the `ultraplot.axes.GeoAxes`
 # instance rather than the `~mpl_toolkits.basemap.Basemap` instance.
 #
-# To ensure that a 2D `~ultraplot.axes.PlotAxes` command like
-# `~ultraplot.axes.PlotAxes.contour` or `~ultraplot.axes.PlotAxes.pcolor`
+# To ensure that a 2D :class:`~ultraplot.axes.PlotAxes` command like
+# :func:`~ultraplot.axes.PlotAxes.contour` or :func:`~ultraplot.axes.PlotAxes.pcolor`
 # fills the entire globe, simply pass ``globe=True`` to the command.
 # This interpolates the data to the North and South poles and across the longitude
 # seam before plotting. This is a convenient and succinct alternative to cartopy's
-# `~cartopy.util.add_cyclic_point` and basemap's `~mpl_toolkits.basemap.addcyclic`.
+# `~cartopy.util.add_cyclic_point` and basemap's :func:`~mpl_toolkits.basemap.addcyclic`.
 #
 # To draw content above or underneath a given geographic feature, simply change
 # the `zorder <https://matplotlib.org/3.1.1/gallery/misc/zorder_demo.html>`__
@@ -329,7 +329,7 @@ for globe in (False, True):
 # latitude gridline locations using the `grid`, `lonlocator`, `latlocator`, `gridminor`,
 # `lonminorlocator`, and `latminorlocator` keys, and configure gridline label formatting
 # with `lonformatter` and `latformatter` (analogous to `xlocator`, `xminorlocator`,
-# and `xformatter` used by `ultraplot.axes.CartesianAxes.format`). By default, inline
+# and `xformatter` used by :func:`ultraplot.axes.CartesianAxes.format`). By default, inline
 # cartopy labels and cartopy label rotation are turned off, but inline labels can
 # be turned on using ``loninline=True``, ``latinline=True``, or ``inlinelabels=True``
 # or by setting :rcraw:`grid.inlinelabels` to ``True``, and label rotation can be
@@ -341,10 +341,10 @@ for globe in (False, True):
 # and latitudes with `lonlim` and `latlim` (analogous to `xlim` and `ylim`), set the
 # latitude bound for circular polar projections using `boundinglat`, and toggle and
 # configure geographic features like land masses, coastlines, and administrative
-# borders using :ref:`settings <rc_ultraplot>` like `land`, `landcolor`, `coast`,
+# borders using :ref:`settings <rc_UltraPlot>` like `land`, `landcolor`, `coast`,
 # `coastcolor`, and `coastlinewidth`. Finally, since `ultraplot.axes.GeoAxes.format`
 # calls `ultraplot.axes.Axes.format`, it can be used to add axes titles, a-b-c labels,
-# and figure titles, just like `ultraplot.axes.CartesianAxes.format`.
+# and figure titles, just like :func:`ultraplot.axes.CartesianAxes.format`.
 #
 # For details, see the `ultraplot.axes.GeoAxes.format` documentation.
 
@@ -423,21 +423,21 @@ fig.format(
 #
 # To zoom into cartopy projections, use
 # `~cartopy.mpl.geoaxes.GeoAxes.set_extent` or pass `lonlim`,
-# `latlim`, or `boundinglat` to `~ultraplot.axes.GeoAxes.format`. The `boundinglat`
+# `latlim`, or `boundinglat` to :func:`~ultraplot.axes.GeoAxes.format`. The `boundinglat`
 # keyword controls the circular latitude boundary for North Polar and
 # South Polar Stereographic, Azimuthal Equidistant, Lambert Azimuthal
-# Equal-Area, and Gnomonic projections. By default, ultraplot tries to use the
+# Equal-Area, and Gnomonic projections. By default, UltraPlot tries to use the
 # degree-minute-second cartopy locators and formatters made available in cartopy
 # 0.18. You can switch from minute-second subintervals to traditional decimal
-# subintervals by passing ``dms=False`` to `~ultraplot.axes.GeoAxes.format`
+# subintervals by passing ``dms=False`` to :func:`~ultraplot.axes.GeoAxes.format`
 # or by setting :rcraw:`grid.dmslabels` to ``False``.
 #
 # To zoom into basemap projections, pass any of the `boundinglat`,
 # `llcrnrlon`, `llcrnrlat`, `urcrnrlon`, `urcrnrlat`, `llcrnrx`, `llcrnry`,
 # `urcrnrx`, `urcrnry`, `width`, or `height` keyword arguments to
-# the `~ultraplot.constructor.Proj` constructor function either directly or via
-# the `proj_kw` `~ultraplot.ui.subplots` keyword argument. You can also pass
-# `lonlim` and `latlim` to `~ultraplot.constructor.Proj` and these arguments
+# the :class:`~ultraplot.constructor.Proj` constructor function either directly or via
+# the `proj_kw` :func:`~ultraplot.ui.subplots` keyword argument. You can also pass
+# `lonlim` and `latlim` to :class:`~ultraplot.constructor.Proj` and these arguments
 # will be used for `llcrnrlon`, `llcrnrlat`, etc. You cannot zoom into basemap
 # projections with `format` after they have already been created.
 
@@ -514,7 +514,7 @@ uplt.rc.reset()
 # plotted below. The full table of projection names with links to the relevant
 # `PROJ <https://proj.org>`__ documentation is found :ref:`here <proj_table>`.
 #
-# ultraplot uses the cartopy API to add the Aitoff, Hammer, Winkel Tripel, and
+# UltraPlot uses the cartopy API to add the Aitoff, Hammer, Winkel Tripel, and
 # Kavrayskiy VII projections (i.e., ``'aitoff'``, ``'hammer'``, ``'wintri'``,
 # and ``'kav7'``), as well as North and South polar versions of the Azimuthal
 # Equidistant, Lambert Azimuthal Equal-Area, and Gnomonic projections (i.e.,

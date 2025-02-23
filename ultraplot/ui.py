@@ -189,7 +189,7 @@ def subplots(*args, **kwargs):
     """
     Return a figure and an arbitrary grid of subplots.
     This command is analogous to `matplotlib.pyplot.subplots`,
-    except the subplots are stored in a `~ultraplot.gridspec.SubplotGrid`.
+    except the subplots are stored in a :class:`~ultraplot.gridspec.SubplotGrid`.
 
     Parameters
     ----------
@@ -207,7 +207,7 @@ def subplots(*args, **kwargs):
     fig : `ultraplot.figure.Figure`
         The figure instance.
     axs : `ultraplot.gridspec.SubplotGrid`
-        The axes instances stored in a `~ultraplot.gridspec.SubplotGrid`.
+        The axes instances stored in a :class:`~ultraplot.gridspec.SubplotGrid`.
 
     See also
     --------

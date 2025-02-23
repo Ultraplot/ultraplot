@@ -26,37 +26,37 @@
 #
 # It is often useful to have narrow "panels" along the edge of a larger
 # subplot for plotting secondary 1-dimensional datasets or summary statistics.
-# In ultraplot, you can generate panels using the `~ultraplot.axes.Axes.panel_axes`
-# command (or its shorthand, `~ultraplot.axes.Axes.panel`). The panel location
+# In UltraPlot, you can generate panels using the :func:`~ultraplot.axes.Axes.panel_axes`
+# command (or its shorthand, :func:`~ultraplot.axes.Axes.panel`). The panel location
 # is specified with a string, e.g. ``ax.panel('r')`` or ``ax.panel('right')``
 # for a right-hand side panel, and the resulting panels are instances of
 # `~ultraplot.axes.CartesianAxes`. By default, the panel shares its axis limits,
 # axis labels, tick positions, and tick labels with the main subplot, but
 # this can be disabled by passing ``share=False``. To generate "stacked" panels,
-# call `~ultraplot.axes.Axes.panel_axes` more than once. To generate several
-# panels at once, call `~ultraplot.gridspec.SubplotGrid.panel_axes` on
-# the `~ultraplot.gridspec.SubplotGrid` returned by `~ultraplot.figure.Figure.subplots`.
+# call :func:`~ultraplot.axes.Axes.panel_axes` more than once. To generate several
+# panels at once, call :func:`~ultraplot.gridspec.SubplotGrid.panel_axes` on
+# the :class:`~ultraplot.gridspec.SubplotGrid` returned by :func:`~ultraplot.figure.Figure.subplots`.
 #
 # In the first example below, the distances are automatically adjusted by the
 # :ref:`tight layout algorithm <ug_tight>` according to the `pad` keyword
 # (the default is :rcraw:`subplots.panelpad` -- this can be changed for an entire
-# figure by passing `panelpad` to `~ultraplot.figure.Figure`). In the second example,
+# figure by passing `panelpad` to :class:`~ultraplot.figure.Figure`). In the second example,
 # the tight layout algorithm is overriden by manually setting the `space` to ``0``.
 # Panel widths are specified in physical units, with the default controlled
 # by :rcraw:`subplots.panelwidth`. This helps preserve the look of the
 # figure if the figure size changes. Note that by default, panels are excluded
 # when centering :ref:`spanning axis labels <ug_share>` and super titles --
-# to include the panels, pass ``includepanels=True`` to `~ultraplot.figure.Figure`.
+# to include the panels, pass ``includepanels=True`` to :class:`~ultraplot.figure.Figure`.
 #
 # .. important::
 #
-#    ultraplot adds panel axes by allocating new rows and columns in the
-#    `~ultraplot.gridspec.GridSpec` rather than "stealing" space from the parent
-#    subplot (note that subsequently indexing the `~ultraplot.gridspec.GridSpec` will
+#    UltraPlot adds panel axes by allocating new rows and columns in the
+#    :class:`~ultraplot.gridspec.GridSpec` rather than "stealing" space from the parent
+#    subplot (note that subsequently indexing the :class:`~ultraplot.gridspec.GridSpec` will
 #    ignore the slots allocated for panels). This approach means that panels
 #    :ref:`do not affect subplot aspect ratios <ug_autosize>` and
 #    :ref:`do not affect subplot spacing <ug_tight>`, which lets
-#    ultraplot avoid relying on complicated `"constrained layout" algorithms
+#    UltraPlot avoid relying on complicated `"constrained layout" algorithms
 #    <https://matplotlib.org/stable/tutorials/intermediate/constrainedlayout_guide.html>`__
 #    and tends to improve the appearance of figures with even the
 #    most complex arrangements of subplots and panels.
@@ -153,14 +153,14 @@ for cbarloc, ploc in ("rb", "br"):
 #
 # `Inset axes
 # <https://matplotlib.org/stable/gallery/subplots_axes_and_figures/zoom_inset_axes.html>`__
-# can be generated with the `~ultraplot.axes.Axes.inset_axes` command (or its
-# shorthand, `~ultraplot.axes.Axes.inset`). To generate several insets at once, call
-# `~ultraplot.gridspec.SubplotGrid.inset_axes` on the `~ultraplot.gridspec.SubplotGrid`
-# returned by `~ultraplot.figure.Figure.subplots`. By default, inset axes have the
+# can be generated with the :func:`~ultraplot.axes.Axes.inset_axes` command (or its
+# shorthand, :func:`~ultraplot.axes.Axes.inset`). To generate several insets at once, call
+# :func:`~ultraplot.gridspec.SubplotGrid.inset_axes` on the :class:`~ultraplot.gridspec.SubplotGrid`
+# returned by :func:`~ultraplot.figure.Figure.subplots`. By default, inset axes have the
 # same projection as the parent axes, but you can also request a :ref:`different
 # projection <ug_proj>` (e.g., ``ax.inset_axes(bounds, proj='polar')``). When
 # the axes are both `~ultraplot.axes.CartesianAxes`, you can pass ``zoom=True``
-# to `~ultraplot.axes.Axes.inset_axes` to quickly add a "zoom indication" box and
+# to :func:`~ultraplot.axes.Axes.inset_axes` to quickly add a "zoom indication" box and
 # lines (this uses `~matplotlib.axes.Axes.indicate_inset_zoom` internally). The box
 # and line positions automatically follow the axis limits of the inset axes and parent
 # axes. To modify the zoom line properties, you can pass a dictionary to `zoom_kw`.

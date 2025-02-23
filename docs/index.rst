@@ -1,5 +1,5 @@
 ..
-   ultraplot documentation master file, created by
+   UltraPlot documentation master file, created by
    sphinx-quickstart on Wed Feb 20 01:31:20 2019.
    You can adapt this file completely to your liking, but
    it should at least contain the root `toctree` directive.
@@ -10,7 +10,7 @@ UltraPlot
 
 A succinct `matplotlib <https://matplotlib.org/>`__ wrapper
 for making beautiful, publication-quality graphics. This project
-is `published on GitHub <https://github.com/ultraplot/ultraplot>`__ and can
+is `published on GitHub <https://github.com/Ultraplot/ultraplot>`__ and can
 be cited using its `Zenodo DOI <https://doi.org/10.5281/zenodo.3873878>`__.
 
 .. toctree::

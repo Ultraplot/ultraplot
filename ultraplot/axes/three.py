@@ -16,7 +16,7 @@ class ThreeAxes(shared._SharedAxes, base.Axes, Axes3D):
 
     Important
     ---------
-    Note that this subclass does *not* implement the `~ultraplot.axes.PlotAxes`
+    Note that this subclass does *not* implement the :class:`~ultraplot.axes.PlotAxes`
     plotting overrides. This axes subclass can be used by passing ``proj='3d'`` or
     ``proj='three'`` to axes-creation commands like `~ultraplot.figure.Figure.add_axes`,
     `~ultraplot.figure.Figure.add_subplot`, and `~ultraplot.figure.Figure.subplots`.

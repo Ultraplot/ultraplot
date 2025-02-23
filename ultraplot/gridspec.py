@@ -55,7 +55,7 @@ wspace, hspace, space : unit-spec or sequence, default: None
     fixes the space between columns 1 and 2 but lets the tight layout algorithm
     determine the space between columns 2 and 3.
 wratios, hratios : float or sequence, optional
-    Passed to `~ultraplot.gridspec.GridSpec`, denotes the width and height
+    Passed to :class:`~ultraplot.gridspec.GridSpec`, denotes the width and height
     ratios for the subplot grid. Length of `wratios` must match the number
     of columns, and length of `hratios` must match the number of rows.
 width_ratios, height_ratios
@@ -1646,7 +1646,7 @@ class SubplotGrid(MutableSequence, list):
     @property
     def gridspec(self):
         """
-        The `~ultraplot.gridspec.GridSpec` uniquely associated with this `SubplotGrid`.
+        The :class:`~ultraplot.gridspec.GridSpec` uniquely associated with this `SubplotGrid`.
         This is used to resolve 2D indexing. See `~SubplotGrid.__getitem__` for details.
 
         See also
@@ -1665,7 +1665,7 @@ class SubplotGrid(MutableSequence, list):
     @property
     def shape(self):
         """
-        The shape of the `~ultraplot.gridspec.GridSpec` associated with the grid.
+        The shape of the :class:`~ultraplot.gridspec.GridSpec` associated with the grid.
         See `~SubplotGrid.__getitem__` for details.
 
         See also
