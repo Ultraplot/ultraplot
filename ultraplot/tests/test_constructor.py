@@ -77,7 +77,9 @@ def test_cycler_edge_cases():
     assert props1["color"] != props2["color"]  # color should cycle
 
     cycle = uplt.Cycle(color=[])
+    assert cycle.get_next() == dict(color="black")  # default fallback
     cycle = uplt.Cycle(colors=[])
+    assert cycle.get_next() == dict(color="black")  # default fallback
 
 
 # see https://github.com/matplotlib/matplotlib/pull/29469
