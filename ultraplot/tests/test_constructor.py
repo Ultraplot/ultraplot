@@ -113,3 +113,12 @@ def test_pass_on_cycle():
     for color in colors:
         assert color == active_cycle.get_next()["color"]
         assert color == cycle.get_next()["color"]
+
+    colors = ["red", "green", "black"]
+    cycle = uplt.Cycle(color=colors)
+    fig, ax = uplt.subplots()
+    ax.set_prop_cycle(cycle)
+    active_cycle = ax.axes._active_cycle
+    for color in colors:
+        assert color == active_cycle.get_next()["color"]
+        assert color == cycle.get_next()["color"]
