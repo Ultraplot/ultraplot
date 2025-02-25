@@ -881,10 +881,10 @@ markeredgecolors, markerfacecolors
 
     def _handle_empty_args(self, props, kwargs):
         """Handle case when no positional arguments are provided."""
-        props.setdefault("color", "black")
+        props.setdefault("color", ["black"])
         if kwargs:
             warnings._warn_ultraplot(f"Ignoring Cycle() keyword arg(s) {kwargs}.")
-        self._build_cycler(())
+        self._build_cycler((props,))
 
     def _handle_cycler_args(self, args, props, kwargs):
         """Handle case when arguments are cycler objects."""
@@ -928,13 +928,17 @@ markeredgecolors, markerfacecolors
                 props.setdefault(key, []).extend(value)
         # Build cycler with matching property lengths
         # Ensure at least a default color property exists
-        if not props:
-            props = {"color": ["black"]}
-
         # Build cycler with matching property lengths
         lengths = [len(value) for value in props.values()]
         maxlen = np.lcm.reduce(lengths)
-        props = {key: value * (maxlen // len(value)) for key, value in props.items()}
+        props = {
+            key: value * (maxlen // len(value))
+            for key, value in props.items()
+            if len(value)
+        }
+        # Set default color property if not present
+        if "color" not in props or not props:
+            props = {"color": ["black"]}
         mcycler = cycler.cycler(**props)
         super().__init__(mcycler)
 

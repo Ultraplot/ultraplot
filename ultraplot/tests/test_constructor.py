@@ -65,7 +65,7 @@ def test_not_allowed_keyword():
 def test_cycler_edge_cases():
     """Test edge cases and error conditions"""
     # Test with empty lists
-    cycle = uplt.Cycle(colors=[])
+    cycle = uplt.Cycle()
     assert cycle.get_next() == dict(color="black")  # default fallback
 
     # Test with mismatched lengths
@@ -75,6 +75,9 @@ def test_cycler_edge_cases():
     props2 = cycle.get_next()
     assert props1["marker"] == props2["marker"]  # marker should stay same
     assert props1["color"] != props2["color"]  # color should cycle
+
+    cycle = uplt.Cycle(color=[])
+    cycle = uplt.Cycle(colors=[])
 
 
 # see https://github.com/matplotlib/matplotlib/pull/29469
