@@ -67,6 +67,10 @@ def test_cycler_edge_cases():
     # Test with empty lists
     cycle = uplt.Cycle()
     assert cycle.get_next() == dict(color="black")  # default fallback
+    cycle = uplt.Cycle(color=[])
+    assert cycle.get_next() == dict(color="black")  # default fallback
+    cycle = uplt.Cycle(colors=[])
+    assert cycle.get_next() == dict(color="black")  # default fallback
 
     # Test with mismatched lengths
     cycle = uplt.Cycle(["red", "blue"], marker=["o"])
@@ -75,11 +79,6 @@ def test_cycler_edge_cases():
     props2 = cycle.get_next()
     assert props1["marker"] == props2["marker"]  # marker should stay same
     assert props1["color"] != props2["color"]  # color should cycle
-
-    cycle = uplt.Cycle(color=[])
-    assert cycle.get_next() == dict(color="black")  # default fallback
-    cycle = uplt.Cycle(colors=[])
-    assert cycle.get_next() == dict(color="black")  # default fallback
 
 
 # see https://github.com/matplotlib/matplotlib/pull/29469
