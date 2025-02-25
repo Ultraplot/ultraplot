@@ -78,6 +78,7 @@ def test_cycler_edge_cases():
     props1 = cycle.get_next()
     props2 = cycle.get_next()
     assert props1["marker"] == props2["marker"]  # marker should stay same
+    assert props1["color"] == "red"
     assert props1["color"] != props2["color"]  # color should cycle
 
 
