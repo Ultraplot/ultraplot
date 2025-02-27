@@ -168,7 +168,7 @@ jobs:
           # Replace placeholders in the template
           sed -i "s|PR_NUMBER|${{ github.event.pull_request.number }}|g" combined-results/index.html
           sed -i "s|PR_TITLE|${{ github.event.pull_request.title }}|g" combined-results/index.html
-          sed -i "s|REPO_NAME|${{ github.repository }}|g" combined-results/index.html
+          sed -i "s|REPO_NAME|${{ github. repository }}|g" combined-results/index.html
           sed -i "s|COMMIT_SHA|${{ github.sha }}|g" combined-results/index.html
           sed -i "s|GENERATION_DATE|$(date)|g" combined-results/index.html
 
@@ -184,16 +184,24 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Upload combined results artifact
+        uses: actions/upload-artifact@v3
         with:
+          name: pr-${{ github.event.pull_request.number }}-pages
           path: combined-results
+          retention-days: 1
 
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v3
+      - name: Comment on PR
+        uses: actions/github-script@v6
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `📊 Test artifacts have been uploaded! Deployment will happen shortly.`
+            })
 
   build-success:
     needs: build
