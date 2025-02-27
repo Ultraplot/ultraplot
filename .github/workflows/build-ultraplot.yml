@@ -90,3 +90,51 @@ jobs:
         with:
           name: failed-comparisons-${{ inputs.python-version }}-${{ inputs.matplotlib-version }}
           path: results/*
+
+      - name: Prepare GitHub Pages directory
+        if: always()
+        run: |
+          mkdir -p gh-pages
+          # Copy all results to the gh-pages directory
+          if [ -d "results" ] && [ -f "results/fig_comparison.html" ]; then
+            # Create subdirectory based on Python and matplotlib version
+            version_dir="py${{ inputs.python-version }}-mpl${{ inputs.matplotlib-version }}"
+            mkdir -p gh-pages/$version_dir
+            cp -r results/* gh-pages/$version_dir/
+
+            # Create the version card HTML
+            version_card="<div class=\"version-card\">
+              <h3>Python ${{ inputs.python-version }}</h3>
+              <p>matplotlib ${{ inputs.matplotlib-version }}</p>
+              <a href=\"./$version_dir/fig_comparison.html\" class=\"view-button\">View Comparison Results</a>
+            </div>"
+
+            # Read the template and perform substitutions
+            cat .github/workflows/templates/results.html > gh-pages/index.html
+
+            # Replace placeholders with actual values
+            sed -i "s|PR_NUMBER|${{ github.event.pull_request.number }}|g" gh-pages/index.html
+            sed -i "s|PR_TITLE|${{ github.event.pull_request.title }}|g" gh-pages/index.html
+            sed -i "s|REPO_NAME|${{ github.repository }}|g" gh-pages/index.html
+            sed -i "s|COMMIT_SHA|${{ github.sha }}|g" gh-pages/index.html
+            sed -i "s|VERSION_CARDS|$version_card|g" gh-pages/index.html
+            sed -i "s|GENERATION_DATE|$(date)|g" gh-pages/index.html
+          else
+            # Use the minimal template if no results are available
+            cat .github/workflows/templates/no-results.html > gh-pages/index.html
+          fi
+
+  deploy-pages:
+    needs: compare-baseline
+    if: always()
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
