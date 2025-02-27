@@ -18,6 +18,17 @@ import datetime
 import subprocess
 from pathlib import Path
 
+# Surpress warnings from cartopy when downloading data inside docs env
+import warnings
+
+try:
+    from cartopy.io import DownloadWarning
+
+    warnings.filterwarnings("ignore", category=DownloadWarning)
+except ImportError:
+    # In case cartopy isn't installed yet when conf.py is executed
+    pass
+
 # Update path for sphinx-automodapi and sphinxext extension
 sys.path.append(os.path.abspath("."))
 sys.path.insert(0, os.path.abspath(".."))
