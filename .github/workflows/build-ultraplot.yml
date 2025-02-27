@@ -16,6 +16,9 @@ env:
 jobs:
   build-ultraplot:
     name: Test Python ${{ inputs.python-version }} with ${{ inputs.matplotlib-version }}
+    permissions:
+      pages: write
+      id-token: write
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
