@@ -90,3 +90,26 @@ jobs:
         with:
           name: failed-comparisons-${{ inputs.python-version }}-${{ inputs.matplotlib-version }}
           path: results/*
+
+      - name: Prepare GitHub Pages directory
+        if: always()
+        run: |
+          mkdir -p gh-pages
+          # Copy all results to the gh-pages directory
+          if [ -d "results" ] && [ -f "results/fig_comparison.html" ]; then
+            # Create subdirectory based on Python and matplotlib version
+            version_dir="py${{ inputs.python-version }}-mpl${{ inputs.matplotlib-version }}"
+            mkdir -p gh-pages/$version_dir
+            cp -r results/* gh-pages/$version_dir/
+
+            # Create version-specific info file that the collector job will use
+            echo "Python ${{ inputs.python-version }} with matplotlib ${{ inputs.matplotlib-version }}" > gh-pages/$version_dir/version_info.txt
+          fi
+
+      - name: Upload comparison results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: comparison-py${{ inputs.python-version }}-mpl${{ inputs.matplotlib-version }}
+          path: gh-pages/
+          retention-days: 1 # Only need these short-term
