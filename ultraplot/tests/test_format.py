@@ -84,22 +84,25 @@ def test_multi_formatting():
     """
     fig, axs = uplt.subplots(ncols=2, proj=("cart", "cyl"))
     axs[0].pcolormesh(state.rand(5, 5))
-    fig.format(
-        land=1,
-        labels=1,
-        lonlim=(0, 90),
-        latlim=(0, 90),
-        xlim=(0, 10),
-        ylim=(0, 10),
-    )
-    axs[:1].format(
-        land=1,
-        labels=1,
-        lonlim=(0, 90),
-        latlim=(0, 90),
-        xlim=(0, 10),
-        ylim=(0, 10),
-    )
+
+    # Warning is raied based on projection. Cart does not have lonlim, latllim or labels
+    with pytest.warns(uplt.warnings.UltraPlotWarning):
+        axs[:1].format(
+            land=1,
+            labels=1,
+            lonlim=(0, 90),
+            latlim=(0, 90),
+            xlim=(0, 10),
+            ylim=(0, 10),
+        )
+        fig.format(
+            land=1,
+            labels=1,
+            lonlim=(0, 90),
+            latlim=(0, 90),
+            xlim=(0, 10),
+            ylim=(0, 10),
+        )
     return fig
 
 
