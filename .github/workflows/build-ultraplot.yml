@@ -13,11 +13,6 @@ env:
   LC_ALL: en_US.UTF-8
   LANG: en_US.UTF-8
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
 jobs:
   build-ultraplot:
     name: Test Python ${{ inputs.python-version }} with ${{ inputs.matplotlib-version }}
@@ -107,36 +102,14 @@ jobs:
             mkdir -p gh-pages/$version_dir
             cp -r results/* gh-pages/$version_dir/
 
-            # Create the version card HTML
-            version_card="<div class=\"version-card\">
-              <h3>Python ${{ inputs.python-version }}</h3>
-              <p>matplotlib ${{ inputs.matplotlib-version }}</p>
-              <a href=\"./$version_dir/fig_comparison.html\" class=\"view-button\">View Comparison Results</a>
-            </div>"
-
-            # Read the template and perform substitutions
-            cat .github/workflows/templates/results.html > gh-pages/index.html
-
-            # Replace placeholders with actual values
-            sed -i "s|PR_NUMBER|${{ github.event.pull_request.number }}|g" gh-pages/index.html
-            sed -i "s|PR_TITLE|${{ github.event.pull_request.title }}|g" gh-pages/index.html
-            sed -i "s|REPO_NAME|${{ github.repository }}|g" gh-pages/index.html
-            sed -i "s|COMMIT_SHA|${{ github.sha }}|g" gh-pages/index.html
-            sed -i "s|VERSION_CARDS|$version_card|g" gh-pages/index.html
-            sed -i "s|GENERATION_DATE|$(date)|g" gh-pages/index.html
-          else
-            # Use the minimal template if no results are available
-            cat .github/workflows/templates/no-results.html > gh-pages/index.html
+            # Create version-specific info file that the collector job will use
+            echo "Python ${{ inputs.python-version }} with matplotlib ${{ inputs.matplotlib-version }}" > gh-pages/$version_dir/version_info.txt
           fi
 
-  deploy-pages:
-    needs: compare-baseline
-    if: always()
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v2
+      - name: Upload comparison results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: comparison-py${{ inputs.python-version }}-mpl${{ inputs.matplotlib-version }}
+          path: gh-pages/
+          retention-days: 1 # Only need these short-term
