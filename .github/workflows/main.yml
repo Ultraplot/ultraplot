@@ -122,14 +122,8 @@ jobs:
       python-version: ${{ matrix.python-version }}
       matplotlib-version: ${{ matrix.matplotlib-version }}
 
-  build-success:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "All tests passed successfully!"
-
   collect-and-deploy:
-    needs: test-matrix
+    needs: build
     runs-on: ubuntu-latest
     environment:
       name: github-pages
@@ -196,3 +190,9 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v2
+
+  build-success:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "All tests passed successfully!"
