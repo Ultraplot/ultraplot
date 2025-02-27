@@ -488,6 +488,8 @@ fig.format(suptitle="Zooming into specific regions", land=True)
 import ultraplot as uplt
 
 # Zooming in with cartopy degree-minute-second labels
+# Set TeX Gyre Heros as the primary font but fall back to DejaVu Sans
+uplt.rc["font.family"] = ["TeX Gyre Heros", "DejaVu Sans"]
 uplt.rc.reso = "hi"
 fig = uplt.figure(refwidth=2.5)
 ax = fig.subplot(121, proj="cyl")
