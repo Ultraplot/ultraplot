@@ -13,12 +13,14 @@ env:
   LC_ALL: en_US.UTF-8
   LANG: en_US.UTF-8
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   build-ultraplot:
     name: Test Python ${{ inputs.python-version }} with ${{ inputs.matplotlib-version }}
-    permissions:
-      pages: write
-      id-token: write
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
