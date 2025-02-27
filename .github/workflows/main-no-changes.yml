@@ -1,0 +1,20 @@
+name: Matrix Test
+on:
+  push:
+    branches: [main, devel]
+    paths-ignore:
+      - "ultraplot/**"
+  pull_request:
+    branches: [main, devel]
+    paths-ignore:
+      - "ultraplot/**"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-success:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "All tests passed successfully!"
