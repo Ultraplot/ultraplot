@@ -170,8 +170,10 @@ jobs:
           sed -i "s|PR_TITLE|${{ github.event.pull_request.title }}|g" combined-results/index.html
           sed -i "s|REPO_NAME|${{ github.repository }}|g" combined-results/index.html
           sed -i "s|COMMIT_SHA|${{ github.sha }}|g" combined-results/index.html
-          sed -i "s|VERSION_CARDS|$VERSION_CARDS|g" combined-results/index.html
           sed -i "s|GENERATION_DATE|$(date)|g" combined-results/index.html
+
+          awk -v cards="$VERSION_CARDS" '{gsub(/VERSION_CARDS/, cards); print}' combined-results/index.html > temp.html
+          mv temp.html combined-results/index.html
 
           # Use no-results template if no version directories were found
           if [ -z "$VERSION_CARDS" ]; then
