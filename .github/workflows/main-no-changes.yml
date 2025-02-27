@@ -17,4 +17,4 @@ jobs:
   build-success:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "All tests passed successfully!"
+      - run: echo "No tests were run since no ultraplot Python code changes were detected! Marking the test suite as passed!"
