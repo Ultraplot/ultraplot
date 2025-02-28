@@ -1,0 +1,20 @@
+name: Matrix Test No Changes
+on:
+  push:
+    branches: [main, devel]
+    paths-ignore:
+      - "ultraplot/**"
+  pull_request:
+    branches: [main, devel]
+    paths-ignore:
+      - "ultraplot/**"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-success:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "No tests were run since no ultraplot Python code changes were detected! Marking the test suite as passed!"
