@@ -13,6 +13,11 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   get-versions:
     runs-on: ubuntu-latest
@@ -120,6 +125,78 @@ jobs:
     with:
       python-version: ${{ matrix.python-version }}
       matplotlib-version: ${{ matrix.matplotlib-version }}
+
+  collect-and-deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: .github/workflows/templates
+          sparse-checkout-cone-mode: false
+
+      - name: Create output directory
+        run: mkdir -p combined-results
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - name: Combine results
+        run: |
+          # Move all artifact contents to the combined directory
+          cp -r artifacts/* combined-results/
+
+          # Create the index.html with proper linking
+          echo "<!DOCTYPE html>" > combined-results/index.html
+          cat .github/workflows/templates/results.html > combined-results/index.html
+
+          # Create version cards for all found versions
+          VERSION_CARDS=""
+          for version_dir in combined-results/py*-mpl*/; do
+            if [ -f "$version_dir/version_info.txt" ]; then
+              version_name=$(cat "$version_dir/version_info.txt")
+              dir_name=$(basename "$version_dir")
+              VERSION_CARDS="${VERSION_CARDS}<div class=\"version-card\">
+                <h3>${version_name}</h3>
+                <a href=\"./${dir_name}/fig_comparison.html\" class=\"view-button\">View Comparison Results</a>
+              </div>"
+            fi
+          done
+
+          # Replace placeholders in the template
+          sed -i "s|PR_NUMBER|${{ github.event.pull_request.number }}|g" combined-results/index.html
+          sed -i "s|PR_TITLE|${{ github.event.pull_request.title }}|g" combined-results/index.html
+          sed -i "s|REPO_NAME|${{ github. repository }}|g" combined-results/index.html
+          sed -i "s|COMMIT_SHA|${{ github.sha }}|g" combined-results/index.html
+          sed -i "s|GENERATION_DATE|$(date)|g" combined-results/index.html
+
+          awk -v cards="$VERSION_CARDS" '{gsub(/VERSION_CARDS/, cards); print}' combined-results/index.html > temp.html
+          mv temp.html combined-results/index.html
+
+          # Use no-results template if no version directories were found
+          if [ -z "$VERSION_CARDS" ]; then
+            cat .github/workflows/templates/no-results.html > combined-results/index.html
+          fi
+
+      # Setup and deploy to GitHub Pages
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload combined results artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr-${{ github.event.pull_request.number }}-pages
+          path: combined-results
+          retention-days: 1
+
+      - name: Log completion
+        run: echo "✅ Artifacts uploaded successfully, awaiting deployment"
 
   build-success:
     needs: build
