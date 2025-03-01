@@ -1,8 +1,11 @@
-ultraplot/tests/baseline
 # VIM extras
 .session.vim
 .vimsession
 .*.sw[a-z]
+
+# Pytest-mpl test directory ignore
+baseline
+baseline/*
 
 # PyPi stuff
 build
