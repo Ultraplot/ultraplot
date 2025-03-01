@@ -678,7 +678,7 @@ def _meta_labels(data, axis=0, always=True):
     # NOTE: Even if coords not present .coords[dim] auto-generates indices
     elif isinstance(data, DataArray):
         if axis < data.ndim:
-            labels = data.coords[data.dims[axis]]
+            labels = np.asarray(data.coords[data.dims[axis]])
         elif not always:
             pass
         else:
