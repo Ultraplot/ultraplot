@@ -86,6 +86,7 @@ jobs:
 
       # Return the html output of the comparison even if failed
       - name: Upload comparison failures
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: failed-comparisons-${{ inputs.python-version }}-${{ inputs.matplotlib-version }}
