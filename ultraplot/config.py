@@ -413,12 +413,20 @@ def config_inline_backend(fmt=None):
         fmt = list(fmt)
     else:
         raise ValueError(f"Invalid inline backend format {fmt!r}. Must be string.")
-    ipython.run_line_magic("config", "InlineBackend.figure_formats = " + repr(fmt))
-    ipython.run_line_magic("config", "InlineBackend.rc = {}")
-    ipython.run_line_magic("config", "InlineBackend.close_figures = True")
-    ipython.run_line_magic(
-        "config", "InlineBackend.print_figure_kwargs = {'bbox_inches': None}"
-    )
+    if hasattr(ipython, "magic"):
+        ipython.magic("config InlineBackend.figure_formats = " + repr(fmt))
+        ipython.magic("config InlineBackend.rc = {}")
+        ipython.magic("config InlineBackend.close_figures = True")
+        ipython.magic(
+            "config InlineBackend.print_figure_kwargs = {'bbox_inches': None}"
+        )
+    else:
+        ipython.run_line_magic("config", "InlineBackend.figure_formats = " + repr(fmt))
+        ipython.run_line_magic("config", "InlineBackend.rc = {}")
+        ipython.run_line_magic("config", "InlineBackend.close_figures = True")
+        ipython.run_line_magic(
+            "config", "InlineBackend.print_figure_kwargs = {'bbox_inches': None}"
+        )
 
 
 def use_style(style):
