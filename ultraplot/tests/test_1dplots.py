@@ -31,7 +31,7 @@ def test_auto_reverse():
     axs[4].pcolor(x, y[::-1], z)
     axs[5].format(xlim=(0, 9), ylim=(0, 9))  # manual override!
     axs[5].pcolor(x, y[::-1], z)
-    fig.format(suptitle="auto-reverse test", collabels=["reverse", "fixed"])
+    fig.format(suptitle="Auto-reverse test", collabels=["reverse", "fixed"])
     return fig
 
 
