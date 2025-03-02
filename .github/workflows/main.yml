@@ -10,10 +10,10 @@ on:
 #   cancel-in-progress: true
 
 jobs:
-  skip-if-no-changes:
+  run-if-changes:
     runs-on: ubuntu-latest
     outputs:
-      skip: ${{ steps.filter.outputs.python }}
+      run: ${{ steps.filter.outputs.python }}
     steps:
       - uses: actions/checkout@v4
       - uses: dorny/paths-filter@v3
@@ -26,15 +26,12 @@ jobs:
   get-versions:
     runs-on: ubuntu-latest
     needs:
-      - skip-if-no-changes
-    if: always() && needs.skip-if-no-changes.outputs.skip != 'true'
+      - run-if-changes
+    if: always() && needs.run-if-changes.outputs.run == 'true'
     outputs:
       python-versions: ${{ steps.set-versions.outputs.python-versions }}
       matplotlib-versions: ${{ steps.set-versions.outputs.matplotlib-versions }}
     steps:
-      - run: |
-          echo 'skip output is: "${{ needs.skip-if-no-changes.outputs.skip }}"'
-
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -127,8 +124,8 @@ jobs:
   build:
     needs:
       - get-versions
-      - skip-if-no-changes
-    if: always() && needs.skip-if-no-changes.outputs.skip != 'true' && needs.get-versions.result != 'skipped'
+      - run-if-changes
+    if: always() && needs.run-if-changes.outputs.run == 'true' && needs.get-versions.result != 'skipped'
     strategy:
       matrix:
         python-version: ${{ fromJson(needs.get-versions.outputs.python-versions) }}
@@ -142,11 +139,11 @@ jobs:
   build-success:
     needs:
       - build
-      - skip-if-no-changes
+      - run-if-changes
     if: >-
       always() && (
-        (needs.skip-if-no-changes.outputs.skip != 'true' && needs.build.result == 'success') ||
-        needs.skip-if-no-changes.outputs.skip == 'true'
+        (needs.run-if-changes.outputs.run == 'true' && needs.build.result == 'success') ||
+        needs.run-if-changes.outputs.run != 'true'
       )
     runs-on: ubuntu-latest
     steps:
