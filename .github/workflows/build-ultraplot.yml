@@ -23,7 +23,15 @@ jobs:
         with:
           fetch-depth: 0
 
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            python:
+              - 'ultraplot/**'
+
       - uses: mamba-org/setup-micromamba@v2.0.4
+        if: steps.filter.outputs.python == 'true'
         with:
           environment-file: ./environment.yml
           init-shell: bash
@@ -35,12 +43,14 @@ jobs:
           cache-downloads: false
 
       - name: Build Ultraplot
+        if: steps.filter.outputs.python == 'true'
         shell: bash -el {0}
         run: |
           micromamba activate ultraplot-dev
           pip install .
 
       - name: Test Ultraplot
+        if: steps.filter.outputs.python == 'true'
         shell: bash -el {0}
         run: |
           micromamba activate ultraplot-dev
@@ -51,7 +61,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            python:
+              - 'ultraplot/**'
+
       - uses: mamba-org/setup-micromamba@v2.0.4
+        if: steps.filter.outputs.python == 'true'
         with:
           environment-file: ./environment.yml
           init-shell: bash
@@ -63,6 +82,7 @@ jobs:
           cache-downloads: false
 
       - name: Generate baseline from main
+        if: steps.filter.outputs.python == 'true'
         shell: bash -el {0}
         run: |
           cd $GITHUB_WORKSPACE
@@ -75,6 +95,7 @@ jobs:
           git checkout ${{ github.sha }}  # Return to PR branch
 
       - name: Image Comparison Ultraplot
+        if: steps.filter.outputs.python == 'true'
         shell: bash -el {0}
         run: |
           cd $GITHUB_WORKSPACE
@@ -85,7 +106,7 @@ jobs:
 
       # Return the html output of the comparison even if failed
       - name: Upload comparison failures
-        if: always()
+        if: always() && steps.filter.outputs.python == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: failed-comparisons-${{ inputs.python-version }}-${{ inputs.matplotlib-version }}

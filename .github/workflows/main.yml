@@ -2,12 +2,8 @@ name: Matrix Test
 on:
   push:
     branches: [main, devel]
-    paths:
-      - "ultraplot/**"
   pull_request:
     branches: [main, devel]
-    paths:
-      - "ultraplot/**"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
