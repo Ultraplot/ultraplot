@@ -10,9 +10,8 @@ the docs during a python session.
 
 Please note that UltraPlot removes the associated documentation when functionality
 is deprecated (see :ref:`What's New <whats_new>`). However, UltraPlot adheres to
-`semantic versioning <https://semver.org>`__, which means old code that uses
-deprecated functionality will still work and issue warnings rather than errors
-until the first major release (version 1.0.0).
+`effort versioning <https://jacobtomlinson.dev/effver/>`__, which means old code that uses
+deprecated functionality will still work and issue warnings rather than errors.
 
 .. important::
 
