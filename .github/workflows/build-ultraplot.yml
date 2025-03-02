@@ -51,7 +51,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - uses: mamba-org/setup-micromamba@v2.0.4
         with:
           environment-file: ./environment.yml
@@ -86,6 +85,7 @@ jobs:
 
       # Return the html output of the comparison even if failed
       - name: Upload comparison failures
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: failed-comparisons-${{ inputs.python-version }}-${{ inputs.matplotlib-version }}
