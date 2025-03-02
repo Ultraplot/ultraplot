@@ -1143,6 +1143,7 @@ class Axes(maxes.Axes):
         # DiscreteLocator or else get issues (see mpl #22233).
         norm = mappable.norm
         formatter = _not_none(formatter, getattr(norm, "_labels", None), "auto")
+        formatter_kw.setdefault("tickrange", (norm.vmin, norm.vmax))
         formatter = constructor.Formatter(formatter, **formatter_kw)
         categorical = isinstance(formatter, mticker.FixedFormatter)
         if locator is not None:
