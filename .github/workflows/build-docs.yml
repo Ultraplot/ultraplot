@@ -24,13 +24,10 @@ jobs:
       - uses: mamba-org/setup-micromamba@v2.0.4
         with:
           environment-file: ./environment.yml
-      - name: Check dependencies
-        run: |
-          micromamba activate ultraplot-dev
-          micromamba list
       - name: "Build docs"
         shell: bash -el {0}
         run: |
+          eval "$(micromamba shell hook --shell bash)"
           micromamba activate ultraplot-dev
           pip install .
           cd docs
