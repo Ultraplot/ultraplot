@@ -21,7 +21,6 @@ jobs:
       - name: "Build docs"
         shell: bash -el {0}
         run: |
-          eval "$(micromamba shell hook --shell bash)"
           micromamba activate ultraplot-dev
           pip install .
           cd docs
