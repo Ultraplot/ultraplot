@@ -125,7 +125,7 @@ jobs:
     needs:
       - get-versions
       - run-if-changes
-    if: always() && needs.run-if-changes.outputs.run == 'true' && needs.get-versions.result != 'skipped'
+    if: always() && needs.run-if-changes.outputs.run == 'true' && needs.get-versions.result == 'success'
     strategy:
       matrix:
         python-version: ${{ fromJson(needs.get-versions.outputs.python-versions) }}
