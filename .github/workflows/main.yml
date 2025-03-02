@@ -10,8 +10,24 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  skip-if-no-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      skip: ${{ steps.filter.outputs.python }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            python:
+              - 'ultraplot/**'
+
   get-versions:
     runs-on: ubuntu-latest
+    needs:
+      - skip-if-no-changes
+    if: always() && needs.skip-if-no-changes.outputs.skip != 'true'
     outputs:
       python-versions: ${{ steps.set-versions.outputs.python-versions }}
       matplotlib-versions: ${{ steps.set-versions.outputs.matplotlib-versions }}
@@ -106,7 +122,10 @@ jobs:
           echo "matplotlib-versions=$(echo $MPL_VERSIONS | jq -c)" >> $GITHUB_OUTPUT
 
   build:
-    needs: get-versions
+    needs:
+      - get-versions
+      - skip-if-no-changes
+    if: always() && needs.skip-if-no-changes.outputs.skip != 'true' && needs.get-versions.result != 'skipped'
     strategy:
       matrix:
         python-version: ${{ fromJson(needs.get-versions.outputs.python-versions) }}
@@ -118,7 +137,14 @@ jobs:
       matplotlib-version: ${{ matrix.matplotlib-version }}
 
   build-success:
-    needs: build
+    needs:
+      - build
+      - skip-if-no-changes
+    if: >-
+      always() && (
+        (needs.skip-if-no-changes.outputs.skip != 'true' && needs.build.result == 'success') ||
+        needs.skip-if-no-changes.outputs.skip == 'true'
+      )
     runs-on: ubuntu-latest
     steps:
       - run: echo "All tests passed successfully!"
