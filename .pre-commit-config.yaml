@@ -14,8 +14,3 @@ repos:
     rev: 25.1.0
     hooks:
       - id: black
-  - repo: https://github.com/jsh9/pydoclint
-    rev: 0.6.2
-    hooks:
-      - id: pydoclint
-        args: [--style=numpy, --arg-type-hints-in-signature=False]
