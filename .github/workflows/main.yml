@@ -147,7 +147,7 @@ jobs:
           if [[ '${{ needs.run-if-changes.outputs.run }}' == 'false' ]]; then
             echo "No changes detected, tests skipped."
           else
-            if [[ '${{ needs.build.result }}' == "success" ]; then
+            if [[ '${{ needs.build.result }}' == 'success' ]]; then
               echo "All tests passed successfully!"
             else
               echo "Tests failed!"
