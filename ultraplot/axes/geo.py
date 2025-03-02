@@ -5,10 +5,6 @@ Axes filled with cartographic projections.
 import copy
 import inspect
 
-# Surpress warnings from cartopy when downloading data inside docs env
-import warnings
-
-
 import matplotlib.axis as maxis
 import matplotlib.path as mpath
 import matplotlib.text as mtext
