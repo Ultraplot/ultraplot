@@ -12,7 +12,7 @@ dependencies:
   - pytest
   - pytest-mpl
   - jupyter
-  - ipython >= 9.0.0
+  - ipython >=9.0.0
   - pip
   - pint
   - sphinx
