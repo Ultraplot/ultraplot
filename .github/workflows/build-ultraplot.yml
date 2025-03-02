@@ -81,7 +81,7 @@ jobs:
           micromamba activate ultraplot-dev
           mkdir -p results
           python -c "import ultraplot as plt; plt.config.Configurator()._save_yaml('ultraplot.yml')"
-          pytest --mpl --mpl-baseline-path=baseline --mpl-generate-summary=html --mpl-results-path=./results/ --mpl-default-style="./ultraplot.yml"
+          pytest --mpl --mpl-baseline-path=baseline --mpl-generate-summary=html --mpl-results-path=./results/ --mpl-default-style="./ultraplot.yml" --store-failed-only ultraplot/tests
 
       # Return the html output of the comparison even if failed
       - name: Upload comparison failures
