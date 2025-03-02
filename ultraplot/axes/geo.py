@@ -8,14 +8,6 @@ import inspect
 # Surpress warnings from cartopy when downloading data inside docs env
 import warnings
 
-try:
-    from cartopy.io import DownloadWarning
-
-    warnings.filterwarnings("ignore", category=DownloadWarning)
-except ImportError:
-    # In case cartopy isn't installed yet when conf.py is executed
-    pass
-
 
 import matplotlib.axis as maxis
 import matplotlib.path as mpath
