@@ -20,7 +20,7 @@
 # Font selection
 # ==============
 #
-# ultraplot registers several new fonts and includes tools
+# UltraPlot registers several new fonts and includes tools
 # for adding your own fonts. These features are described below.
 #
 #
@@ -43,9 +43,9 @@
 # Matplotlib uses DejaVu Sans in part because it includes glyphs for a very wide
 # range of symbols, especially mathematical symbols. However in our opinion,
 # DejaVu Sans is not very aesthetically pleasing. To improve the font selection while
-# keeping things consistent across different workstations, ultraplot is packaged
+# keeping things consistent across different workstations, UltraPlot is packaged
 # the open source `TeX Gyre fonts <https://ctan.org/pkg/tex-gyre?lang=en>`__ and a few
-# additional open source sans-serif fonts. ultraplot also uses the TeX Gyre fonts as the
+# additional open source sans-serif fonts. UltraPlot also uses the TeX Gyre fonts as the
 # first (i.e., default) entries for each of matplotlib's `font family lists
 # <https://matplotlib.org/stable/tutorials/text/text_props.html#default-font>`__:
 #
@@ -60,14 +60,14 @@
 # * The `Courier <https://en.wikipedia.org/wiki/Courier_(typeface)>`__ lookalike
 #   :rcraw:`font.monospace` = ``'TeX Gyre Cursor'``.
 #
-# After importing ultraplot, the default matplotlib font will be
+# After importing UltraPlot, the default matplotlib font will be
 # `TeX Gyre Heros <https://ctan.org/pkg/tex-gyre-heros>`__, which
 # emulates the more conventional and (in our opinion) aesthetically pleasing
 # font `Helvetica <https://en.wikipedia.org/wiki/Helvetica>`__. The default font
 # family lists are shown in the :ref:`default ultraplotrc file <ug_ultraplotrc>`.
-# To compare different fonts, use the `~ultraplot.demos.show_fonts` command with the
+# To compare different fonts, use the :func:`~ultraplot.demos.show_fonts` command with the
 # `family` keyword (default behavior is ``family='sans-serif'``). Tables of the TeX
-# Gyre and sans-serif fonts packaged with ultraplot are shown below.
+# Gyre and sans-serif fonts packaged with UltraPlot are shown below.
 
 # %%
 import ultraplot as uplt
@@ -87,36 +87,36 @@ fig, axs = uplt.show_fonts(family="tex-gyre")
 #
 # In matplotlib, math text rendered by TeX can be produced by surrounding
 # an expression with ``$dollar signs$``. To help math text jive better with
-# the new default :ref:`non-math text font <ug_fonts_included>`, ultraplot changes
+# the new default :ref:`non-math text font <ug_fonts_included>`, UltraPlot changes
 # :rcraw:`mathtext.fontset` to ``'custom'``. This means that math is drawn with
 # the italicized version of the non-math font (see the matplotlib `math text
 # guide <https://matplotlib.org/stable/tutorials/text/mathtext.html#custom-fonts>`__
 # for details). This generally improves the appearance of figures with simple
 # math expressions. However, if you need unusual math symbols or complex math
 # operators, you may want to change :rcraw:`font.name` to something more suitable
-# for math (e.g., the ultraplot-packaged font ``'Fira Math'`` or the matplotlib-packaged
+# for math (e.g., the UltraPlot-packaged font ``'Fira Math'`` or the matplotlib-packaged
 # font ``'DejaVu Sans'``; see `this page <https://github.com/firamath/firamath>`__ for
 # more on Fira Math). Alternatively, you can change the math text font alone by setting
 # :rcraw:`mathtext.fontset` back to one of matplotlib's math-specialized font sets
 # (e.g., ``'stixsans'`` or ``'dejavusans'``).
 #
-# A table of math text containing the sans-serif fonts packaged with ultraplot is shown
+# A table of math text containing the sans-serif fonts packaged with UltraPlot is shown
 # below. The dummy glyph "¤" is shown where a given math character is unavailable
 # for a particular font (in practice, the fallback font :rc:`mathtext.fallback` is used
-# whenever a math character is unavailable, but `~ultraplot.demos.show_fonts` disables
+# whenever a math character is unavailable, but :func:`~ultraplot.demos.show_fonts` disables
 # this fallback font in order to highlight the missing characters).
 #
 # .. note::
 #
-#    ultraplot modifies matplotlib's math text internals so that the ``'custom'``
+#    UltraPlot modifies matplotlib's math text internals so that the ``'custom'``
 #    font set can be applied with modifications to the currently active non-math
 #    font rather than only a global font family. This works by changing the default
 #    values of :rcraw:`mathtext.bf`, :rcraw:`mathtext.it`, :rcraw:`mathtext.rm`,
 #    :rcraw:`mathtext.sf` from the global default font family ``'sans'`` to the local
 #    font family ``'regular'``, where ``'regular'`` is a dummy name permitted by
-#    ultraplot (see the :ref:`ultraplotrc file <ug_ultraplotrc>` for details). This means
+#    UltraPlot (see the :ref:`ultraplotrc file <ug_ultraplotrc>` for details). This means
 #    that if :rcraw:`mathtext.fontset` is ``'custom'`` and the font family is changed
-#    for an arbitrary `~matplotlib.text.Text` instance, then any LaTeX-generated math
+#    for an arbitrary :class:`~matplotlib.text.Text` instance, then any LaTeX-generated math
 #    in the text string will also use this font family.
 
 # %%
@@ -131,10 +131,10 @@ fig, axs = uplt.show_fonts(family="sans-serif", math=True)
 # --------------------
 #
 # You can register your own fonts by adding files to the ``fonts`` subfolder
-# inside `~ultraplot.config.Configurator.user_folder` and calling
-# `~ultraplot.config.register_fonts`. This command is called on import. You can
-# also manually pass file paths to `~ultraplot.config.register_fonts`.
-# To change the default font, use the `~ultraplot.config.rc`
+# inside :func:`~ultraplot.config.Configurator.user_folder` and calling
+# :func:`~ultraplot.config.register_fonts`. This command is called on import. You can
+# also manually pass file paths to :func:`~ultraplot.config.register_fonts`.
+# To change the default font, use the :func:`~ultraplot.config.rc`
 # object or modify your ``ultraplotrc``. See the
 # :ref:`configuration section <ug_config>` for details.
 #
@@ -142,12 +142,12 @@ fig, axs = uplt.show_fonts(family="sans-serif", math=True)
 # is not stored under the matplotlib-compatible ``.ttf``, ``.otf``, or ``.afm``
 # formats. For example, several macOS fonts are unavailable because they are
 # stored as ``.dfont`` collections. Also, while matplotlib nominally supports
-# ``.ttc`` collections, ultraplot ignores them because figures with ``.ttc`` fonts
+# ``.ttc`` collections, UltraPlot ignores them because figures with ``.ttc`` fonts
 # `cannot be saved as PDFs <https://github.com/matplotlib/matplotlib/issues/3135>`__.
 # You can get matplotlib to use ``.dfont`` and ``.ttc`` collections by
 # expanding them into individual ``.ttf`` files with the
 # `DFontSplitter application <https://peter.upfold.org.uk/projects/dfontsplitter>`__,
-# then saving the files in-place or in the ``~/.ultraplot/fonts`` folder.
+# then saving the files in-place or in the ``~/.UltraPlot/fonts`` folder.
 #
 # To find font collections, check the paths listed in ``OSXFontDirectories``,
 # ``X11FontDirectories``, ``MSUserFontDirectories``, and ``MSFontDirectories``

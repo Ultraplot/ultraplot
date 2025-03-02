@@ -353,3 +353,19 @@ def test_triangular_functions():
     da = xr.DataArray(state.rand(N), dims=("x",), coords={"x": x, "y": ("x", y)})
     ax.tricontour(da.x, da.y, da, labels=True)
     return fig
+
+
+@pytest.mark.mpl_image_compare
+def test_colorbar_extends():
+    """
+    Test all the possible extends
+    """
+    # Ensure that the colorbars are not showing artifacts on the ticks. In the past extend != neither showed ghosting on the ticks. This occured after a manual draw after the colorbar was created.
+    fig, ax = uplt.subplots(nrows=2, ncols=2, share=False)
+    data = state.rand(20, 20)
+    levels = np.linspace(0, 1, 11)
+    extends = ["neither", "both", "min", "max"]
+    for extend, axi in zip(extends, ax):
+        m = axi.contourf(data, levels=levels, extend=extend)
+        axi.colorbar(m)
+    return fig

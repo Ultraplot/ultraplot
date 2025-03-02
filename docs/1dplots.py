@@ -24,13 +24,13 @@
 # 1D plotting commands
 # ====================
 #
-# ultraplot adds :ref:`several new features <why_plotting>` to matplotlib's
-# plotting commands using the intermediate `~ultraplot.axes.PlotAxes` class.
+# UltraPlot adds :ref:`several new features <why_plotting>` to matplotlib's
+# plotting commands using the intermediate :class:`~ultraplot.axes.PlotAxes` class.
 # For the most part, these additions represent a *superset* of matplotlib -- if
 # you are not interested, you can use the plotting commands just like you would
 # in matplotlib. This section documents the features added for 1D plotting commands
-# like `~ultraplot.axes.PlotAxes.plot`, `~ultraplot.axes.PlotAxes.scatter`,
-# and `~ultraplot.axes.PlotAxes.bar`.
+# like :func:`~ultraplot.axes.PlotAxes.plot`, :func:`~ultraplot.axes.PlotAxes.scatter`,
+# and :func:`~ultraplot.axes.PlotAxes.bar`.
 
 
 # %% [raw] raw_mimetype="text/restructuredtext"
@@ -39,14 +39,14 @@
 # Data arguments
 # --------------
 #
-# The treatment of data arguments passed to the 1D `~ultraplot.axes.PlotAxes`
+# The treatment of data arguments passed to the 1D :class:`~ultraplot.axes.PlotAxes`
 # commands is standardized. For each command, you can optionally omit
 # the dependent variable coordinates, in which case they are inferred from the data
 # (see :ref:`xarray and pandas integration <ug_1dintegration>`), or pass
 # 2D dependent or independent variable coordinates, in which case the
 # plotting command is called for each column of the 2D array(s). If coordinates
 # are string labels, they are converted to indices and tick labels using
-# `~ultraplot.ticker.IndexLocator` and `~ultraplot.ticker.IndexFormatter`.
+# :class:`~ultraplot.ticker.IndexLocator` and :class:`~ultraplot.ticker.IndexFormatter`.
 # If coordinates are descending and the axis limits are unset, the axis
 # direction is automatically reversed. All positional arguments can also be
 # specified as keyword arguments (see the documentation for each plotting command).
@@ -54,9 +54,9 @@
 # .. note::
 #
 #    By default, when choosing the *x* or *y* axis limits,
-#    ultraplot ignores out-of-bounds data along the other axis if it was explicitly
-#    fixed by `~matplotlib.axes.Axes.set_xlim` or `~matplotlib.axes.Axes.set_ylim` (or,
-#    equivalently, by passing `xlim` or `ylim` to `ultraplot.axes.CartesianAxes.format`).
+#    UltraPlot ignores out-of-bounds data along the other axis if it was explicitly
+#    fixed by :func:`~matplotlib.axes.Axes.set_xlim` or :func:`~matplotlib.axes.Axes.set_ylim` (or,
+#    equivalently, by passing `xlim` or `ylim` to :func:`ultraplot.axes.CartesianAxes.format`).
 #    This can be useful if you wish to restrict the view along a "dependent" variable
 #    axis within a large dataset. To disable this feature, pass ``inbounds=False`` to
 #    the plotting command or set :rcraw:`axes.inbounds` to ``False`` (see also
@@ -134,7 +134,7 @@ fig.format(
 # Pandas and xarray integration
 # -----------------------------
 #
-# The 1D `~ultraplot.axes.PlotAxes` commands recognize `pandas`_
+# The 1D :class:`~ultraplot.axes.PlotAxes` commands recognize `pandas`_
 # and `xarray`_ data structures. If you omit dependent variable coordinates,
 # the commands try to infer them from the `pandas.Series`, `pandas.DataFrame`,
 # or `xarray.DataArray`. If you did not explicitly set the *x* or *y* axis label
@@ -145,19 +145,19 @@ fig.format(
 #
 # These features restore some of the convenience you get with the builtin
 # `pandas`_ and `xarray`_ plotting functions. They are also *optional* --
-# installation of pandas and xarray are not required to use ultraplot. The
+# installation of pandas and xarray are not required to use UltraPlot. The
 # automatic labels can be disabled by setting :rcraw:`autoformat` to ``False``
 # or by passing ``autoformat=False`` to any plotting command.
 #
 # .. note::
 #
-#    For every plotting command, you can pass a `~xarray.Dataset`, `~pandas.DataFrame`,
+#    For every plotting command, you can pass a `~xarray.Dataset`, :class:`~pandas.DataFrame`,
 #    or `dict` to the `data` keyword with strings as data arguments instead of arrays
 #    -- just like matplotlib. For example, ``ax.plot('y', data=dataset)`` and
 #    ``ax.plot(y='y', data=dataset)`` are translated to ``ax.plot(dataset['y'])``.
 #    This is the preferred input style for most `seaborn`_ plotting commands.
-#    Also, if you pass a `pint.Quantity` or `~xarray.DataArray`
-#    containing a `pint.Quantity`, ultraplot will automatically call
+#    Also, if you pass a `pint.Quantity` or :class:`~xarray.DataArray`
+#    containing a `pint.Quantity`, UltraPlot will automatically call
 #    `~pint.UnitRegistry.setup_matplotlib` so that the axes become unit-aware.
 
 # %%
@@ -216,10 +216,10 @@ ax.plot(df, cycle=cycle, lw=3, legend="t", legend_kw={"frame": False})
 # <https://matplotlib.org/stable/tutorials/intermediate/color_cycle.html#sphx-glr-tutorials-intermediate-color-cycle-py>`__
 # on-the-fly and use different property cycles for different plot elements.
 # You can do so using the `cycle` and `cycle_kw` keywords, available
-# with most 1D `~ultraplot.axes.PlotAxes` commands. `cycle` and `cycle_kw` are
-# passed to the `~ultraplot.constructor.Cycle` :ref:`constructor function
+# with most 1D :class:`~ultraplot.axes.PlotAxes` commands. `cycle` and `cycle_kw` are
+# passed to the :class:`~ultraplot.constructor.Cycle` :ref:`constructor function
 # <why_constructor>`, and the resulting property cycle is used for the plot. You
-# can specify `cycle` once with 2D input data (in which case each column is
+# can specify `cycle` once with 3D input data (in which case each column is
 # plotted in succession according to the property cycle) or call a plotting
 # command multiple times with the same `cycle` argument (the property
 # cycle is not reset). You can also disable property cycling with ``cycle=False``,
@@ -266,20 +266,20 @@ with uplt.rc.context({"lines.linewidth": 3}):
 # Line plots
 # ----------
 #
-# Line plots can be drawn with `~ultraplot.axes.PlotAxes.plot` or
-# `~ultraplot.axes.PlotAxes.plotx` (or their aliases, `~ultraplot.axes.PlotAxes.line`
-# or `~ultraplot.axes.PlotAxes.linex`). For the ``x`` commands, positional
+# Line plots can be drawn with :func:`~ultraplot.axes.PlotAxes.plot` or
+# :func:`~ultraplot.axes.PlotAxes.plotx` (or their aliases, :func:`~ultraplot.axes.PlotAxes.line`
+# or :func:`~ultraplot.axes.PlotAxes.linex`). For the ``x`` commands, positional
 # arguments are interpreted as *x* coordinates or (*y*, *x*) pairs. This is analogous
-# to `~ultraplot.axes.PlotAxes.barh` and `~ultraplot.axes.PlotAxes.fill_betweenx`.
-# Also, the default *x* bounds for lines drawn with `~ultraplot.axes.PlotAxes.plot`
-# and *y* bounds for lines drawn with `~ultraplot.axes.PlotAxes.plotx` are now
+# to :func:`~ultraplot.axes.PlotAxes.barh` and :func:`~ultraplot.axes.PlotAxes.fill_betweenx`.
+# Also, the default *x* bounds for lines drawn with :func:`~ultraplot.axes.PlotAxes.plot`
+# and *y* bounds for lines drawn with :func:`~ultraplot.axes.PlotAxes.plotx` are now
 # "sticky", i.e. there is no padding between the lines and axes edges by default.
 #
-# Step and stem plots can be drawn with `~ultraplot.axes.PlotAxes.step`,
-# `~ultraplot.axes.PlotAxes.stepx`, `~ultraplot.axes.PlotAxes.stem`, and
-# `~ultraplot.axes.PlotAxes.stemx`. Plots of parallel vertical and horizontal
-# lines can be drawn with `~ultraplot.axes.PlotAxes.vlines` and
-# `~ultraplot.axes.PlotAxes.hlines`. You can have different colors for "negative" and
+# Step and stem plots can be drawn with :func:`~ultraplot.axes.PlotAxes.step`,
+# :func:`~ultraplot.axes.PlotAxes.stepx`, :func:`~ultraplot.axes.PlotAxes.stem`, and
+# :func:`~ultraplot.axes.PlotAxes.stemx`. Plots of parallel vertical and horizontal
+# lines can be drawn with :func:`~ultraplot.axes.PlotAxes.vlines` and
+# :func:`~ultraplot.axes.PlotAxes.hlines`. You can have different colors for "negative" and
 # "positive" lines using ``negpos=True`` (see :ref:`below <ug_negpos>` for details).
 
 # %%
@@ -328,35 +328,35 @@ fig.format(suptitle="Line plots demo", xlabel="xlabel", ylabel="ylabel")
 # Scatter plots
 # -------------
 #
-# The `~ultraplot.axes.PlotAxes.scatter` command now permits omitting *x*
-# coordinates and accepts 2D *y* coordinates, just like `~ultraplot.axes.PlotAxes.plot`.
-# As with `~ultraplot.axes.PlotAxes.plotx`, the `~ultraplot.axes.PlotAxes.scatterx`
-# command is just like `~ultraplot.axes.PlotAxes.scatter`, except positional
+# The :func:`~ultraplot.axes.PlotAxes.scatter` command now permits omitting *x*
+# coordinates and accepts 2D *y* coordinates, just like :func:`~ultraplot.axes.PlotAxes.plot`.
+# As with :func:`~ultraplot.axes.PlotAxes.plotx`, the :func:`~ultraplot.axes.PlotAxes.scatterx`
+# command is just like :func:`~ultraplot.axes.PlotAxes.scatter`, except positional
 # arguments are interpreted as *x* coordinates and (*y*, *x*) pairs.
-# `~ultraplot.axes.PlotAxes.scatter` also now accepts keywords
-# that look like `~ultraplot.axes.PlotAxes.plot` keywords (e.g., `color` instead of
-# `c` and `markersize` instead of `s`). This way, `~ultraplot.axes.PlotAxes.scatter`
+# :func:`~ultraplot.axes.PlotAxes.scatter` also now accepts keywords
+# that look like :func:`~ultraplot.axes.PlotAxes.plot` keywords (e.g., `color` instead of
+# `c` and `markersize` instead of `s`). This way, :func:`~ultraplot.axes.PlotAxes.scatter`
 # can be used to simply "plot markers, not lines" without changing the input
-# arguments relative to `~ultraplot.axes.PlotAxes.plot`.
+# arguments relative to :func:`~ultraplot.axes.PlotAxes.plot`.
 #
-# The property cycler used by `~ultraplot.axes.PlotAxes.scatter` can be changed
+# The property cycler used by :func:`~ultraplot.axes.PlotAxes.scatter` can be changed
 # using the `cycle` keyword argument, and unlike matplotlib it can include
 # properties like `marker` and `markersize`. The colormap `cmap` and normalizer
 # `norm` used with the optional `c` color array are now passed through the
-# `~ultraplot.constructor.Colormap` and `~ultraplot.constructor.Norm` constructor
+# :class:`~ultraplot.constructor.Colormap` and :class:`~ultraplot.constructor.Norm` constructor
 # functions.
 
 # .. important::
 #
 #    In matplotlib, arrays passed to the marker size keyword `s` always represent the
-#    area in units ``points ** 2``. In ultraplot, arrays passed to `s` are scaled so
+#    area in units ``points ** 2``. In UltraPlot, arrays passed to `s` are scaled so
 #    that the minimum data value has the area ``1`` while the maximum data value
 #    has the area :rcraw:`lines.markersize` squared. These minimum and maximum marker
 #    sizes can also be specified manually with the `smin` and `smax` keywords,
 #    analogous to `vmin` and `vmax` used to scale the color array `c`. This feature
-#    can be disabled by passing ``absolute_size=True`` to `~ultraplot.axes.Axes.scatter`
-#    or `~ultraplot.axes.Axes.scatterx`. This is done automatically when `seaborn`_
-#    calls `~ultraplot.axes.Axes.scatter` internally.
+#    can be disabled by passing ``absolute_size=True`` to :func:`~ultraplot.axes.Axes.scatter`
+#    or :func:`~ultraplot.axes.Axes.scatterx`. This is done automatically when `seaborn`_
+#    calls :func:`~ultraplot.axes.Axes.scatter` internally.
 
 # %%
 import ultraplot as uplt
@@ -413,13 +413,13 @@ fig.format(suptitle="Scatter plot demo", xlabel="xlabel", ylabel="ylabel")
 # Parametric plots
 # ----------------
 #
-# Parametric plots can be drawn using the new `~ultraplot.axes.PlotAxes.parametric`
-# command. This creates `~matplotlib.collections.LineCollection`\ s that map
+# Parametric plots can be drawn using the new :func:`~ultraplot.axes.PlotAxes.parametric`
+# command. This creates :class:`~matplotlib.collections.LineCollection`\ s that map
 # individual line segments to individual colors, where each segment represents a
 # "parametric" coordinate (e.g., time). The parametric coordinates are specified with
 # a third positional argument or with the keywords `c`, `color`, `colors` or `values`.
 # Representing parametric coordinates with colors instead of text labels can be
-# cleaner. The below example makes a simple `~ultraplot.axes.PlotAxes.parametric`
+# cleaner. The below example makes a simple :func:`~ultraplot.axes.PlotAxes.parametric`
 # plot with a colorbar indicating the parametric coordinate.
 
 # %%
@@ -483,7 +483,7 @@ ax.colorbar(m, loc="b", locator=2, label="parametric coordinate")
 # Bar plots and area plots
 # ------------------------
 #
-# The `~ultraplot.axes.PlotAxes.bar` and `~ultraplot.axes.PlotAxes.barh` commands
+# The :func:`~ultraplot.axes.PlotAxes.bar` and :func:`~ultraplot.axes.PlotAxes.barh` commands
 # apply default *x* or *y* coordinates if you failed to provide them explicitly
 # and can *group* or *stack* successive columns of data if you pass 2D arrays instead
 # of 1D arrays -- just like `pandas`_. When bars are grouped, their widths and
@@ -491,31 +491,31 @@ ax.colorbar(m, loc="b", locator=2, label="parametric coordinate")
 # is the default behavior and stacking can be enabled with ``stack=True``
 # or ``stacked=True``.
 #
-# The `~ultraplot.axes.PlotAxes.fill_between` and `~ultraplot.axes.PlotAxes.fill_betweenx`
-# commands have the new shorthands `~ultraplot.axes.PlotAxes.area`
-# and `~ultraplot.axes.PlotAxes.areax`. Similar to `~ultraplot.axes.PlotAxes.bar` and
-# `~ultraplot.axes.PlotAxes.barh`, they apply default *x* coordinates if you failed
+# The :func:`~ultraplot.axes.PlotAxes.fill_between` and :func:`~ultraplot.axes.PlotAxes.fill_betweenx`
+# commands have the new shorthands :func:`~ultraplot.axes.PlotAxes.area`
+# and :func:`~ultraplot.axes.PlotAxes.areax`. Similar to :func:`~ultraplot.axes.PlotAxes.bar` and
+# :func:`~ultraplot.axes.PlotAxes.barh`, they apply default *x* coordinates if you failed
 # to provide them explicitly, and can *overlay* or *stack* successive columns of
 # data if you pass 2D arrays instead of 1D arrays -- just like `pandas`_. Overlaying
 # is the default behavior but stacking can be enabled with ``stack=True`` or
 # ``stacked=True``. Also note the default *x* bounds for shading drawn with
-# `~ultraplot.axes.PlotAxes.area` and *y* bounds for shading drawn with
-# `~ultraplot.axes.PlotAxes.areax` is now "sticky", i.e. there is no padding
+# :func:`~ultraplot.axes.PlotAxes.area` and *y* bounds for shading drawn with
+# :func:`~ultraplot.axes.PlotAxes.areax` is now "sticky", i.e. there is no padding
 # between the shading and axes edges by default.
 
 # .. important::
 #
-#    In matplotlib, bar widths for horizontal `~matplotlib.axes.Axes.barh` plots
-#    are expressed with the `height` keyword. In ultraplot, bar widths are always
+#    In matplotlib, bar widths for horizontal :func:`~matplotlib.axes.Axes.barh` plots
+#    are expressed with the `height` keyword. In UltraPlot, bar widths are always
 #    expressed with the `width` keyword. Note that bar widths can also be passed
 #    as a third positional argument.
 #    Additionally, matplotlib bar widths are always expressed in data units,
-#    while ultraplot bar widths are expressed in step size-relative units by
+#    while UltraPlot bar widths are expressed in step size-relative units by
 #    default. For example, ``width=1`` with a dependent coordinate step
 #    size of ``2`` fills 100% of the space between each bar rather than 50%. This
-#    can be disabled by passing ``absolute_width=True`` to `~ultraplot.axes.Axes.bar`
-#    or `~ultraplot.axes.Axes.barh`. This is done automatically when `seaborn`_ calls
-#    `~ultraplot.axes.Axes.bar` or `~ultraplot.axes.Axes.barh` internally.
+#    can be disabled by passing ``absolute_width=True`` to :func:`~ultraplot.axes.Axes.bar`
+#    or :func:`~ultraplot.axes.Axes.barh`. This is done automatically when `seaborn`_ calls
+#    :func:`~ultraplot.axes.Axes.bar` or :func:`~ultraplot.axes.Axes.barh` internally.
 
 # %%
 import ultraplot as uplt
@@ -604,13 +604,13 @@ uplt.rc.reset()
 #
 # You can use different colors for "negative" and
 # "positive" data by passing ``negpos=True`` to any of the
-# `~ultraplot.axes.PlotAxes.fill_between`, `~ultraplot.axes.PlotAxes.fill_betweenx`
-# (shorthands `~ultraplot.axes.PlotAxes.area`, `~ultraplot.axes.PlotAxes.areax`),
-# `~ultraplot.axes.PlotAxes.vlines`, `~ultraplot.axes.PlotAxes.hlines`,
-# `~ultraplot.axes.PlotAxes.bar`, or `~ultraplot.axes.PlotAxes.barh` commands.
+# :func:`~ultraplot.axes.PlotAxes.fill_between`, :func:`~ultraplot.axes.PlotAxes.fill_betweenx`
+# (shorthands :func:`~ultraplot.axes.PlotAxes.area`, :func:`~ultraplot.axes.PlotAxes.areax`),
+# :func:`~ultraplot.axes.PlotAxes.vlines`, :func:`~ultraplot.axes.PlotAxes.hlines`,
+# :func:`~ultraplot.axes.PlotAxes.bar`, or :func:`~ultraplot.axes.PlotAxes.barh` commands.
 # The default negative and positive colors are controlled with :rcraw:`negcolor` and
 # :rcraw:`poscolor` but the colors can be modified for particular plots by passing
-# ``negcolor=color`` and ``poscolor=color`` to the `~ultraplot.axes.PlotAxes` commands.
+# ``negcolor=color`` and ``poscolor=color`` to the :class:`~ultraplot.axes.PlotAxes` commands.
 
 # %%
 import ultraplot as uplt

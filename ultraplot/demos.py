@@ -1039,7 +1039,7 @@ def show_fonts(
     *args : str or `~matplotlib.font_manager.FontProperties`
         The font specs, font names, or `~matplotlib.font_manager.FontProperties`\\ s
         to show. If no positional arguments are passed and the `family` argument is
-        not passed, then the fonts found in `~ultraplot.config.Configurator.user_folder`
+        not passed, then the fonts found in :func:`~ultraplot.config.Configurator.user_folder`
         and `~ultraplot.config.Configurator.local_folders` and the *available*
         :rcraw:`font.sans-serif` fonts are shown.
     family \
@@ -1051,7 +1051,7 @@ def show_fonts(
         :rcraw:`font.fantasy`. The special family ``'tex-gyre'`` includes the
         `TeX Gyre <http://www.gust.org.pl/projects/e-foundry/tex-gyre>`__ fonts.
     user : bool, optional
-        Whether to include fonts in `~ultraplot.config.Configurator.user_folder` and
+        Whether to include fonts in :func:`~ultraplot.config.Configurator.user_folder` and
         `~ultraplot.config.Configurator.local_folders` at the top of the table. Default
         is ``True`` if called without any arguments and ``False`` otherwise.
     text : str, optional

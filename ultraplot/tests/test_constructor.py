@@ -65,6 +65,10 @@ def test_not_allowed_keyword():
 def test_cycler_edge_cases():
     """Test edge cases and error conditions"""
     # Test with empty lists
+    cycle = uplt.Cycle()
+    assert cycle.get_next() == dict(color="black")  # default fallback
+    cycle = uplt.Cycle(color=[])
+    assert cycle.get_next() == dict(color="black")  # default fallback
     cycle = uplt.Cycle(colors=[])
     assert cycle.get_next() == dict(color="black")  # default fallback
 
@@ -74,6 +78,7 @@ def test_cycler_edge_cases():
     props1 = cycle.get_next()
     props2 = cycle.get_next()
     assert props1["marker"] == props2["marker"]  # marker should stay same
+    assert props1["color"] == "red"
     assert props1["color"] != props2["color"]  # color should cycle
 
 
@@ -102,6 +107,15 @@ def test_manual_cycle():
 def test_pass_on_cycle():
     colors = ["red", "green", "black"]
     cycle = uplt.Cycle(colors)
+    fig, ax = uplt.subplots()
+    ax.set_prop_cycle(cycle)
+    active_cycle = ax.axes._active_cycle
+    for color in colors:
+        assert color == active_cycle.get_next()["color"]
+        assert color == cycle.get_next()["color"]
+
+    colors = ["red", "green", "black"]
+    cycle = uplt.Cycle(color=colors)
     fig, ax = uplt.subplots()
     ax.set_prop_cycle(cycle)
     active_cycle = ax.axes._active_cycle
