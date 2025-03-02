@@ -2,12 +2,12 @@ name: Matrix Test No Changes
 on:
   push:
     branches: [main, devel]
-    paths-ignore:
-      - "ultraplot/**"
+    paths:
+      - "!ultraplot/**"
   pull_request:
     branches: [main, devel]
-    paths-ignore:
-      - "ultraplot/**"
+    paths:
+      - "!ultraplot/**"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
