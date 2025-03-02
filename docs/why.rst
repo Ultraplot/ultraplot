@@ -882,7 +882,7 @@ Limitation
 ----------
 
 Matplotlib `~matplotlib.rcParams` can be changed persistently by placing
-`matplotlibrc <ug_mplrc_>`_ files in the same directory as your python script.
+`matplotlibrc :ref:`ug_mplrc` files in the same directory as your python script.
 But it can be difficult to design and store your own colormaps and color cycles for
 future use. It is also difficult to get matplotlib to use custom ``.ttf`` and
 ``.otf`` font files, which may be desirable when you are working on

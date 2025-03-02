@@ -29,6 +29,28 @@ except ImportError:
     # In case cartopy isn't installed yet when conf.py is executed
     pass
 
+# Handle sphinx.util.console deprecation
+# Note this has been deprecated in Sphinx 5.0 and some extensions still use the console module. Needs to be updated later
+try:
+    # For newer Sphinx versions where sphinx.util.console is removed
+    import sphinx
+
+    if not hasattr(sphinx.util, "console"):
+        # Create a compatibility layer
+        import sys
+        import sphinx.util
+        from sphinx.util import logging
+
+        class ConsoleColorFallback:
+            def __getattr__(self, name):
+                return (
+                    lambda text: text
+                )  # Return a function that returns the text unchanged
+
+        sphinx.util.console = ConsoleColorFallback()
+except Exception:
+    pass
+
 # Update path for sphinx-automodapi and sphinxext extension
 sys.path.append(os.path.abspath("."))
 sys.path.insert(0, os.path.abspath(".."))
