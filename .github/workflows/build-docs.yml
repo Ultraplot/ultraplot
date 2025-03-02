@@ -24,6 +24,10 @@ jobs:
           sudo apt-get install -y texlive-fonts-extra
           sudo fc-cache -fv
         # need tex-gyre-hero fonts to show text in geo plots
+      - name: Check dependencies
+        run: |
+          micromamba activate ultraplot-dev
+          micromamba list
       - name: "Build docs"
         shell: bash -el {0}
         run: |
