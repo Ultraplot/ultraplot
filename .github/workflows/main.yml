@@ -140,11 +140,18 @@ jobs:
     needs:
       - build
       - run-if-changes
-    if: >-
-      always() && (
-        (needs.run-if-changes.outputs.run == 'true' && needs.build.result == 'success') ||
-        needs.run-if-changes.outputs.run != 'true'
-      )
+    if: always()
     runs-on: ubuntu-latest
     steps:
-      - run: echo "All tests passed successfully!"
+      - run: |
+          if [[ '${{ needs.run-if-changes.outputs.run }}' == 'false' ]]; then
+            echo "No changes detected, tests skipped."
+          else
+            if [[ '${{ needs.build.result }}' == "success" ]; then
+              echo "All tests passed successfully!"
+            else
+              echo "Tests failed!"
+              exit 1
+            fi
+          fi
+
