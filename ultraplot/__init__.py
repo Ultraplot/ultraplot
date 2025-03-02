@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
-A succinct matplotlib wrapper for making beautiful, publication-quality graphics. Woo!
+A succinct matplotlib wrapper for making beautiful, publication-quality graphics.
 """
+assert False  # cause a failure
 # SCM versioning
 name = "ultraplot"
 
