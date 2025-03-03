@@ -788,12 +788,11 @@ class _Colormap(object):
         """
         name = self.name
         name = name or ""
-        if name[:1] != "_":
-            name = "_" + name
-        suffix = suffix or "copy"
-        suffix = "_" + suffix
-        if name[-len(suffix) :] != suffix:
-            name = name + suffix
+        suffix = suffix or ""
+        if suffix:
+            suffix += "_" + suffix
+        if suffix and not name.endswith(suffix):
+            name += suffix
         return name
 
     def _parse_path(self, path, ext=None, subfolder=None):
