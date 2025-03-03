@@ -23,8 +23,8 @@ submitting your own changes.
 
    Please note that when classes, functions, keywords, or settings are deprecated,
    they are not removed -- using the old syntax will result in a warning rather than
-   an error and preserve the original functionality. Since UltraPlot adheres to `semantic
-   versioning <https://semver.org>`__, we will not consider removing the deprecated
+   an error and preserve the original functionality. Since UltraPlot adheres to `effort
+   versioning <https://jacobtomlinson.dev/effver/>`__, we will not consider removing the deprecated
    syntax until the first major release (i.e., version 1.0.0).
 
 Version 1.0.0 (####-##-##)
