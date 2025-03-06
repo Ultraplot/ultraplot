@@ -14,6 +14,7 @@ authors = [
 ]
 maintainers = [
     {name = "Casper van Elteren", email = "caspervanelteren@gmail.com"},
+    {name = "Matthew R. Becker", email = "becker.mr@gmail.com"},
 ]
 description = "A succinct matplotlib wrapper for making beautiful, publication-quality graphics."
 readme = "README.rst"
