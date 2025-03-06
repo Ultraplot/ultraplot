@@ -1,9 +1,9 @@
 name: Build docs
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+# on:
+#   push:
+#     branches: [main]
+#   pull_request:
+#     branches: [main]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
