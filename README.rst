@@ -2,7 +2,7 @@
     :alt: UltraPlot Logo
     :width: 100%
 
-|build-status| |docs| |pypi| |code-style| |pre-commit| |pr-welcome| |license|
+|build-status| |coverage| |docs| |pypi| |code-style| |pre-commit| |pr-welcome| |license|
 
 A succinct `matplotlib <https://matplotlib.org/>`__ wrapper for making beautiful,
 publication-quality graphics. It builds upon ProPlot_ and transports it into the modern age (supporting mpl 3.9.0+).
@@ -68,3 +68,7 @@ inside the ``ultraplot`` folder.
 .. |pre-commit| image:: https://results.pre-commit.ci/badge/github/Ultraplot/ultraplot/main.svg
    :target: https://results.pre-commit.ci/latest/github/Ultraplot/ultraplot/main
    :alt: pre-commit.ci status
+
+.. |coverage| image:: https://codecov.io/gh/Ultraplot/ultraplot/graph/badge.svg?token=C6ZB7Q9II4 
+   :target: https://codecov.io/gh/Ultraplot/ultraplot
+   :alt: coverage
