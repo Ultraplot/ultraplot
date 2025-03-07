@@ -2,7 +2,7 @@
     :alt: UltraPlot Logo
     :width: 100%
 
-|build-status| |docs| |pypi| |code-style| |pre-commit| |pr-welcome| |license|
+|build-status| |coverage| |docs| |pypi| |code-style| |pre-commit| |pr-welcome| |license|
 
 A succinct `matplotlib <https://matplotlib.org/>`__ wrapper for making beautiful,
 publication-quality graphics. It builds upon ProPlot_ and transports it into the modern age (supporting mpl 3.9.0+).
@@ -46,12 +46,13 @@ To install a development version of UltraPlot, you can use
 or clone the repository and run ``pip install -e .``
 inside the ``ultraplot`` folder.
 
-
 .. |build-status| image::  https://github.com/ultraplot/ultraplot/actions/workflows/build-ultraplot.yml/badge.svg
 
 .. |code-style| image:: https://img.shields.io/badge/code%20style-black-000000.svg
 
 .. |pr-welcome| image:: https://img.shields.io/badge/PRs-welcome-brightgreen
+
+.. |coverage| image:: https::/github.com/ultraplot/ultraplot/actions/workflows/coverage.yml/badge.svg
 
 .. |docs| image:: https://readthedocs.org/projects/ultraplot/badge/?version=latest
    :alt: docs
