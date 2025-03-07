@@ -44,6 +44,7 @@ jobs:
       - name: Test Ultraplot
         run: |
           pytest --cov-branch --cov-report=xml
+          ls -lah
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5
