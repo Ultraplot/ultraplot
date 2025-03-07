@@ -43,7 +43,7 @@ jobs:
 
       - name: Test Ultraplot
         run: |
-          pytest --cov-branch --cov-report=xml
+          pytest --cov=ultraplot --cov-branch --cov-report term-missing --cov-report=xml ultraplot
           ls -lah
 
       - name: Upload coverage reports to Codecov
