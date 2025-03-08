@@ -51,6 +51,11 @@ try:
 except Exception:
     pass
 
+# Build what's news page from github releases
+from subprocess import run
+
+run("python _scripts/fetch_releases.py".split(), check=False)
+
 # Update path for sphinx-automodapi and sphinxext extension
 sys.path.append(os.path.abspath("."))
 sys.path.insert(0, os.path.abspath(".."))
@@ -157,6 +162,7 @@ exclude_patterns = [
     "conf.py",
     "sphinxext",
     "_build",
+    "_scripts",
     "_templates",
     "_themes",
     "*.ipynb",

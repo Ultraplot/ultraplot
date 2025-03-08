@@ -46,7 +46,7 @@ be cited using its `Zenodo DOI <https://doi.org/10.5281/zenodo.3873878>`__.
 
    api
    external-links
-   whatsnew
+   whats_new
    contributing
    authors
 
