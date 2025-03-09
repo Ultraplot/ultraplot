@@ -60,12 +60,11 @@ def fetch_all_releases():
 
 def fetch_releases():
     """Fetches the latest releases from GitHub and formats them as RST."""
-    response = fetch_all_releases()
-    if response.status_code != 200:
-        print(f"Error fetching releases: {response.status_code}")
+    releases = fetch_all_releases()
+    if not releases:
+        print(f"Error fetching releases!")
         return ""
 
-    releases = response.json()
     rst_content = ".. _whats_new:\n\n==========\n\nWhat's new?\n==========\n\n"  # H1
 
     for release in releases:
