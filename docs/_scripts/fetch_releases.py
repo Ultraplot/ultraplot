@@ -80,7 +80,7 @@ def fetch_releases():
                 else:
                     title = title.strip()
                     break
-        
+
         if title:
             title = f"{tag}: {title}"
         else:
