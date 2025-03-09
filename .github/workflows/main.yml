@@ -13,7 +13,7 @@ jobs:
   run-if-changes:
     runs-on: ubuntu-latest
     outputs:
-      run: ${{ steps.filter.outputs.python }}
+      run: ${{ (github.event_name == 'push' && github.ref_name == 'main') && 'true' || steps.filter.outputs.python }}
     steps:
       - uses: actions/checkout@v4
       - uses: dorny/paths-filter@v3

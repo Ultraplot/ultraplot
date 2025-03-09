@@ -18,6 +18,9 @@ jobs:
     name: Test Python ${{ inputs.python-version }} with ${{ inputs.matplotlib-version }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    defaults:
+      run: 
+        shell: bash -el {0}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -35,22 +38,28 @@ jobs:
           cache-downloads: false
 
       - name: Build Ultraplot
-        shell: bash -el {0}
         run: |
-          micromamba activate ultraplot-dev
-          pip install .
+          pip install --no-build-isolation --no-deps .
 
       - name: Test Ultraplot
-        shell: bash -el {0}
         run: |
-          micromamba activate ultraplot-dev
-          pytest
+          pytest --cov=ultraplot --cov-branch --cov-report term-missing --cov-report=xml ultraplot
 
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: Ultraplot/ultraplot
+  
   compare-baseline:
     needs: build-ultraplot
     runs-on: ubuntu-latest
+    defaults:
+      run: 
+        shell: bash -el {0}    
     steps:
       - uses: actions/checkout@v4
+
       - uses: mamba-org/setup-micromamba@v2.0.4
         with:
           environment-file: ./environment.yml
@@ -63,11 +72,8 @@ jobs:
           cache-downloads: false
 
       - name: Generate baseline from main
-        shell: bash -el {0}
         run: |
-          cd $GITHUB_WORKSPACE
           mkdir -p baseline
-          micromamba activate ultraplot-dev
           git fetch origin ${{ github.event.pull_request.base.sha }}
           git checkout ${{ github.event.pull_request.base.sha }}
           python -c "import ultraplot as plt; plt.config.Configurator()._save_yaml('ultraplot.yml')"
@@ -75,10 +81,7 @@ jobs:
           git checkout ${{ github.sha }}  # Return to PR branch
 
       - name: Image Comparison Ultraplot
-        shell: bash -el {0}
         run: |
-          cd $GITHUB_WORKSPACE
-          micromamba activate ultraplot-dev
           mkdir -p results
           python -c "import ultraplot as plt; plt.config.Configurator()._save_yaml('ultraplot.yml')"
           pytest --mpl --mpl-baseline-path=baseline --mpl-generate-summary=html --mpl-results-path=./results/ --mpl-default-style="./ultraplot.yml" --store-failed-only ultraplot/tests
@@ -88,5 +91,5 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: failed-comparisons-${{ inputs.python-version }}-${{ inputs.matplotlib-version }}
+          name: failed-comparisons-${{ inputs.python-version }}-${{ inputs.matplotlib-version }}-${{ github.sha }}
           path: results/*
