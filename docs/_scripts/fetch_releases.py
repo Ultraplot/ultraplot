@@ -65,7 +65,8 @@ def fetch_releases():
         print(f"Error fetching releases!")
         return ""
 
-    rst_content = ".. _whats_new:\n\n==========\n\nWhat's new?\n==========\n\n"  # H1
+    header = "What's new?"
+    rst_content = f".. _whats_new:\n\n{header}\n{'=' * len(header)}\n\n"  # H1
 
     for release in releases:
         # ensure title is formatted as {tag}: {title}
