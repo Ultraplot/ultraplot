@@ -74,7 +74,7 @@ def fetch_releases():
         if not title.startswith(tag):
             title = f"{tag}: {title}"
         else:
-            title = title[len(tag):]
+            title = title[len(tag) :]
             while title:
                 if not title[0].isalpha():
                     title = title[1:]
