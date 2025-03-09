@@ -36,9 +36,31 @@ def format_release_body(text):
     return formatted_text.strip()
 
 
+def fetch_all_releases():
+    """Fetches all GitHub releases across multiple pages."""
+    releases = []
+    page = 1
+
+    while True:
+        response = requests.get(GITHUB_API_URL, params={"per_page": 30, "page": page})
+        if response.status_code != 200:
+            print(f"Error fetching releases: {response.status_code}")
+            break
+
+        page_data = response.json()
+        # If the page is empty, stop fetching
+        if not page_data:
+            break
+
+        releases.extend(page_data)
+        page += 1
+
+    return releases
+
+
 def fetch_releases():
     """Fetches the latest releases from GitHub and formats them as RST."""
-    response = requests.get(GITHUB_API_URL)
+    response = fetch_all_releases()
     if response.status_code != 200:
         print(f"Error fetching releases: {response.status_code}")
         return ""
