@@ -71,9 +71,7 @@ def fetch_releases():
         # ensure title is formatted as {tag}: {title}
         tag = release["tag_name"].lower()
         title = release["name"]
-        if not title.startswith(tag):
-            title = f"{tag}: {title}"
-        else:
+        if title.startswith(tag):
             title = title[len(tag) :]
             while title:
                 if not title[0].isalpha():
@@ -82,7 +80,12 @@ def fetch_releases():
                 else:
                     title = title.strip()
                     break
+        
+        if title:
             title = f"{tag}: {title}"
+        else:
+            title = tag
+
         date = release["published_at"][:10]
         body = format_release_body(release["body"] or "")
 
