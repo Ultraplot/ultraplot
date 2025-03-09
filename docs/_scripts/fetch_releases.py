@@ -68,7 +68,21 @@ def fetch_releases():
     rst_content = ".. _whats_new:\n\n==========\n\nWhat's new?\n==========\n\n"  # H1
 
     for release in releases:
+        # ensure title is formatted as {tag}: {title}
+        tag = release["tag_name"].lower()
         title = release["name"]
+        if not title.startswith(tag):
+            title = f"{tag}: {title}"
+        else:
+            title = title[len(tag):]
+            while title:
+                if not title[0].isalpha():
+                    title = title[1:]
+                    title = title.strip()
+                else:
+                    title = title.strip()
+                    break
+            title = f"{tag}: {title}"
         date = release["published_at"][:10]
         body = format_release_body(release["body"] or "")
 
