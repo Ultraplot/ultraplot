@@ -1304,7 +1304,7 @@ class ContinuousColormap(mcolors.LinearSegmentedColormap, _Colormap):
         ----------
         path : path-like, optional
             The output filename. If not provided, the colormap is saved in the
-            ``cmaps`` subfolder in `~ultraplot.config.Configurator.user_folder`
+            ``cmaps`` subfolder in :func:`~ultraplot.config.Configurator.user_folder`
             under the filename ``name.json`` (where ``name`` is the colormap
             name). Valid extensions are shown in the below table.
 
@@ -1778,7 +1778,7 @@ class DiscreteColormap(mcolors.ListedColormap, _Colormap):
         ----------
         path : path-like, optional
             The output filename. If not provided, the colormap is saved in the
-            ``cycles`` subfolder in `~ultraplot.config.Configurator.user_folder`
+            ``cycles`` subfolder in :func:`~ultraplot.config.Configurator.user_folder`
             under the filename ``name.hex`` (where ``name`` is the color cycle
             name). Valid extensions are described in the below table.
 
@@ -3038,7 +3038,7 @@ class ColorDatabase(MutableMapping, dict):
 
         This works everywhere that colors are used in matplotlib, for
         example as `color`, `edgecolor', or `facecolor` keyword arguments
-        passed to `~ultraplot.axes.PlotAxes` commands.
+        passed to :class:`~ultraplot.axes.PlotAxes` commands.
         """
         key = self._parse_key(key)
         return dict.__getitem__(self, key)

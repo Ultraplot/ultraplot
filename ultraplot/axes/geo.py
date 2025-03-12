@@ -113,8 +113,8 @@ lonlabels, latlabels, labels : str, bool, or sequence, :rc:`grid.labels`
       and the ``(left, right)`` sides for latitudes.
     * A boolean 4-tuple indicating whether to draw labels on the
       ``(left, right, bottom, top)`` sides, as with the basemap
-      `~mpl_toolkits.basemap.Basemap.drawmeridians` and
-      `~mpl_toolkits.basemap.Basemap.drawparallels` `labels` keyword.
+      :func:`~mpl_toolkits.basemap.Basemap.drawmeridians` and
+      :func:`~mpl_toolkits.basemap.Basemap.drawparallels` `labels` keyword.
 
 loninline, latinline, inlinelabels : bool, default: :rc:`grid.inlinelabels`
     *For cartopy axes only.*
@@ -165,7 +165,7 @@ reso : {'lo', 'med', 'hi', 'x-hi', 'xx-hi'}, optional
     must be passed to `~ultraplot.constructor.Proj` instead.
 color : color-spec, default: :rc:`meta.color`
     The color for the axes edge. Propagates to `labelcolor` unless specified
-    otherwise (similar to `ultraplot.axes.CartesianAxes.format`).
+    otherwise (similar to :func:`ultraplot.axes.CartesianAxes.format`).
 gridcolor : color-spec, default: :rc:`grid.color`
     The color for the gridline labels.
 labelcolor : color-spec, default: `color` or :rc:`grid.labelcolor`
@@ -771,8 +771,8 @@ class GeoAxes(plot.PlotAxes):
         The cartopy `~cartopy.mpl.gridliner.Gridliner`
         used for major gridlines or a 2-tuple containing the
         (longitude, latitude) major gridlines returned by
-        basemap's `~mpl_toolkits.basemap.Basemap.drawmeridians`
-        and `~mpl_toolkits.basemap.Basemap.drawparallels`.
+        basemap's :func:`~mpl_toolkits.basemap.Basemap.drawmeridians`
+        and :func:`~mpl_toolkits.basemap.Basemap.drawparallels`.
         This can be used for customization and debugging.
         """
         if self._name == "basemap":
@@ -786,8 +786,8 @@ class GeoAxes(plot.PlotAxes):
         The cartopy `~cartopy.mpl.gridliner.Gridliner`
         used for minor gridlines or a 2-tuple containing the
         (longitude, latitude) minor gridlines returned by
-        basemap's `~mpl_toolkits.basemap.Basemap.drawmeridians`
-        and `~mpl_toolkits.basemap.Basemap.drawparallels`.
+        basemap's :func:`~mpl_toolkits.basemap.Basemap.drawmeridians`
+        and :func:`~mpl_toolkits.basemap.Basemap.drawparallels`.
         This can be used for customization and debugging.
         """
         if self._name == "basemap":

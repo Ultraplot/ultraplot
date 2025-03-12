@@ -19,7 +19,7 @@
 # Color names
 # ===========
 #
-# ultraplot registers several new color names and includes tools for defining
+# UltraPlot registers several new color names and includes tools for defining
 # your own color names. These features are described below.
 
 
@@ -29,28 +29,28 @@
 # Included colors
 # ---------------
 #
-# ultraplot adds new color names from the `XKCD color survey
+# UltraPlot adds new color names from the `XKCD color survey
 # <https://blog.xkcd.com/2010/05/03/color-survey-results/>`__  and
 # the `Open Color <https://github.com/yeun/open-color>`__ UI design color
-# palettes. You can use `~ultraplot.demos.show_colors` to generate a table of these
+# palettes. You can use :func:`~ultraplot.demos.show_colors` to generate a table of these
 # colors. Note that matplotlib's native `X11/CSS4 named colors
 # <https://matplotlib.org/examples/color/named_colors.html>`__ are still
 # registered, but some of these color names may be overwritten by the XKCD names,
 # and we encourage choosing colors from the below tables instead. XKCD colors
 # are `available in matplotlib
 # <https://matplotlib.org/stable/tutorials/colors/colors.html>`__ under the
-# ``xkcd:`` prefix, but ultraplot doesn't require this prefix because the XKCD
+# ``xkcd:`` prefix, but UltraPlot doesn't require this prefix because the XKCD
 # selection is larger and the names are generally more likely to match your
 # intuition for what a color "should" look like.
 #
-# For all colors, ultraplot ensures that ``'grey'`` is a synonym of ``'gray'``
-# (for example, ``'grey5'`` and ``'gray5'`` are both valid). ultraplot also
+# For all colors, UltraPlot ensures that ``'grey'`` is a synonym of ``'gray'``
+# (for example, ``'grey5'`` and ``'gray5'`` are both valid). UltraPlot also
 # retricts the available XKCD colors with a filtering algorithm so they are
 # "distinct" in :ref:`perceptually uniform space <ug_perceptual>`. This
 # makes it a bit easier to pick out colors from the table generated with
-# `~ultraplot.demos.show_colors`. The filtering algorithm also cleans up similar
+# :func:`~ultraplot.demos.show_colors`. The filtering algorithm also cleans up similar
 # names -- for example, ``'reddish'`` and ``'reddy'`` are changed to ``'red'``.
-# You can adjust the filtering algorithm by calling `~ultraplot.config.register_colors`
+# You can adjust the filtering algorithm by calling :func:`~ultraplot.config.register_colors`
 # with the `space` or `margin` keywords.
 
 # %%
@@ -65,17 +65,17 @@ fig, axs = uplt.show_colors()
 # Modifying colors
 # ----------------
 #
-# ultraplot provides the top-level `~ultraplot.utils.set_alpha`,
-# `~ultraplot.utils.set_hue`, `~ultraplot.utils.set_saturation`,
-# `~ultraplot.utils.set_luminance`, `~ultraplot.utils.shift_hue`,
-# `~ultraplot.utils.scale_saturation`, and `~ultraplot.utils.scale_luminance`
+# UltraPlot provides the top-level :func:`~ultraplot.utils.set_alpha`,
+# :func:`~ultraplot.utils.set_hue`, :func:`~ultraplot.utils.set_saturation`,
+# :func:`~ultraplot.utils.set_luminance`, :func:`~ultraplot.utils.shift_hue`,
+# :func:`~ultraplot.utils.scale_saturation`, and :func:`~ultraplot.utils.scale_luminance`
 # functions for quickly modifying existing colors. The ``set`` functions change
 # individual hue, saturation, or luminance values in the :ref:`perceptually uniform
 # colorspace <ug_perceptual>` specified by the `space` keyword (default is ``'hcl'``).
 # The ``shift`` and ``scale`` functions shift or scale the
 # hue, saturation, or luminance by the input value -- for example,
 # ``uplt.scale_luminance('color', 1.2)`` makes ``'color'`` 20% brighter. These
-# are useful for creating color gradations outside of `~ultraplot.colors.Cycle`
+# are useful for creating color gradations outside of :class:`~ultraplot.colors.Cycle`
 # or if you simply spot a color you like and want to make it a bit
 # brighter, less vibrant, etc.
 
@@ -130,8 +130,8 @@ for scale in (0, 1, 3):
 # on the discrete colormap color list. This feature is powered by the
 # `~ultraplot.colors.ColorDatabase` class. This is useful if you spot a
 # nice color in one of the available colormaps or color cycles and want
-# to use it for some arbitrary plot element. Use the `~ultraplot.utils.to_rgb` or
-# `~ultraplot.utils.to_rgba` functions to retrieve the RGB or RGBA channel values.
+# to use it for some arbitrary plot element. Use the :func:`~ultraplot.utils.to_rgb` or
+# :func:`~ultraplot.utils.to_rgba` functions to retrieve the RGB or RGBA channel values.
 
 # %%
 import ultraplot as uplt
@@ -190,12 +190,12 @@ fig.format(
 # ---------------------
 #
 # You can register your own colors by adding ``.txt`` files to the
-# ``colors`` subfolder inside `~ultraplot.config.Configurator.user_folder`,
+# ``colors`` subfolder inside :func:`~ultraplot.config.Configurator.user_folder`,
 # or to a folder named ``ultraplot_colors`` in the same directory as your python session
-# or an arbitrary parent directory (see `~ultraplot.config.Configurator.local_folders`).
-# After adding the file, call `~ultraplot.config.register_colors` or restart your python
+# or an arbitrary parent directory (see :func:`~ultraplot.config.Configurator.local_folders`).
+# After adding the file, call :func:`~ultraplot.config.register_colors` or restart your python
 # session. You can also manually pass file paths, dictionaries, ``name=color``
-# keyword arguments to `~ultraplot.config.register_colors`. Each color
+# keyword arguments to :func:`~ultraplot.config.register_colors`. Each color
 # file should contain lines that look like ``color: #xxyyzz``
 # where ``color`` is the registered color name and ``#xxyyzz`` is
 # the HEX value. Lines beginning with ``#`` are ignored as comments.

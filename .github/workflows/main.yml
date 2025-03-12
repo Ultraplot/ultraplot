@@ -5,9 +5,29 @@ on:
   pull_request:
     branches: [main, devel]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
+  run-if-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      run: ${{ (github.event_name == 'push' && github.ref_name == 'main') && 'true' || steps.filter.outputs.python }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            python:
+              - 'ultraplot/**'
+
   get-versions:
     runs-on: ubuntu-latest
+    needs:
+      - run-if-changes
+    if: always() && needs.run-if-changes.outputs.run == 'true'
     outputs:
       python-versions: ${{ steps.set-versions.outputs.python-versions }}
       matplotlib-versions: ${{ steps.set-versions.outputs.matplotlib-versions }}
@@ -102,7 +122,10 @@ jobs:
           echo "matplotlib-versions=$(echo $MPL_VERSIONS | jq -c)" >> $GITHUB_OUTPUT
 
   build:
-    needs: get-versions
+    needs:
+      - get-versions
+      - run-if-changes
+    if: always() && needs.run-if-changes.outputs.run == 'true' && needs.get-versions.result == 'success'
     strategy:
       matrix:
         python-version: ${{ fromJson(needs.get-versions.outputs.python-versions) }}
@@ -114,7 +137,21 @@ jobs:
       matplotlib-version: ${{ matrix.matplotlib-version }}
 
   build-success:
-    needs: build
+    needs:
+      - build
+      - run-if-changes
+    if: always()
     runs-on: ubuntu-latest
     steps:
-      - run: echo "All tests passed successfully!"
+      - run: |
+          if [[ '${{ needs.run-if-changes.outputs.run }}' == 'false' ]]; then
+            echo "No changes detected, tests skipped."
+          else
+            if [[ '${{ needs.build.result }}' == 'success' ]]; then
+              echo "All tests passed successfully!"
+            else
+              echo "Tests failed!"
+              exit 1
+            fi
+          fi
+

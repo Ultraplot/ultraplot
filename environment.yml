@@ -11,6 +11,7 @@ dependencies:
   - pandas
   - pytest
   - pytest-mpl
+  - pytest-cov
   - jupyter
   - pip
   - pint

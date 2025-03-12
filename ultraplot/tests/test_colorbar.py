@@ -251,3 +251,20 @@ def test_reversed_levels():
                 ax.pcolormesh(data, colorbar="b", **kw)
                 i += 1
     return fig
+
+
+@pytest.mark.mpl_image_compare
+def test_minor_override():
+    """Test minor ticks override."""
+    # Setting a custom minor tick should override the settings. Here we set the ticks to 1 and the minorticks to half that. We then check that the minor ticks are set correctly
+    data = state.rand(10, 10)
+    left, right, minor, n = 0, 1, 0.05, 11
+    levels = np.linspace(left, right, n)
+    fig, ax = uplt.subplots()
+    m = ax.pcolormesh(data, colorbar="b", levels=levels)
+    cax = ax.colorbar(m, minorticks=minor)
+    assert np.allclose(
+        cax.minorlocator.tick_values(left, right),
+        np.linspace(left - minor, right + minor, n * 2 + 1),
+    )
+    return fig

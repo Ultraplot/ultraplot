@@ -4,20 +4,20 @@
 
 .. _ug_config:
 
-Configuring ultraplot
+Configuring UltraPlot
 ===================
 
 Overview
 --------
 
 A dictionary-like object named `~ultraplot.config.rc`, belonging to the
-`~ultraplot.config.Configurator` class, is created when you import ultraplot.
+`~ultraplot.config.Configurator` class, is created when you import UltraPlot.
 This is your one-stop shop for working with
 `matplotlib settings <ug_rcmpl_>`_
 stored in `~ultraplot.config.rc_matplotlib`
 (our name for the `~matplotlib.rcParams` dictionary)
-and :ref:`ultraplot settings <ug_rcultraplot>`
-stored in `~ultraplot.config.rc_ultraplot`.
+and :ref:`ultraplot settings <ug_rcUltraPlot>`
+stored in `~ultraplot.config.rc_UltraPlot`.
 
 To change global settings on-the-fly, simply update `~ultraplot.config.rc`
 using either dot notation or as you would any other dictionary:
@@ -72,21 +72,21 @@ Matplotlib settings
 -------------------
 
 Matplotlib settings are natively stored in the `~matplotlib.rcParams`
-dictionary. ultraplot makes this dictionary available in the top-level namespace as
+dictionary. UltraPlot makes this dictionary available in the top-level namespace as
 `~ultraplot.config.rc_matplotlib`. All matplotlib settings can also be changed with
 `~ultraplot.config.rc`. Details on the matplotlib settings can be found on
 `this page <ug_rcmpl_>`_.
 
-.. _ug_rcultraplot:
+.. _ug_rcUltraPlot:
 
-ultraplot settings
+UltraPlot settings
 ----------------
 
-ultraplot settings are natively stored in the `~ultraplot.config.rc_ultraplot` dictionary.
+UltraPlot settings are natively stored in the `~ultraplot.config.rc_UltraPlot` dictionary.
 They should almost always be changed with `~ultraplot.config.rc` rather than
-`~ultraplot.config.rc_ultraplot` to ensure that :ref:`meta-settings <ug_rcmeta>` are
+`~ultraplot.config.rc_UltraPlot` to ensure that :ref:`meta-settings <ug_rcmeta>` are
 synced. These settings are not found in `~matplotlib.rcParams` -- they either
-control ultraplot-managed features (e.g., a-b-c labels and geographic gridlines)
+control UltraPlot-managed features (e.g., a-b-c labels and geographic gridlines)
 or they represent existing matplotlib settings with more clear or succinct names.
 Here's a broad overview of the new settings:
 
@@ -116,10 +116,10 @@ Here's a broad overview of the new settings:
 Meta-settings
 -------------
 
-Some ultraplot settings may be more accurately described as "meta-settings",
-as they change several matplotlib and ultraplot settings at once (note that settings
+Some UltraPlot settings may be more accurately described as "meta-settings",
+as they change several matplotlib and UltraPlot settings at once (note that settings
 are only synced when they are changed on the `~ultraplot.config.rc` object rather than
-the `~ultraplot.config.rc_ultraplot` and `~ultraplot.config.rc_matplotlib` dictionaries).
+the `~ultraplot.config.rc_UltraPlot` and `~ultraplot.config.rc_matplotlib` dictionaries).
 Here's a broad overview of the "meta-settings":
 
 * Setting :rcraw:`font.small` (or, equivalently, :rcraw:`fontsmall`) changes
@@ -154,7 +154,7 @@ Here's a broad overview of the "meta-settings":
 Table of settings
 -----------------
 
-A comprehensive table of the new ultraplot settings is shown below.
+A comprehensive table of the new UltraPlot settings is shown below.
 
 .. include:: _static/rctable.rst
 
@@ -163,11 +163,11 @@ A comprehensive table of the new ultraplot settings is shown below.
 The ultraplotrc file
 ------------------
 
-When you import ultraplot for the first time, a ``ultraplotrc`` file is generated with
+When you import UltraPlot for the first time, a ``ultraplotrc`` file is generated with
 all lines commented out. This file is just like `matplotlibrc <ug_mplrc_>`_,
-except it controls both matplotlib *and* ultraplot settings. The syntax is essentially
+except it controls both matplotlib *and* UltraPlot settings. The syntax is essentially
 the same as matplotlibrc, and the file path is very similar to matplotlibrc. On most
-platforms it is found in ``~/.ultraplot/ultraplotrc``, but a loose hidden file in the
+platforms it is found in ``~/.UltraPlot/ultraplotrc``, but a loose hidden file in the
 home directory named ``~/.ultraplotrc`` is also allowed (use
 `~ultraplot.config.Configurator.user_file` to print the path). To update this file
 after a version change, simply remove it and restart your python session.

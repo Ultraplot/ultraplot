@@ -431,3 +431,96 @@ def test_triplot_variants(x, y, z, triangles, use_triangulation, use_datadict):
         else:
             ax.triplot(x, y, "ko-")  # Without specific triangles
     return fig
+
+
+@pytest.mark.mpl_image_compare
+def test_norm_not_modified():
+    """
+    Ensure that norm is correctly passed to pcolor and related functions.
+    """
+    # Create mock data and assign the colors to y
+    # The norm should clip the data and not be modified
+    x = np.arange(10)
+    y = x**2
+    c = y
+    cmap = uplt.Colormap("viridis")
+    norm = uplt.Norm("linear", 0, 10)
+    fig, (left, right) = uplt.subplots(ncols=2, share=0)
+    left.scatter(x, y, c=c, cmap=cmap, norm=norm)
+    assert norm.vmin == 0
+    assert norm.vmax == 10
+
+    arr = state.rand(20, 40) * 1000
+    xe = np.linspace(0, 1, num=40, endpoint=True)
+    ye = np.linspace(0, 1, num=20, endpoint=True)
+
+    norm = uplt.Norm("linear", vmin=0, vmax=1)
+    right.pcolor(xe, ye, arr, cmap="viridis", norm=norm)
+    assert norm.vmin == 0
+    assert norm.vmax == 1
+    return fig
+
+
+@pytest.mark.mpl_image_compare
+def test_line_plot_cyclers():
+    # Sample data
+    M, N = 50, 10
+    state = np.random.RandomState(51423)
+    data1 = (state.rand(M, N) - 0.48).cumsum(axis=1).cumsum(axis=0)
+    data2 = (state.rand(M, N) - 0.48).cumsum(axis=1).cumsum(axis=0) * 1.5
+    data1 += state.rand(M, N)
+    data2 += state.rand(M, N)
+    data1 *= 2
+
+    cmaps = ("Blues", "Reds")
+    cycle = uplt.Cycle(*cmaps)
+
+    # Use property cycle for columns of 2D input data
+    fig, ax = uplt.subplots(ncols=3, sharey=True)
+
+    # Intention of subplots
+    ax[0].set_title("Property cycle")
+    ax[1].set_title("Joined cycle")
+    ax[2].set_title("Separate cycles")
+
+    ax[0].plot(
+        data1 + data2,
+        cycle="black",  # cycle from monochromatic colormap
+        cycle_kw={"ls": ("-", "--", "-.", ":")},
+    )
+
+    # Plot all dat with both cyclers on
+    ax[1].plot(
+        (data1 + data2),
+        cycle=cycle,
+    )
+
+    # Test cyclers separately
+    cycle = uplt.Cycle(*cmaps)
+    for idx in range(0, N):
+        ax[2].plot(
+            (data1[..., idx] + data2[..., idx]),
+            cycle=cycle,
+            cycle_kw={"N": N, "left": 0.3},
+        )
+
+    fig.format(xlabel="xlabel", ylabel="ylabel", suptitle="On-the-fly property cycles")
+    return fig
+
+
+@pytest.mark.mpl_image_compare
+def test_heatmap_labels():
+    """
+    Heatmap function should show labels when asked
+    """
+    x = state.rand(10, 10)
+    # Nans should not be shown
+    x[0, 0] = np.nan
+    x[0, -1] = np.nan
+    x[-1, 0] = np.nan
+    x[-1, -1] = np.nan
+    x[4:6, 4:6] = np.nan
+
+    fig, ax = uplt.subplots()
+    ax.heatmap(x, labels=True)
+    return fig

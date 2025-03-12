@@ -26,11 +26,11 @@
 #
 # This section documents a few basic additions to matplotlib's plotting commands
 # that can be useful for statistical analysis. These features are implemented
-# using the intermediate `~ultraplot.axes.PlotAxes` subclass (see the :ref:`1D plotting
+# using the intermediate :class:`~ultraplot.axes.PlotAxes` subclass (see the :ref:`1D plotting
 # <ug_1dplots>` section for details). Some of these tools will be expanded in the
 # future, but for a more comprehensive suite of statistical plotting utilities, you
 # may be interested in `seaborn`_ (we try to ensure that seaborn plotting commands
-# are compatible with ultraplot figures and axes).
+# are compatible with UltraPlot figures and axes).
 
 # %% [raw] raw_mimetype="text/restructuredtext"
 # .. _ug_errorbars:
@@ -39,11 +39,11 @@
 # ----------------------
 #
 # Error bars and error shading can be quickly added on-the-fly to
-# `~ultraplot.axes.PlotAxes.line`, `~ultraplot.axes.PlotAxes.linex`
-# (equivalently, `~ultraplot.axes.PlotAxes.plot`,
-# `~ultraplot.axes.PlotAxes.plotx`), `~ultraplot.axes.PlotAxes.scatter`,
-# `~ultraplot.axes.PlotAxes.scatterx`, `~ultraplot.axes.PlotAxes.bar`, and
-# `~ultraplot.axes.PlotAxes.barh` plots using any of several keyword arguments.
+# :func:`~ultraplot.axes.PlotAxes.line`, :func:`~ultraplot.axes.PlotAxes.linex`
+# (equivalently, :func:`~ultraplot.axes.PlotAxes.plot`,
+# :func:`~ultraplot.axes.PlotAxes.plotx`), :func:`~ultraplot.axes.PlotAxes.scatter`,
+# :func:`~ultraplot.axes.PlotAxes.scatterx`, :func:`~ultraplot.axes.PlotAxes.bar`, and
+# :func:`~ultraplot.axes.PlotAxes.barh` plots using any of several keyword arguments.
 #
 # If you pass 2D arrays to these commands with ``mean=True``, ``means=True``,
 # ``median=True``, or ``medians=True``, the means or medians of each column are
@@ -55,7 +55,7 @@
 # these bars (the ``box`` keywords; think of them as miniature boxplots), a
 # transparent primary shading region (the ``shade`` keywords), and a more
 # transparent secondary shading region (the ``fade`` keywords). See the
-# documentation on the `~ultraplot.axes.PlotAxes` commands for details.
+# documentation on the :class:`~ultraplot.axes.PlotAxes` commands for details.
 
 
 # %%
@@ -153,14 +153,14 @@ for orientation, array in zip(("vertical", "horizontal"), (varray, harray)):
 # --------------------------
 #
 # Vertical and horizontal box and violin plots can be drawn using
-# `~ultraplot.axes.PlotAxes.boxplot`, `~ultraplot.axes.PlotAxes.violinplot`,
-# `~ultraplot.axes.PlotAxes.boxploth`, and `~ultraplot.axes.PlotAxes.violinploth` (or
-# their new shorthands, `~ultraplot.axes.PlotAxes.box`, `~ultraplot.axes.PlotAxes.violin`,
-# `~ultraplot.axes.PlotAxes.boxh`, and `~ultraplot.axes.PlotAxes.violinh`). The
-# ultraplot versions employ aesthetically pleasing defaults and permit flexible
+# :func:`~ultraplot.axes.PlotAxes.boxplot`, :func:`~ultraplot.axes.PlotAxes.violinplot`,
+# :func:`~ultraplot.axes.PlotAxes.boxploth`, and :func:`~ultraplot.axes.PlotAxes.violinploth` (or
+# their new shorthands, :func:`~ultraplot.axes.PlotAxes.box`, :func:`~ultraplot.axes.PlotAxes.violin`,
+# :func:`~ultraplot.axes.PlotAxes.boxh`, and :func:`~ultraplot.axes.PlotAxes.violinh`). The
+# UltraPlot versions employ aesthetically pleasing defaults and permit flexible
 # configuration using keywords like `color`, `barcolor`, and `fillcolor`.
-# They also automatically apply axis labels based on the `~pandas.DataFrame`
-# or `~xarray.DataArray` column labels. Violin plot error bars are controlled
+# They also automatically apply axis labels based on the :class:`~pandas.DataFrame`
+# or :class:`~xarray.DataArray` column labels. Violin plot error bars are controlled
 # with the same keywords used for :ref:`on-the-fly error bars <ug_errorbars>`.
 
 # %%
@@ -203,21 +203,21 @@ ax.format(title="Multiple colors", ymargin=0.15)
 # -----------------------------
 #
 # Vertical and horizontal histograms can be drawn with
-# `~ultraplot.axes.PlotAxes.hist` and `~ultraplot.axes.PlotAxes.histh`.
-# As with the other 1D `~ultraplot.axes.PlotAxes` commands, multiple histograms
+# :func:`~ultraplot.axes.PlotAxes.hist` and :func:`~ultraplot.axes.PlotAxes.histh`.
+# As with the other 1D :class:`~ultraplot.axes.PlotAxes` commands, multiple histograms
 # can be drawn by passing 2D arrays instead of 1D arrays, and the color
 # cycle used to color histograms can be changed on-the-fly using
 # the `cycle` and `cycle_kw` keywords. Likewise, 2D histograms can
-# be drawn with the `~ultraplot.axes.PlotAxes.hist2d`
-# `~ultraplot.axes.PlotAxes.hexbin` commands, and their colormaps can
+# be drawn with the :func:`~ultraplot.axes.PlotAxes.hist2d`
+# :func:`~ultraplot.axes.PlotAxes.hexbin` commands, and their colormaps can
 # be changed on-the-fly with the `cmap` and `cmap_kw` keywords (see
 # the :ref:`2D plotting section <ug_apply_cmap>`). Marginal distributions
 # for the 2D histograms can be added using :ref:`panel axes <ug_panels>`.
 #
-# In the future, ultraplot will include options for adding "smooth" kernel density
+# In the future, UltraPlot will include options for adding "smooth" kernel density
 # estimations to histograms plots using a `kde` keyword. It will also include
 # separate `ultraplot.axes.PlotAxes.kde` and `ultraplot.axes.PlotAxes.kde2d` commands.
-# The `~ultraplot.axes.PlotAxes.violin` and `~ultraplot.axes.PlotAxes.violinh` commands
+# The :func:`~ultraplot.axes.PlotAxes.violin` and :func:`~ultraplot.axes.PlotAxes.violinh` commands
 # will use the same algorithm for kernel density estimation as the `kde` commands.
 
 # %%
