@@ -1319,7 +1319,7 @@ class Axes(maxes.Axes):
             _, key = pair
             value = kwargs.pop(key, None)
             if isinstance(value, str):
-                value = units(kwargs[key], "em", fontsize=fontsize)
+                value = units(value, "em", fontsize=fontsize)
             if value is not None:
                 kwargs[key] = value
 
