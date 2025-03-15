@@ -179,3 +179,18 @@ def test_tuple_handles():
             handler_map={tuple: legend_handler.HandlerTuple(pad=0, ndivide=3)},
         )
     return fig
+
+
+@pytest.mark.image_compare
+def test_legend_col_spacing():
+    """
+    Test legend column spacing.
+    """
+    fig, ax = uplt.subplots()
+    ax.plot(state.rand(10), label="short")
+    ax.plot(state.rand(10), label="longer label")
+    ax.plot(state.rand(10), label="even longer label")
+    for idx in range(3):
+        ax.legend(loc="bottom", ncol=3, columnspacing=f"{idx}em")
+    uplt.show(block=1)
+    return fig
