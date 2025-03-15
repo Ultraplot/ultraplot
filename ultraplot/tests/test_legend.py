@@ -181,7 +181,7 @@ def test_tuple_handles():
     return fig
 
 
-@pytest.mark.image_compare
+@pytest.mark.mpl_image_compare
 def test_legend_col_spacing():
     """
     Test legend column spacing.
