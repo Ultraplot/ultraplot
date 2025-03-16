@@ -43,7 +43,6 @@ class StoreFailedMplPlugin:
         )
         target = (self.result_dir / name).absolute()
         if target.is_dir():
-            print(f"Removing {report.nodeid}")
             shutil.rmtree(target)
         else:
             print(f"Did not find {report.nodeid}")
@@ -58,7 +57,7 @@ class StoreFailedMplPlugin:
                     self._remove_success(report)
             else:
                 print(f"{report.failed=}")
-                print(f"Skipping {report.nodeid}")
+                print(f"Test {report.nodeid} failed!")
 
 
 # Register the plugin if the option is used
