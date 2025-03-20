@@ -344,7 +344,7 @@ for globe in (False, True):
 # borders using :ref:`settings <rc_UltraPlot>` like `land`, `landcolor`, `coast`,
 # `coastcolor`, and `coastlinewidth`. Finally, since `ultraplot.axes.GeoAxes.format`
 # calls `ultraplot.axes.Axes.format`, it can be used to add axes titles, a-b-c labels,
-# and figure titles, just like :func:`ultraplot.axes.CartesianAxes.format`.
+# and figure titles, just like :func:`ultraplot.axes.CartesianAxes.format`. UltraPlot also adds the ability to add tick marks for longitude and latitude using the keywords `lontick` and `lattick` for rectilinear projections only. This can enhance contrast and readability under some conditions, e.g. when overlaying contours.
 #
 # For details, see the `ultraplot.axes.GeoAxes.format` documentation.
 
