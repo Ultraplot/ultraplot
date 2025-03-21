@@ -40,7 +40,7 @@
 # To create `polar axes <polar_>`_, pass ``proj='polar'`` to an axes-creation
 # command like :meth:`ultraplot.figure.Figure.add_subplot`. Polar axes are represented with the
 # :class:`~ultraplot.axes.PolarAxes` subclass, which has its own :func:`~ultraplot.axes.PolarAxes.format`
-# command. `ultraplot.axes.PolarAxes.format` facilitates polar-specific modifications
+# command. :meth:`ultraplot.axes.PolarAxes.format` facilitates polar-specific modifications
 # like changing the central radius `r0`, the zero azimuth location `theta0`,
 # and the positive azimuthal direction `thetadir`. It also supports toggling and
 # configuring the "major" and "minor" gridline locations with `grid`, `rlocator`,
