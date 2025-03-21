@@ -186,7 +186,7 @@ axs.format(
 #   available as the :attr:`~ultraplot.axes.GeoAxes.projection` attribute.
 #
 # Together, these features let you work with geophysical data without invoking
-# verbose cartopy classes like :calss:`~cartopy.crs.LambertAzimuthalEqualArea` or
+# verbose cartopy classes like :class:`~cartopy.crs.LambertAzimuthalEqualArea` or
 # keeping track of separate :class:`~mpl_toolkits.basemap.Basemap` instances. This
 # considerably reduces the amount of code needed to make complex geographic
 # plots. In the below examples, we create a variety of plots using both
