@@ -224,17 +224,18 @@ extlinks = {
 # Set up mapping for other projects' docs
 intersphinx_mapping = {
     "cycler": ("https://matplotlib.org/cycler/", None),
-    "matplotlib": ("https://matplotlib.org/stable", None),
-    "sphinx": ("http://www.sphinx-doc.org/en/stable", None),
-    "python": ("https://docs.python.org/3", None),
-    "numpy": ("https://docs.scipy.org/doc/numpy", None),
-    "scipy": ("https://docs.scipy.org/doc/scipy/reference", None),
-    "xarray": ("http://xarray.pydata.org/en/stable", None),
-    "cartopy": ("https://scitools.org.uk/cartopy/docs/latest", None),
-    "basemap": ("https://matplotlib.org/basemap/stable", None),
-    "pandas": ("https://pandas.pydata.org/pandas-docs/stable", None),
+    "matplotlib": ("https://matplotlib.org/stable/", None),
+    "sphinx": ("https://www.sphinx-doc.org/en/master/", None),
+    "python": ("https://docs.python.org/3/", None),
+    "numpy": ("https://numpy.org/doc/stable/", None),
+    "scipy": ("https://docs.scipy.org/doc/scipy/", None),
+    "xarray": ("https://docs.xarray.dev/en/stable/", None),
+    "cartopy": ("https://scitools.org.uk/cartopy/docs/latest/", None),
+    "basemap": ("https://matplotlib.org/basemap/", None),
+    "pandas": ("https://pandas.pydata.org/pandas-docs/stable/", None),
     "pint": ("https://pint.readthedocs.io/en/stable/", None),
 }
+
 
 # Fix duplicate class member documentation from autosummary + numpydoc
 # See: https://github.com/phn/pytpm/issues/3#issuecomment-12133978
