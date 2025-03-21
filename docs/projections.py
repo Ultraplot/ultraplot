@@ -321,7 +321,7 @@ for globe in (False, True):
 # Formatting projections
 # ----------------------
 #
-# The `ultraplot.axes.GeoAxes.format` command facilitates geographic-specific axes
+# The :meth:`ultraplot.axes.GeoAxes.format` command facilitates geographic-specific axes
 # modifications. It can toggle and configure the "major" and "minor" longitude and
 # latitude gridline locations using the `grid`, `lonlocator`, `latlocator`, `gridminor`,
 # `lonminorlocator`, and `latminorlocator` keys, and configure gridline label formatting
