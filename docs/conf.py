@@ -63,8 +63,8 @@ sys.path.insert(0, os.path.abspath(".."))
 # Print available system fonts
 from matplotlib.font_manager import fontManager
 
-# print("Font files:", end=" ")
-# print(", ".join(os.path.basename(font.fname) for font in fontManager.ttflist))
+print("Font files:", end=" ")
+print(", ".join(os.path.basename(font.fname) for font in fontManager.ttflist))
 
 
 # -- Project information -------------------------------------------------------
@@ -224,15 +224,15 @@ extlinks = {
 # Set up mapping for other projects' docs
 intersphinx_mapping = {
     "cycler": ("https://matplotlib.org/cycler/", None),
-    "matplotlib": ("https://matplotlib.org/stable/", None),
-    "sphinx": ("http://www.sphinx-doc.org/en/stable/", None),
-    "python": ("https://docs.python.org/3/", None),
-    "numpy": ("https://numpy.org/doc/stable/", None),
-    "scipy": ("https://docs.scipy.org/doc/scipy/", None),
-    "xarray": ("https://docs.xarray.dev/en/stable/", None),
-    "cartopy": ("https://scitools.org.uk/cartopy/docs/latest/", None),  #
-    "basemap": ("https://matplotlib.org/basemap/stable/", None),
-    "pandas": ("https://pandas.pydata.org/pandas-docs/stable/", None),
+    "matplotlib": ("https://matplotlib.org/stable", None),
+    "sphinx": ("http://www.sphinx-doc.org/en/stable", None),
+    "python": ("https://docs.python.org/3", None),
+    "numpy": ("https://docs.scipy.org/doc/numpy", None),
+    "scipy": ("https://docs.scipy.org/doc/scipy/reference", None),
+    "xarray": ("http://xarray.pydata.org/en/stable", None),
+    "cartopy": ("https://scitools.org.uk/cartopy/docs/latest", None),
+    "basemap": ("https://matplotlib.org/basemap/stable", None),
+    "pandas": ("https://pandas.pydata.org/pandas-docs/stable", None),
     "pint": ("https://pint.readthedocs.io/en/stable/", None),
 }
 
@@ -290,8 +290,6 @@ nbsphinx_custom_formats = {".py": ["jupytext.reads", {"fmt": "py:percent"}]}
 # The name of the Pygments (syntax highlighting) style to use.
 # The light-dark theme toggler overloads this, but set default anyway
 pygments_style = "none"
-
-jupyter_execute_kwargs = {"cache": "yes"}  # Enable caching
 
 
 # -- Options for HTML output -------------------------------------------------

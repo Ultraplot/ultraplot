@@ -38,21 +38,21 @@
 # ----------
 #
 # To create `polar axes <polar_>`_, pass ``proj='polar'`` to an axes-creation
-# command like :func:`~ultraplot.figure.Figure.add_subplot`. Polar axes are represented with the
+# command like `ultraplot.figure.Figure.add_subplot`. Polar axes are represented with the
 # :class:`~ultraplot.axes.PolarAxes` subclass, which has its own :func:`~ultraplot.axes.PolarAxes.format`
-# command. :func:`~ultraplot.axes.PolarAxes.format` facilitates polar-specific modifications
-# like changing the central radius :param:`r0`, the zero azimuth location :param:`theta0`,
+# command. `ultraplot.axes.PolarAxes.format` facilitates polar-specific modifications
+# like changing the central radius `r0`, the zero azimuth location `theta0`,
 # and the positive azimuthal direction `thetadir`. It also supports toggling and
 # configuring the "major" and "minor" gridline locations with `grid`, `rlocator`,
 # `thetalocator`, `gridminor`, `rminorlocator`, and `thetaminorlocator` and formatting
 # the gridline labels with `rformatter` and `thetaformatter` (analogous to `xlocator`,
-# `xformatter`, and `xminorlocator` used by :func:`~ultraplot.axes.CartesianAxes.format`),
+# `xformatter`, and `xminorlocator` used by :func:`ultraplot.axes.CartesianAxes.format`),
 # and creating "annular" or "sector" plots by changing the radial or azimuthal
-# bounds `rlim` and `thetalim`. Finally, since :func:`~ultraplot.axes.PolarAxes.format`
-# calls :func:`~ultraplot.axes.Axes.format`, it can be used to add axes titles, a-b-c
+# bounds `rlim` and `thetalim`. Finally, since `ultraplot.axes.PolarAxes.format`
+# calls `ultraplot.axes.Axes.format`, it can be used to add axes titles, a-b-c
 # labels, and figure titles.
 #
-# For details, see :func:`~ultraplot.axes.PolarAxes.format`.
+# For details, see `ultraplot.axes.PolarAxes.format`.
 
 # %%
 import ultraplot as uplt
@@ -115,18 +115,18 @@ axs[2].format(
 #
 # To create geographic axes, pass ``proj='name'`` to an axes-creation command like
 # `ultraplot.figure.Figure.add_subplot`, where ``name`` is any valid :ref:`PROJ projection
-# name <proj_table>`. Alternatively, you can pass a :class:`cartopy.crs.Projection` or
-# :class:`~mpl_toolkits.basemap.Basemap` instance returned by the :class:`~ultraplot.constructor.Proj`
+# name <proj_table>`. Alternatively, you can pass a `cartopy.crs.Projection` or
+# `~mpl_toolkits.basemap.Basemap` instance returned by the :class:`~ultraplot.constructor.Proj`
 # :ref:`constructor function <why_constructor>` to `proj` (see below for details). If
 # you want to create your subplots :ref:`all-at-once <ug_subplot>` with e.g.
 # :func:`~ultraplot.ui.subplots` but need different projections for each subplot, you can pass
 # a list or dictionary to the `proj` keyword (e.g., ``proj=('cartesian', 'pcarree')``
 # or ``proj={2: 'pcarree'}`` -- see :func:`~ultraplot.figure.Figure.subplots` for details).
-# Geographic axes are represented with the :class:`~ultraplot.axes.GeoAxes` subclass, which
+# Geographic axes are represented with the `~ultraplot.axes.GeoAxes` subclass, which
 # has its own :func:`~ultraplot.axes.GeoAxes.format` command. `ultraplot.axes.GeoAxes.format`
 # facilitates :ref:`geographic-specific modifications <ug_geoformat>` like meridional
 # and parallel gridlines and land mass outlines. The syntax is very similar to
-# :func:`~ultraplot.axes.CartesianAxes.format`. Note that the `proj` keyword and several of
+# :func:`ultraplot.axes.CartesianAxes.format`. Note that the `proj` keyword and several of
 # the :func:`~ultraplot.axes.GeoAxes.format` keywords are inspired by the basemap API.
 # In the below example, we create and format a very simple geographic plot.
 
