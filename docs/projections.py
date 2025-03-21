@@ -186,7 +186,7 @@ axs.format(
 #   available as the :attr:`~ultraplot.axes.GeoAxes.projection` attribute.
 #
 # Together, these features let you work with geophysical data without invoking
-# verbose cartopy classes like :calss:`~cartopy.crs.LambertAzimuthalEqualArea` or
+# verbose cartopy classes like :class:`~cartopy.crs.LambertAzimuthalEqualArea` or
 # keeping track of separate :class:`~mpl_toolkits.basemap.Basemap` instances. This
 # considerably reduces the amount of code needed to make complex geographic
 # plots. In the below examples, we create a variety of plots using both
@@ -321,7 +321,7 @@ for globe in (False, True):
 # Formatting projections
 # ----------------------
 #
-# The `ultraplot.axes.GeoAxes.format` command facilitates geographic-specific axes
+# The :meth:`ultraplot.axes.GeoAxes.format` command facilitates geographic-specific axes
 # modifications. It can toggle and configure the "major" and "minor" longitude and
 # latitude gridline locations using the `grid`, `lonlocator`, `latlocator`, `gridminor`,
 # `lonminorlocator`, and `latminorlocator` keys, and configure gridline label formatting
