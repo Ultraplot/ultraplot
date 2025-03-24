@@ -18,7 +18,7 @@ while expanding its scope to meet emerging needs in data visualization across mu
 scientific disciplines.
 
 ProPlot Legacy
--------------
+--------------
 
 UltraPlot stands on the shoulders of ProPlot, which was developed by Luke Davis starting in 2021.
 As a PhD candidate at Colorado State University's Department of Atmospheric Science, Luke
