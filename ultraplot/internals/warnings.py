@@ -13,7 +13,7 @@ from . import ic  # noqa: F401
 REGEX_INTERNAL = re.compile(r"\A(matplotlib|mpl_toolkits|ultraplot)\.")
 
 # Trivial warning class meant only to communicate the source of the warning
-UltraplotWarning = type("UltraPlotWarning", (UserWarning,), {})
+UltraPlotWarning = type("UltraPlotWarning", (UserWarning,), {})
 
 # Add due to overwriting the module name
 catch_warnings = warnings.catch_warnings
@@ -50,7 +50,7 @@ def _warn_ultraplot(message):
             break  # this is the first external frame
         frame = frame.f_back
         stacklevel += 1
-    warnings.warn(message, UltraplotWarning, stacklevel=stacklevel)
+    warnings.warn(message, UltraPlotWarning, stacklevel=stacklevel)
 
 
 def _rename_objs(version, **kwargs):
