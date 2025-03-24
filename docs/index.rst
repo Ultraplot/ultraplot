@@ -151,4 +151,4 @@ For more details, check the full :doc:`User guide <usage>` and :doc:`API Referen
    external-links
    whats_new
    contributing
-   authors
+   about
