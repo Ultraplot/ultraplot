@@ -12,11 +12,6 @@ UltraPlot was developed to extend its capabilities with new features focused on 
 statistical visualization, enhanced interactive elements, and improved integration with
 modern data science workflows.
 
-The transition from ProPlot to UltraPlot represented an evolution in scientific visualization
-tools, preserving the original project's emphasis on beautiful, publication-quality figures
-while expanding its scope to meet emerging needs in data visualization across multiple
-scientific disciplines.
-
 ProPlot Legacy
 -------------
 
