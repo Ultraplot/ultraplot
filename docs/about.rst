@@ -18,7 +18,7 @@ while expanding its scope to meet emerging needs in data visualization across mu
 scientific disciplines.
 
 ProPlot Legacy
---------------
+-------------
 
 UltraPlot stands on the shoulders of ProPlot, which was developed by Luke Davis starting in 2021.
 As a PhD candidate at Colorado State University's Department of Atmospheric Science, Luke
@@ -30,6 +30,17 @@ helping with automatic testing, PyPi deployment, and improving the new user expe
 
 The UltraPlot team is grateful to all ProPlot contributors who laid the groundwork for
 this next generation of scientific visualization tools.
+
+Proplot's Original Contributors
+-------------------------------
+
+* `Luke Davis`_ (Original ProPlot creator)
+* `Riley Brady`_
+* `Mark Harfouche`_
+* `Stephane Raynaud`_
+* `Mickaël Lalande`_
+* `Pratiman Patel`_
+* `Zachary Moon`_
 
 .. _Luke Davis: https://github.com/lukelbd
 
