@@ -24,5 +24,6 @@ dependencies:
   - sphinx-rtd-theme
   - basemap >=1.4.1
   - pre-commit
+  - sphinx-design
   - pip:
       - git+https://github.com/ultraplot/UltraTheme.git
