@@ -21,7 +21,7 @@ for creating **beautiful, publication-quality graphics** with ease.
 #################
 A preview of what UltraPlot can do. For more see the sidebar!
 
-.. grid:: 3
+.. grid:: 1 2 3 3
    :gutter: 2
 
    .. grid-item-card::
