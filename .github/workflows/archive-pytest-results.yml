@@ -79,7 +79,7 @@ jobs:
           Plot Comparison Results
           =======================
 
-          This page provides links to the results of matplotlib test comparisons from CI runs.
+          This page provides links to the results of UltraPlot test comparisons from CI runs.
 
           .. list-table::
              :widths: 15 15 45 25
