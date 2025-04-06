@@ -25,55 +25,61 @@ Below is a gallery showing random examples of what UltraPlot can do, for more ex
    :widths: 33 33 33
    :header-rows: 0
 
-   * - .. image:: https://ultraplot.readthedocs.io/en/latest/_static/example_plots/subplot_example.png
+   * - .. image:: https://ultraplot.readthedocs.io/en/latest/_static/example_plots/subplot_example.svg
          :alt: Subplots & Layouts
          :target: https://ultraplot.readthedocs.io/en/latest/subplots.html
          :width: 100%
+         :height: 200px
 
        **Subplots & Layouts**
 
        Create complex multi-panel layouts effortlessly.
 
-     - .. image:: https://ultraplot.readthedocs.io/en/latest/_static/example_plots/cartesian_example.png
+     - .. image:: https://ultraplot.readthedocs.io/en/latest/_static/example_plots/cartesian_example.svg
          :alt: Cartesian Plots
          :target: https://ultraplot.readthedocs.io/en/latest/cartesian.html
          :width: 100%
+         :height: 200px
 
        **Cartesian Plots**
 
        Easily generate clean, well-formatted plots.
 
-     - .. image:: https://ultraplot.readthedocs.io/en/latest/_static/example_plots/projection_example.png
+     - .. image:: https://ultraplot.readthedocs.io/en/latest/_static/example_plots/projection_example.svg
          :alt: Projections & Maps
          :target: https://ultraplot.readthedocs.io/en/latest/projections.html
          :width: 100%
+         :height: 200px
 
        **Projections & Maps**
 
        Built-in support for projections and geographic plots.
 
-   * - .. image:: https://ultraplot.readthedocs.io/en/latest/_static/example_plots/colorbars_legends_example.png
+   * - .. image:: https://ultraplot.readthedocs.io/en/latest/_static/example_plots/colorbars_legends_example.svg
          :alt: Colorbars & Legends
          :target: https://ultraplot.readthedocs.io/en/latest/colorbars_legends.html
          :width: 100%
+         :height: 200px
 
        **Colorbars & Legends**
 
        Customize legends and colorbars with ease.
 
-     - .. image:: https://ultraplot.readthedocs.io/en/latest/_static/example_plots/panels_example.png
+     - .. image:: https://ultraplot.readthedocs.io/en/latest/_static/example_plots/panels_example.svg
          :alt: Insets & Panels
          :target: https://ultraplot.readthedocs.io/en/latest/insets_panels.html
          :width: 100%
+         :height: 200px
 
        **Insets & Panels**
 
        Add inset plots and panel-based layouts.
 
-     - .. image:: https://ultraplot.readthedocs.io/en/latest/_static/example_plots/colormaps_example.png
+     - .. image:: https://ultraplot.readthedocs.io/en/latest/_static/example_plots/colormaps_example.svg
          :alt: Colormaps & Cycles
          :target: https://ultraplot.readthedocs.io/en/latest/colormaps.html
          :width: 100%
+         :height: 200px
 
        **Colormaps & Cycles**
 

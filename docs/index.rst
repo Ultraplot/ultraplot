@@ -32,7 +32,7 @@ A preview of what UltraPlot can do. For more see the sidebar!
         **Subplots & Layouts**
         ^^^
 
-        .. image:: _static/example_plots/subplot_example.png
+        .. image:: _static/example_plots/subplot_example.svg
             :align: center
 
         Create complex multi-panel layouts effortlessly.
@@ -45,7 +45,7 @@ A preview of what UltraPlot can do. For more see the sidebar!
         **Cartesian Plots**
         ^^^
 
-        .. image:: _static/example_plots/cartesian_example.png
+        .. image:: _static/example_plots/cartesian_example.svg
             :align: center
 
         .. container:: bottom-aligned-text
@@ -60,7 +60,7 @@ A preview of what UltraPlot can do. For more see the sidebar!
         **Projections & Maps**
         ^^^
 
-        .. image:: _static/example_plots/projection_example.png
+        .. image:: _static/example_plots/projection_example.svg
             :align: center
 
         .. container:: bottom-aligned-text
@@ -74,7 +74,7 @@ A preview of what UltraPlot can do. For more see the sidebar!
         **Colorbars & Legends**
         ^^^
 
-        .. image:: _static/example_plots/colorbars_legends_example.png
+        .. image:: _static/example_plots/colorbars_legends_example.svg
             :align: center
 
         Customize legends and colorbars with ease.
@@ -87,7 +87,7 @@ A preview of what UltraPlot can do. For more see the sidebar!
         **Insets & Panels**
         ^^^
 
-        .. image:: _static/example_plots/panels_example.png
+        .. image:: _static/example_plots/panels_example.svg
             :align: center
 
         Add inset plots and panel-based layouts.
@@ -100,7 +100,7 @@ A preview of what UltraPlot can do. For more see the sidebar!
       **Colormaps & Cycles**
       ^^^
 
-      .. image:: _static/example_plots/colormaps_example.png
+      .. image:: _static/example_plots/colormaps_example.svg
         :align: center
 
       Use prebuilt colormaps and define your own color cycles.
