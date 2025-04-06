@@ -37,6 +37,7 @@ jobs:
           workflow: ${{ github.event.workflow_run.workflow_id }}
           workflow_conclusion: any # We want results even if tests fail
           path: temp_artifacts
+          allow_forks: true
 
       # Create a timestamped archive directory
       - name: Prepare archive directory
