@@ -2457,7 +2457,7 @@ class Axes(maxes.Axes):
         loc = self._abc_loc = _translate_loc(loc or self._abc_loc, "text")
         if loc not in ("left", "right", "center"):
             kw.update(self._abc_border_kwargs)
-        if (pad := kwargs.pop("pad", None)) and pad is not None:
+        if (pad := kwargs.pop("pad", None)) is not None:
             self._abc_pad = pad
         kw.update(kwargs)
         self._title_dict["abc"].update(kw)
