@@ -8,6 +8,7 @@ on:
 jobs:
   debug:
     runs-on: ubuntu-latest
+    permissions: {}
     steps:
       - name: Print event data
         run: echo '${{ toJson(github.event) }}'
@@ -15,6 +16,7 @@ jobs:
   archive-test-results:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    permissions: {}
 
     steps:
       - uses: actions/checkout@v4
