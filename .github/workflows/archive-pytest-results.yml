@@ -109,7 +109,7 @@ jobs:
               echo "   * - ${date_formatted}" >> docs/plot_comparison_results.rst
               echo "     - ${sha}" >> docs/plot_comparison_results.rst
               echo "     - ${title} (${branch})" >> docs/plot_comparison_results.rst
-              echo "     -${config_links}" >> docs/plot_comparison_results.rst
+              echo "     - ${config_links}" >> docs/plot_comparison_results.rst
             fi
           done < "docs/_static/mpl-results/archives.txt"
 
