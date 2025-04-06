@@ -835,7 +835,7 @@ class Axes(maxes.Axes):
             # Estimate label size - we can get more precise by using renderer.get_text_width
             # but we'll use a simpler estimation here
             label_size = (
-                max([len(str(l.get_text())) for l in axis.get_ticklabels()]) * 0.5
+                max([len(str(l.get_text())) for l in axis.get_ticklabels()]) * 2
                 if has_labels
                 else 0
             )
@@ -3314,11 +3314,11 @@ def _get_pos_from_locator(
     # Set x-coordinate based on horizontal position
     x, y = 0, 1
     match loc:
-        case "left":
+        case "left" | "outer left":
             x = 0
         case "center":
             x = 0.5
-        case "right":
+        case "right" | "outer right":
             x = 1
         case "upper center" | "lower center":
             x = 0.5
@@ -3326,10 +3326,6 @@ def _get_pos_from_locator(
             x = x_pad
         case "upper right" | "lower right":
             x = 1 - x_pad
-        case "outer right":
-            x = 1 + x_pad
-        case "outer left":
-            x = -x_pad
 
     # Set y-coordinate based on vertical position
     match loc:
