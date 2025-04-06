@@ -2,7 +2,7 @@ name: Archive Plot Comparison Results
 
 on:
   workflow_run:
-    workflows: ["Matrix tests"]
+    workflows: ["Matrix Test"]
     types:
       - completed
 
