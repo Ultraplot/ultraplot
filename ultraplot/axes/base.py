@@ -3337,6 +3337,4 @@ def _get_pos_from_locator(
             y = 1 - y_pad
         case "lower left" | "lower right" | "lower center":
             y = y_pad
-            if loc == "left":
-                y = y_pad
     return (x, y)
