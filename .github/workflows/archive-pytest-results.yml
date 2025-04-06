@@ -28,7 +28,7 @@ jobs:
 
       # Download all artifacts from the triggered workflow
       - name: Download all artifacts
-        uses: dawidd6/action-download-artifact@v2
+        uses: dawidd6/action-download-artifact@v6
         with:
           workflow: ${{ github.event.workflow_run.workflow_id }}
           workflow_conclusion: any # We want results even if tests fail
