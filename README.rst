@@ -16,6 +16,70 @@ Why UltraPlot? | Write Less, Create More
     :alt: Comparison of ProPlot and UltraPlot
     :align: center
 
+Checkout our examples
+=====================
+
+Below is a gallery showing random examples of what UltraPlot can do, for more examples checkout our extensive `docs <https://ultraplot.readthedocs.io>`_.
+
+.. list-table::
+   :widths: 33 33 33
+   :header-rows: 0
+
+   * - .. image:: https://ultraplot.readthedocs.io/en/latest/_static/example_plots/subplot_example.png
+         :alt: Subplots & Layouts
+         :target: https://ultraplot.readthedocs.io/en/latest/subplots.html
+         :width: 100%
+
+       **Subplots & Layouts**
+
+       Create complex multi-panel layouts effortlessly.
+
+     - .. image:: https://ultraplot.readthedocs.io/en/latest/_static/example_plots/cartesian_example.png
+         :alt: Cartesian Plots
+         :target: https://ultraplot.readthedocs.io/en/latest/cartesian.html
+         :width: 100%
+
+       **Cartesian Plots**
+
+       Easily generate clean, well-formatted plots.
+
+     - .. image:: https://ultraplot.readthedocs.io/en/latest/_static/example_plots/projection_example.png
+         :alt: Projections & Maps
+         :target: https://ultraplot.readthedocs.io/en/latest/projections.html
+         :width: 100%
+
+       **Projections & Maps**
+
+       Built-in support for projections and geographic plots.
+
+   * - .. image:: https://ultraplot.readthedocs.io/en/latest/_static/example_plots/colorbars_legends_example.png
+         :alt: Colorbars & Legends
+         :target: https://ultraplot.readthedocs.io/en/latest/colorbars_legends.html
+         :width: 100%
+
+       **Colorbars & Legends**
+
+       Customize legends and colorbars with ease.
+
+     - .. image:: https://ultraplot.readthedocs.io/en/latest/_static/example_plots/panels_example.png
+         :alt: Insets & Panels
+         :target: https://ultraplot.readthedocs.io/en/latest/insets_panels.html
+         :width: 100%
+
+       **Insets & Panels**
+
+       Add inset plots and panel-based layouts.
+
+     - .. image:: https://ultraplot.readthedocs.io/en/latest/_static/example_plots/colormaps_example.png
+         :alt: Colormaps & Cycles
+         :target: https://ultraplot.readthedocs.io/en/latest/colormaps.html
+         :width: 100%
+
+       **Colormaps & Cycles**
+
+       Visually appealing, perceptually uniform colormaps.
+
+
 Documentation
 =============
 
@@ -69,6 +133,6 @@ inside the ``ultraplot`` folder.
    :target: https://results.pre-commit.ci/latest/github/Ultraplot/ultraplot/main
    :alt: pre-commit.ci status
 
-.. |coverage| image:: https://codecov.io/gh/Ultraplot/ultraplot/graph/badge.svg?token=C6ZB7Q9II4 
+.. |coverage| image:: https://codecov.io/gh/Ultraplot/ultraplot/graph/badge.svg?token=C6ZB7Q9II4
    :target: https://codecov.io/gh/Ultraplot/ultraplot
    :alt: coverage
