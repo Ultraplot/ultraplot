@@ -2,6 +2,7 @@
 """
 Test twin, inset, and panel axes.
 """
+import re
 import numpy as np
 import pytest
 import ultraplot as uplt
@@ -197,3 +198,61 @@ def test_outer_labels():
         abc_kw=dict(pad=-0.25),
     )
     return fig
+
+
+def test_abc_padding():
+    """
+    Test the specific calculation for ABC padding in title positioning.
+    """
+    fig, ax = uplt.subplots()
+    renderer = ax.figure._get_renderer()
+
+    # Set up test scenario
+    ax.set_title("Test Title")
+    ax.format(
+        title="Testing",
+        abc="a.",
+        abcloc="or",
+    )
+    # Get initial position
+    initial_abc_x = ax.axes._title_dict["abc"].get_position()[0]
+
+    # Pad the position and check the offset
+    padding_value = 12
+
+    ax.format(
+        title="Testing",
+        abc="a.",
+        abcloc="or",
+        abc_kw=dict(pad=padding_value),
+    )
+    fig.canvas.draw()
+
+    # Verify the new position
+    new_abc_x = ax.axes._title_dict["abc"].get_position()[0]
+
+    # Assert position has changed
+    assert new_abc_x != initial_abc_x, "ABC padding didn't affect position"
+
+    # Reset padding and position
+    ax.format(
+        title="Testing",
+        abc="a.",
+        abcloc="or",
+        abc_kw=dict(pad=0),
+    )
+    fig.canvas.draw()
+    reference_position = ax.axes._title_dict["abc"].get_position()[0]
+
+    # Apply padding again
+    ax.format(
+        title="Testing",
+        abc="a.",
+        abcloc="or",
+        abc_kw=dict(pad=padding_value),
+    )
+    # Verify the exact offset matches our expectation
+    actual_offset = ax.axes._title_dict["abc"].get_position()[0] - reference_position
+    diff = actual_offset - ax.axes._abc_pad  # Note pad is signed!
+    assert np.allclose(diff, -padding_value), "ABC padding offset calculation incorrect"
+    uplt.close(fig)
