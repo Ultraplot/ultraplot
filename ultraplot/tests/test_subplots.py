@@ -148,9 +148,9 @@ def test_reference_aspect():
     """
     # A simple test
     refwidth = 1.5
+    uplt.rc.reset()
     fig, axs = uplt.subplots(ncols=2, refwidth=refwidth)
     fig.auto_layout()
-
     assert np.isclose(refwidth, axs[fig._refnum - 1]._get_size_inches()[0])
 
     # A test with funky layout
