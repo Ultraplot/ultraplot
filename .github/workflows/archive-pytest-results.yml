@@ -3,13 +3,17 @@ name: Archive Plot Comparison Results
 on:
   workflow_run:
     workflows: ["Matrix Test"]
-    types:
-      - completed
+    types: [completed]
 
 jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print event data
+        run: echo '${{ toJson(github.event) }}
   archive-test-results:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
 
     steps:
       - uses: actions/checkout@v4
