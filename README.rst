@@ -29,6 +29,7 @@ Below is a gallery showing random examples of what UltraPlot can do, for more ex
          :alt: Subplots & Layouts
          :target: https://ultraplot.readthedocs.io/en/latest/subplots.html
          :width: 100%
+         :height: 200px
 
        **Subplots & Layouts**
 
@@ -38,6 +39,7 @@ Below is a gallery showing random examples of what UltraPlot can do, for more ex
          :alt: Cartesian Plots
          :target: https://ultraplot.readthedocs.io/en/latest/cartesian.html
          :width: 100%
+         :height: 200px
 
        **Cartesian Plots**
 
@@ -47,6 +49,7 @@ Below is a gallery showing random examples of what UltraPlot can do, for more ex
          :alt: Projections & Maps
          :target: https://ultraplot.readthedocs.io/en/latest/projections.html
          :width: 100%
+         :height: 200px
 
        **Projections & Maps**
 
@@ -56,6 +59,7 @@ Below is a gallery showing random examples of what UltraPlot can do, for more ex
          :alt: Colorbars & Legends
          :target: https://ultraplot.readthedocs.io/en/latest/colorbars_legends.html
          :width: 100%
+         :height: 200px
 
        **Colorbars & Legends**
 
@@ -65,6 +69,7 @@ Below is a gallery showing random examples of what UltraPlot can do, for more ex
          :alt: Insets & Panels
          :target: https://ultraplot.readthedocs.io/en/latest/insets_panels.html
          :width: 100%
+         :height: 200px
 
        **Insets & Panels**
 
@@ -74,6 +79,7 @@ Below is a gallery showing random examples of what UltraPlot can do, for more ex
          :alt: Colormaps & Cycles
          :target: https://ultraplot.readthedocs.io/en/latest/colormaps.html
          :width: 100%
+         :height: 200px
 
        **Colormaps & Cycles**
 
