@@ -177,3 +177,23 @@ def test_twin_axes_3():
         ax.format(ylabel="%s Thing" % color, ycolor=color)
     axs[0].format(xlabel="xlabel")
     return fig
+
+
+@pytest.mark.mpl_image_compare
+def test_outer_labels():
+    """
+    Produces a plot where the the abc loc is in top left or top right of a plot. Padding can be used for finer adjustment if necessary.
+    """
+    fig, ax = uplt.subplots(ncols=2)
+    ax[0].format(
+        abc="a.",
+        abcloc="ol",
+        title="testing",
+    )
+    ax[1].format(
+        abc="a.",
+        abcloc="outer right",
+        title="testing",
+        abc_kw=dict(pad=-0.25),
+    )
+    return fig

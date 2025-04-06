@@ -105,6 +105,8 @@ LEGEND_LOCS = {
     "cl": "center left",
     "uc": "upper center",
     "lc": "lower center",
+    "ol": "outer left",
+    "or": "outer right",
 }
 for _loc in tuple(LEGEND_LOCS.values()):
     if _loc not in LEGEND_LOCS:
@@ -123,6 +125,8 @@ TEXT_LOCS = {
         "lower left",
         "lower center",
         "lower right",
+        "outer left",
+        "outer right",
     )
 }
 COLORBAR_LOCS = {

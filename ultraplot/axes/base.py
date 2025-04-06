@@ -765,6 +765,7 @@ class Axes(maxes.Axes):
         self._auto_format = None  # manipulated by wrapper functions
         self._abc_border_kwargs = {}
         self._abc_loc = None
+        self._abc_pad = 0
         self._abc_title_pad = rc["abc.titlepad"]
         self._title_above = rc["title.above"]
         self._title_border_kwargs = {}  # title border properties
@@ -811,6 +812,50 @@ class Axes(maxes.Axes):
         d["lower center"] = self.text(0, 0.5, "", va="bottom", ha="center", **kw)
         d["lower right"] = self.text(0, 1, "", va="bottom", ha="right", **kw)
 
+        # Setting outer alignment needs to modify the transform slightly; setting it with the default will not move it outside the range of the axis
+        for loc, ha, side in zip(
+            ["outer left", "outer right"], ["right", "left"], [0, -1]
+        ):
+            # Get relevant axis (y-axis for both left and right)
+            axis = self.yaxis
+
+            # Determine if ticks are visible and get their size
+            has_ticks = (
+                axis.get_major_ticks() and axis.get_major_ticks()[side].get_visible()
+            )
+            tick_length = (
+                axis.majorTicks[0].tick1line.get_markersize() if has_ticks else 0
+            )
+
+            # Get the size of tick labels if they exist
+            has_labels = (
+                axis.get_major_ticks()
+                and axis.get_major_ticks()[side].label1.get_visible()
+            )
+            # Estimate label size - we can get more precise by using renderer.get_text_width
+            # but we'll use a simpler estimation here
+            label_size = (
+                max([len(str(l.get_text())) for l in axis.get_ticklabels()]) * 0.5
+                if has_labels
+                else 0
+            )
+
+            # Calculate symmetrical offset based on tick length and label size
+            base_offset = (tick_length / 72) + (label_size / 72)
+            offset = -base_offset if ha == "right" else base_offset
+
+            # Create text with appropriate position and transform
+            kw["transform"] = self.transAxes + mtransforms.ScaledTranslation(
+                offset, 0, self.figure.dpi_scale_trans
+            )
+            d[loc] = self.text(
+                0 if ha == "right" else 1,
+                1,
+                "",
+                va="bottom",
+                ha=ha,
+                **kw,
+            )
         # Subplot-specific settings
         # NOTE: Default number for any axes is None (i.e., no a-b-c labels allowed)
         # and for subplots added with add_subplot is incremented automatically
@@ -2412,6 +2457,8 @@ class Axes(maxes.Axes):
         loc = self._abc_loc = _translate_loc(loc or self._abc_loc, "text")
         if loc not in ("left", "right", "center"):
             kw.update(self._abc_border_kwargs)
+        if (pad := kwargs.pop("pad", None)) and pad is not None:
+            self._abc_pad = pad
         kw.update(kwargs)
         self._title_dict["abc"].update(kw)
 
@@ -2509,26 +2556,10 @@ class Axes(maxes.Axes):
         x_pad = self._title_pad / (72 * width)
         y_pad = self._title_pad / (72 * height)
         for loc, obj in self._title_dict.items():
-            x, y = (0, 1)
             if loc == "abc":  # redirect
                 loc = self._abc_loc
-            if loc == "left":
-                x = 0
-            elif loc == "center":
-                x = 0.5
-            elif loc == "right":
-                x = 1
-            if loc in ("upper center", "lower center"):
-                x = 0.5
-            elif loc in ("upper left", "lower left"):
-                x = x_pad
-            elif loc in ("upper right", "lower right"):
-                x = 1 - x_pad
-            if loc in ("upper left", "upper right", "upper center"):
-                y = 1 - y_pad
-            elif loc in ("lower left", "lower right", "lower center"):
-                y = y_pad
-            obj.set_position((x, y))
+            xy = _get_pos_from_locator(loc, x_pad, y_pad)
+            obj.set_position(xy)
 
         # Get title padding. Push title above tick marks since matplotlib ignores them.
         # This is known matplotlib problem but especially annoying with top panels.
@@ -2562,8 +2593,8 @@ class Axes(maxes.Axes):
 
         # Offset title away from a-b-c label
         # NOTE: Title texts all use axes transform in x-direction
-        if not tobj.get_text() or not aobj.get_text():
-            return
+        # if not tobj.get_text() or not aobj.get_text():
+        # return
         awidth, twidth = (
             obj.get_window_extent(renderer).transformed(self.transAxes.inverted()).width
             for obj in (aobj, tobj)
@@ -2578,7 +2609,7 @@ class Axes(maxes.Axes):
         else:  # guaranteed center, there are others
             toffset = 0.5 * (awidth + pad)
             aoffset = -0.5 * (twidth + pad)
-        aobj.set_x(aobj.get_position()[0] + aoffset)
+        aobj.set_x(aobj.get_position()[0] + aoffset + self._abc_pad)
         tobj.set_x(tobj.get_position()[0] + toffset)
 
     def _update_super_title(self, suptitle=None, **kwargs):
@@ -3270,3 +3301,42 @@ class Axes(maxes.Axes):
 # NOTE: This is needed for __init__
 Axes._format_signatures = {Axes: inspect.signature(Axes.format)}
 Axes.format = docstring._obfuscate_kwargs(Axes.format)
+
+
+def _get_pos_from_locator(
+    loc: str,
+    x_pad: float,
+    y_pad: float,
+) -> tuple[float, float]:
+    """
+    Helper function to map string locators to x and y coordinates.
+    """
+    # Set x-coordinate based on horizontal position
+    x, y = 0, 1
+    match loc:
+        case "left":
+            x = 0
+        case "center":
+            x = 0.5
+        case "right":
+            x = 1
+        case "upper center" | "lower center":
+            x = 0.5
+        case "upper left" | "lower left":
+            x = x_pad
+        case "upper right" | "lower right":
+            x = 1 - x_pad
+        case "outer right":
+            x = 1 + x_pad
+        case "outer left":
+            x = -x_pad
+
+    # Set y-coordinate based on vertical position
+    match loc:
+        case "upper left" | "upper right" | "upper center":
+            y = 1 - y_pad
+        case "lower left" | "lower right" | "lower center":
+            y = y_pad
+            if loc == "left":
+                y = y_pad
+    return (x, y)
