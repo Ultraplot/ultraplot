@@ -152,3 +152,10 @@ For more details, check the full :doc:`User guide <usage>` and :doc:`API Referen
    whats_new
    contributing
    about
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Dev Zone
+   :hidden:
+
+   plot_comparison_results
