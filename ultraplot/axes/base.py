@@ -835,7 +835,7 @@ class Axes(maxes.Axes):
             # Estimate label size - we can get more precise by using renderer.get_text_width
             # but we'll use a simpler estimation here
             label_size = (
-                max([len(str(l.get_text())) for l in axis.get_ticklabels()]) * 2
+                max([len(str(l.get_text())) for l in axis.get_ticklabels()]) * 4
                 if has_labels
                 else 0
             )
@@ -2593,8 +2593,8 @@ class Axes(maxes.Axes):
 
         # Offset title away from a-b-c label
         # NOTE: Title texts all use axes transform in x-direction
-        # if not tobj.get_text() or not aobj.get_text():
-        # return
+        if not tobj.get_text() or not aobj.get_text():
+            return
         awidth, twidth = (
             obj.get_window_extent(renderer).transformed(self.transAxes.inverted()).width
             for obj in (aobj, tobj)
