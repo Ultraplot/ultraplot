@@ -182,7 +182,7 @@ def test_twin_axes_3():
 @pytest.mark.mpl_image_compare
 def test_outer_labels():
     """
-    Produces a plot where the the abc loc is in top left or top right of a plot. Padding can be used for finer adjustment if necessary.
+    Produces a plot where the abc loc is in top left or top right of a plot. Padding can be used for finer adjustment if necessary.
     """
     fig, ax = uplt.subplots(ncols=2)
     ax[0].format(
