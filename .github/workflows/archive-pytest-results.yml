@@ -8,6 +8,7 @@ on:
 jobs:
   debug:
     runs-on: ubuntu-latest
+    permissions: {}
     steps:
       - name: Print event data
         run: echo '${{ toJson(github.event) }}'
@@ -15,10 +16,12 @@ jobs:
   archive-test-results:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    permissions: {}
 
     steps:
       - uses: actions/checkout@v4
         with:
+          repository: ${{ github.event.workflow_run.head_repository.full_name }}
           ref: ${{ github.event.workflow_run.head_branch }}
           fetch-depth: 0
 
@@ -41,7 +44,7 @@ jobs:
         run: |
           TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
           SHA_SHORT=$(echo ${{ github.event.workflow_run.head_sha }} | cut -c1-7)
-          PR_NUMBER=$(echo "${{ github.event.workflow_run.head_branch }}" | grep -oP 'pull/\K\d+' || echo "main")
+          PR_NUMBER=$(echo "${{ github.event.workflow_run.head_branch }}" | grep -oP 'pull/\K\d+' || echo "-1")
 
           if [[ "$PR_NUMBER" == "main" ]]; then
             BRANCH_INFO="main"
