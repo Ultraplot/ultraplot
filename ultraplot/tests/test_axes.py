@@ -205,7 +205,6 @@ def test_abc_padding():
     Test the specific calculation for ABC padding in title positioning.
     """
     fig, ax = uplt.subplots()
-    renderer = ax.figure._get_renderer()
 
     # Set up test scenario
     ax.set_title("Test Title")
