@@ -34,13 +34,13 @@
 #
 # .. important::
 #
-#    By default, UltraPlot automatically adjusts the width of
-#    :func:`~ultraplot.axes.PlotAxes.contourf` and :func:`~ultraplot.axes.PlotAxes.pcolor` edges
-#    to eliminate the appearance of `"white lines" in saved vector graphic files
-#    <https://github.com/jklymak/contourfIssues>`__. However, this can significantly
-#    slow down the drawing time for large datasets. To disable this feature,
-#    pass ``edgefix=False`` to the relevant :class:`~ultraplot.axes.PlotAxes` command,
-#    or set :rcraw:`edgefix` to ``False`` to disable globally.
+#    UltraPlot includes functionality to fix the common issue of unwanted
+#    `"white lines" in saved vector graphic files
+#    <https://github.com/jklymak/contourfIssues>`__ by adjusting the width of
+#    :func:`~ultraplot.axes.PlotAxes.contourf` and :func:`~ultraplot.axes.PlotAxes.pcolor` edges.
+#    This feature is disabled by default to maintain optimal performance, especially for large datasets.
+#    To enable this edge-fixing capability, pass ``edgefix=True`` to the relevant
+#    :class:`~ultraplot.axes.PlotAxes` command, or set :rcraw:`edgefix` to ``True`` to enable globally.
 
 # %% [raw] raw_mimetype="text/restructuredtext"
 # .. _ug_2dstd:
