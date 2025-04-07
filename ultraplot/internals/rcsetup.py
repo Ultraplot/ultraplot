@@ -1131,7 +1131,7 @@ _rc_ultraplot_table = {
     ),
     # Special setting
     "edgefix": (
-        True,
+        False,
         _validate_bool,
         'Whether to fix issues with "white lines" appearing between patches '
         "in saved vector graphics and with vector graphic backends. Applies "

@@ -21,6 +21,7 @@ import matplotlib.projections as mproj
 import matplotlib.text as mtext
 import matplotlib.ticker as mticker
 import matplotlib.transforms as mtransforms
+from matplotlib import get_backend
 import numpy as np
 from matplotlib import cbook
 
