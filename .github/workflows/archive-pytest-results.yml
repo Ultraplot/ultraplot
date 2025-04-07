@@ -12,11 +12,12 @@ jobs:
     steps:
       - name: Print event data
         run: echo '${{ toJson(github.event) }}'
-  
+
   archive-test-results:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'failure' }}
-    permissions: {}
+    permissions:
+      contents: write # Need write permission to commit files
 
     steps:
       - uses: actions/checkout@v4
@@ -24,6 +25,8 @@ jobs:
           repository: ${{ github.event.workflow_run.head_repository.full_name }}
           ref: ${{ github.event.workflow_run.head_branch }}
           fetch-depth: 0
+          # Use a token with sufficient permissions
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Python
         uses: actions/setup-python@v4
