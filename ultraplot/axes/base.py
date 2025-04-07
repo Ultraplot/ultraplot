@@ -317,6 +317,8 @@ abcloc, titleloc : str, default: :rc:`abc.loc`, :rc:`title.loc`
     upper left inside axes    ``'upper left'``, ``'ul'``
     lower left inside axes    ``'lower left'``, ``'ll'``
     lower right inside axes   ``'lower right'``, ``'lr'``
+    left of y axis            ```'outer left'``, ``'ol'``
+    right of y axis           ```'outer right'``, ``'or'``
     ========================  ============================
 
 abcborder, titleborder : bool, default: :rc:`abc.border` and :rc:`title.border`
@@ -327,6 +329,9 @@ abcbbox, titlebbox : bool, default: :rc:`abc.bbox` and :rc:`title.bbox`
     Whether to draw a white bbox around titles and a-b-c labels positioned
     inside the axes. This can help them stand out on top of artists plotted
     inside the axes.
+abcpad : float, default: :rc:`abc.pad`
+    The padding for the inner and outer titles and a-b-c labels.
+    %(units.pt)s
 abc_kw, title_kw : dict-like, optional
     Additional settings used to update the a-b-c label and title
     with ``text.update()``.
@@ -2457,9 +2462,8 @@ class Axes(maxes.Axes):
         loc = self._abc_loc = _translate_loc(loc or self._abc_loc, "text")
         if loc not in ("left", "right", "center"):
             kw.update(self._abc_border_kwargs)
-        if (pad := kwargs.pop("pad", None)) is not None:
-            self._abc_pad = pad
         kw.update(kwargs)
+
         self._title_dict["abc"].update(kw)
 
     def _update_title(self, loc, title=None, **kwargs):
@@ -2593,24 +2597,62 @@ class Axes(maxes.Axes):
 
         # Offset title away from a-b-c label
         # NOTE: Title texts all use axes transform in x-direction
-        if not tobj.get_text() or not aobj.get_text():
-            return
-        awidth, twidth = (
-            obj.get_window_extent(renderer).transformed(self.transAxes.inverted()).width
-            for obj in (aobj, tobj)
-        )
-        ha = aobj.get_ha()
+
+        # Offset title away from a-b-c label
+        atext, ttext = aobj.get_text(), tobj.get_text()
+        awidth = twidth = 0
         pad = (abcpad / 72) / self._get_size_inches()[0]
+        ha = aobj.get_ha()
+
+        # Get dimensions of non-empty elements
+        if atext:
+            awidth = (
+                aobj.get_window_extent(renderer)
+                .transformed(self.transAxes.inverted())
+                .width
+            )
+        if ttext:
+            twidth = (
+                tobj.get_window_extent(renderer)
+                .transformed(self.transAxes.inverted())
+                .width
+            )
+
+        # Calculate offsets based on alignment and content
         aoffset = toffset = 0
-        if ha == "left":
-            toffset = awidth + pad
-        elif ha == "right":
-            aoffset = -(twidth + pad)
-        else:  # guaranteed center, there are others
-            toffset = 0.5 * (awidth + pad)
-            aoffset = -0.5 * (twidth + pad)
-        aobj.set_x(aobj.get_position()[0] + aoffset + self._abc_pad)
-        tobj.set_x(tobj.get_position()[0] + toffset)
+        if atext and ttext:
+            if ha == "left":
+                toffset = awidth + pad
+            elif ha == "right":
+                aoffset = -(twidth + pad)
+            elif ha == "center":
+                toffset = 0.5 * (awidth + pad)
+                aoffset = -0.5 * (twidth + pad)
+
+        # Apply positioning adjustments
+        if atext:
+            aobj.set_x(aobj.get_position()[0] + aoffset + self._abc_pad)
+        if ttext:
+            tobj.set_x(tobj.get_position()[0] + toffset)
+
+        # if not tobj.get_text() or not aobj.get_text():
+        #    return
+        # awidth, twidth = (
+        #    obj.get_window_extent(renderer).transformed#(self.transAxes.inverted()).width
+        #    for obj in (aobj, tobj)
+        # )
+        # ha = aobj.get_ha()
+        # pad = (abcpad / 72) / self._get_size_inches()[0]
+        # aoffset = toffset = 0
+        # if ha == "left":
+        #    toffset = awidth + pad
+        # elif ha == "right":
+        #    aoffset = -(twidth + pad)
+        # else:  # guaranteed center, there are others
+        #    toffset = 0.5 * (awidth + pad)
+        #    aoffset = -0.5 * (twidth + pad)
+        # aobj.set_x(aobj.get_position()[0] + aoffset + #self._abc_pad)
+        # tobj.set_x(tobj.get_position()[0] + toffset)
 
     def _update_super_title(self, suptitle=None, **kwargs):
         """
@@ -2785,6 +2827,8 @@ class Axes(maxes.Axes):
             title_kw = title_kw or {}
             self._update_share_labels(share_xlabels, target="x")
             self._update_share_labels(share_ylabels, target="y")
+            if (pad := kwargs.pop("abcpad", None)) is not None:
+                self._abc_pad = pad
             self._update_abc(**abc_kw)
             self._update_title(None, title, **title_kw)
             self._update_title(

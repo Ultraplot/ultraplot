@@ -195,7 +195,7 @@ def test_outer_labels():
         abc="a.",
         abcloc="outer right",
         title="testing",
-        abc_kw=dict(pad=-0.25),
+        abcpad=-0.25,
     )
     return fig
 
@@ -223,7 +223,7 @@ def test_abc_padding():
         title="Testing",
         abc="a.",
         abcloc="or",
-        abc_kw=dict(pad=padding_value),
+        abcpad=padding_value,
     )
     fig.canvas.draw()
 
@@ -238,7 +238,7 @@ def test_abc_padding():
         title="Testing",
         abc="a.",
         abcloc="or",
-        abc_kw=dict(pad=0),
+        abcpad=0,
     )
     fig.canvas.draw()
     reference_position = ax.axes._title_dict["abc"].get_position()[0]
@@ -248,7 +248,7 @@ def test_abc_padding():
         title="Testing",
         abc="a.",
         abcloc="or",
-        abc_kw=dict(pad=padding_value),
+        abcpad=padding_value,
     )
     # Verify the exact offset matches our expectation
     actual_offset = ax.axes._title_dict["abc"].get_position()[0] - reference_position
