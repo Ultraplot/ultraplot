@@ -4081,17 +4081,31 @@ class PlotAxes(base.Axes):
         elif len(hatches) != len(y):
             raise ValueError(f"Retrieved {len(hatches)} hatches but need {len(y)}")
 
-        orientation = "vertical" if vert else "horizontal"
-        artists = self._call_native(
-            "violinplot",
-            y,
-            orientation=orientation,
-            showmeans=False,
-            showmedians=False,
-            showextrema=False,
-            **kw,
-        )
-
+        if version.parse(mpl.__version__) >= version.parse("3.10.0"):
+            # For matplotlib 3.10+:
+            # Use orientation parameter
+            orientation = "vertical" if vert else "horizontal"
+            artists = self._call_native(
+                "violinplot",
+                y,
+                orientation=orientation,
+                showmeans=False,
+                showmedians=False,
+                showextrema=False,
+                **kw,
+            )
+        else:
+            # For older matplotlib versions:
+            # Use vert parameter
+            artists = self._call_native(
+                "violinplot",
+                y,
+                vert=vert,  # Use the original vert boolean
+                showmeans=False,
+                showmedians=False,
+                showextrema=False,
+                **kw,
+            )
         # Modify body settings
         artists = artists or {}  # necessary?
         bodies = artists.pop("bodies", ())  # should be no other entries
