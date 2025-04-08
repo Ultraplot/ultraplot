@@ -17,7 +17,7 @@ def test_auto_reverse():
     """
     x = np.arange(10)[::-1]
     y = np.arange(10)
-    z = state.rand(10, 10)
+    z = np.random.rand(10, 10)
     fig, axs = uplt.subplots(ncols=2, nrows=3, share=0)
     # axs[0].format(xreverse=False)  # should fail
     axs[0].plot(x, y)
