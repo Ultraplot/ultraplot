@@ -763,7 +763,7 @@ class Axes(maxes.Axes):
         # TODO(compat): Drop this function when mpl 3.12 is deprecated.
         # Introduced in mpl 3.10 and deprecated in mpl 3.12
         get_converter = lambda axis: (
-            axis.get_converter() if hasattr(axis, "get_converter") else axis.converter
+            axis.get_converter if hasattr(axis, "get_converter") else axis.converter
         )
         self.xaxis.get_converter = lambda: get_converter
         self.yaxis.get_converter = lambda: get_converter
