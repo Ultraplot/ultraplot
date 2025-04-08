@@ -2191,7 +2191,6 @@ class Axes(maxes.Axes):
             handles = []
             for obj in objs:
                 if isinstance(obj, ignore) and not _legend_label(obj):
-                    print(_legend_label(obj))
                     continue
                 if hasattr(obj, "update_scalarmappable"):  # for e.g. pcolor
                     obj.update_scalarmappable()
