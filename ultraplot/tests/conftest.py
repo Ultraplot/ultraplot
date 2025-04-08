@@ -26,10 +26,6 @@ def pytest_addoption(parser):
     )
 
 
-def pytest_configure(config):
-    config.seed = 51423
-
-
 class StoreFailedMplPlugin:
     def __init__(self, config):
         self.config = config
