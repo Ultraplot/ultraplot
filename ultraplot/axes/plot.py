@@ -3892,7 +3892,6 @@ class PlotAxes(base.Axes):
             x, y, autoy=False, autoguide=False, vert=vert, **kw
         )
         kw = self._parse_cycle(x.size, **kw)  # possibly apply cycle
-        print(kw)
         if fill and fillcolor is None:
             parser = self._get_patches_for_fill
             fillcolor = [parser.get_next_color() for _ in range(x.size)]
