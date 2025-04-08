@@ -1,4 +1,4 @@
-import os, shutil, pytest, re
+import os, shutil, pytest, re, numpy as np
 from pathlib import Path
 import warnings
 
@@ -8,6 +8,15 @@ warnings.filterwarnings(
 )
 
 
+@pytest.fixture(autouse=True)
+def _reset_numpy_seed():
+    """
+    Ensure all tests start with the same rng
+    """
+    seed = 51423
+    np.random.seed(seed)
+
+
 # Define command line option
 def pytest_addoption(parser):
     parser.addoption(
@@ -15,6 +24,10 @@ def pytest_addoption(parser):
         action="store_true",
         help="Store only failed matplotlib comparison images",
     )
+
+
+def pytest_configure(config):
+    config.seed = 51423
 
 
 class StoreFailedMplPlugin:

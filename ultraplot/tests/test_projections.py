@@ -8,8 +8,6 @@ import numpy as np
 import ultraplot as uplt
 import pytest
 
-state = np.random.RandomState(51423)
-
 
 @pytest.mark.mpl_image_compare
 def test_aspect_ratios():
@@ -59,7 +57,7 @@ def test_cartopy_contours():
     ax.coastlines()
     x = np.linspace(-180, 180, N)
     y = np.linspace(-90, 90, N)
-    z = state.rand(N, N) * 10 - 5
+    z = np.random.rand(N, N) * 10 - 5
     m = ax.contourf(
         x,
         y,
@@ -77,7 +75,7 @@ def test_cartopy_contours():
     m = ax.contourf(
         np.linspace(0, 180, N),
         np.linspace(0, 90, N)[1::2],
-        state.rand(N // 2, N) * 10 + 5,
+        np.random.rand(N // 2, N) * 10 + 5,
         cmap="BuRd",
         transform=uplt.PlateCarree(),
         edgefix=False,

@@ -50,8 +50,7 @@ def test_drawing_in_projection_without_globe():
     offset = -40
     lon = plt.arange(offset, 360 + offset - 1, 60)
     lat = plt.arange(-60, 60 + 1, 30)
-    state = np.random.RandomState(51423)
-    data = state.rand(len(lat), len(lon))
+    data = np.random.rand(len(lat), len(lon))
 
     globe = False
     string = "with" if globe else "without"
@@ -86,8 +85,7 @@ def test_drawing_in_projection_with_globe():
     offset = -40
     lon = plt.arange(offset, 360 + offset - 1, 60)
     lat = plt.arange(-60, 60 + 1, 30)
-    state = np.random.RandomState(51423)
-    data = state.rand(len(lat), len(lon))
+    data = np.random.rand(len(lat), len(lon))
 
     globe = True
     string = "with" if globe else "without"

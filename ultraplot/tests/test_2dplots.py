@@ -8,8 +8,6 @@ import xarray as xr
 
 import ultraplot as uplt
 
-state = np.random.RandomState(51423)
-
 
 @pytest.mark.skip("not sure what this does")
 @pytest.mark.mpl_image_compare
@@ -18,7 +16,7 @@ def test_colormap_vcenter():
     Test colormap vcenter.
     """
     fig, axs = uplt.subplots(ncols=3)
-    data = 10 * state.rand(10, 10) - 3
+    data = 10 * np.random.rand(10, 10) - 3
     axs[0].pcolor(data, vcenter=0)
     axs[1].pcolor(data, vcenter=1)
     axs[2].pcolor(data, vcenter=2)
@@ -34,9 +32,9 @@ def test_auto_diverging1():
     fig = uplt.figure()
     # fig.format(collabels=('Auto sequential', 'Auto diverging'), suptitle='Default')
     ax = fig.subplot(121)
-    ax.pcolor(state.rand(10, 10) * 5, colorbar="b")
+    ax.pcolor(np.random.rand(10, 10) * 5, colorbar="b")
     ax = fig.subplot(122)
-    ax.pcolor(state.rand(10, 10) * 5 - 3.5, colorbar="b")
+    ax.pcolor(np.random.rand(10, 10) * 5 - 3.5, colorbar="b")
     fig.format(toplabels=("Sequential", "Diverging"))
     return fig
 
@@ -46,7 +44,7 @@ def test_auto_diverging1():
 def test_autodiverging2():
     # Test with explicit vcenter
     fig, axs = uplt.subplots(ncols=3)
-    data = 5 * state.rand(10, 10)
+    data = 5 * np.random.rand(10, 10)
     axs[0].pcolor(data, vcenter=0, colorbar="b")  # otherwise should be disabled
     axs[1].pcolor(data, vcenter=1.5, colorbar="b")
     axs[2].pcolor(data, vcenter=4, colorbar="b", symmetric=True)
@@ -60,7 +58,7 @@ def test_autodiverging3():
     cmap = uplt.Colormap(
         ("red7", "red3", "red1", "blue1", "blue3", "blue7"), listmode="discrete"
     )  # noqa: E501
-    data1 = 10 * state.rand(10, 10)
+    data1 = 10 * np.random.rand(10, 10)
     data2 = data1 - 2
     for i, cmap in enumerate(("RdBu_r", cmap)):
         for j, data in enumerate((data1, data2)):
@@ -72,7 +70,7 @@ def test_autodiverging3():
 @pytest.mark.mpl_image_compare
 def test_autodiverging4():
     fig, axs = uplt.subplots(ncols=3)
-    data = state.rand(5, 5) * 10 - 5
+    data = np.random.rand(5, 5) * 10 - 5
     for i, ax in enumerate(axs[:2]):
         ax.pcolor(data, sequential=bool(i), colorbar="b")
     axs[2].pcolor(data, diverging=False, colorbar="b")  # should have same effect
@@ -82,7 +80,7 @@ def test_autodiverging4():
 @pytest.mark.mpl_image_compare
 def test_autodiverging5():
     fig, axs = uplt.subplots(ncols=2)
-    data = state.rand(5, 5) * 10 + 2
+    data = np.random.rand(5, 5) * 10 + 2
     for ax, norm in zip(axs, (None, "div")):
         ax.pcolor(data, norm=norm, colorbar="b")
     return fig
@@ -94,11 +92,11 @@ def test_colormap_mode():
     Test auto extending, auto discrete. Should issue warnings.
     """
     fig, axs = uplt.subplots(ncols=2, nrows=2, share=False)
-    axs[0].pcolor(state.rand(5, 5) % 0.3, extend="both", cyclic=True, colorbar="b")
-    axs[1].pcolor(state.rand(5, 5), sequential=True, diverging=True, colorbar="b")
-    axs[2].pcolor(state.rand(5, 5), discrete=False, qualitative=True, colorbar="b")
+    axs[0].pcolor(np.random.rand(5, 5) % 0.3, extend="both", cyclic=True, colorbar="b")
+    axs[1].pcolor(np.random.rand(5, 5), sequential=True, diverging=True, colorbar="b")
+    axs[2].pcolor(np.random.rand(5, 5), discrete=False, qualitative=True, colorbar="b")
     uplt.rc["cmap.discrete"] = False  # should be ignored below
-    axs[3].contourf(state.rand(5, 5), colorbar="b")
+    axs[3].contourf(np.random.rand(5, 5), colorbar="b")
     return fig
 
 
@@ -110,7 +108,7 @@ def test_contour_labels():
     filled contour edges when not adding labels but that would be inconsistent with
     behavior when labels are active.
     """
-    data = state.rand(5, 5) * 10 - 5
+    data = np.random.rand(5, 5) * 10 - 5
     fig, axs = uplt.subplots(ncols=2)
     ax = axs[0]
     ax.contourf(
@@ -137,10 +135,10 @@ def test_contour_negative():
     """
     fig = uplt.figure(share=False)
     ax = fig.subplot(131)
-    data = state.rand(10, 10) * 10 - 5
+    data = np.random.rand(10, 10) * 10 - 5
     ax.contour(data, color="k")
     ax = fig.subplot(132)
-    ax.tricontour(*(state.rand(3, 20) * 10 - 5), color="k")
+    ax.tricontour(*(np.random.rand(3, 20) * 10 - 5), color="k")
     ax = fig.subplot(133)
     ax.contour(data, cmap=["black"])  # fails but that's ok
     return fig
@@ -170,7 +168,7 @@ def test_edge_fix():
     fig, axs = uplt.subplots(ncols=2, share=False)
     axs.format(grid=False)
     axs[0].bar(
-        state.rand(
+        np.random.rand(
             10,
         )
         * 10
@@ -178,10 +176,10 @@ def test_edge_fix():
         width=1,
         negpos=True,
     )
-    axs[1].area(state.rand(5, 3), stack=True)
+    axs[1].area(np.random.rand(5, 3), stack=True)
 
     # Test whether ignored for transparent colorbars
-    data = state.rand(10, 10)
+    data = np.random.rand(10, 10)
     cmap = "magma"
     fig, axs = uplt.subplots(nrows=3, ncols=2, refwidth=2.5, share=False)
     for i, iaxs in enumerate((axs[:2], axs[2:4])):
@@ -208,15 +206,18 @@ def test_flow_functions():
     """
     fig, ax = uplt.subplots()
     for _ in range(2):
-        ax.streamplot(state.rand(10, 10), 5 * state.rand(10, 10), label="label")
+        ax.streamplot(np.random.rand(10, 10), 5 * np.random.rand(10, 10), label="label")
 
     fig, axs = uplt.subplots(ncols=2)
     ax = axs[0]
     ax.quiver(
-        state.rand(10, 10), 5 * state.rand(10, 10), c=state.rand(10, 10), label="label"
+        np.random.rand(10, 10),
+        5 * np.random.rand(10, 10),
+        c=np.random.rand(10, 10),
+        label="label",
     )
     ax = axs[1]
-    ax.quiver(state.rand(10), state.rand(10), label="single")
+    ax.quiver(np.random.rand(10), np.random.rand(10), label="single")
     return fig
 
 
@@ -226,7 +227,7 @@ def test_gray_adjustment():
     Test gray adjustments when creating segmented colormaps.
     """
     fig, ax = uplt.subplots()
-    data = state.rand(5, 5) * 10 - 5
+    data = np.random.rand(5, 5) * 10 - 5
     cmap = uplt.Colormap(["blue", "grey3", "red"])
     ax.pcolor(data, cmap=cmap, colorbar="b")
     return fig
@@ -240,14 +241,19 @@ def test_ignore_message():
     warning = uplt.internals.UltraplotWarning
     fig, axs = uplt.subplots(ncols=2, nrows=2)
     with pytest.warns(warning):
-        axs[0].contour(state.rand(5, 5) * 10, levels=uplt.arange(10), symmetric=True)
+        axs[0].contour(
+            np.random.rand(5, 5) * 10, levels=uplt.arange(10), symmetric=True
+        )
     with pytest.warns(warning):
         axs[1].contourf(
-            state.rand(10, 10), levels=np.linspace(0, 1, 10), locator=5, locator_kw={}
+            np.random.rand(10, 10),
+            levels=np.linspace(0, 1, 10),
+            locator=5,
+            locator_kw={},
         )
     with pytest.warns(warning):
         axs[2].contourf(
-            state.rand(10, 10),
+            np.random.rand(10, 10),
             levels=uplt.arange(0, 1, 0.2),
             vmin=0,
             vmax=2,
@@ -256,8 +262,8 @@ def test_ignore_message():
         )
     with pytest.warns(warning):
         axs[3].hexbin(
-            state.rand(1000),
-            state.rand(1000),
+            np.random.rand(1000),
+            np.random.rand(1000),
             levels=uplt.arange(0, 20),
             gridsize=10,
             locator=2,
@@ -273,9 +279,8 @@ def test_levels_with_vmin_vmax():
     Make sure `vmin` and `vmax` go into level generation algorithm.
     """
     # Sample data
-    state = np.random.RandomState(51423)
     x = y = np.array([-10, -5, 0, 5, 10])
-    data = state.rand(y.size, x.size)
+    data = np.random.rand(y.size, x.size)
 
     # Figure
     fig = uplt.figure(refwidth=2.3, share=False)
@@ -291,7 +296,7 @@ def test_level_restriction():
     Test `negative`, `positive`, and `symmetric` with and without discrete.
     """
     fig, axs = uplt.subplots(ncols=3, nrows=2)
-    data = 20 * state.rand(10, 10) - 5
+    data = 20 * np.random.rand(10, 10) - 5
     keys = ("negative", "positive", "symmetric")
     for i, grp in enumerate((axs[:3], axs[3:])):
         for j, ax in enumerate(grp):
@@ -307,7 +312,7 @@ def test_qualitative_colormaps_1():
     extreme only if unset.
     """
     fig, axs = uplt.subplots(ncols=2)
-    data = state.rand(5, 5)
+    data = np.random.rand(5, 5)
     colors = uplt.get_colors("set3")
     for ax, extend in zip(axs, ("both", "neither")):
         ax.pcolor(data, extend=extend, colors=colors, colorbar="b")
@@ -317,7 +322,7 @@ def test_qualitative_colormaps_1():
 @pytest.mark.mpl_image_compare
 def test_qualitative_colormaps_2():
     fig, axs = uplt.subplots(ncols=2)
-    data = state.rand(5, 5)
+    data = np.random.rand(5, 5)
     cmap = uplt.Colormap("set3")
     cmap.set_under("black")  # does not overwrite
     for ax, extend in zip(axs, ("both", "neither")):
@@ -332,7 +337,7 @@ def test_segmented_norm():
     """
     fig, ax = uplt.subplots()
     ax.pcolor(
-        state.rand(5, 5) * 10,
+        np.random.rand(5, 5) * 10,
         discrete=False,
         norm="segmented",
         norm_kw={"levels": [0, 2, 10]},
@@ -348,9 +353,9 @@ def test_triangular_functions():
     """
     fig, ax = uplt.subplots()
     N = 30
-    y = state.rand(N) * 20
-    x = state.rand(N) * 50
-    da = xr.DataArray(state.rand(N), dims=("x",), coords={"x": x, "y": ("x", y)})
+    y = np.random.rand(N) * 20
+    x = np.random.rand(N) * 50
+    da = xr.DataArray(np.random.rand(N), dims=("x",), coords={"x": x, "y": ("x", y)})
     ax.tricontour(da.x, da.y, da, labels=True)
     return fig
 
@@ -362,7 +367,7 @@ def test_colorbar_extends():
     """
     # Ensure that the colorbars are not showing artifacts on the ticks. In the past extend != neither showed ghosting on the ticks. This occured after a manual draw after the colorbar was created.
     fig, ax = uplt.subplots(nrows=2, ncols=2, share=False)
-    data = state.rand(20, 20)
+    data = np.random.rand(20, 20)
     levels = np.linspace(0, 1, 11)
     extends = ["neither", "both", "min", "max"]
     for extend, axi in zip(extends, ax):
