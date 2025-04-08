@@ -3804,7 +3804,7 @@ class PlotAxes(base.Axes):
         )
         kw = self._parse_cycle(x.size, **kw)
         objs = self._call_native(
-            "pie", x, explode = explode, labeldistance=pad, wedgeprops=wedge_kw, **kw
+            "pie", x, explode=explode, labeldistance=pad, wedgeprops=wedge_kw, **kw
         )
         objs = tuple(cbook.silent_list(type(seq[0]).__name__, seq) for seq in objs)
         self._fix_patch_edges(objs[0], **edgefix_kw, **wedge_kw)

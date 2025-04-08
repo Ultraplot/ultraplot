@@ -760,6 +760,14 @@ class Axes(maxes.Axes):
                 kw_format.update(_pop_params(kwargs, sig))
         super().__init__(*args, **kwargs)
 
+        # TODO(compat): Drop this function when mpl 3.12 is deprecated.
+        # Introduced in mpl 3.10 and deprecated in mpl 3.12
+        get_converter = lambda axis: (
+            axis.get_converter() if hasattr(axis, "get_converter") else axis.converter
+        )
+        self.xaxis.get_converter = lambda: get_converter
+        self.yaxis.get_converter = lambda: get_converter
+
         # Varous scalar properties
         self._active_cycle = rc["axes.prop_cycle"]
         self._auto_format = None  # manipulated by wrapper functions
