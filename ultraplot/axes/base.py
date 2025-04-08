@@ -2177,7 +2177,7 @@ class Axes(maxes.Axes):
             for obj in objs:
                 if hasattr(obj, "get_label"):  # e.g. silent list
                     lab = obj.get_label()
-                    if lab is not None and str(lab)[:1] != "_":
+                    if lab is not None and not str(lab).startswith("_"):
                         labs.append(lab)
             return tuple(labs)
 
@@ -2191,6 +2191,7 @@ class Axes(maxes.Axes):
             handles = []
             for obj in objs:
                 if isinstance(obj, ignore) and not _legend_label(obj):
+                    print(_legend_label(obj))
                     continue
                 if hasattr(obj, "update_scalarmappable"):  # for e.g. pcolor
                     obj.update_scalarmappable()
@@ -2238,7 +2239,10 @@ class Axes(maxes.Axes):
             # Append this handle with some name
             else:
                 hs = hs[0] if len(hs) == 1 else hs  # unfurl for better error messages
+                # print(labs)
                 label = label if label is not None else labs[0] if labs else "_no_label"
+                if label == "_no_label":
+                    continue
                 ihandles.append(hs)
                 ilabels.append(label)
         return ihandles, ilabels
