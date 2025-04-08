@@ -38,7 +38,7 @@ def test_inset_colors_2():
     ix = ax.inset_axes(
         (0.3, 0.5, 0.5, 0.3),
         zoom=True,
-        zoom_kw={"lw": 3, "ec": "red9", "a": 1, "c": uplt.set_alpha("red4", 0.5)},
+        zoom_kw={"lw": 3, "ec": "red9", "a": 1, "fc": uplt.set_alpha("red4", 0.5)},
     )
     ix.format(xlim=(10, 20), ylim=(10, 20))
     return fig
