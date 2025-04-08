@@ -23,6 +23,8 @@ import matplotlib.image as mimage
 import matplotlib.lines as mlines
 import matplotlib.patches as mpatches
 import matplotlib.ticker as mticker
+import matplotlib as mpl
+from packaging import version
 import numpy as np
 import numpy.ma as ma
 
@@ -3908,14 +3910,30 @@ class PlotAxes(base.Axes):
         if hatch is None:
             hatch = [None for _ in range(x.size)]
 
+        # TODO(compat) remove this when 3.9 is deprecated
+        # Convert vert boolean to orientation string for newer versions
         orientation = "vertical" if vert else "horizontal"
 
-        # Mpl>=3.10 renames labels to tick_labels
-        # _parse_1d_args will generate the 'labels' key, we remap it here as other functions still rely on the 'labels'
+        # Handle tick_labels vs labels parameter
         tick_labels = kw.pop("labels", None)
-        if tick_labels is not None:
-            kw["tick_labels"] = tick_labels
-        artists = self._call_native("boxplot", y, orientation=orientation, **kw)
+
+        if version.parse(mpl.__version__) >= version.parse("3.10.0"):
+            # For matplotlib 3.10+:
+            # 1. Use orientation parameter
+            # 2. Use tick_labels parameter
+            if tick_labels is not None:
+                kw["tick_labels"] = tick_labels
+            artists = self._call_native("boxplot", y, orientation=orientation, **kw)
+        else:
+            # For older matplotlib versions:
+            # 1. Use vert parameter
+            # 2. Use labels parameter
+            if tick_labels is not None:
+                kw["labels"] = tick_labels
+            artists = self._call_native(
+                "boxplot", y, vert=(orientation == "vertical"), **kw
+            )
+
         artists = artists or {}  # necessary?
         artists = {
             key: cbook.silent_list(type(objs[0]).__name__, objs) if objs else objs
