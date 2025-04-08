@@ -13,11 +13,10 @@ def setup_mpl():
 @pytest.mark.mpl_image_compare
 def test_standardized_input():
     # Sample data
-    state = np.random.RandomState(51423)
     x = y = np.array([-10, -5, 0, 5, 10])
     xedges = plt.edges(x)
     yedges = plt.edges(y)
-    data = state.rand(y.size, x.size)  # "center" coordinates
+    data = np.random.rand(y.size, x.size)  # "center" coordinates
     lim = (np.min(xedges), np.max(xedges))
 
     with plt.rc.context({"cmap": "Grays", "cmap.levels": 21}):
@@ -48,10 +47,9 @@ def test_standardized_input():
 def test_inbounds_data():
     # Sample data
     cmap = "turku_r"
-    state = np.random.RandomState(51423)
     N = 80
     x = y = np.arange(N + 1)
-    data = 10 + (state.normal(0, 3, size=(N, N))).cumsum(axis=0).cumsum(axis=1)
+    data = 10 + (np.random.normal(0, 3, size=(N, N))).cumsum(axis=0).cumsum(axis=1)
     xlim = ylim = (0, 25)
 
     # Plot the data
@@ -90,8 +88,7 @@ def test_inbounds_data():
 @pytest.mark.mpl_image_compare
 def test_colorbar():
     # Sample data
-    state = np.random.RandomState(51423)
-    data = 10 + state.normal(0, 1, size=(33, 33)).cumsum(axis=0).cumsum(axis=1)
+    data = 10 + np.random.normal(0, 1, size=(33, 33)).cumsum(axis=0).cumsum(axis=1)
 
     # Figure
     fig, axs = plt.subplots([[1, 1, 2, 2], [0, 3, 3, 0]], ref=3, refwidth=2.3)

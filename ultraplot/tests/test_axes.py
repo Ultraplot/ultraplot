@@ -6,8 +6,6 @@ import numpy as np
 import pytest
 import ultraplot as uplt
 
-state = np.random.RandomState(51423)
-
 
 def test_axis_access():
     # attempt to access the ax object 2d and linearly
@@ -172,7 +170,7 @@ def test_twin_axes_3():
     axs[-1].spines["right"].set_position(("axes", 1.2))
     colors = ("Green", "Red", "Blue")
     for ax, color in zip(axs, colors):
-        data = state.random(1) * state.random(10)
+        data = np.random.random(1) * np.random.random(10)
         ax.plot(data, marker="o", linestyle="none", color=color)
         ax.format(ylabel="%s Thing" % color, ycolor=color)
     axs[0].format(xlabel="xlabel")

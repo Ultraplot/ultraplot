@@ -8,10 +8,11 @@ import pytest
 def test_statistical_boxplot():
     # Sample data
     N = 500
-    state = np.random.RandomState(51423)
-    data1 = state.normal(size=(N, 5)) + 2 * (state.rand(N, 5) - 0.5) * np.arange(5)
+    data1 = np.random.normal(size=(N, 5)) + 2 * (
+        np.random.rand(N, 5) - 0.5
+    ) * np.arange(5)
     data1 = pd.DataFrame(data1, columns=pd.Index(list("abcde"), name="label"))
-    data2 = state.rand(100, 7)
+    data2 = np.random.rand(100, 7)
     data2 = pd.DataFrame(data2, columns=pd.Index(list("abcdefg"), name="label"))
 
     # Figure
@@ -39,9 +40,8 @@ def test_statistical_boxplot():
 def test_panel_dist():
     # Sample data
     N = 500
-    state = np.random.RandomState(51423)
-    x = state.normal(size=(N,))
-    y = state.normal(size=(N,))
+    x = np.random.normal(size=(N,))
+    y = np.random.normal(size=(N,))
     bins = uplt.arange(-3, 3, 0.25)
 
     # Histogram with marginal distributions

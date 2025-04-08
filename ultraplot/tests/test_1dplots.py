@@ -9,8 +9,6 @@ import pandas as pd
 import ultraplot as uplt
 import pytest
 
-state = np.random.RandomState(51423)
-
 
 @pytest.mark.mpl_image_compare
 def test_auto_reverse():
@@ -19,7 +17,7 @@ def test_auto_reverse():
     """
     x = np.arange(10)[::-1]
     y = np.arange(10)
-    z = state.rand(10, 10)
+    z = np.random.rand(10, 10)
     fig, axs = uplt.subplots(ncols=2, nrows=3, share=0)
     # axs[0].format(xreverse=False)  # should fail
     axs[0].plot(x, y)
@@ -51,7 +49,7 @@ def test_cmap_cycles():
         samples=[3, 4, 5, 2, 1],
     )
     fig, ax = uplt.subplots()
-    data = state.rand(10, len(cycle)).cumsum(axis=1)
+    data = np.random.rand(10, len(cycle)).cumsum(axis=1)
     data = pd.DataFrame(data, columns=list("abcdefghijklmno"))
     ax.plot(data, cycle=cycle, linewidth=2, legend="b")
     return fig
@@ -63,9 +61,12 @@ def test_column_iteration():
     Test scatter column iteration.
     """
     fig, axs = uplt.subplots(ncols=2)
-    axs[0].plot(state.rand(5, 5), state.rand(5, 5), lw=5)
+    axs[0].plot(np.random.rand(5, 5), np.random.rand(5, 5), lw=5)
     axs[1].scatter(
-        state.rand(5, 5), state.rand(5, 5), state.rand(5, 5), state.rand(5, 5)
+        np.random.rand(5, 5),
+        np.random.rand(5, 5),
+        np.random.rand(5, 5),
+        np.random.rand(5, 5),
     )
     return fig
 
@@ -86,7 +87,7 @@ def test_bar_width():
     """
     fig, axs = uplt.subplots(ncols=3)
     x = np.arange(10)
-    y = state.rand(10, 2)
+    y = np.random.rand(10, 2)
     for i, ax in enumerate(axs):
         ax.bar(x * (2 * i + 1), y, width=0.8, absolute_width=i == 1)
     return fig
@@ -117,8 +118,8 @@ def test_boxplot_colors():
     """
     fig = uplt.figure(share=False)
     ax = fig.subplot(221)
-    box_data = state.uniform(-3, 3, size=(1000, 5))
-    violin_data = state.normal(0, 1, size=(1000, 5))
+    box_data = np.random.uniform(-3, 3, size=(1000, 5))
+    violin_data = np.random.normal(0, 1, size=(1000, 5))
     ax.box(box_data, fillcolor=["red", "blue", "green", "orange", "yellow"])
     ax = fig.subplot(222)
     ax.violin(
@@ -145,7 +146,7 @@ def test_boxplot_vectors():
     labels = ["foo", "bar", "baz"]
     datas = []
     for count in counts:
-        data = state.rand(count)
+        data = np.random.rand(count)
         datas.append(data)
     datas = np.array(datas, dtype=object)
     assert len(datas) == len(coords)
@@ -171,7 +172,7 @@ def test_histogram_types():
     Test the different histogram types using basic keywords.
     """
     fig, axs = uplt.subplots(ncols=2, nrows=2, share=False)
-    data = state.normal(size=(100, 5))
+    data = np.random.normal(size=(100, 5))
     data += np.arange(5)
     kws = ({"stack": 0}, {"stack": 1}, {"fill": 0}, {"fill": 1, "alpha": 0.5})
     for ax, kw in zip(axs, kws):
@@ -185,7 +186,7 @@ def test_invalid_plot():
     Test lines with missing or invalid values.
     """
     fig, axs = uplt.subplots(ncols=2)
-    data = state.normal(size=(100, 5))
+    data = np.random.normal(size=(100, 5))
     for j in range(5):
         data[:, j] = np.sort(data[:, j])
         data[: 19 * (j + 1), j] = np.nan
@@ -202,7 +203,7 @@ def test_invalid_dist():
     Test distributions with missing or invalid data.
     """
     fig, axs = uplt.subplots(ncols=2, nrows=2)
-    data = state.normal(size=(100, 5))
+    data = np.random.normal(size=(100, 5))
     for i in range(5):  # test uneven numbers of invalid values
         data[: 10 * (i + 1), :] = np.nan
     data_masked = ma.masked_invalid(data)  # should be same result
@@ -237,7 +238,7 @@ def test_parametric_labels():
     uplt.rc.inlinefmt = "svg"
     fig, ax = uplt.subplots()
     ax.parametric(
-        state.rand(5),
+        np.random.rand(5),
         c=list("abcde"),
         lw=20,
         colorbar="b",
@@ -261,8 +262,8 @@ def test_parametric_colors():
     )
     for ax, color in zip(axs, colors):
         ax.parametric(
-            state.rand(5),
-            state.rand(5),
+            np.random.rand(5),
+            np.random.rand(5),
             linewidth=2,
             label="label",
             color=color,
@@ -277,8 +278,8 @@ def test_scatter_args():
     """
     Test diverse scatter keyword parsing and RGB scaling.
     """
-    x, y = state.randn(50), state.randn(50)
-    data = state.rand(50, 3)
+    x, y = np.random.randn(50), np.random.randn(50)
+    data = np.random.rand(50, 3)
     fig, axs = uplt.subplots(ncols=4, share=0)
     ax = axs[0]
     ax.scatter(x, y, s=80, fc="none", edgecolors="r")
@@ -314,7 +315,7 @@ def test_scatter_alpha():
     Test behavior with multiple alpha values.
     """
     fig, ax = uplt.subplots()
-    data = state.rand(10)
+    data = np.random.rand(10)
     alpha = np.linspace(0.1, 1, data.size)
     ax.scatter(data, alpha=alpha)
     ax.scatter(data + 1, c=np.arange(data.size), cmap="BuRd", alpha=alpha)
@@ -336,8 +337,8 @@ def test_scatter_cycle():
         edgecolors=["r", "k"],
     )
     ax.scatter(
-        state.rand(10, 4),
-        state.rand(10, 4),
+        np.random.rand(10, 4),
+        np.random.rand(10, 4),
         cycle=cycle,
         area_size=False,
     )
@@ -362,7 +363,7 @@ def test_scatter_sizes():
             ax.scatter(np.arange(5), [0.25 * (1 + i)] * 5, size**2, **kw)
     # Test various size arguments
     ax = fig.subplot(122, margin=0.15)
-    data = state.rand(5) * 500
+    data = np.random.rand(5) * 500
     ax.scatter(
         np.arange(5),
         [0.25] * 5,
@@ -449,7 +450,7 @@ def test_norm_not_modified():
     assert norm.vmin == 0
     assert norm.vmax == 10
 
-    arr = state.rand(20, 40) * 1000
+    arr = np.random.rand(20, 40) * 1000
     xe = np.linspace(0, 1, num=40, endpoint=True)
     ye = np.linspace(0, 1, num=20, endpoint=True)
 
@@ -464,11 +465,10 @@ def test_norm_not_modified():
 def test_line_plot_cyclers():
     # Sample data
     M, N = 50, 10
-    state = np.random.RandomState(51423)
-    data1 = (state.rand(M, N) - 0.48).cumsum(axis=1).cumsum(axis=0)
-    data2 = (state.rand(M, N) - 0.48).cumsum(axis=1).cumsum(axis=0) * 1.5
-    data1 += state.rand(M, N)
-    data2 += state.rand(M, N)
+    data1 = (np.random.rand(M, N) - 0.48).cumsum(axis=1).cumsum(axis=0)
+    data2 = (np.random.rand(M, N) - 0.48).cumsum(axis=1).cumsum(axis=0) * 1.5
+    data1 += np.random.rand(M, N)
+    data2 += np.random.rand(M, N)
     data1 *= 2
 
     cmaps = ("Blues", "Reds")
@@ -512,7 +512,7 @@ def test_heatmap_labels():
     """
     Heatmap function should show labels when asked
     """
-    x = state.rand(10, 10)
+    x = np.random.rand(10, 10)
     # Nans should not be shown
     x[0, 0] = np.nan
     x[0, -1] = np.nan

@@ -7,8 +7,6 @@ import xarray as xr
 import ultraplot as uplt, pytest
 import pint
 
-state = np.random.RandomState(51423)
-
 
 @pytest.mark.mpl_image_compare
 def test_pint_quantities():
@@ -20,10 +18,10 @@ def test_pint_quantities():
     fig, ax = uplt.subplots()
     ax.plot(
         np.arange(10),
-        state.rand(10) * ureg.km,
+        np.random.rand(10) * ureg.km,
         "C0",
         np.arange(10),
-        state.rand(10) * ureg.m * 1e2,
+        np.random.rand(10) * ureg.m * 1e2,
         "C1",
     )
     return fig
@@ -37,7 +35,7 @@ def test_data_keyword():
     N = 10
     M = 20
     ds = xr.Dataset(
-        {"z": (("x", "y"), state.rand(N, M))},
+        {"z": (("x", "y"), np.random.rand(N, M))},
         coords={
             "x": ("x", np.arange(N) * 10, {"long_name": "longitude"}),
             "y": ("y", np.arange(M) * 5, {"long_name": "latitude"}),
@@ -57,14 +55,14 @@ def test_keep_guide_labels():
     legend subsequently.
     """
     fig, ax = uplt.subplots()
-    df = pd.DataFrame(state.rand(5, 5))
+    df = pd.DataFrame(np.random.rand(5, 5))
     df.name = "variable"
     m = ax.pcolor(df)
     ax.colorbar(m)
 
     fig, ax = uplt.subplots()
     for k in ("foo", "bar", "baz"):
-        s = pd.Series(state.rand(5), index=list("abcde"), name=k)
+        s = pd.Series(np.random.rand(5), index=list("abcde"), name=k)
         ax.plot(
             s,
             legend="ul",
@@ -89,7 +87,7 @@ def test_seaborn_swarmplot():
     ax = fig.subplot()
     sns.swarmplot(ax=ax, x="day", y="total_bill", data=tips, palette="cubehelix")
     # fig, ax = uplt.subplots()
-    # sns.swarmplot(y=state.normal(size=100), ax=ax)
+    # sns.swarmplot(y=np.random.normal(size=100), ax=ax)
     return fig
 
 
@@ -99,8 +97,8 @@ def test_seaborn_hist():
     Test seaborn histograms.
     """
     fig, axs = uplt.subplots(ncols=2, nrows=2)
-    sns.histplot(state.normal(size=100), ax=axs[0])
-    sns.kdeplot(x=state.rand(100), y=state.rand(100), ax=axs[1])
+    sns.histplot(np.random.normal(size=100), ax=axs[0])
+    sns.kdeplot(x=np.random.rand(100), y=np.random.rand(100), ax=axs[1])
     penguins = sns.load_dataset("penguins")
     sns.histplot(
         data=penguins, x="flipper_length_mm", hue="species", multiple="stack", ax=axs[2]
@@ -145,5 +143,5 @@ def test_seaborn_heatmap():
     Test seaborn heatmaps. This should work thanks to backwards compatibility support.
     """
     fig, ax = uplt.subplots()
-    sns.heatmap(state.normal(size=(50, 50)), ax=ax[0])
+    sns.heatmap(np.random.normal(size=(50, 50)), ax=ax[0])
     return fig

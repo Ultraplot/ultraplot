@@ -5,8 +5,6 @@ Test format and rc behavior.
 import locale, numpy as np, ultraplot as uplt, pytest
 import warnings
 
-state = np.random.RandomState(51423)
-
 
 # def test_colormap_assign():
 #     """
@@ -83,7 +81,7 @@ def test_multi_formatting():
     Support formatting in multiple projections.
     """
     fig, axs = uplt.subplots(ncols=2, proj=("cart", "cyl"))
-    axs[0].pcolormesh(state.rand(5, 5))
+    axs[0].pcolormesh(np.random.rand(5, 5))
     fig.format(
         land=1,
         labels=1,
@@ -247,7 +245,7 @@ def test_spine_side():
     Test automatic spine selection when passing `xspineloc` or `yspineloc`.
     """
     fig, ax = uplt.subplots()
-    ax.plot(uplt.arange(-5, 5), (10 * state.rand(11, 5) - 5).cumsum(axis=0))
+    ax.plot(uplt.arange(-5, 5), (10 * np.random.rand(11, 5) - 5).cumsum(axis=0))
     ax.format(xloc="bottom", yloc="zero")
     ax.alty(loc="right")
     return fig
@@ -316,7 +314,7 @@ def test_tick_labels():
     """
     import pandas as pd
 
-    data = state.rand(5, 3)
+    data = np.random.rand(5, 3)
     data = pd.DataFrame(data, index=["foo", "bar", "baz", "bat", "bot"])
     fig, axs = uplt.subplots(abc="A.", abcloc="ul", ncols=2, refwidth=3, span=False)
     for i, ax in enumerate(axs):
