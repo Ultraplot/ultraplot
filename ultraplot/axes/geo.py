@@ -4,6 +4,7 @@ Axes filled with cartographic projections.
 """
 import copy
 import inspect
+from functools import partial
 
 import matplotlib.axis as maxis
 import matplotlib.path as mpath
@@ -15,7 +16,14 @@ from .. import constructor
 from .. import proj as pproj
 from ..config import rc
 from ..internals import ic  # noqa: F401
-from ..internals import _not_none, _pop_rc, _version_cartopy, docstring, warnings
+from ..internals import (
+    _not_none,
+    _pop_rc,
+    _version_cartopy,
+    docstring,
+    warnings,
+)
+from ..utils import units
 from . import plot
 
 try:
@@ -65,6 +73,10 @@ longrid, latgrid, grid : bool, default: :rc:`grid`
 longridminor, latgridminor, gridminor : bool, default: :rc:`gridminor`
     Whether to draw "minor" longitude and latitude lines.
     Use the keyword `gridminor` to toggle both at once.
+lonticklen, latticklen, ticklen : unit-spec, default: :rc:`tick.len`
+    Major tick lengths for the longitudinal (x) and latitude (y) axis.
+    %(units.pt)s
+    Use the keyword `ticklen` to set both at once.
 latmax : float, default: 80
     The maximum absolute latitude for gridlines. Longitude gridlines are cut off
     poleward of this value (note this feature does not work in cartopy 0.18).
@@ -562,6 +574,9 @@ class GeoAxes(plot.PlotAxes):
         latgrid=None,
         longridminor=None,
         latgridminor=None,
+        ticklen=None,
+        lonticklen=None,
+        latticklen=None,
         latmax=None,
         nsteps=None,
         lonlocator=None,
@@ -761,9 +776,83 @@ class GeoAxes(plot.PlotAxes):
                 latgrid=latgridminor,
                 nsteps=nsteps,
             )
+        # Set tick lengths for flat projections
+        if lonticklen or latticklen:
+            # Only add warning when ticks are given
+            if _is_rectilinear_projection(self):
+                self._add_geoticks("x", lonticklen, ticklen)
+                self._add_geoticks("y", latticklen, ticklen)
+            else:
+                warnings._warn_ultraplot(
+                    f"Projection is not rectilinear. Ignoring {lonticklen=} and {latticklen=} settings."
+                )
 
         # Parent format method
         super().format(rc_kw=rc_kw, rc_mode=rc_mode, **kwargs)
+
+    def _add_geoticks(self, x_or_y, itick, ticklen):
+        """
+        Add tick marks to the geographic axes.
+
+        Parameters
+        ----------
+        x_or_y : {'x', 'y'}
+            The axis to add ticks to ('x' for longitude, 'y' for latitude).
+        itick, ticklen : unit-spec, default: :rc:`tick.len`
+            Major tick lengths for the x and y axis.
+            %(units.pt)s
+            Use the argument `ticklen` to set both at once.
+
+        Notes
+        -----
+        This method handles proper tick mark drawing for geographic projections
+        while respecting the current gridline settings.
+        """
+
+        size = _not_none(itick, ticklen)
+        # Skip if no tick size specified
+        if size is None:
+            return
+        size = units(size) * rc["tick.len"]
+
+        ax = getattr(self, f"{x_or_y}axis")
+
+        # Get the tick positions based on the locator
+        gl = self.gridlines_major
+        # Note: set_xticks points to a different method than self.[x/y]axis.set_ticks
+        # from the mpl backend. For basemap we are adding the ticks to the mpl backend
+        # and for cartopy we are simple using their functions by showing the axis.
+        if isinstance(gl, tuple):
+            locator = gl[0] if x_or_y == "x" else gl[1]
+            tick_positions = np.asarray(list(locator.keys()))
+            # Show the ticks but hide the labels
+            ax.set_ticks(tick_positions)
+            ax.set_major_formatter(mticker.NullFormatter())
+
+        # Always show the ticks
+        ax.set_visible(True)
+
+        # Apply tick parameters
+        # Move the labels outwards if specified
+        # Offset of 2 * size is aesthetically nice
+        if isinstance(gl, tuple):
+            locator = gl[0] if x_or_y == "x" else gl[1]
+            for loc, objects in locator.items():
+                for object in objects:
+                    # text is wrapped in a list
+                    if isinstance(object, list) and len(object) > 0:
+                        object = object[0]
+                    if isinstance(object, mtext.Text):
+                        object.set_visible(True)
+        else:
+            setattr(gl, f"{x_or_y}padding", 2 * size)
+
+        # Note: set grid_alpha to 0 as it is controlled through the gridlines_major
+        # object (which is not the same ticker)
+        sizes = [size, 0.6 * size if isinstance(size, (int, float)) else size]
+        for size, which in zip(sizes, ["major", "minor"]):
+            self.tick_params(axis=x_or_y, which=which, length=size, grid_alpha=0)
+        self.stale = True
 
     @property
     def gridlines_major(self):
@@ -864,8 +953,6 @@ class _CartopyAxes(GeoAxes, _GeoAxes):
             super().__init__(*args, projection=self.projection, **kwargs)
         else:
             super().__init__(*args, map_projection=self.projection, **kwargs)
-        for axis in (self.xaxis, self.yaxis):
-            axis.set_tick_params(which="both", size=0)  # prevent extra label offset
 
     def _apply_axis_sharing(self):  # noqa: U100
         """
@@ -1173,6 +1260,7 @@ class _CartopyAxes(GeoAxes, _GeoAxes):
             lonlines = (np.asarray(lonlines) + 180) % 360 - 180  # only for cartopy
         gl.xlocator = mticker.FixedLocator(lonlines)
         gl.ylocator = mticker.FixedLocator(latlines)
+        self.stale = True
 
     def _update_major_gridlines(
         self,
@@ -1202,6 +1290,8 @@ class _CartopyAxes(GeoAxes, _GeoAxes):
         )
         gl.xformatter = self._lonaxis.get_major_formatter()
         gl.yformatter = self._lataxis.get_major_formatter()
+        self.xaxis.set_major_formatter(mticker.NullFormatter())
+        self.yaxis.set_major_formatter(mticker.NullFormatter())
 
         # Update gridline label parameters
         # NOTE: Cartopy 0.18 and 0.19 can not draw both edge and inline labels. Instead
@@ -1211,7 +1301,8 @@ class _CartopyAxes(GeoAxes, _GeoAxes):
         # TODO: Cartopy has had two formatters for a while but we use the newer one.
         # See https://github.com/SciTools/cartopy/pull/1066
         if labelpad is not None:
-            gl.xpadding = gl.ypadding = labelpad
+            gl.xpadding = labelpad
+            gl.ypadding = labelpad
         if loninline is not None:
             gl.x_inline = bool(loninline)
         if latinline is not None:
@@ -1673,3 +1764,67 @@ class _BasemapAxes(GeoAxes):
 # Apply signature obfuscation after storing previous signature
 GeoAxes._format_signatures[GeoAxes] = inspect.signature(GeoAxes.format)
 GeoAxes.format = docstring._obfuscate_kwargs(GeoAxes.format)
+
+
+def _is_rectilinear_projection(ax):
+    """Check if the axis has a flat projection (works with Cartopy)."""
+    # Determine what the projection function is
+    # Create a square and determine if the lengths are preserved
+    # For geoaxes projc is always set in format, and thus is not None
+    proj = getattr(ax, "projection", None)
+    transform = None
+    if hasattr(proj, "transform_point"):  # cartopy
+        if proj.transform_point is not None:
+            transform = partial(proj.transform_point, src_crs=proj.as_geodetic())
+    elif hasattr(proj, "projection"):  # basemap
+        transform = proj
+
+    if transform is not None:
+        # Create three collinear points (in a straight line)
+        line_points = [(0, 0), (10, 10), (20, 20)]
+
+        # Transform the points using the projection
+        transformed_points = [transform(x, y) for x, y in line_points]
+
+        # Check if the transformed points are still collinear
+        # Points are collinear if the slopes between consecutive points are equal
+        x0, y0 = transformed_points[0]
+        x1, y1 = transformed_points[1]
+        x2, y2 = transformed_points[2]
+
+        # Calculate slopes
+        xdiff1 = x1 - x0
+        xdiff2 = x2 - x1
+        if np.allclose(xdiff1, 0) or np.allclose(xdiff2, 0):  # Avoid division by zero
+            # Check if both are vertical lines
+            return np.allclose(xdiff1, 0) and np.allclose(xdiff2, 0)
+
+        slope1 = (y1 - y0) / xdiff1
+        slope2 = (y2 - y1) / xdiff2
+
+        # If slopes are equal (within a small tolerance), the projection preserves straight lines
+        return np.allclose(slope1 - slope2, 0)
+    # Cylindrical projections are generally rectilinear
+    rectilinear_projections = {
+        # Cartopy projections
+        "platecarree",
+        "mercator",
+        "lambertcylindrical",
+        "miller",
+        # Basemap projections
+        "cyl",
+        "merc",
+        "mill",
+        "rect",
+        "rectilinear",
+        "unknown",
+    }
+
+    # For Cartopy
+    if hasattr(proj, "name"):
+        return proj.name.lower() in rectilinear_projections
+    # For Basemap
+    elif hasattr(proj, "projection"):
+        return proj.projection.lower() in rectilinear_projections
+    # If we can't determine, assume it's not rectilinear
+    return False

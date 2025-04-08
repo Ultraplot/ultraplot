@@ -131,6 +131,7 @@ except ImportError:
 extensions = [
     "matplotlib.sphinxext.plot_directive",  # see: https://matplotlib.org/sampledoc/extensions.html  # noqa: E501
     "sphinx.ext.autodoc",  # include documentation from docstrings
+    "sphinx_design",
     "sphinx.ext.doctest",  # >>> examples
     "sphinx.ext.extlinks",  # for :pr:, :issue:, :commit:
     "sphinx.ext.autosectionlabel",  # use :ref:`Heading` for any heading
@@ -144,6 +145,7 @@ extensions = [
     "sphinx_automodapi.automodapi",  # fork of automodapi
     "sphinx_rtd_light_dark",  # use custom theme
     "sphinx_copybutton",  # add copy button to code
+    "_ext.notoc",
     "nbsphinx",  # parse rst books
 ]
 
@@ -224,17 +226,18 @@ extlinks = {
 # Set up mapping for other projects' docs
 intersphinx_mapping = {
     "cycler": ("https://matplotlib.org/cycler/", None),
-    "matplotlib": ("https://matplotlib.org/stable", None),
-    "sphinx": ("http://www.sphinx-doc.org/en/stable", None),
-    "python": ("https://docs.python.org/3", None),
-    "numpy": ("https://docs.scipy.org/doc/numpy", None),
-    "scipy": ("https://docs.scipy.org/doc/scipy/reference", None),
-    "xarray": ("http://xarray.pydata.org/en/stable", None),
-    "cartopy": ("https://scitools.org.uk/cartopy/docs/latest", None),
-    "basemap": ("https://matplotlib.org/basemap/stable", None),
-    "pandas": ("https://pandas.pydata.org/pandas-docs/stable", None),
+    "matplotlib": ("https://matplotlib.org/stable/", None),
+    "sphinx": ("https://www.sphinx-doc.org/en/master/", None),
+    "python": ("https://docs.python.org/3/", None),
+    "numpy": ("https://numpy.org/doc/stable/", None),
+    "scipy": ("https://docs.scipy.org/doc/scipy/", None),
+    "xarray": ("https://docs.xarray.dev/en/stable/", None),
+    "cartopy": ("https://scitools.org.uk/cartopy/docs/latest/", None),
+    "basemap": ("https://matplotlib.org/basemap/", None),
+    "pandas": ("https://pandas.pydata.org/pandas-docs/stable/", None),
     "pint": ("https://pint.readthedocs.io/en/stable/", None),
 }
+
 
 # Fix duplicate class member documentation from autosummary + numpydoc
 # See: https://github.com/phn/pytpm/issues/3#issuecomment-12133978
@@ -287,6 +290,8 @@ nbsphinx_timeout = 300
 # Add jupytext support to nbsphinx
 nbsphinx_custom_formats = {".py": ["jupytext.reads", {"fmt": "py:percent"}]}
 
+nbsphinx_execute = "auto"
+
 # The name of the Pygments (syntax highlighting) style to use.
 # The light-dark theme toggler overloads this, but set default anyway
 pygments_style = "none"
@@ -310,6 +315,10 @@ html_theme_options = {
     "collapse_navigation": True,
     "navigation_depth": 4,
     "prev_next_buttons_location": "bottom",  # top and bottom
+    "includehidden": True,
+    "titles_only": True,
+    "display_toc": True,
+    "sticky_navigation": True,
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
@@ -336,6 +345,13 @@ html_favicon = str(Path("_static") / "logo_blank.ico")
 # Output file base name for HTML help builder.
 htmlhelp_basename = "ultraplotdoc"
 
+
+html_css_files = [
+    "custom.css",
+]
+html_js_files = [
+    "custom.js",
+]
 
 # -- Options for LaTeX output ------------------------------------------------
 

@@ -1,4 +1,4 @@
-import ultraplot as plt, numpy as np
+import ultraplot as plt, numpy as np, warnings
 import pytest
 
 
@@ -114,3 +114,63 @@ def test_drawing_in_projection_with_globe():
         abcborder=False,
     )
     return fig
+
+
+@pytest.mark.mpl_image_compare
+def test_geoticks():
+
+    lonlim = (-140, 60)
+    latlim = (-10, 50)
+    basemap_projection = plt.Proj(
+        "cyl",
+        lonlim=lonlim,
+        latlim=latlim,
+        backend="basemap",
+    )
+    fig, ax = plt.subplots(
+        ncols=3,
+        proj=(
+            "cyl",  # cartopy
+            "cyl",  # cartopy
+            basemap_projection,  # basemap
+        ),
+        share=0,
+    )
+    settings = dict(land=True, labels=True, lonlines=20, latlines=20)
+    # Shows sensible "default"; uses cartopy backend to show the grid lines with ticks
+    ax[0].format(
+        lonlim=lonlim,
+        latlim=latlim,
+        **settings,
+    )
+
+    # Add lateral ticks only
+    ax[1].format(
+        latticklen=True,
+        gridminor=True,
+        lonlim=lonlim,
+        latlim=latlim,
+        **settings,
+    )
+
+    ax[2].format(
+        latticklen=5.0,
+        lonticklen=2.0,
+        grid=False,
+        gridminor=False,
+        **settings,
+    )
+    return fig
+
+
+def test_geoticks_input_handling(recwarn):
+    fig, ax = plt.subplots(proj="aeqd")
+    # Should warn that about non-rectilinear projection.
+    with pytest.warns(plt.warnings.UltraplotWarning):
+        ax.format(lonticklen=True)
+    # When set to None the latticks are not added.
+    # No warnings should be raised.
+    ax.format(lonticklen=None)
+    assert len(recwarn) == 0
+    # Can parse a string
+    ax.format(lonticklen="1em")

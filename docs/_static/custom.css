@@ -1,0 +1,188 @@
+.grid-item-card .card-img-top {
+    height: 100%;
+    object-fit: cover;
+    width: 100%;
+    background-color: slategrey;
+}
+
+/* Make all cards with this class use flexbox for vertical layout */
+.card-with-bottom-text {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+}
+
+/* Style the card content areas */
+.card-with-bottom-text .sd-card-body {
+    display: flex !important;
+    flex-direction: column !important;
+    flex-grow: 1 !important;
+}
+
+/* Make images not grow or shrink */
+.card-with-bottom-text img {
+    flex-shrink: 0 !important;
+    margin-bottom: 0.5rem !important;
+}
+
+/* Push the last paragraph to the bottom */
+.card-with-bottom-text .sd-card-body > p:last-child {
+    margin-top: auto !important;
+    padding-top: 0.5rem !important;
+    text-align: center !important;
+}
+
+.img-container img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+
+.right-toc {
+    position: fixed;
+    top: 90px;
+    right: 20px;
+    width: 280px;
+    font-size: 0.9em;
+    max-height: calc(100vh - 150px);
+    background-color: #f8f9fa;
+    z-index: 100;
+    border-radius: 6px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    border-left: 3px solid #2980b9;
+}
+
+.right-toc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    border-bottom: 1px solid #e1e4e5;
+}
+
+.right-toc-title {
+    font-weight: 600;
+    font-size: 1.1em;
+    color: #2980b9;
+}
+
+.right-toc-buttons {
+    display: flex;
+    align-items: center;
+}
+
+.right-toc-toggle-btn {
+    background: none;
+    border: none;
+    color: #2980b9;
+    font-size: 16px;
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 3px;
+    padding: 0;
+    transition: background-color 0.2s;
+}
+
+.right-toc-toggle-btn:hover {
+    background-color: rgba(41, 128, 185, 0.1);
+}
+
+.right-toc-content {
+    padding: 15px 15px 15px 20px;
+    overflow-y: auto;
+    max-height: calc(100vh - 200px);
+}
+
+.right-toc-list {
+    list-style-type: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.right-toc-link {
+    display: block;
+    padding: 5px 0;
+    text-decoration: none;
+    color: #404040;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    margin-bottom: 3px;
+}
+
+.right-toc-link:hover {
+    background-color: rgba(41, 128, 185, 0.1);
+    padding-left: 5px;
+    color: #2980b9;
+}
+
+.right-toc-level-h1 {
+    font-weight: 600;
+    font-size: 1em;
+}
+
+.right-toc-level-h2 {
+    padding-left: 1.2em;
+    font-size: 0.95em;
+}
+
+.right-toc-level-h3 {
+    padding-left: 2.4em;
+    font-size: 0.9em;
+    color: #606060;
+}
+
+/* Active TOC item highlighting */
+.right-toc-link.active {
+    background-color: rgba(41, 128, 185, 0.15);
+    color: #2980b9;
+    font-weight: 500;
+    padding-left: 5px;
+}
+
+/* Collapsed state */
+.right-toc-collapsed {
+    width: auto;
+    border-left-width: 0;
+}
+
+.right-toc-collapsed .right-toc-header {
+    border-bottom: none;
+    padding: 8px 12px;
+}
+
+/* Scrollbar styling */
+.right-toc-content::-webkit-scrollbar {
+    width: 5px;
+}
+
+.right-toc-content::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.right-toc-content::-webkit-scrollbar-thumb {
+    background: #cdcdcd;
+    border-radius: 10px;
+}
+
+.right-toc-content::-webkit-scrollbar-thumb:hover {
+    background: #9e9e9e;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 1200px) {
+    .right-toc {
+        width: 230px;
+    }
+}
+
+@media screen and (max-width: 992px) {
+    .right-toc {
+        display: none; /* Hide on smaller screens */
+    }
+}
