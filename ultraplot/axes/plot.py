@@ -3930,7 +3930,7 @@ class PlotAxes(base.Axes):
             # 2. Use labels parameter
             if tick_labels is not None:
                 kw["labels"] = tick_labels
-            artists = self._call_native("boxplot", y, vert=orientation**kw)
+            artists = self._call_native("boxplot", y, vert=orientation, **kw)
 
         artists = artists or {}  # necessary?
         artists = {
