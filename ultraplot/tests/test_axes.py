@@ -26,10 +26,7 @@ def test_inset_colors_1():
     """
     fig, ax = uplt.subplots()
     ax.format(xlim=(0, 100), ylim=(0, 100))
-    ix = ax.inset_axes(
-        (0.5, 0.5, 0.3, 0.3), zoom=True, zoom_kw={"color": "r", "fc": "r", "ec": "b"}
-    )  # zoom_kw={'alpha': 1})
-    # ix = ax.inset_axes((40, 40, 20, 20), zoom=True, transform='data')
+    ix = ax.inset_axes((0.5, 0.5, 0.3, 0.3), zoom=True, zoom_kw={"fc": "r", "ec": "b"})
     ix.format(xlim=(10, 20), ylim=(10, 20), grid=False)
     return fig
 

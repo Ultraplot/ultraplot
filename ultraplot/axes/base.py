@@ -1544,7 +1544,7 @@ class Axes(maxes.Axes):
         bounds: tuple[float, float, float, float],
         parent: "Axes",
         **kwargs,
-    ) -> tuple | "InsetIndicator":
+    ) -> "tuple | InsetIndicator":
         import matplotlib as mpl
         from packaging import version
 
