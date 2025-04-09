@@ -393,3 +393,10 @@ def test_input_parsing_cycle():
     last_color = uplt.colors.to_rgba(cycle.get_next()["color"])
     assert np.allclose(first_color, lower_half(0.0))
     assert np.allclose(last_color, upper_half(1.0))
+
+
+def test_scaler():
+    fig, ax = uplt.subplots(ncols=2, share=0)
+    ax[0].set_yscale("mercator")
+    ax[1].set_yscale("asinh")
+    return fig
