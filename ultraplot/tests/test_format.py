@@ -80,6 +80,7 @@ def test_multi_formatting():
     """
     Support formatting in multiple projections.
     """
+    # Mix Cartesian with a projection
     fig, axs = uplt.subplots(ncols=2, proj=("cart", "cyl"))
     axs[0].pcolormesh(np.random.rand(5, 5))
 
