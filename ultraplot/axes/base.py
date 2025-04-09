@@ -816,51 +816,23 @@ class Axes(maxes.Axes):
         d["lower left"] = self.text(0, 0, "", va="bottom", ha="left", **kw)
         d["lower center"] = self.text(0, 0.5, "", va="bottom", ha="center", **kw)
         d["lower right"] = self.text(0, 1, "", va="bottom", ha="right", **kw)
+        d["outer left"] = self.text(
+            0,
+            1,
+            "",
+            va="bottom",
+            ha="right",
+            **kw,
+        )
+        d["outer right"] = self.text(
+            1,
+            1,
+            "",
+            va="bottom",
+            ha="left",
+            **kw,
+        )
 
-        # Setting outer alignment needs to modify the transform slightly; setting it with the default will not move it outside the range of the axis
-        for loc, ha, side in zip(
-            ["outer left", "outer right"], ["right", "left"], [0, -1]
-        ):
-            # Get relevant axis (y-axis for both left and right)
-            axis = self.yaxis
-
-            # Determine if ticks are visible and get their size
-            has_ticks = (
-                axis.get_major_ticks() and axis.get_major_ticks()[side].get_visible()
-            )
-            tick_length = (
-                axis.majorTicks[0].tick1line.get_markersize() if has_ticks else 0
-            )
-
-            # Get the size of tick labels if they exist
-            has_labels = (
-                axis.get_major_ticks()
-                and axis.get_major_ticks()[side].label1.get_visible()
-            )
-            # Estimate label size - we can get more precise by using renderer.get_text_width
-            # but we'll use a simpler estimation here
-            label_size = (
-                max([len(str(l.get_text())) for l in axis.get_ticklabels()]) * 4
-                if has_labels
-                else 0
-            )
-
-            # Calculate symmetrical offset based on tick length and label size
-            base_offset = (tick_length / 72) + (label_size / 72)
-            offset = -base_offset if ha == "right" else base_offset
-
-            # Create text with appropriate position and transform
-            kw["transform"] = self.transAxes + mtransforms.ScaledTranslation(
-                offset, 0, self.figure.dpi_scale_trans
-            )
-            d[loc] = self.text(
-                0 if ha == "right" else 1,
-                1,
-                "",
-                va="bottom",
-                ha=ha,
-                **kw,
-            )
         # Subplot-specific settings
         # NOTE: Default number for any axes is None (i.e., no a-b-c labels allowed)
         # and for subplots added with add_subplot is incremented automatically
@@ -2463,8 +2435,55 @@ class Axes(maxes.Axes):
         if loc not in ("left", "right", "center"):
             kw.update(self._abc_border_kwargs)
         kw.update(kwargs)
-
+        self._update_outer_abc_loc(loc)
         self._title_dict["abc"].update(kw)
+
+    def _update_outer_abc_loc(self, loc):
+        """
+        For the outer labels, we need to align them vertically and create the offset based on the tick lenght and the tick label. This function loops through all axes in the figure to find maximum tick length and label size and transforms the position accordingly.
+        """
+        if loc not in ["outer left", "outer right"]:
+            return
+        # Find the largest offset by considering the tick and label size
+        tick_length = label_size = 0
+        ha = "right" if loc == "outer left" else "left"
+        side = 0 if loc == "outer left" else -1
+
+        # Loop through all axes in the figure to find maximum tick length and label size
+        for axi in self.figure.axes:
+            axis = axi.yaxis
+            # Determine if ticks are visible and get their size
+            has_ticks = (
+                axis.get_major_ticks() and axis.get_major_ticks()[side].get_visible()
+            )
+            if has_ticks:
+                tick_length = max(
+                    axis.majorTicks[0].tick1line.get_markersize(), tick_length
+                )
+
+            # Get the size of tick labels if they exist
+            has_labels = (
+                axis.get_major_ticks()
+                and axis.get_major_ticks()[side].label1.get_visible()
+            )
+            # Estimate label size; note it uses the raw text representation which can be misleading due to the latex processing
+            if has_labels:
+                label_size = max(
+                    max([len(l.get_text()) for l in axis.get_ticklabels()]),
+                    label_size,
+                )
+        # Calculate symmetrical offset based on tick length and label size
+        base_offset = (tick_length / 72) + (label_size / 72)
+        offset = -base_offset if ha == "right" else base_offset
+
+        # Create text with appropriate position and transform
+        aobj = self._title_dict[loc]
+        aobj.set_transform(
+            self.transAxes
+            + mtransforms.ScaledTranslation(offset, 0, self.figure.dpi_scale_trans)
+        )
+        p = aobj.get_position()
+        aobj.set_position((p[0] + offset, p[1]))
 
     def _update_title(self, loc, title=None, **kwargs):
         """
