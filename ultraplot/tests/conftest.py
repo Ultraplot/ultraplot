@@ -1,11 +1,15 @@
-import os, shutil, pytest, re
+import os, shutil, pytest, re, numpy as np
 from pathlib import Path
 import warnings
 
-warnings.simplefilter("ignore")
-warnings.filterwarnings(
-    "ignore", message="Bad key .* in file .*ultraplot.yml", module="matplotlib"
-)
+
+@pytest.fixture(autouse=True)
+def _reset_numpy_seed():
+    """
+    Ensure all tests start with the same rng
+    """
+    seed = 51423
+    np.random.seed(seed)
 
 
 # Define command line option
@@ -63,6 +67,14 @@ class StoreFailedMplPlugin:
 # Register the plugin if the option is used
 def pytest_configure(config):
     print("Configuring StoreFailedMplPlugin")
+    # Surpress ultraplot config loading which mpl does not recognize
+    if rc_file := config.getoption("--mpl-default-style", None):
+        warnings.filterwarnings(
+            "ignore",
+            message=rf"Bad key .* in file .*" + rc_file,
+            category=UserWarning,
+            module="matplotlib",
+        )
     try:
         if config.getoption("--store-failed-only", False):
             print("Registering StoreFailedMplPlugin")
