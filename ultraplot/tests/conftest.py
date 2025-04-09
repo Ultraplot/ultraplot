@@ -3,16 +3,6 @@ from pathlib import Path
 import warnings
 
 
-def pytest_configure():
-    # Surpress ultraplot config loading which mpl does not recognize
-    warnings.filterwarnings(
-        "ignore",
-        message=r"Bad key .* in file .*ultraplot\.yml",
-        category=UserWarning,
-        module="matplotlib",
-    )
-
-
 @pytest.fixture(autouse=True)
 def _reset_numpy_seed():
     """
@@ -77,6 +67,14 @@ class StoreFailedMplPlugin:
 # Register the plugin if the option is used
 def pytest_configure(config):
     print("Configuring StoreFailedMplPlugin")
+    # Surpress ultraplot config loading which mpl does not recognize
+    if rc_file := config.getoption("--mpl-default-style", None):
+        warnings.filterwarnings(
+            "ignore",
+            message=rf"Bad key .* in file .*" + rc_file,
+            category=UserWarning,
+            module="matplotlib",
+        )
     try:
         if config.getoption("--store-failed-only", False):
             print("Registering StoreFailedMplPlugin")
