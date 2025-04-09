@@ -2,10 +2,14 @@ import os, shutil, pytest, re, numpy as np
 from pathlib import Path
 import warnings
 
-warnings.simplefilter("ignore")
-warnings.filterwarnings(
-    "ignore", message="Bad key .* in file .*ultraplot.yml", module="matplotlib"
-)
+
+def pytest_configure():
+    warnings.filterwarnings(
+        "ignore",
+        message=r"Bad key .* in file .*ultraplot\.yml",
+        category=UserWarning,
+        module="matplotlib",
+    )
 
 
 @pytest.fixture(autouse=True)
