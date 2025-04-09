@@ -4,6 +4,7 @@ import warnings
 
 
 def pytest_configure():
+    # Surpress ultraplot config loading which mpl does not recognize
     warnings.filterwarnings(
         "ignore",
         message=r"Bad key .* in file .*ultraplot\.yml",
