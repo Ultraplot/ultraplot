@@ -1212,6 +1212,7 @@ class Axes(maxes.Axes):
             extendfrac=extendfrac,
             **kwargs,
         )
+        obj.ax.grid(False)
         # obj.minorlocator = minorlocator  # backwards compatibility
         obj.update_ticks = guides._update_ticks.__get__(obj)  # backwards compatible
         if minorlocator is not None:
