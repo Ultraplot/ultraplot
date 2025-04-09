@@ -84,7 +84,7 @@ def test_multi_formatting():
     fig, axs = uplt.subplots(ncols=2, proj=("cart", "cyl"))
     axs[0].pcolormesh(np.random.rand(5, 5))
 
-    # Warning is raied based on projection. Cart does not have lonlim, latllim or labels
+    # Warning is raised based on projection. Cart does not have lonlim, latllim or labels
     with pytest.warns(uplt.warnings.UltraPlotWarning):
         fig.format(
             land=1,
