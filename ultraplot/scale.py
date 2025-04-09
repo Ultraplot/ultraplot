@@ -956,7 +956,7 @@ def _scale_factory(scale, axis, *args, **kwargs):  # noqa: U100
                 + ", ".join(map(repr, mapping))
                 + "."
             )
-        # Ensure that if the scaler exists in mpl or otherwise it will attempt to return it, which has a different singature than the _Scale class above
+        # Ensure that if the scaler exists in mpl or otherwise it will attempt to return it, which has a different signature than the _Scale class above
         scaler = mapping[scale]
         # Assume it is a MPL class
         if not issubclass(scaler, _Scale):
