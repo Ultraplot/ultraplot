@@ -329,7 +329,7 @@ abcbbox, titlebbox : bool, default: :rc:`abc.bbox` and :rc:`title.bbox`
     Whether to draw a white bbox around titles and a-b-c labels positioned
     inside the axes. This can help them stand out on top of artists plotted
     inside the axes.
-abcpad : float, default: :rc:`abc.pad`
+abcpad : float or unit-spec, default: :rc:`abc.pad`
     The padding for the inner and outer titles and a-b-c labels.
     %(units.pt)s
 abc_kw, title_kw : dict-like, optional
@@ -2832,7 +2832,7 @@ class Axes(maxes.Axes):
             self._update_share_labels(share_xlabels, target="x")
             self._update_share_labels(share_ylabels, target="y")
             if (pad := kwargs.pop("abcpad", None)) is not None:
-                self._abc_pad = pad
+                self._abc_pad = units(pad)
             self._update_abc(**abc_kw)
             self._update_title(None, title, **title_kw)
             self._update_title(
