@@ -264,3 +264,14 @@ def test_minor_override():
         np.linspace(left - minor, right + minor, n * 2 + 1),
     )
     return fig
+
+
+@pytest.mark.mpl_image_compare
+def test_draw_edges():
+    data = np.random.rand(10, 10)
+    fig, ax = uplt.subplots(ncols=2)
+    for axi, drawedges in zip(ax, [True, False]):
+        h = axi.pcolor(data, discrete=True)
+        axi.colorbar(h, drawedges=drawedges)
+        axi.set_title(f"{drawedges=}")
+    return fig
