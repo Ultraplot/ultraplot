@@ -1212,11 +1212,7 @@ class Axes(maxes.Axes):
             extendfrac=extendfrac,
             **kwargs,
         )
-        gridalpha = rc["grid.alpha"] if grid else 0
-        # Mpl raises user warning when gridalpha is provided while grid is False
-        with warnings.catch_warnings():
-            warnings.simplefilter("ignore", UserWarning)
-            obj.ax.grid(grid, alpha=gridalpha)
+        obj.ax.grid(False)
         # obj.minorlocator = minorlocator  # backwards compatibility
         obj.update_ticks = guides._update_ticks.__get__(obj)  # backwards compatible
         if minorlocator is not None:
