@@ -255,3 +255,14 @@ def test_abc_padding():
     diff = actual_offset - ax.axes._abc_pad  # Note pad is signed!
     assert np.allclose(diff, -padding_value), "ABC padding offset calculation incorrect"
     uplt.close(fig)
+
+
+@pytest.mark.mpl_image_compare
+def test_unequal_abc_padding():
+    """Check if labels are pushed out based on the largest labl length"""
+    fig, ax = uplt.subplots(ncols=2, nrows=2, share=0)
+    ax[0, 0].set_yscale("asinh")
+    ax[1, 0].set_yscale("mercator")
+    ax[1, 1].set_yscale("logit")
+    ax.format(abc="a.", abcloc="ol")
+    return fig
