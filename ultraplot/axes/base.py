@@ -2631,7 +2631,11 @@ class Axes(maxes.Axes):
 
         # Apply positioning adjustments
         if atext:
-            aobj.set_x(aobj.get_position()[0] + aoffset + self._abc_pad)
+            aobj.set_x(
+                aobj.get_position()[0]
+                + aoffset
+                + (self._abc_pad / 72) / (self._get_size_inches()[0])
+            )
         if ttext:
             tobj.set_x(tobj.get_position()[0] + toffset)
 
