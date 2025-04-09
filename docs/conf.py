@@ -338,7 +338,7 @@ html_static_path = ["_static"]
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
 # pixels large. Static folder is for CSS and image files. Use ImageMagick to
 # convert png to ico on command line with 'convert image.png image.ico'
-html_favicon = str(Path("_static") / "logo_blank.ico")
+html_favicon = str(Path("_static") / "logo_blank.svg")
 
 # -- Options for HTMLHelp output ---------------------------------------------
 
