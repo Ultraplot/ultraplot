@@ -765,9 +765,8 @@ class Axes(maxes.Axes):
         get_converter = lambda axis: (
             axis.get_converter if hasattr(axis, "get_converter") else axis.converter
         )
-        self.xaxis.get_converter = lambda: get_converter
-        self.yaxis.get_converter = lambda: get_converter
-
+        self.xaxis.get_converter = lambda: get_converter(self.xaxis)
+        self.yaxis.get_converter = lambda: get_converter(self.yaxis)
         # Varous scalar properties
         self._active_cycle = rc["axes.prop_cycle"]
         self._auto_format = None  # manipulated by wrapper functions
