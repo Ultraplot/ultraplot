@@ -956,7 +956,12 @@ def _scale_factory(scale, axis, *args, **kwargs):  # noqa: U100
                 + ", ".join(map(repr, mapping))
                 + "."
             )
-        return mapping[scale](*args, **kwargs)
+        # Ensure that if the scaler exists in mpl or otherwise it will attempt to return it, which has a different signature than the _Scale class above
+        scaler = mapping[scale]
+        # Assume it is a MPL class
+        if not issubclass(scaler, _Scale):
+            return scaler(axis, *args, **kwargs)
+        return scaler(*args, **kwargs)
 
 
 # Monkey patch matplotlib scale factory with version that accepts ScaleBase instances.
