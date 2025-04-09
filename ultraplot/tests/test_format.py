@@ -85,7 +85,6 @@ def test_multi_formatting():
 
     # Warning is raied based on projection. Cart does not have lonlim, latllim or labels
     with pytest.warns(uplt.warnings.UltraPlotWarning):
-        axs[0].pcolormesh(np.random.rand(5, 5))
         fig.format(
             land=1,
             labels=1,
