@@ -2658,25 +2658,6 @@ class Axes(maxes.Axes):
         if ttext:
             tobj.set_x(tobj.get_position()[0] + toffset)
 
-        # if not tobj.get_text() or not aobj.get_text():
-        #    return
-        # awidth, twidth = (
-        #    obj.get_window_extent(renderer).transformed#(self.transAxes.inverted()).width
-        #    for obj in (aobj, tobj)
-        # )
-        # ha = aobj.get_ha()
-        # pad = (abcpad / 72) / self._get_size_inches()[0]
-        # aoffset = toffset = 0
-        # if ha == "left":
-        #    toffset = awidth + pad
-        # elif ha == "right":
-        #    aoffset = -(twidth + pad)
-        # else:  # guaranteed center, there are others
-        #    toffset = 0.5 * (awidth + pad)
-        #    aoffset = -0.5 * (twidth + pad)
-        # aobj.set_x(aobj.get_position()[0] + aoffset + #self._abc_pad)
-        # tobj.set_x(tobj.get_position()[0] + toffset)
-
     def _update_super_title(self, suptitle=None, **kwargs):
         """
         Update the figure super title.
