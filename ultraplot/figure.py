@@ -816,7 +816,7 @@ class Figure(mfigure.Figure):
     @staticmethod
     def _parse_backend(backend=None, basemap=None):
         """
-        Handle deprecation deprication of basemap and cartopy package.
+        Handle deprecation of basemap and cartopy package.
         """
         # Basemap is currently being developed again so are removing the deprecation warning
         return backend
