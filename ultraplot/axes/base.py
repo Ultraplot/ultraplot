@@ -816,22 +816,8 @@ class Axes(maxes.Axes):
         d["lower left"] = self.text(0, 0, "", va="bottom", ha="left", **kw)
         d["lower center"] = self.text(0, 0.5, "", va="bottom", ha="center", **kw)
         d["lower right"] = self.text(0, 1, "", va="bottom", ha="right", **kw)
-        d["outer left"] = self.text(
-            0,
-            1,
-            "",
-            va="bottom",
-            ha="right",
-            **kw,
-        )
-        d["outer right"] = self.text(
-            1,
-            1,
-            "",
-            va="bottom",
-            ha="left",
-            **kw,
-        )
+        d["outer left"] = self.text(0, 1, "", va="bottom", ha="right", **kw)
+        d["outer right"] = self.text(1, 1, "", va="bottom", ha="left", **kw)
 
         # Subplot-specific settings
         # NOTE: Default number for any axes is None (i.e., no a-b-c labels allowed)
