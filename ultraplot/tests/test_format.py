@@ -491,6 +491,17 @@ def test_unequal_abc_padding():
     return fig
 
 
+def test_abc_with_labels():
+    """
+    This test should check the "normal" conditions in which the yaxis has labels and the location for abc is adjusted for the outer labels (left or right)
+    """
+    fig, ax = uplt.subplots()
+    ax.set_yticks([1, 2, 3])
+    ax.set_yticklabels(["one", "two", "three"])
+    ax.format(abc="a.", abcloc="ol")
+    uplt.close(fig)
+
+
 def test_abc_number():
     # The keyword `abc` can take on lists, if the lists exceeds the number of the axes
     with pytest.raises(ValueError):
