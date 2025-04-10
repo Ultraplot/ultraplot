@@ -503,6 +503,9 @@ def test_abc_with_labels():
 
 
 def test_abc_number():
+    """
+    Test handling of `abc` with lists of labels that exceed or match the number of axes.
+    """
     # The keyword `abc` can take on lists, if the lists exceeds the number of the axes
     with pytest.raises(ValueError):
         fig, ax = uplt.subplots(ncols=3)
@@ -514,6 +517,9 @@ def test_abc_number():
 
 
 def test_loc_positions():
+    """
+    Test all locations the abc labels can be in
+    """
     from ultraplot.internals.rcsetup import TEXT_LOCS
 
     fig, ax = uplt.subplots()
