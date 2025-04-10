@@ -7,6 +7,8 @@ import numpy as np
 import pytest
 import ultraplot as uplt
 
+state = np.random.RandomState(51423)
+
 
 def test_axis_access():
     # attempt to access the ax object 2d and linearly
@@ -171,7 +173,7 @@ def test_twin_axes_3():
     axs[-1].spines["right"].set_position(("axes", 1.2))
     colors = ("Green", "Red", "Blue")
     for ax, color in zip(axs, colors):
-        data = np.random.random(1) * np.random.random(10)
+        data = state.random(1) * state.random(10)
         ax.plot(data, marker="o", linestyle="none", color=color)
         ax.format(ylabel="%s Thing" % color, ycolor=color)
     axs[0].format(xlabel="xlabel")
@@ -264,3 +266,23 @@ def test_unequal_abc_padding():
     ax[1, 1].set_yscale("logit")
     ax.format(abc="a.", abcloc="ol")
     return fig
+
+
+def test_abc_number():
+    # The keyword `abc` can take on lists, if the lists exceeds the number of the axes
+    with pytest.raises(ValueError):
+        fig, ax = uplt.subplots(ncols=3)
+        ax.format(abc=["a", "bb"])
+    # This should work fine
+    fig, ax = uplt.subplots(ncols=2)
+    ax.format(abc=["a", "b"])
+    uplt.close(fig)
+
+
+def test_loc_positions():
+    from ultraplot.internals.rcsetup import TEXT_LOCS
+
+    fig, ax = uplt.subplots()
+    for loc in TEXT_LOCS:
+        ax.format(abc="a.", abcloc=loc)
+    uplt.close(fig)
