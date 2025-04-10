@@ -2457,7 +2457,9 @@ class Axes(maxes.Axes):
             axis = axi.yaxis
             # Determine if ticks are visible and get their size
             has_ticks = (
-                axis.get_major_ticks() and axis.get_major_ticks()[side].get_visible()
+                axis.get_major_ticks()
+                and axis.get_major_ticks()[side].get_visible()
+                and axis._major_tick_kw["tickdir"] != "in"
             )
             if has_ticks:
                 tick_length = max(
