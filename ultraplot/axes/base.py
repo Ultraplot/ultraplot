@@ -2440,7 +2440,10 @@ class Axes(maxes.Axes):
 
     def _update_outer_abc_loc(self, loc):
         """
-        For the outer labels, we need to align them vertically and create the offset based on the tick lenght and the tick label. This function loops through all axes in the figure to find maximum tick length and label size and transforms the position accordingly.
+        For the outer labels, we need to align them vertically and create the
+        offset based on the tick length and the tick label. This function loops
+        through all axes in the figure to find maximum tick length and label size
+        and transforms the position accordingly.
         """
         if loc not in ["outer left", "outer right"]:
             return
