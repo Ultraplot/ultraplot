@@ -2,12 +2,9 @@
 """
 Test twin, inset, and panel axes.
 """
-import re
 import numpy as np
 import pytest
 import ultraplot as uplt
-
-state = np.random.RandomState(51423)
 
 
 def test_axis_access():
@@ -173,7 +170,7 @@ def test_twin_axes_3():
     axs[-1].spines["right"].set_position(("axes", 1.2))
     colors = ("Green", "Red", "Blue")
     for ax, color in zip(axs, colors):
-        data = state.random(1) * state.random(10)
+        data = np.random(1) * np.random(10)
         ax.plot(data, marker="o", linestyle="none", color=color)
         ax.format(ylabel="%s Thing" % color, ycolor=color)
     axs[0].format(xlabel="xlabel")
