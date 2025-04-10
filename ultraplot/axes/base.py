@@ -2474,7 +2474,12 @@ class Axes(maxes.Axes):
             # Estimate label size; note it uses the raw text representation which can be misleading due to the latex processing
             if has_labels:
                 label_size = max(
-                    max([len(l.get_text()) for l in axis.get_ticklabels()]),
+                    max(
+                        [
+                            len(l.get_text()) + axis._major_tick_kw["labelsize"]
+                            for l in axis.get_ticklabels()
+                        ]
+                    ),
                     label_size,
                 )
         # Calculate symmetrical offset based on tick length and label size
