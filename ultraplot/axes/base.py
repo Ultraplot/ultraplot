@@ -2457,14 +2457,15 @@ class Axes(maxes.Axes):
             axis = axi.yaxis
             # Determine if ticks are visible and get their size
             has_ticks = (
-                axis.get_major_ticks()
-                and axis.get_major_ticks()[side].get_visible()
-                and axis._major_tick_kw["tickdir"] != "in"
+                axis.get_major_ticks() and axis.get_major_ticks()[side].get_visible()
             )
             if has_ticks:
-                tick_length = max(
-                    axis.majorTicks[0].tick1line.get_markersize(), tick_length
-                )
+                # Ignore if tick direction is not outwards
+                tickdir = axis._major_tick_kw.get("tickdir")
+                if tickdir and tickdir != "in":
+                    tick_length = max(
+                        axis.majorTicks[0].tick1line.get_markersize(), tick_length
+                    )
 
             # Get the size of tick labels if they exist
             has_labels = (
@@ -2473,15 +2474,12 @@ class Axes(maxes.Axes):
             )
             # Estimate label size; note it uses the raw text representation which can be misleading due to the latex processing
             if has_labels:
-                label_size = max(
-                    max(
-                        [
-                            len(l.get_text()) + axis._major_tick_kw["labelsize"]
-                            for l in axis.get_ticklabels()
-                        ]
-                    ),
-                    label_size,
-                )
+                fontsize = axis._major_tick_kw.get("labelsize")
+                if fontsize and fontsize > 0:
+                    label_size = max(
+                        max([len(l.get_text()) for l in axis.get_ticklabels()]),
+                        label_size,
+                    )
         # Calculate symmetrical offset based on tick length and label size
         base_offset = (tick_length / 72) + (label_size / 72)
         offset = -base_offset if ha == "right" else base_offset
