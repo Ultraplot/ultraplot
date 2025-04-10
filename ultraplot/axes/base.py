@@ -2448,25 +2448,23 @@ class Axes(maxes.Axes):
             )
             if has_ticks:
                 # Ignore if tick direction is not outwards
-                tickdir = axis._major_tick_kw.get("tickdir")
+                tickdir = axis._major_tick_kw.get("tickdir", "out")
                 if tickdir and tickdir != "in":
                     tick_length = max(
                         axis.majorTicks[0].tick1line.get_markersize(), tick_length
                     )
 
             # Get the size of tick labels if they exist
-            has_labels = (
-                axis.get_major_ticks()
-                and axis.get_major_ticks()[side].label1.get_visible()
-            )
+            has_labels = True if axis.get_ticklabels() else False
             # Estimate label size; note it uses the raw text representation which can be misleading due to the latex processing
             if has_labels:
-                fontsize = axis._major_tick_kw.get("labelsize")
-                if fontsize and fontsize > 0:
-                    label_size = max(
-                        max([len(l.get_text()) for l in axis.get_ticklabels()]),
-                        label_size,
-                    )
+                _offset = max(
+                    [
+                        len(l.get_text()) + l.get_fontsize()
+                        for l in axis.get_ticklabels()
+                    ]
+                )
+                label_size = max(_offset, label_size)
         # Calculate symmetrical offset based on tick length and label size
         base_offset = (tick_length / 72) + (label_size / 72)
         offset = -base_offset if ha == "right" else base_offset
