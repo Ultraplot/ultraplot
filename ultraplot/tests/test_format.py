@@ -523,6 +523,9 @@ def test_loc_positions():
     from ultraplot.internals.rcsetup import TEXT_LOCS
 
     fig, ax = uplt.subplots()
+    ax.set_title(
+        "Dummy title"
+    )  # trigger sync with abc to ensure they both move correctly
     for loc in TEXT_LOCS:
         ax.format(abc="a.", abcloc=loc)
     uplt.close(fig)
