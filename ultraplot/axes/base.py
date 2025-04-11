@@ -317,6 +317,8 @@ abcloc, titleloc : str, default: :rc:`abc.loc`, :rc:`title.loc`
     upper left inside axes    ``'upper left'``, ``'ul'``
     lower left inside axes    ``'lower left'``, ``'ll'``
     lower right inside axes   ``'lower right'``, ``'lr'``
+    left of y axis            ```'outer left'``, ``'ol'``
+    right of y axis           ```'outer right'``, ``'or'``
     ========================  ============================
 
 abcborder, titleborder : bool, default: :rc:`abc.border` and :rc:`title.border`
@@ -327,6 +329,9 @@ abcbbox, titlebbox : bool, default: :rc:`abc.bbox` and :rc:`title.bbox`
     Whether to draw a white bbox around titles and a-b-c labels positioned
     inside the axes. This can help them stand out on top of artists plotted
     inside the axes.
+abcpad : float or unit-spec, default: :rc:`abc.pad`
+    The padding for the inner and outer titles and a-b-c labels.
+    %(units.pt)s
 abc_kw, title_kw : dict-like, optional
     Additional settings used to update the a-b-c label and title
     with ``text.update()``.
@@ -765,6 +770,7 @@ class Axes(maxes.Axes):
         self._auto_format = None  # manipulated by wrapper functions
         self._abc_border_kwargs = {}
         self._abc_loc = None
+        self._abc_pad = 0
         self._abc_title_pad = rc["abc.titlepad"]
         self._title_above = rc["title.above"]
         self._title_border_kwargs = {}  # title border properties
@@ -810,6 +816,8 @@ class Axes(maxes.Axes):
         d["lower left"] = self.text(0, 0, "", va="bottom", ha="left", **kw)
         d["lower center"] = self.text(0, 0.5, "", va="bottom", ha="center", **kw)
         d["lower right"] = self.text(0, 1, "", va="bottom", ha="right", **kw)
+        d["outer left"] = self.text(0, 1, "", va="bottom", ha="right", **kw)
+        d["outer right"] = self.text(1, 1, "", va="bottom", ha="left", **kw)
 
         # Subplot-specific settings
         # NOTE: Default number for any axes is None (i.e., no a-b-c labels allowed)
@@ -2414,7 +2422,61 @@ class Axes(maxes.Axes):
         if loc not in ("left", "right", "center"):
             kw.update(self._abc_border_kwargs)
         kw.update(kwargs)
+        self._update_outer_abc_loc(loc)
         self._title_dict["abc"].update(kw)
+
+    def _update_outer_abc_loc(self, loc):
+        """
+        For the outer labels, we need to align them vertically and create the
+        offset based on the tick length and the tick label. This function loops
+        through all axes in the figure to find maximum tick length and label size
+        and transforms the position accordingly.
+        """
+        if loc not in ["outer left", "outer right"]:
+            return
+        # Find the largest offset by considering the tick and label size
+        tick_length = label_size = 0
+        ha = "right" if loc == "outer left" else "left"
+        side = 0 if loc == "outer left" else -1
+
+        # Loop through all axes in the figure to find maximum tick length and label size
+        for axi in self.figure.axes:
+            axis = axi.yaxis
+            # Determine if ticks are visible and get their size
+            has_ticks = (
+                axis.get_major_ticks() and axis.get_major_ticks()[side].get_visible()
+            )
+            if has_ticks:
+                # Ignore if tick direction is not outwards
+                tickdir = axis._major_tick_kw.get("tickdir", "out")
+                if tickdir and tickdir != "in":
+                    tick_length = max(
+                        axis.majorTicks[0].tick1line.get_markersize(), tick_length
+                    )
+
+            # Get the size of tick labels if they exist
+            has_labels = True if axis.get_ticklabels() else False
+            # Estimate label size; note it uses the raw text representation which can be misleading due to the latex processing
+            if has_labels:
+                _offset = max(
+                    [
+                        len(l.get_text()) + l.get_fontsize()
+                        for l in axis.get_ticklabels()
+                    ]
+                )
+                label_size = max(_offset, label_size)
+        # Calculate symmetrical offset based on tick length and label size
+        base_offset = (tick_length / 72) + (label_size / 72)
+        offset = -base_offset if ha == "right" else base_offset
+
+        # Create text with appropriate position and transform
+        aobj = self._title_dict[loc]
+        aobj.set_transform(
+            self.transAxes
+            + mtransforms.ScaledTranslation(offset, 0, self.figure.dpi_scale_trans)
+        )
+        p = aobj.get_position()
+        aobj.set_position((p[0] + offset, p[1]))
 
     def _update_title(self, loc, title=None, **kwargs):
         """
@@ -2510,26 +2572,10 @@ class Axes(maxes.Axes):
         x_pad = self._title_pad / (72 * width)
         y_pad = self._title_pad / (72 * height)
         for loc, obj in self._title_dict.items():
-            x, y = (0, 1)
             if loc == "abc":  # redirect
                 loc = self._abc_loc
-            if loc == "left":
-                x = 0
-            elif loc == "center":
-                x = 0.5
-            elif loc == "right":
-                x = 1
-            if loc in ("upper center", "lower center"):
-                x = 0.5
-            elif loc in ("upper left", "lower left"):
-                x = x_pad
-            elif loc in ("upper right", "lower right"):
-                x = 1 - x_pad
-            if loc in ("upper left", "upper right", "upper center"):
-                y = 1 - y_pad
-            elif loc in ("lower left", "lower right", "lower center"):
-                y = y_pad
-            obj.set_position((x, y))
+            xy = _get_pos_from_locator(loc, x_pad, y_pad)
+            obj.set_position(xy)
 
         # Get title padding. Push title above tick marks since matplotlib ignores them.
         # This is known matplotlib problem but especially annoying with top panels.
@@ -2563,24 +2609,47 @@ class Axes(maxes.Axes):
 
         # Offset title away from a-b-c label
         # NOTE: Title texts all use axes transform in x-direction
-        if not tobj.get_text() or not aobj.get_text():
-            return
-        awidth, twidth = (
-            obj.get_window_extent(renderer).transformed(self.transAxes.inverted()).width
-            for obj in (aobj, tobj)
-        )
-        ha = aobj.get_ha()
+
+        # Offset title away from a-b-c label
+        atext, ttext = aobj.get_text(), tobj.get_text()
+        awidth = twidth = 0
         pad = (abcpad / 72) / self._get_size_inches()[0]
+        ha = aobj.get_ha()
+
+        # Get dimensions of non-empty elements
+        if atext:
+            awidth = (
+                aobj.get_window_extent(renderer)
+                .transformed(self.transAxes.inverted())
+                .width
+            )
+        if ttext:
+            twidth = (
+                tobj.get_window_extent(renderer)
+                .transformed(self.transAxes.inverted())
+                .width
+            )
+
+        # Calculate offsets based on alignment and content
         aoffset = toffset = 0
-        if ha == "left":
-            toffset = awidth + pad
-        elif ha == "right":
-            aoffset = -(twidth + pad)
-        else:  # guaranteed center, there are others
-            toffset = 0.5 * (awidth + pad)
-            aoffset = -0.5 * (twidth + pad)
-        aobj.set_x(aobj.get_position()[0] + aoffset)
-        tobj.set_x(tobj.get_position()[0] + toffset)
+        if atext and ttext:
+            if ha == "left":
+                toffset = awidth + pad
+            elif ha == "right":
+                aoffset = -(twidth + pad)
+            elif ha == "center":
+                toffset = 0.5 * (awidth + pad)
+                aoffset = -0.5 * (twidth + pad)
+
+        # Apply positioning adjustments
+        if atext:
+            aobj.set_x(
+                aobj.get_position()[0]
+                + aoffset
+                + (self._abc_pad / 72) / (self._get_size_inches()[0])
+            )
+        if ttext:
+            tobj.set_x(tobj.get_position()[0] + toffset)
 
     def _update_super_title(self, suptitle=None, **kwargs):
         """
@@ -2755,6 +2824,8 @@ class Axes(maxes.Axes):
             title_kw = title_kw or {}
             self._update_share_labels(share_xlabels, target="x")
             self._update_share_labels(share_ylabels, target="y")
+            if (pad := kwargs.pop("abcpad", None)) is not None:
+                self._abc_pad = units(pad)
             self._update_abc(**abc_kw)
             self._update_title(None, title, **title_kw)
             self._update_title(
@@ -3271,3 +3342,36 @@ class Axes(maxes.Axes):
 # NOTE: This is needed for __init__
 Axes._format_signatures = {Axes: inspect.signature(Axes.format)}
 Axes.format = docstring._obfuscate_kwargs(Axes.format)
+
+
+def _get_pos_from_locator(
+    loc: str,
+    x_pad: float,
+    y_pad: float,
+) -> tuple[float, float]:
+    """
+    Helper function to map string locators to x and y coordinates.
+    """
+    # Set x-coordinate based on horizontal position
+    x, y = 0, 1
+    match loc:
+        case "left" | "outer left":
+            x = 0
+        case "center":
+            x = 0.5
+        case "right" | "outer right":
+            x = 1
+        case "upper center" | "lower center":
+            x = 0.5
+        case "upper left" | "lower left":
+            x = x_pad
+        case "upper right" | "lower right":
+            x = 1 - x_pad
+
+    # Set y-coordinate based on vertical position
+    match loc:
+        case "upper left" | "upper right" | "upper center":
+            y = 1 - y_pad
+        case "lower left" | "lower right" | "lower center":
+            y = y_pad
+    return (x, y)

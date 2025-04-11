@@ -401,3 +401,131 @@ def test_scaler():
     ax[0].set_yscale("mercator")
     ax[1].set_yscale("asinh")
     return fig
+
+
+@pytest.mark.mpl_image_compare
+def test_outer_labels():
+    """
+    Produces a plot where the abc loc is in top left or top right of a plot. Padding can be used for finer adjustment if necessary.
+    """
+    fig, ax = uplt.subplots(ncols=2)
+    ax[0].format(
+        abc="a.",
+        abcloc="ol",
+        title="testing",
+    )
+    ax[1].format(
+        abc="a.",
+        abcloc="outer right",
+        title="testing",
+        abcpad=-0.25,
+    )
+    return fig
+
+
+def test_abc_padding():
+    """
+    Test the specific calculation for ABC padding in title positioning.
+    """
+    fig, ax = uplt.subplots()
+
+    # Set up test scenario
+    ax.set_title("Test Title")
+    ax.format(
+        title="Testing",
+        abc="a.",
+        abcloc="or",
+    )
+    # Get initial position
+    initial_abc_x = ax.axes._title_dict["abc"].get_position()[0]
+
+    # Pad the position and check the offset
+    padding_value = 12
+
+    ax.format(
+        title="Testing",
+        abc="a.",
+        abcloc="or",
+        abcpad=padding_value,
+    )
+    fig.canvas.draw()
+
+    # Verify the new position
+    new_abc_x = ax.axes._title_dict["abc"].get_position()[0]
+
+    # Assert position has changed
+    assert new_abc_x != initial_abc_x, "ABC padding didn't affect position"
+
+    # Reset padding and position
+    ax.format(
+        title="Testing",
+        abc="a.",
+        abcloc="or",
+        abcpad=0,
+    )
+    fig.canvas.draw()
+    reference_position = ax.axes._title_dict["abc"].get_position()[0]
+
+    # Apply padding again
+    ax.format(
+        title="Testing",
+        abc="a.",
+        abcloc="or",
+        abcpad=padding_value,
+    )
+    # Verify the exact offset matches our expectation
+    actual_offset = ax.axes._title_dict["abc"].get_position()[0] - reference_position
+    diff = actual_offset - ax.axes._abc_pad  # Note pad is signed!
+    assert np.allclose(diff, -padding_value), "ABC padding offset calculation incorrect"
+    uplt.close(fig)
+
+
+@pytest.mark.mpl_image_compare
+def test_unequal_abc_padding():
+    """Check if labels are pushed out based on the largest labl length"""
+    fig, ax = uplt.subplots(ncols=2, nrows=2, share=0)
+    ax[0, 0].set_yscale("asinh")
+    ax[1, 0].set_yscale("mercator")
+    ax[1, 1].set_yscale("logit")
+    ax.format(abc="a.", abcloc="ol")
+    return fig
+
+
+def test_abc_with_labels():
+    """
+    This test should check the "normal" conditions in which the yaxis has labels and the location for abc is adjusted for the outer labels (left or right)
+    """
+    fig, ax = uplt.subplots()
+    ax.set_yticks([1, 2, 3])
+    ax.set_yticklabels(["one", "two", "three"])
+    ax.format(abc="a.", abcloc="ol")
+    uplt.close(fig)
+
+
+def test_abc_number():
+    """
+    Test handling of `abc` with lists of labels that exceed or match the number of axes.
+    """
+    # The keyword `abc` can take on lists, if the lists exceeds the number of the axes
+    with pytest.raises(ValueError):
+        fig, ax = uplt.subplots(ncols=3)
+        ax.format(abc=["a", "bb"])
+    # This should work fine
+    fig, ax = uplt.subplots(ncols=2)
+    ax.format(abc=["a", "b"])
+    uplt.close(fig)
+
+
+def test_loc_positions():
+    """
+    Test all locations the abc labels can be in
+    """
+    from ultraplot.internals.rcsetup import TEXT_LOCS
+
+    fig, ax = uplt.subplots()
+    ax.set_title(
+        "Dummy title"
+    )  # trigger sync with abc to ensure they both move correctly
+    for loc in TEXT_LOCS:
+        ax.format(abc="a.", abcloc=loc)
+    uplt.close(fig)

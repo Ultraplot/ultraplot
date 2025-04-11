@@ -170,7 +170,7 @@ def test_twin_axes_3():
     axs[-1].spines["right"].set_position(("axes", 1.2))
     colors = ("Green", "Red", "Blue")
     for ax, color in zip(axs, colors):
-        data = np.random.random(1) * np.random.random(10)
+        data = np.random.rand(1) * np.random.rand(10)
         ax.plot(data, marker="o", linestyle="none", color=color)
         ax.format(ylabel="%s Thing" % color, ycolor=color)
     axs[0].format(xlabel="xlabel")
