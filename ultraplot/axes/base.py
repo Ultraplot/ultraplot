@@ -765,6 +765,13 @@ class Axes(maxes.Axes):
                 kw_format.update(_pop_params(kwargs, sig))
         super().__init__(*args, **kwargs)
 
+        # TODO(compat): Drop this function when mpl 3.12 is deprecated.
+        # Introduced in mpl 3.10 and deprecated in mpl 3.12
+        get_converter = lambda axis: (
+            axis.get_converter if hasattr(axis, "get_converter") else axis.converter
+        )
+        self.xaxis.get_converter = lambda: get_converter(self.xaxis)
+        self.yaxis.get_converter = lambda: get_converter(self.yaxis)
         # Varous scalar properties
         self._active_cycle = rc["axes.prop_cycle"]
         self._auto_format = None  # manipulated by wrapper functions
@@ -1540,6 +1547,66 @@ class Axes(maxes.Axes):
             )
         )
 
+    def _format_inset(
+        self,
+        bounds: tuple[float, float, float, float],
+        parent: "Axes",
+        **kwargs,
+    ) -> "tuple | InsetIndicator":
+        import matplotlib as mpl
+        from packaging import version
+
+        if version.parse(mpl.__version__) >= version.parse("3.10"):
+            return self.__format_inset(bounds, parent, **kwargs)
+        return self.__format_inset_legacy(bounds, parent, **kwargs)
+
+    def __format_inset(
+        self,
+        bounds: tuple[float, float, float, float],
+        parent: "Axes",
+        **kwargs,
+    ) -> "InsetIndicator":
+        # Implementation for matplotlib >= 3.10
+        # NOTE: if the api changes we need to deprecate the old one. At the time of writing the IndicateInset is experimental and may change in the future. This would require us to change potentially the return signature of this function.
+        kwargs.setdefault("label", "_indicate_inset")
+
+        # If we already have a zoom indicator we need to update the properties or add them
+        # Note the first time we enter this function, we create the object. Afterwards the function is accessed again but with different updates
+        if self._inset_zoom_artists:
+            indicator = self._inset_zoom_artists
+            indicator.rectangle.update(kwargs)
+            indicator.rectangle.set_bounds(bounds)  # otherwise the patch is not updated
+            for connector in indicator.connectors:
+                connector.update(kwargs)
+        else:
+            indicator = parent.indicate_inset(bounds, self, **kwargs)
+            self._inset_zoom_artists = indicator
+        return indicator
+
+    def __format_inset_legacy(
+        self, bounds: tuple[float, float, float, float], parent: "Axes", **kwargs
+    ) -> tuple[mpatches.Rectangle, list[mpatches.ConnectionPatch]]:
+        # Implementation for matplotlib < 3.10
+        rectpatch, connects = parent.indicate_inset(bounds, self)
+
+        # Update indicator properties
+        if self._inset_zoom_artists:
+            rectpatch_prev, connects_prev = self._inset_zoom_artists
+            rectpatch.update_from(rectpatch_prev)
+            rectpatch.set_zorder(rectpatch_prev.get_zorder())
+            rectpatch_prev.remove()
+            for line, line_prev in zip(connects, connects_prev):
+                line.update_from(line_prev)
+                line.set_zorder(line_prev.get_zorder())  # not included in update_from
+                line_prev.remove()
+
+        rectpatch.update(kwargs)
+        for line in connects:
+            line.update(kwargs)
+
+        self._inset_zoom_artists = (rectpatch, connects)
+        return rectpatch, connects
+
     def _get_legend_handles(self, handler_map=None):
         """
         Internal implementation of matplotlib's ``get_legend_handles_labels``.
@@ -2118,7 +2185,7 @@ class Axes(maxes.Axes):
             for obj in objs:
                 if hasattr(obj, "get_label"):  # e.g. silent list
                     lab = obj.get_label()
-                    if lab is not None and str(lab)[:1] != "_":
+                    if lab is not None and not str(lab).startswith("_"):
                         labs.append(lab)
             return tuple(labs)
 
@@ -2180,6 +2247,8 @@ class Axes(maxes.Axes):
             else:
                 hs = hs[0] if len(hs) == 1 else hs  # unfurl for better error messages
                 label = label if label is not None else labs[0] if labs else "_no_label"
+                if label.startswith("_"):
+                    continue
                 ihandles.append(hs)
                 ilabels.append(label)
         return ihandles, ilabels
@@ -2959,8 +3028,6 @@ class Axes(maxes.Axes):
         """
         %(axes.indicate_inset)s
         """
-        import matplotlib as mpl
-        from packaging import version
 
         # Add the inset indicators
         parent = self._inset_parent
@@ -2977,52 +3044,7 @@ class Axes(maxes.Axes):
         xlim, ylim = self.get_xlim(), self.get_ylim()
         bounds = (xlim[0], ylim[0], xlim[1] - xlim[0], ylim[1] - ylim[0])
 
-        if version.parse(mpl.__version__) >= version.parse("3.10"):
-            # Implementation for matplotlib >= 3.10
-            # NOTE: if the api changes we need to deprecate the old one. At the time of writing the IndicateInset is experimental and may change in the future. This would require us to change potentially the return signature of this function.
-            self.apply_aspect()
-            kwargs.setdefault("label", "_indicate_inset")
-            if kwargs.get("transform") is None:
-                kwargs["transform"] = self.transData
-
-            from matplotlib.inset import InsetIndicator
-
-            indicator = InsetIndicator(bounds=bounds, inset_ax=self, **kwargs)
-
-            if self._inset_zoom_artists:
-                indicator = self._inset_zoom_artists
-                indicator.update(kwargs)
-                indicator.rectangle.update(kwargs)
-                [c.update(kwargs) for c in indicator.connectors]
-            else:
-                self._inset_zoom_artists = indicator
-                self.add_artist(indicator)
-
-            return (indicator.rectangle, indicator.connectors)
-
-        else:
-            # Implementation for matplotlib < 3.10
-            rectpatch, connects = parent.indicate_inset(bounds, self)
-
-            # Update indicator properties
-            if self._inset_zoom_artists:
-                rectpatch_prev, connects_prev = self._inset_zoom_artists
-                rectpatch.update_from(rectpatch_prev)
-                rectpatch.set_zorder(rectpatch_prev.get_zorder())
-                rectpatch_prev.remove()
-                for line, line_prev in zip(connects, connects_prev):
-                    line.update_from(line_prev)
-                    line.set_zorder(
-                        line_prev.get_zorder()
-                    )  # not included in update_from
-                    line_prev.remove()
-
-            rectpatch.update(kwargs)
-            for line in connects:
-                line.update(kwargs)
-
-            self._inset_zoom_artists = (rectpatch, connects)
-            return rectpatch, connects
+        return self._format_inset(bounds, parent, **kwargs)
 
     @docstring._snippet_manager
     def panel(self, side=None, **kwargs):
@@ -3266,7 +3288,7 @@ class Axes(maxes.Axes):
         else:
             transform = self._get_transform(transform)
         with warnings.catch_warnings():  # ignore duplicates (internal issues?)
-            warnings.simplefilter("ignore", warnings.UltraplotWarning)
+            warnings.simplefilter("ignore", warnings.UltraPlotWarning)
             kwargs.update(_pop_props(kwargs, "text"))
 
         # Update the text object using a monkey patch

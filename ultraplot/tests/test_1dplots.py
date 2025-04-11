@@ -124,7 +124,7 @@ def test_boxplot_colors():
     ax = fig.subplot(222)
     ax.violin(
         violin_data,
-        fillcolor=["gray1", "gray7"],
+        cycle=["gray1", "gray7"],
         hatches=[None, "//", None, None, "//"],
         means=True,
         barstds=2,
@@ -151,14 +151,15 @@ def test_boxplot_vectors():
     datas = np.array(datas, dtype=object)
     assert len(datas) == len(coords)
     fig, ax = uplt.subplot(refwidth=3)
+    cycle = uplt.Cycle("538")
     ax.boxplot(
         coords,
         datas,
         lw=2,
         notch=False,
         whis=(10, 90),
-        cycle="538",
         fillalpha=[0.5, 0.5, 1],
+        cycle=cycle,
         hatch=[None, "//", "**"],
         boxlw=[2, 1, 1],
     )
@@ -219,7 +220,7 @@ def test_pie_charts():
     """
     Test basic pie plots. No examples in user guide right now.
     """
-    uplt.rc.inlinefmt = "svg"
+    uplt.rc.inlineformat = "svg"
     labels = ["foo", "bar", "baz", "biff", "buzz"]
     array = np.arange(1, 6)
     data = pd.Series(array, index=labels)
@@ -235,7 +236,7 @@ def test_parametric_labels():
     Test passing strings as parametric 'color values'. This is likely
     a common use case.
     """
-    uplt.rc.inlinefmt = "svg"
+    uplt.rc.inlineformat = "svg"
     fig, ax = uplt.subplots()
     ax.parametric(
         np.random.rand(5),
@@ -286,7 +287,7 @@ def test_scatter_args():
     ax = axs[1]
     ax.scatter(data, c=data, cmap="reds")  # column iteration
     ax = axs[2]
-    with pytest.warns(uplt.internals.UltraplotWarning) as record:
+    with pytest.warns(uplt.internals.UltraPlotWarning) as record:
         ax.scatter(data[:, 0], c=data, cmap="reds")  # actual colors
     assert len(record) == 1
     ax = axs[3]

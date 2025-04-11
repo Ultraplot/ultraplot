@@ -85,7 +85,9 @@ def test_seaborn_swarmplot():
     tips = sns.load_dataset("tips")
     fig = uplt.figure(refwidth=3)
     ax = fig.subplot()
-    sns.swarmplot(ax=ax, x="day", y="total_bill", data=tips, palette="cubehelix")
+    sns.swarmplot(
+        ax=ax, x="day", hue="day", y="total_bill", data=tips, palette="cubehelix"
+    )
     # fig, ax = uplt.subplots()
     # sns.swarmplot(y=np.random.normal(size=100), ax=ax)
     return fig

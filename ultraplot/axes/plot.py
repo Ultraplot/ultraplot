@@ -23,6 +23,8 @@ import matplotlib.image as mimage
 import matplotlib.lines as mlines
 import matplotlib.patches as mpatches
 import matplotlib.ticker as mticker
+import matplotlib as mpl
+from packaging import version
 import numpy as np
 import numpy.ma as ma
 
@@ -3804,7 +3806,7 @@ class PlotAxes(base.Axes):
         )
         kw = self._parse_cycle(x.size, **kw)
         objs = self._call_native(
-            "pie", x, explode, labeldistance=pad, wedgeprops=wedge_kw, **kw
+            "pie", x, explode=explode, labeldistance=pad, wedgeprops=wedge_kw, **kw
         )
         objs = tuple(cbook.silent_list(type(seq[0]).__name__, seq) for seq in objs)
         self._fix_patch_edges(objs[0], **edgefix_kw, **wedge_kw)
@@ -3908,7 +3910,28 @@ class PlotAxes(base.Axes):
         if hatch is None:
             hatch = [None for _ in range(x.size)]
 
-        artists = self._call_native("boxplot", y, vert=vert, **kw)
+        # TODO(compat) remove this when 3.9 is deprecated
+        # Convert vert boolean to orientation string for newer versions
+        orientation = "vertical" if vert else "horizontal"
+
+        # Handle tick_labels vs labels parameter
+        tick_labels = kw.pop("labels", None)
+
+        if version.parse(mpl.__version__) >= version.parse("3.10.0"):
+            # For matplotlib 3.10+:
+            # 1. Use orientation parameter
+            # 2. Use tick_labels parameter
+            if tick_labels is not None:
+                kw["tick_labels"] = tick_labels
+            artists = self._call_native("boxplot", y, orientation=orientation, **kw)
+        else:
+            # For older matplotlib versions:
+            # 1. Use vert parameter
+            # 2. Use labels parameter
+            if tick_labels is not None:
+                kw["labels"] = tick_labels
+            artists = self._call_native("boxplot", y, vert=vert, **kw)
+
         artists = artists or {}  # necessary?
         artists = {
             key: cbook.silent_list(type(objs[0]).__name__, objs) if objs else objs
@@ -4056,16 +4079,31 @@ class PlotAxes(base.Axes):
         elif len(hatches) != len(y):
             raise ValueError(f"Retrieved {len(hatches)} hatches but need {len(y)}")
 
-        artists = self._call_native(
-            "violinplot",
-            y,
-            vert=vert,
-            showmeans=False,
-            showmedians=False,
-            showextrema=False,
-            **kw,
-        )
-
+        if version.parse(mpl.__version__) >= version.parse("3.10.0"):
+            # For matplotlib 3.10+:
+            # Use orientation parameter
+            orientation = "vertical" if vert else "horizontal"
+            artists = self._call_native(
+                "violinplot",
+                y,
+                orientation=orientation,
+                showmeans=False,
+                showmedians=False,
+                showextrema=False,
+                **kw,
+            )
+        else:
+            # For older matplotlib versions:
+            # Use vert parameter
+            artists = self._call_native(
+                "violinplot",
+                y,
+                vert=vert,  # Use the original vert boolean
+                showmeans=False,
+                showmedians=False,
+                showextrema=False,
+                **kw,
+            )
         # Modify body settings
         artists = artists or {}  # necessary?
         bodies = artists.pop("bodies", ())  # should be no other entries
