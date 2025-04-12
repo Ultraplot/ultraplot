@@ -43,6 +43,7 @@ from ..internals import (
     guides,
     inputs,
     warnings,
+    _version_mpl,
 )
 from . import base
 
@@ -3917,7 +3918,7 @@ class PlotAxes(base.Axes):
         # Handle tick_labels vs labels parameter
         tick_labels = kw.pop("labels", None)
 
-        if version.parse(mpl.__version__) >= version.parse("3.10.0"):
+        if version.parse(_version_mpl) >= version.parse("3.10.0"):
             # For matplotlib 3.10+:
             # 1. Use orientation parameter
             # 2. Use tick_labels parameter
@@ -4079,7 +4080,7 @@ class PlotAxes(base.Axes):
         elif len(hatches) != len(y):
             raise ValueError(f"Retrieved {len(hatches)} hatches but need {len(y)}")
 
-        if version.parse(mpl.__version__) >= version.parse("3.10.0"):
+        if version.parse(_version_mpl) >= version.parse("3.10.0"):
             # For matplotlib 3.10+:
             # Use orientation parameter
             orientation = "vertical" if vert else "horizontal"

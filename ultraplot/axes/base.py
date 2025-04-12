@@ -23,6 +23,7 @@ import matplotlib.ticker as mticker
 import matplotlib.transforms as mtransforms
 import numpy as np
 from matplotlib import cbook
+from packaging import version
 
 from .. import colors as pcolors
 from .. import constructor
@@ -1553,10 +1554,8 @@ class Axes(maxes.Axes):
         parent: "Axes",
         **kwargs,
     ) -> "tuple | InsetIndicator":
-        import matplotlib as mpl
-        from packaging import version
 
-        if version.parse(mpl.__version__) >= version.parse("3.10"):
+        if version.parse(_version_mpl) >= version.parse("3.10.0"):
             return self.__format_inset(bounds, parent, **kwargs)
         return self.__format_inset_legacy(bounds, parent, **kwargs)
 
