@@ -12,7 +12,6 @@ def test_violin_labels():
     assert len(xtick_labels) == 1
     assert xtick_labels[0].get_text() == "hello world!"
 
-    fig, ax = uplt.subplots()
     # Also test the horizontal ticks
     ax.violinploth(x=[1, 2, 3], labels=["hello world!"])
     ytick_labels = ax.get_yticklabels()
