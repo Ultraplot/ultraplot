@@ -14,6 +14,9 @@ def test_violinplot_versions(
     expected_key: str,
     expected_value: bool | str,
 ):
+    """
+    Test specific logic for violinplot to ensure that past and current versions work as expected.
+    """
     fig, ax = uplt.subplots()
     with mock.patch("ultraplot.axes.plot._version_mpl", new=mpl_version):
         with mock.patch.object(ax.axes, "_call_native") as mock_call:
