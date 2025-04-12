@@ -1,4 +1,4 @@
-import os, shutil, pytest, re, numpy as np
+import os, shutil, pytest, re, numpy as np, ultraplot as uplt
 from pathlib import Path
 import warnings
 
@@ -10,6 +10,12 @@ def _reset_numpy_seed():
     """
     seed = 51423
     np.random.seed(seed)
+
+
+@pytest.fixture(autouse=True)
+def close_figures_after_test():
+    yield
+    uplt.close("all")
 
 
 # Define command line option
