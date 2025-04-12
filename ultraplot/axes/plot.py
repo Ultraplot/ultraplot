@@ -4061,10 +4061,10 @@ class PlotAxes(base.Axes):
 
         # Plot violins
         y, kw = inputs._dist_reduce(y, means=means, medians=medians, **kw)
+        print(kw, y)
         *eb, kw = self._add_error_bars(
             x, y, vert=vert, default_boxstds=True, default_marker=True, **kw
         )  # noqa: E501
-        kw.pop("labels", None)  # already applied in _parse_1d_args
         kw.setdefault("positions", x)  # coordinates passed as keyword
         y = _not_none(kw.pop("distribution"), y)  # i.e. was reduced
         y = inputs._dist_clean(y)
@@ -4079,6 +4079,15 @@ class PlotAxes(base.Axes):
             hatches = len(y) * [None]
         elif len(hatches) != len(y):
             raise ValueError(f"Retrieved {len(hatches)} hatches but need {len(y)}")
+            
+        tick_labels = kw.pop("labels", None)
+        if tick_labels is not None and isinstance(tick_labels, Iterable):
+            if vert:
+                self.set_xticks(x)
+                self.set_xticklabels(tick_labels)
+            else:
+                self.set_yticks(y)
+                self.set_yticklabels(tick_labels)
 
         if version.parse(str(_version_mpl)) >= version.parse("3.10.0"):
             # For matplotlib 3.10+:
@@ -4105,6 +4114,7 @@ class PlotAxes(base.Axes):
                 showextrema=False,
                 **kw,
             )
+
         # Modify body settings
         artists = artists or {}  # necessary?
         bodies = artists.pop("bodies", ())  # should be no other entries
