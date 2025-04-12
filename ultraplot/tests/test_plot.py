@@ -6,17 +6,17 @@ def test_violin_labels():
     """
     Test the labels functionality of violinplot and violinploth.
     """
+    labels = "hello world !".split()
     fig, ax = uplt.subplots()
-    ax.violinplot(y=[1, 2, 3], labels=["hello world!"])
-    xtick_labels = ax.get_xticklabels()
-    assert len(xtick_labels) == 1
-    assert xtick_labels[0].get_text() == "hello world!"
+    bodies = ax.violinplot(y=[1, 2, 3], labels=labels)
+    for label, body in zip(labels, bodies):
+        assert body.get_label() == label
 
     # Also test the horizontal ticks
-    ax.violinploth(x=[1, 2, 3], labels=["hello world!"])
+    bodies = ax.violinploth(x=[1, 2, 3], labels=labels)
     ytick_labels = ax.get_yticklabels()
-    assert len(ytick_labels) == 1
-    assert ytick_labels[0].get_text() == "hello world!"
+    for label, body in zip(labels, bodies):
+        assert body.get_label() == label
 
 
 @pytest.mark.parametrize(

@@ -4079,16 +4079,7 @@ class PlotAxes(base.Axes):
         elif len(hatches) != len(y):
             raise ValueError(f"Retrieved {len(hatches)} hatches but need {len(y)}")
 
-        tick_labels = kw.pop("labels", None)
-        if tick_labels is not None and isinstance(tick_labels, Iterable):
-            if vert:
-                self.set_xticks(x)
-                self.set_xticklabels(tick_labels)
-            else:
-                # Note x is y here
-                self.set_yticks(x)
-                self.set_yticklabels(tick_labels)
-
+        plot_labels = kw.pop("labels", None)
         if version.parse(str(_version_mpl)) >= version.parse("3.10.0"):
             # For matplotlib 3.10+:
             # Use orientation parameter
@@ -4121,6 +4112,12 @@ class PlotAxes(base.Axes):
         if bodies:
             bodies = cbook.silent_list(type(bodies[0]).__name__, bodies)
 
+        # Pad body names if less available
+        if plot_labels is None:
+            plot_labels = np.full(len(bodies), None)
+        elif len(plot_labels) < len(bodies):
+            for i in range(len(plot_labels), len(bodies)):
+                plot_labels = np.append(plot_labels, None)
         for i, body in enumerate(bodies):
             body.set_alpha(1.0)  # change default to 1.0
             if fillcolor[i] is not None:
@@ -4133,6 +4130,8 @@ class PlotAxes(base.Axes):
                 body.set_linewidths(linewidth)
             if hatches[i] is not None:
                 body.set_hatch(hatches[i])
+            if plot_labels is not None:
+                body.set_label(plot_labels[i])
         return (bodies, *eb) if eb else bodies
 
     @docstring._snippet_manager
