@@ -1211,7 +1211,7 @@ class Axes(maxes.Axes):
         ):
             minorlocator, tickminor = None, False  # attempted fix
         for ticker in (locator, formatter, minorlocator):
-            if _version_mpl < "3.2":
+            if version.parse(str(_version_mpl)) < version.parse("3.2"):
                 pass  # see notes above
             elif isinstance(ticker, mticker.TickHelper):
                 ticker.set_axis(axis)
@@ -1555,7 +1555,7 @@ class Axes(maxes.Axes):
         **kwargs,
     ) -> "tuple | InsetIndicator":
 
-        if version.parse(_version_mpl) >= version.parse("3.10.0"):
+        if version.parse(str(_version_mpl)) >= version.parse("3.10.0"):
             return self.__format_inset(bounds, parent, **kwargs)
         return self.__format_inset_legacy(bounds, parent, **kwargs)
 
@@ -2421,7 +2421,7 @@ class Axes(maxes.Axes):
         if not isinstance(self, maxes.SubplotBase):
             raise RuntimeError("Axes must be a subplot.")
         setter = getattr(self, "_set_position", self.set_position)
-        if _version_mpl >= "3.4":
+        if version.parse(str(_version_mpl)) >= version.parse("3.4"):
             setter(self.get_subplotspec().get_position(self.figure))
         else:
             self.update_params()

@@ -22,3 +22,12 @@ def test_violinplot_versions(mpl_version, expected_key, expected_value):
                 assert "vert" not in kwargs
             else:
                 assert "orientation" not in kwargs
+
+
+def test_hatches():
+    # should be ok
+    fig, ax = uplt.subplots()
+    ax.violinplot(y=[1, 2, 3], vert=True, hatch="x")
+
+    with pytest.raises(ValueError):
+        ax.violinplot(y=[1, 2, 3], vert=True, hatches=["x", "o"])
