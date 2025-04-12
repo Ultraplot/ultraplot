@@ -66,37 +66,43 @@ class TestCollectAndReplaceFonts:
             self.font_instance = ufonts._UnicodeFonts.__new__(ufonts._UnicodeFonts)
             # Reset the warning flag for tests
             ufonts.WARN_MATHPARSER = True
-            
+
     def test_init_method(self, monkeypatch):
         """Test the __init__ method of _UnicodeFonts."""
         # Mock the _collect_replacements and _replace_fonts methods
         mock_ctx = {"mathtext.it": "sans:italic"}
         mock_regular = {"it": "regular:italic"}
-        
+
         with (
-            patch.object(ufonts._UnicodeFonts, "_collect_replacements", return_value=(mock_ctx, mock_regular)) as mock_collect,
+            patch.object(
+                ufonts._UnicodeFonts,
+                "_collect_replacements",
+                return_value=(mock_ctx, mock_regular),
+            ) as mock_collect,
             patch.object(ufonts._UnicodeFonts, "_replace_fonts") as mock_replace,
-            patch.object(ufonts.UnicodeFonts, "__init__", return_value=None) as mock_super_init
+            patch.object(
+                ufonts.UnicodeFonts, "__init__", return_value=None
+            ) as mock_super_init,
         ):
             # Call __init__ directly
             font_instance = ufonts._UnicodeFonts()
-            
+
             # Verify the methods were called with expected arguments
             mock_collect.assert_called_once()
             mock_replace.assert_called_once_with(mock_regular)
-            
+
             # Verify super().__init__ was called with rc_context
             mock_super_init.assert_called_once()
-            
+
             # Test that the __init__ method uses rc_context correctly
             with patch("matplotlib.rc_context") as mock_rc_context:
                 # Create a new context manager for testing
                 mock_context = MagicMock()
                 mock_rc_context.return_value = mock_context
-                
+
                 # Call __init__ again to test rc_context
                 ufonts._UnicodeFonts()
-                
+
                 # Verify rc_context was called with the correct arguments
                 mock_rc_context.assert_called_once_with(mock_ctx)
 
