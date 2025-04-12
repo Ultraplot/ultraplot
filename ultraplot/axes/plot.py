@@ -4085,7 +4085,8 @@ class PlotAxes(base.Axes):
                 self.set_xticks(x)
                 self.set_xticklabels(tick_labels)
             else:
-                self.set_yticks(y)
+                # Note x is y here
+                self.set_yticks(x)
                 self.set_yticklabels(tick_labels)
 
         if version.parse(str(_version_mpl)) >= version.parse("3.10.0"):
