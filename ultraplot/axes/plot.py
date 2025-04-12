@@ -4061,7 +4061,6 @@ class PlotAxes(base.Axes):
 
         # Plot violins
         y, kw = inputs._dist_reduce(y, means=means, medians=medians, **kw)
-        print(kw, y)
         *eb, kw = self._add_error_bars(
             x, y, vert=vert, default_boxstds=True, default_marker=True, **kw
         )  # noqa: E501
@@ -4079,7 +4078,7 @@ class PlotAxes(base.Axes):
             hatches = len(y) * [None]
         elif len(hatches) != len(y):
             raise ValueError(f"Retrieved {len(hatches)} hatches but need {len(y)}")
-            
+
         tick_labels = kw.pop("labels", None)
         if tick_labels is not None and isinstance(tick_labels, Iterable):
             if vert:
