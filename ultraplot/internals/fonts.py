@@ -37,6 +37,12 @@ class _UnicodeFonts(UnicodeFonts):
         # NOTE: Could also capture the 'default_font_prop' passed as positional
         # argument but want to guard against keyword changes. This entire API is
         # private and it is easier to do graceful fallback with _fonts dictionary.
+        ctx, regular = self._collect_replacements()
+        with mpl.rc_context(ctx):
+            super().__init__(*args, **kwargs)
+        self._replace_fonts(regular)
+
+    def _collect_replacements(self) -> tuple[dict, dict]:
         ctx = {}  # rc context
         regular = {}  # styles
         for texfont in ("cal", "rm", "tt", "it", "bf", "sf"):
@@ -45,8 +51,9 @@ class _UnicodeFonts(UnicodeFonts):
             if prop.startswith("regular"):
                 ctx[key] = prop.replace("regular", "sans", 1)
                 regular[texfont] = prop
-        with mpl.rc_context(ctx):
-            super().__init__(*args, **kwargs)
+        return ctx, regular
+
+    def _replace_fonts(self, regular: dict):
         # Apply current font replacements
         global WARN_MATHPARSER
         if (
