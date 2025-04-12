@@ -1,9 +1,7 @@
 import pytest, ultraplot as uplt, matplotlib as mpl
 import ultraplot.internals.fonts as ufonts
 
-from unittest.mock import patch, MagicMock
-from matplotlib import font_manager
-from matplotlib.mathtext import MathTextParser
+from unittest.mock import patch
 
 
 @pytest.mark.skip(reason="Only for reference, relies on class attributes")
