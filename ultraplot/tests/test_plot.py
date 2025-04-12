@@ -2,25 +2,17 @@ import ultraplot as uplt, numpy as np, pytest
 from unittest import mock
 
 
-@pytest.mark.parametrize(
-    "mpl_version, expected_key, expected_value",
-    [
-        ("3.10.0", "orientation", "vertical"),
-        ("3.9.0", "vert", True),
-    ],
-)
 def test_violin_labels():
     """
     Test the labels functionality of violinplot and violinploth.
     """
     fig, ax = uplt.subplots()
-    ax.violinplot(y=[1, 2, 3], vert=True, labels=["hello world!"])
+    ax.violinplot(y=[1, 2, 3], labels=["hello world!"])
     xtick_labels = ax.get_xticklabels()
     assert len(xtick_labels) == 1
     assert xtick_labels[0].get_text() == "hello world!"
 
-    ax.violinploth(y=[1, 2, 3], vert=True, labels=["hello world!"])
-
+    fig, ax = uplt.subplots()
     # Also test the horizontal ticks
     ax.violinploth(x=[1, 2, 3], labels=["hello world!"])
     ytick_labels = ax.get_yticklabels()
@@ -28,6 +20,13 @@ def test_violin_labels():
     assert ytick_labels[0].get_text() == "hello world!"
 
 
+@pytest.mark.parametrize(
+    "mpl_version, expected_key, expected_value",
+    [
+        ("3.10.0", "orientation", "vertical"),
+        ("3.9.0", "vert", True),
+    ],
+)
 def test_violinplot_versions(
     mpl_version: str,
     expected_key: str,
