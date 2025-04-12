@@ -1,3 +1,4 @@
+from matplotlib.mathtext import MathTextParser
 import pytest, ultraplot as uplt, matplotlib as mpl
 import ultraplot.internals.fonts as ufonts
 
@@ -9,8 +10,7 @@ def test_replacement():
     """
     Test whether replaced the unicodes fonts
     """
-    # This test has type checking issues but works at runtime
-    pass
+    assert MathTextParser._font_mapping["custom"] is ufonts.UnicodeFonts
 
 
 def test_warning_on_missing_attributes(monkeypatch):
