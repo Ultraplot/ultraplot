@@ -9,7 +9,7 @@ import ultraplot as uplt
 
 def test_axis_access():
     # attempt to access the ax object 2d and linearly
-    fix, ax = uplt.subplots(ncols=2, nrows=2)
+    fig, ax = uplt.subplots(ncols=2, nrows=2)
     ax[0, 0]
     ax[1, 0]
     with pytest.raises(IndexError):
