@@ -35,7 +35,7 @@ def test_violinplot_versions(
                 assert "orientation" not in kwargs
 
             # Also test the horizontal ticks
-            ax.violinploth(y=[1, 2, 3], labels=["hello world!"])
+            ax.violinploth(x=[1, 2, 3], labels=["hello world!"])
             ytick_labels = ax.get_yticklabels()
             assert len(ytick_labels) == 1
             assert ytick_labels[0].get_text() == "hello world!"
