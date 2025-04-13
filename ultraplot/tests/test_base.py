@@ -21,7 +21,7 @@ def test_inset_mpl_versions(
     fig, ax = uplt.subplots()
     bounds = (0.1, 0.1, 0.2, 0.2)  # x, y, width, height
     parent = fig.axes[0]
-    
+
     # Create a spy to monitor calls to indicate_inset on the parent
     with mock.patch.object(parent, "indicate_inset") as mock_indicate_inset:
         # Set appropriate return value based on matplotlib version
@@ -38,15 +38,15 @@ def test_inset_mpl_versions(
             mock_connects = [mock.MagicMock()]
             mock_indicate_inset.return_value = (mock_rectangle, mock_connects)
             expected_result = (mock_rectangle, mock_connects)
-        
+
         # Apply the version patch and call _format_inset
         with mock.patch("ultraplot.internals.versions._version_mpl", new=mpl_version):
             # Call the method we want to test
             result = ax.axes._format_inset(bounds, parent=parent)
-            
+
             # Verify mpl.indicate_inset was called
             mock_indicate_inset.assert_called_once()
-            
+
             # Verify the result type matches expected for the matplotlib version
             if version.parse(mpl_version) >= version.parse("3.10.0"):
                 # For 3.10+ we expect an InsetIndicator object
