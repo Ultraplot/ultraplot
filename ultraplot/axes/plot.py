@@ -4079,7 +4079,7 @@ class PlotAxes(base.Axes):
         elif len(hatches) != len(y):
             raise ValueError(f"Retrieved {len(hatches)} hatches but need {len(y)}")
 
-        plot_labels = kw.pop("labels", None)
+        legend_labels = kw.pop("labels", None)
         if version.parse(str(_version_mpl)) >= version.parse("3.10.0"):
             # For matplotlib 3.10+:
             # Use orientation parameter
@@ -4112,12 +4112,17 @@ class PlotAxes(base.Axes):
         if bodies:
             bodies = cbook.silent_list(type(bodies[0]).__name__, bodies)
 
+        print(legend_labels, len(bodies))
         # Pad body names if less available
-        if plot_labels is None:
-            plot_labels = np.full(len(bodies), None)
-        elif len(plot_labels) < len(bodies):
-            for i in range(len(plot_labels), len(bodies)):
-                plot_labels = np.append(plot_labels, None)
+        if legend_labels is None:
+            legend_labels = np.full(len(bodies), None)
+        elif len(legend_labels) < len(bodies):
+            print("here")
+            warnings._warn_ultraplot(
+                f"Warning: More bodies ({len(bodies)}) than labels ({len(legend_labels)})"
+            )
+            for i in range(len(legend_labels), len(bodies)):
+                legend_labels = np.append(legend_labels, None)
         for i, body in enumerate(bodies):
             body.set_alpha(1.0)  # change default to 1.0
             if fillcolor[i] is not None:
@@ -4130,8 +4135,8 @@ class PlotAxes(base.Axes):
                 body.set_linewidths(linewidth)
             if hatches[i] is not None:
                 body.set_hatch(hatches[i])
-            if plot_labels[i] is not None:
-                body.set_label(plot_labels[i])
+            if legend_labels[i] is not None:
+                body.set_label(legend_labels[i])
         return (bodies, *eb) if eb else bodies
 
     @docstring._snippet_manager

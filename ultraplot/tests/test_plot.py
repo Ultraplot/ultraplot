@@ -1,6 +1,8 @@
 import ultraplot as uplt, numpy as np, pytest
 from unittest import mock
 
+from ultraplot.internals.warnings import UltraPlotWarning
+
 
 def test_violin_labels():
     """
@@ -12,11 +14,18 @@ def test_violin_labels():
     for label, body in zip(labels, bodies):
         assert body.get_label() == label
 
-    # Also test the horizontal ticks
+    # # Also test the horizontal ticks
     bodies = ax.violinploth(x=[1, 2, 3], labels=labels)
     ytick_labels = ax.get_yticklabels()
     for label, body in zip(labels, bodies):
         assert body.get_label() == label
+
+    # Labels are padded if they are shorter than the data
+    shorter_labels = [labels[0]]
+    with pytest.warns(UltraPlotWarning):
+        bodies = ax.violinplot(y=[[1, 2, 3], [2, 3, 4]], labels=shorter_labels)
+        assert len(bodies) == 3
+        assert bodies[0].get_label() == shorter_labels[0]
 
 
 @pytest.mark.parametrize(
