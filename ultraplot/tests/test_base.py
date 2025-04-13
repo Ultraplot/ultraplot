@@ -23,7 +23,10 @@ def test_inset_mpl_versions(
     parent = fig.axes[0]
 
     # Create a spy to monitor calls to indicate_inset on the parent
-    with mock.patch.object(parent, "indicate_inset") as mock_indicate_inset:
+    with (
+        mock.patch.object(parent, "indicate_inset") as mock_indicate_inset,
+        mock.patch("ultraplot.axes.base._version_mpl", new=mpl_version),
+    ):
         # Set appropriate return value based on matplotlib version
         if version.parse(mpl_version) >= version.parse("3.10.0"):
             # For mpl 3.10+, indicate_inset returns InsetIndicator object
