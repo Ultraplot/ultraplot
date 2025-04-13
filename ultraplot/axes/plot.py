@@ -4130,7 +4130,7 @@ class PlotAxes(base.Axes):
                 body.set_linewidths(linewidth)
             if hatches[i] is not None:
                 body.set_hatch(hatches[i])
-            if plot_labels is not None:
+            if plot_labels[i] is not None:
                 body.set_label(plot_labels[i])
         return (bodies, *eb) if eb else bodies
 
