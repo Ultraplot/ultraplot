@@ -58,7 +58,7 @@ def test_violinplot_versions(
                 assert "orientation" not in kwargs
 
 
-def test_hatches():
+def test_violinplot_hatches():
     """
     Test the input on the hatches parameter. Either a singular or a list of strings. When a list is provided, it must be of the same length as the number of violins.
     """
