@@ -35,7 +35,7 @@ def test_violin_labels():
         ("3.9.0", "vert", True),
     ],
 )
-def test_violinplot_versions(
+def test_violinplot_mpl_versions(
     mpl_version: str,
     expected_key: str,
     expected_value: bool | str,
