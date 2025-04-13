@@ -68,3 +68,33 @@ def test_violinplot_hatches():
 
     with pytest.raises(ValueError):
         ax.violinplot(y=[1, 2, 3], vert=True, hatches=["x", "o"])
+
+
+@pytest.mark.parametrize(
+    "mpl_version, expected_key, expected_value",
+    [
+        ("3.10.0", "orientation", "vertical"),
+        ("3.9.0", "vert", True),
+    ],
+)
+def test_boxplot_mpl_versions(
+    mpl_version: str,
+    expected_key: str,
+    expected_value: bool | str,
+):
+    """
+    Test specific logic for violinplot to ensure that past and current versions work as expected.
+    """
+    fig, ax = uplt.subplots()
+    with mock.patch("ultraplot.axes.plot._version_mpl", new=mpl_version):
+        with mock.patch.object(ax.axes, "_call_native") as mock_call:
+            # Note: implicit testing of labels passing. It should work
+            ax.violinplot(y=[1, 2, 3], vert=True)
+
+            mock_call.assert_called_once()
+            _, kwargs = mock_call.call_args
+            assert kwargs[expected_key] == expected_value
+            if expected_key == "orientation":
+                assert "vert" not in kwargs
+            else:
+                assert "orientation" not in kwargs
