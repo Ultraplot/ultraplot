@@ -89,7 +89,7 @@ def test_boxplot_mpl_versions(
     with mock.patch("ultraplot.axes.plot._version_mpl", new=mpl_version):
         with mock.patch.object(ax.axes, "_call_native") as mock_call:
             # Note: implicit testing of labels passing. It should work
-            ax.violinplot(y=[1, 2, 3], vert=True)
+            ax.boxplot(y=[1, 2, 3], vert=True)
 
             mock_call.assert_called_once()
             _, kwargs = mock_call.call_args
