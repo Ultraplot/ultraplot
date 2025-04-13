@@ -4103,12 +4103,10 @@ class PlotAxes(base.Axes):
         if bodies:
             bodies = cbook.silent_list(type(bodies[0]).__name__, bodies)
 
-        print(legend_labels, len(bodies))
         # Pad body names if less available
         if legend_labels is None:
             legend_labels = np.full(len(bodies), None)
         elif len(legend_labels) < len(bodies):
-            print("here")
             warnings._warn_ultraplot(
                 f"Warning: More bodies ({len(bodies)}) than labels ({len(legend_labels)})"
             )
