@@ -3915,22 +3915,13 @@ class PlotAxes(base.Axes):
         # Convert vert boolean to orientation string for newer versions
         orientation = "vertical" if vert else "horizontal"
 
-        # Handle tick_labels vs labels parameter
-        tick_labels = kw.pop("labels", None)
-
         if version.parse(str(_version_mpl)) >= version.parse("3.10.0"):
             # For matplotlib 3.10+:
-            # 1. Use orientation parameter
-            # 2. Use tick_labels parameter
-            if tick_labels is not None:
-                kw["tick_labels"] = tick_labels
+            # Use the orientation parameters
             artists = self._call_native("boxplot", y, orientation=orientation, **kw)
         else:
             # For older matplotlib versions:
-            # 1. Use vert parameter
-            # 2. Use labels parameter
-            if tick_labels is not None:
-                kw["labels"] = tick_labels
+            # Use vert parameter
             artists = self._call_native("boxplot", y, vert=vert, **kw)
 
         artists = artists or {}  # necessary?
