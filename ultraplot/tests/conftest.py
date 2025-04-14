@@ -12,10 +12,10 @@ def _reset_numpy_seed():
     np.random.seed(seed)
 
 
-# @pytest.fixture(autouse=True)
-# def close_figures_after_test():
-#     yield
-#     uplt.close("all")
+@pytest.fixture(autouse=True)
+def close_figures_after_test():
+    yield
+    uplt.close("all")
 
 
 # Define command line option
