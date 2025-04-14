@@ -22,7 +22,6 @@ from ..internals import (
     _version_cartopy,
     docstring,
     warnings,
-    labels,
 )
 from ..utils import units
 from . import plot
