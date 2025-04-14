@@ -22,9 +22,11 @@ from ..internals import (
     _version_cartopy,
     docstring,
     warnings,
+    labels,
 )
 from ..utils import units
 from . import plot
+from . import shared
 
 try:
     import cartopy.crs as ccrs
@@ -424,7 +426,7 @@ class _LatAxis(_GeoAxis):
         self._latmax = latmax
 
 
-class GeoAxes(plot.PlotAxes):
+class GeoAxes(shared._SharedAxes, plot.PlotAxes):
     """
     Axes subclass for plotting in geographic projections. Uses either cartopy
     or basemap as a "backend".
@@ -479,6 +481,199 @@ class GeoAxes(plot.PlotAxes):
         ultraplot.figure.Figure.add_subplot
         """
         super().__init__(*args, **kwargs)
+
+    def _sharex_limits(self, sharex):
+        """
+        Safely share limits and tickers without resetting things.
+        """
+        # Copy non-default limits and scales. Either this axes or the input
+        # axes could be a newly-created subplot while the other is a subplot
+        # with possibly-modified user settings we are careful to preserve.
+        for ax1, ax2 in ((self, sharex), (sharex, self)):
+            ax1._lonaxis.set_view_interval(
+                *ax2._lonaxis.get_view_interval(),
+            )
+        # Copy non-default locators and formatters
+        self.sharex(sharex)
+        if sharex._lonaxis.isDefault_majloc and not self._lonaxis.isDefault_majloc:
+            sharex._lonaxis.set_major_locator(self._lonaxis.get_major_locator())
+        if sharex._lonaxis.isDefault_minloc and not self._lonaxis.isDefault_minloc:
+            sharex._lonaxis.set_minor_locator(self._lonaxis.get_minor_locator())
+        if sharex._lonaxis.isDefault_majfmt and not self.xaxis.isDefault_majfmt:
+            sharex._lonaxis.set_major_formatter(self._lonaxis.get_major_formatter())
+        # if sharex._lonaxis.isDefault_minfmt and not self._lonaxis.isDefault_minfmt:
+        # sharex._lonaxis.set_minor_formatter(self.xaxis.get_minor_formatter())
+        self._lonaxis.major = sharex._lonaxis.major
+        self._lonaxis.minor = sharex._lonaxis.minor
+
+    def _sharey_limits(self, sharey):
+        """
+        Safely share limits and tickers without resetting things.
+        """
+        # NOTE: See _sharex_limits for notes
+        for ax1, ax2 in ((self, sharey), (sharey, self)):
+            ax1._lataxis.set_view_interval(*ax2._lataxis.get_view_interval())
+        self.sharey(sharey)
+        if sharey._lataxis.isDefault_majloc and not self._lataxis.isDefault_majloc:
+            sharey._lataxis.set_major_locator(self._lataxis.get_major_locator())
+        if sharey._lataxis.isDefault_minloc and not self._lataxis.isDefault_minloc:
+            sharey._lataxis.set_minor_locator(self._lataxis.get_minor_locator())
+        if sharey._lataxis.isDefault_majfmt and not self._lataxis.isDefault_majfmt:
+            sharey._lataxis.set_major_formatter(self._lataxis.get_major_formatter())
+
+        # if sharey._lataxis.isDefault_minfmt and not self._lataxis.isDefault_minfmt:
+        # sharey._lataxis.set_minor_formatter(self._lataxis.get_minor_formatter())
+        self._lataxis.major = sharey._lataxis.major
+        self._lataxis.minor = sharey._lataxis.minor
+
+    def _sharex_setup(self, sharex, *, labels=True, limits=True):
+        """
+        Configure shared axes accounting. Input is the 'parent' axes from which this
+        one will draw its properties. Use keyword args to override settings.
+        """
+        # Share panels across *different* subplots
+        super()._sharex_setup(sharex)
+        # Get the axis sharing level
+        level = (
+            3
+            if self._panel_sharex_group and self._is_panel_group_member(sharex)
+            else self.figure._sharex
+        )
+        if level not in range(5):  # must be internal error
+            raise ValueError(f"Invalid sharing level sharex={level!r}.")
+        if sharex in (None, self) or not isinstance(sharex, GeoAxes):
+            return
+        # Share future axis label changes. Implemented in _apply_axis_sharing().
+        # Matplotlib only uses these attributes in __init__() and cla() to share
+        # tickers -- all other builtin sharing features derives from shared x axes
+        if level > 0 and labels:
+            self._sharex = sharex
+        # Share future axis tickers, limits, and scales
+        # NOTE: Only difference between levels 2 and 3 is level 3 hides tick
+        # labels. But this is done after the fact -- tickers are still shared.
+        if level > 1 and limits:
+            self._sharex_limits(sharex)
+
+    def _sharey_setup(self, sharey, *, labels=True, limits=True):
+        """
+        Configure shared axes accounting for panels. The input is the
+        'parent' axes, from which this one will draw its properties.
+        """
+        # NOTE: See _sharex_setup for notes
+        super()._sharey_setup(sharey)
+        level = (
+            3
+            if self._panel_sharey_group and self._is_panel_group_member(sharey)
+            else self.figure._sharey
+        )
+        if level not in range(5):  # must be internal error
+            raise ValueError(f"Invalid sharing level sharey={level!r}.")
+        if sharey in (None, self) or not isinstance(sharey, GeoAxes):
+            return
+        if level > 0 and labels:
+            self._sharey = sharey
+        if level > 1 and limits:
+            self._sharey_limits(sharey)
+
+    def _toggle_ticks(self, label: "str | None", which: str):
+        """
+        Ticks are controlled by matplotlib independent of the backend. We can toggle ticks on and of depending on the desired position.
+        """
+        if not isinstance(label, str):
+            return
+
+        # Only allow "lrbt" and "all" or "both"
+        label = label.replace("top", "t")
+        label = label.replace("bottom", "b")
+        label = label.replace("left", "l")
+        label = label.replace("right", "r")
+        match label:
+            case _ if (
+                len(label) == 2 and "t" in label and "b" in label and which == "x"
+            ):
+                self.xaxis.set_ticks_position("both")
+            case _ if (
+                len(label) == 2 and "l" in label and "r" in label and which == "y"
+            ):
+                self.yaxis.set_ticks_position("both")
+            case "t":
+                self.xaxis.set_ticks_position("top")
+            case "b":
+                self.xaxis.set_ticks_position("bottom")
+            case "l":
+                self.yaxis.set_ticks_position("left")
+            case "r":
+                self.yaxis.set_ticks_position("right")
+            case "all" | "both":
+                if which == "x":
+                    self.xaxis.set_position("both")
+                else:
+                    self.yaxis.set_position("both")
+            case _:
+                warnings._warn_ultraplot(
+                    f"Not toggling {label=}. Input was not understood. Valid values are ['left', 'right', 'top', 'bottom', 'all', 'both']"
+                )
+
+    def _apply_axis_sharing(self):
+        """
+        Enforce the "shared" axis labels and axis tick labels. If this is not
+        called at drawtime, "shared" labels can be inadvertantly turned off.
+        """
+        # X axis
+        # NOTE: Critical to apply labels to *shared* axes attributes rather
+        # than testing extents or we end up sharing labels with twin axes.
+        # NOTE: Similar to how _align_super_labels() calls _apply_title_above() this
+        # is called inside _align_axis_labels() so we align the correct text.
+        # NOTE: The "panel sharing group" refers to axes and panels *above* the
+        # bottommost or to the *right* of the leftmost panel. But the sharing level
+        # used for the leftmost and bottommost is the *figure* sharing level.
+
+        if any([not _is_rectilinear_projection(ax) for ax in self.figure.axes]):
+            warnings._warn_ultraplot(
+                "Sharing of axes only allowed for figures that have a rectilinear projection"
+            )
+            return
+        axis = self._lonaxis
+        level = self.figure._sharex
+        if self._panel_sharex_group:
+            level = 3
+        if self._sharex:
+            axis.set_view_interval(*self._sharex._lonaxis.get_view_interval())
+            axis.set_minor_locator(self._sharex._lonaxis.get_minor_locator())
+
+            match self.xaxis.get_ticks_position():
+                case "top":
+                    gl = self._sharex.gridlines_major
+                case "bottom":
+                    gl = self.gridlines_major
+                case _:
+                    gl = None
+            if gl and hasattr(gl, "xformatter"):
+                gl.xformatter = mticker.NullFormatter()
+
+        # # Y axis
+        axis = self._lonaxis
+        if self._sharey:
+            axis.set_view_interval(*self._sharey._lataxis.get_view_interval())
+            axis.set_minor_locator(self._sharey._lataxis.get_minor_locator())
+
+            match self.yaxis.get_ticks_position():
+                case "left":
+                    gl = self.gridlines_major
+                case "right":
+                    gl = self._sharey.gridlines_major
+                case _:
+                    gl = None
+            if gl and hasattr(gl, "yformatter"):
+                gl.yformatter = mticker.NullFormatter()
+
+    def draw(self, renderer=None, *args, **kwargs):
+        # Perform extra post-processing steps
+        # NOTE: In *principle* axis sharing application step goes here. But should
+        # already be complete because auto_layout() (called by figure pre-processor)
+        # has to run it before aligning labels. So this is harmless no-op.
+        self._apply_axis_sharing()
+        super().draw(renderer, *args, **kwargs)
 
     def _get_lonticklocs(self, which="major"):
         """
@@ -543,7 +738,7 @@ class GeoAxes(plot.PlotAxes):
                         + " or a string of single-letter characters like 'lr'."
                     )
                 for char in string:
-                    array["lrbtg".index(char)] = True
+                    array["lrtbg".index(char)] = True
                 if rc["grid.geolabels"] and any(array):
                     array[4] = True  # possibly toggle geo spine labels
         elif not any(isinstance(_, str) for _ in array):
@@ -676,6 +871,9 @@ class GeoAxes(plot.PlotAxes):
             labels = _not_none(labels, rc.find("grid.labels", context=True))
             lonlabels = _not_none(lonlabels, labels)
             latlabels = _not_none(latlabels, labels)
+            # Set the ticks
+            self._toggle_ticks(lonlabels, "x")
+            self._toggle_ticks(latlabels, "y")
             lonarray = self._to_label_array(lonlabels, lon=True)
             latarray = self._to_label_array(latlabels, lon=False)
 
@@ -825,33 +1023,34 @@ class GeoAxes(plot.PlotAxes):
         if isinstance(gl, tuple):
             locator = gl[0] if x_or_y == "x" else gl[1]
             tick_positions = np.asarray(list(locator.keys()))
-            # Show the ticks but hide the labels
-            ax.set_ticks(tick_positions)
             ax.set_major_formatter(mticker.NullFormatter())
+        else:
+            locator = gl.xlocator if x_or_y == "x" else gl.ylocator
+            lim = gl.crs.x_limits if x_or_y == "x" else gl.crs.y_limits
+            tick_positions = locator.tick_values(*lim)
 
         # Always show the ticks
+        ax.set_ticks(tick_positions)
         ax.set_visible(True)
 
         # Apply tick parameters
         # Move the labels outwards if specified
         # Offset of 2 * size is aesthetically nice
-        if isinstance(gl, tuple):
-            locator = gl[0] if x_or_y == "x" else gl[1]
-            for loc, objects in locator.items():
-                for object in objects:
-                    # text is wrapped in a list
-                    if isinstance(object, list) and len(object) > 0:
-                        object = object[0]
-                    if isinstance(object, mtext.Text):
-                        object.set_visible(True)
-        else:
+        if hasattr(gl, f"{x_or_y}padding"):
             setattr(gl, f"{x_or_y}padding", 2 * size)
 
         # Note: set grid_alpha to 0 as it is controlled through the gridlines_major
         # object (which is not the same ticker)
+        params = ax.get_tick_params()
         sizes = [size, 0.6 * size if isinstance(size, (int, float)) else size]
         for size, which in zip(sizes, ["major", "minor"]):
-            self.tick_params(axis=x_or_y, which=which, length=size, grid_alpha=0)
+            params.update({"length": size})
+            self.tick_params(
+                axis=x_or_y,
+                which=which,
+                grid_alpha=0,
+                **params,
+            )
         self.stale = True
 
     @property
@@ -953,12 +1152,8 @@ class _CartopyAxes(GeoAxes, _GeoAxes):
             super().__init__(*args, projection=self.projection, **kwargs)
         else:
             super().__init__(*args, map_projection=self.projection, **kwargs)
-
-    def _apply_axis_sharing(self):  # noqa: U100
-        """
-        No-op for now. In future will hide labels on certain subplots.
-        """
-        pass
+        for axis in (self.xaxis, self.yaxis):
+            axis.set_tick_params(which="both", size=0)  # prevent extra label offset
 
     @staticmethod
     def _get_circle_path(N=100):
@@ -1021,12 +1216,7 @@ class _CartopyAxes(GeoAxes, _GeoAxes):
         return gl
 
     @staticmethod
-    def _toggle_gridliner_labels(
-        gl, left=None, right=None, bottom=None, top=None, geo=None
-    ):
-        """
-        Toggle gridliner labels across different cartopy versions.
-        """
+    def _get_side_labels() -> tuple:
         if _version_cartopy >= "0.18":
             left_labels = "left_labels"
             right_labels = "right_labels"
@@ -1037,6 +1227,18 @@ class _CartopyAxes(GeoAxes, _GeoAxes):
             right_labels = "ylabels_right"
             bottom_labels = "xlabels_bottom"
             top_labels = "xlabels_top"
+        return (left_labels, right_labels, bottom_labels, top_labels)
+
+    @staticmethod
+    def _toggle_gridliner_labels(
+        gl, left=None, right=None, bottom=None, top=None, geo=None
+    ):
+        """
+        Toggle gridliner labels across different cartopy versions.
+        """
+        left_labels, right_labels, bottom_labels, top_labels = (
+            _CartopyAxes._get_side_labels()
+        )
         if left is not None:
             setattr(gl, left_labels, left)
         if right is not None:
@@ -1331,23 +1533,19 @@ class _CartopyAxes(GeoAxes, _GeoAxes):
                     f"{type(self.projection).__name__} projection."
                 )
                 lonarray = [False] * 5
-        array = [
-            (
-                True
-                if lon and lat
-                else (
-                    "x"
-                    if lon
-                    else (
-                        "y"
-                        if lat
-                        else False if lon is not None or lon is not None else None
-                    )
-                )
-            )
-            for lon, lat in zip(lonarray, latarray)
-        ]
-        self._toggle_gridliner_labels(gl, *array[:2], *array[2:4], array[4])
+        sides = dict()
+        for side, lon, lat in zip(
+            "left right top bottom geo".split(), lonarray, latarray
+        ):
+            if lon and lat:
+                sides[side] = True
+            elif lon:
+                sides[side] = "x"
+            elif lat:
+                sides[side] = "y"
+            elif lon is not None or lat is not None:
+                sides[side] = False
+        self._toggle_gridliner_labels(gl, **sides)
 
     def _update_minor_gridlines(self, longrid=None, latgrid=None, nsteps=None):
         """
@@ -1518,6 +1716,21 @@ class _BasemapAxes(GeoAxes):
         self._lataxis = _LatAxis(self, latmax=latmax)
         self._set_view_intervals(extent)
         super().__init__(*args, **kwargs)
+
+        self._turnoff_tick_labels(self._lonlines_major)
+        self._turnoff_tick_labels(self._latlines_major)
+
+    def _turnoff_tick_labels(self, locator: mticker.Formatter):
+        """
+        For GeoAxes with are dealing with a duality. Basemap axes behave differently than Cartopy axes and vice versa. UltraPlot abstracts away from these by providing GeoAxes. For basemap axes we need to turn off the tick labels as they will be handles by GeoAxis
+        """
+        for loc, objects in locator.items():
+            for object in objects:
+                # text is wrapped in a list
+                if isinstance(object, list) and len(object) > 0:
+                    object = object[0]
+                if isinstance(object, mtext.Text):
+                    object.set_visible(True)
 
     def _get_lon0(self):
         """
