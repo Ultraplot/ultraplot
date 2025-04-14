@@ -482,98 +482,86 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
         """
         super().__init__(*args, **kwargs)
 
-    def _sharex_limits(self, sharex):
-        """
-        Safely share limits and tickers without resetting things.
-        """
-        # Copy non-default limits and scales. Either this axes or the input
-        # axes could be a newly-created subplot while the other is a subplot
-        # with possibly-modified user settings we are careful to preserve.
-        for ax1, ax2 in ((self, sharex), (sharex, self)):
-            ax1._lonaxis.set_view_interval(
-                *ax2._lonaxis.get_view_interval(),
-            )
-        # Copy non-default locators and formatters
-        self.sharex(sharex)
-        if sharex._lonaxis.isDefault_majloc and not self._lonaxis.isDefault_majloc:
-            sharex._lonaxis.set_major_locator(self._lonaxis.get_major_locator())
-        if sharex._lonaxis.isDefault_minloc and not self._lonaxis.isDefault_minloc:
-            sharex._lonaxis.set_minor_locator(self._lonaxis.get_minor_locator())
-        if sharex._lonaxis.isDefault_majfmt and not self.xaxis.isDefault_majfmt:
-            sharex._lonaxis.set_major_formatter(self._lonaxis.get_major_formatter())
-        # if sharex._lonaxis.isDefault_minfmt and not self._lonaxis.isDefault_minfmt:
-        # sharex._lonaxis.set_minor_formatter(self.xaxis.get_minor_formatter())
-        self._lonaxis.major = sharex._lonaxis.major
-        self._lonaxis.minor = sharex._lonaxis.minor
-
     def _sharey_limits(self, sharey):
+        return self._share_limits(sharey, which="y")
+
+    def _sharex_limits(self, sharex):
+        return self._share_limits(sharex, which="x")
+
+    def _share_limits(self, other: "GeoAxes", which: str):
         """
         Safely share limits and tickers without resetting things.
         """
         # NOTE: See _sharex_limits for notes
-        for ax1, ax2 in ((self, sharey), (sharey, self)):
-            ax1._lataxis.set_view_interval(*ax2._lataxis.get_view_interval())
-        self.sharey(sharey)
-        if sharey._lataxis.isDefault_majloc and not self._lataxis.isDefault_majloc:
-            sharey._lataxis.set_major_locator(self._lataxis.get_major_locator())
-        if sharey._lataxis.isDefault_minloc and not self._lataxis.isDefault_minloc:
-            sharey._lataxis.set_minor_locator(self._lataxis.get_minor_locator())
-        if sharey._lataxis.isDefault_majfmt and not self._lataxis.isDefault_majfmt:
-            sharey._lataxis.set_major_formatter(self._lataxis.get_major_formatter())
+        if which == "x":
+            this_ax = self._lonaxis
+            other_ax = other._lonaxis
+        else:
+            this_ax = self._lataxis
+            other_ax = other._lataxis
+        for ax1, ax2 in ((this_ax, other_ax), (other_ax, this_ax)):
+            ax1.set_view_interval(*ax2.get_view_interval())
 
+        # Set the shared axis
+        getattr(self, f"share{which}")(other)
+
+        props = ["isDefault_majloc", "isDefault_minloc", "isDefault_majfmt"]
+        funcs = [
+            "major_locator",
+            "minor_locator",
+            "major_formatteer",
+        ]
+        for prop, func in zip(props, funcs):
+            if getattr(other_ax, prop) and not getattr(this_ax, prop):
+                setter = getattr(other_ax, f"set_{func}")
+                getter = getattr(this_ax, f"get_{func}")
+                if setter and getter:
+                    setter(getter())
         # if sharey._lataxis.isDefault_minfmt and not self._lataxis.isDefault_minfmt:
         # sharey._lataxis.set_minor_formatter(self._lataxis.get_minor_formatter())
-        self._lataxis.major = sharey._lataxis.major
-        self._lataxis.minor = sharey._lataxis.minor
+        this_ax.major = other._lataxis.major
+        this_ax.minor = other._lataxis.minor
 
-    def _sharex_setup(self, sharex, *, labels=True, limits=True):
-        """
-        Configure shared axes accounting. Input is the 'parent' axes from which this
-        one will draw its properties. Use keyword args to override settings.
-        """
-        # Share panels across *different* subplots
-        super()._sharex_setup(sharex)
-        # Get the axis sharing level
-        level = (
-            3
-            if self._panel_sharex_group and self._is_panel_group_member(sharex)
-            else self.figure._sharex
-        )
+    def __share_axis_setup(
+        self,
+        other: "GeoAxes",
+        *,
+        which: str,
+        labels: bool,
+        limits: bool,
+    ):
+        level = getattr(self.figure, f"_share{which}")
+        if getattr(self, f"_panel_share{which}_group") and self.is_panel_group_member(
+            other
+        ):
+            level = 3
         if level not in range(5):  # must be internal error
             raise ValueError(f"Invalid sharing level sharex={level!r}.")
-        if sharex in (None, self) or not isinstance(sharex, GeoAxes):
+        if other in (None, self) or not isinstance(other, GeoAxes):
             return
         # Share future axis label changes. Implemented in _apply_axis_sharing().
         # Matplotlib only uses these attributes in __init__() and cla() to share
         # tickers -- all other builtin sharing features derives from shared x axes
         if level > 0 and labels:
-            self._sharex = sharex
+            setattr(self, f"_share{which}", other)
         # Share future axis tickers, limits, and scales
         # NOTE: Only difference between levels 2 and 3 is level 3 hides tick
         # labels. But this is done after the fact -- tickers are still shared.
         if level > 1 and limits:
-            self._sharex_limits(sharex)
+            self._share_limits(other, which=which)
 
     def _sharey_setup(self, sharey, *, labels=True, limits=True):
         """
         Configure shared axes accounting for panels. The input is the
         'parent' axes, from which this one will draw its properties.
         """
-        # NOTE: See _sharex_setup for notes
-        super()._sharey_setup(sharey)
-        level = (
-            3
-            if self._panel_sharey_group and self._is_panel_group_member(sharey)
-            else self.figure._sharey
-        )
-        if level not in range(5):  # must be internal error
-            raise ValueError(f"Invalid sharing level sharey={level!r}.")
-        if sharey in (None, self) or not isinstance(sharey, GeoAxes):
-            return
-        if level > 0 and labels:
-            self._sharey = sharey
-        if level > 1 and limits:
-            self._sharey_limits(sharey)
+        super()._sharey_setup(sharey, labels=labels, limits=limits)
+        return self.__share_axis_setup(sharey, which="y", labels=labels, limits=limits)
+
+    def _sharex_setup(self, sharex, *, labels=True, limits=True):
+        # Share panels across *different* subplots
+        super()._sharex_setup(sharex, labels=labels, limits=limits)
+        return self.__share_axis_setup(sharex, which="x", labels=labels, limits=limits)
 
     def _toggle_ticks(self, label: "str | None", which: str):
         """
@@ -618,54 +606,76 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
         """
         Enforce the "shared" axis labels and axis tick labels. If this is not
         called at drawtime, "shared" labels can be inadvertantly turned off.
-        """
-        # X axis
-        # NOTE: Critical to apply labels to *shared* axes attributes rather
-        # than testing extents or we end up sharing labels with twin axes.
-        # NOTE: Similar to how _align_super_labels() calls _apply_title_above() this
-        # is called inside _align_axis_labels() so we align the correct text.
-        # NOTE: The "panel sharing group" refers to axes and panels *above* the
-        # bottommost or to the *right* of the leftmost panel. But the sharing level
-        # used for the leftmost and bottommost is the *figure* sharing level.
 
-        if any([not _is_rectilinear_projection(ax) for ax in self.figure.axes]):
-            warnings._warn_ultraplot(
+        Notes:
+            - Critical to apply labels to *shared* axes attributes rather than testing
+                extents or we end up sharing labels with twin axes.
+            - Similar to how align_super_labels() calls apply_title_above(), this is called
+                inside align_axis_labels() so we align the correct text.
+            - The "panel sharing group" refers to axes and panels *above* the bottommost
+                or to the *right* of the leftmost panel. But the sharing level used for
+                the leftmost and bottommost is the *figure* sharing level.
+        """
+        # Check if all projections are rectilinear
+        if any(not _is_rectilinear_projection(ax) for ax in self.figure.axes):
+            warnings.warn_ultraplot(
                 "Sharing of axes only allowed for figures that have a rectilinear projection"
             )
             return
-        axis = self._lonaxis
-        level = self.figure._sharex
-        if self._panel_sharex_group:
-            level = 3
+
+        # Handle X axis sharing
         if self._sharex:
-            axis.set_view_interval(*self._sharex._lonaxis.get_view_interval())
-            axis.set_minor_locator(self._sharex._lonaxis.get_minor_locator())
+            self._handle_axis_sharing(
+                source_axis=self._sharex._lonaxis,
+                target_axis=self._lonaxis,
+                position=self.xaxis.get_ticks_position(),
+                formatter_attribute="xformatter",
+                is_x_axis=True,
+            )
 
-            match self.xaxis.get_ticks_position():
-                case "top":
-                    gl = self._sharex.gridlines_major
-                case "bottom":
-                    gl = self.gridlines_major
-                case _:
-                    gl = None
-            if gl and hasattr(gl, "xformatter"):
-                gl.xformatter = mticker.NullFormatter()
-
-        # # Y axis
-        axis = self._lonaxis
+        # Handle Y axis sharing
         if self._sharey:
-            axis.set_view_interval(*self._sharey._lataxis.get_view_interval())
-            axis.set_minor_locator(self._sharey._lataxis.get_minor_locator())
+            self._handle_axis_sharing(
+                source_axis=self._sharey._lataxis,
+                target_axis=self._lataxis,
+                position=self.yaxis.get_ticks_position(),
+                formatter_attribute="yformatter",
+                is_x_axis=False,
+            )
 
-            match self.yaxis.get_ticks_position():
-                case "left":
-                    gl = self.gridlines_major
-                case "right":
-                    gl = self._sharey.gridlines_major
-                case _:
-                    gl = None
-            if gl and hasattr(gl, "yformatter"):
-                gl.yformatter = mticker.NullFormatter()
+    def _handle_axis_sharing(
+        self, source_axis, target_axis, position, formatter_attribute, is_x_axis
+    ):
+        """
+        Helper method to handle axis sharing for both X and Y axes.
+
+        Args:
+            source_axis: The source axis to share from
+            target_axis: The target axis to apply sharing to
+            position: Position of the axis ('top', 'bottom', 'left', 'right')
+            formatter_attribute: Attribute name for the formatter ('xformatter' or 'yformatter')
+            is_x_axis: Boolean indicating if this is an X axis
+        """
+        # Copy view interval and minor locator from source to target
+        target_axis.set_view_interval(*source_axis.get_view_interval())
+        target_axis.set_minor_locator(source_axis.get_minor_locator())
+
+        # Determine which gridlines to use based on axis position
+        gl = None
+        if is_x_axis:
+            if position == "top":
+                gl = self._sharex.gridlines_major
+            elif position == "bottom":
+                gl = self.gridlines_major
+        else:  # Y axis
+            if position == "left":
+                gl = self.gridlines_major
+            elif position == "right":
+                gl = self._sharey.gridlines_major
+
+        # Set null formatter if gridlines exist and have the formatter attribute
+        if gl and hasattr(gl, formatter_attribute):
+            setattr(gl, formatter_attribute, mticker.NullFormatter())
 
     def draw(self, renderer=None, *args, **kwargs):
         # Perform extra post-processing steps
