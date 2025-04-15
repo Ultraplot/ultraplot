@@ -617,7 +617,7 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
         """
         # Check if all projections are rectilinear
         if any(not _is_rectilinear_projection(ax) for ax in self.figure.axes):
-            warnings.warn_ultraplot(
+            warnings._warn_ultraplot(
                 "Sharing of axes only allowed for figures that have a rectilinear projection"
             )
             return
