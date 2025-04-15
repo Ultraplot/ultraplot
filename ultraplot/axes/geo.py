@@ -593,9 +593,9 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
                 self.yaxis.set_ticks_position("right")
             case "all" | "both":
                 if which == "x":
-                    self.xaxis.set_position("both")
+                    self.xaxis.set_ticks_position("both")
                 else:
-                    self.yaxis.set_position("both")
+                    self.yaxis.set_ticks_position("both")
             case _:
                 warnings._warn_ultraplot(
                     f"Not toggling {label=}. Input was not understood. Valid values are ['left', 'right', 'top', 'bottom', 'all', 'both']"
