@@ -529,3 +529,39 @@ def test_loc_positions():
     for loc in TEXT_LOCS:
         ax.format(abc="a.", abcloc=loc)
     uplt.close(fig)
+
+
+@pytest.mark.parametrize("angle", [0, 45, 89, 63, 90])
+def test_axis_label_anchor(angle):
+    """
+    Check if the rotation of the xticklabels is correctly handle by xrotation and yrotation
+    """
+    fig, ax = uplt.subplots(ncols=2)
+    ax[0].format(xrotation=angle, yrotation=angle)
+
+    # Need fixed ticks for it to work (set locator explicitly)
+    ax[1].set_xticks(ax[1].get_xticks())
+    ax[1].set_yticks(ax[1].get_yticks())
+
+    kw = dict()
+    if angle in (0, 90, -90):
+        kw["ha"] = "right"
+    ax[1].set_xticklabels(
+        ax[1].get_xticklabels(), rotation=angle, rotation_mode="anchor", **kw
+    )
+    ax[1].set_yticklabels(
+        ax[1].get_yticklabels(), rotation=angle, rotation_mode="anchor", **kw
+    )
+
+    # Ticks should be in the same position
+    for tick1, tick2 in zip(ax[0].get_xticklabels(), ax[1].get_xticklabels()):
+        assert tick1.get_rotation() == angle
+        assert tick2.get_rotation() == angle
+        assert tick1.get_position()[0] == tick2.get_position()[0]
+        assert tick1.get_position()[1] == tick2.get_position()[1]
+
+    for tick1, tick2 in zip(ax[0].get_yticklabels(), ax[1].get_yticklabels()):
+        assert tick1.get_rotation() == angle
+        assert tick2.get_rotation() == angle
+        assert tick1.get_position()[0] == tick2.get_position()[0]
+        assert tick1.get_position()[1] == tick2.get_position()[1]
