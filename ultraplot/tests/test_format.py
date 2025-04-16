@@ -531,7 +531,7 @@ def test_loc_positions():
     uplt.close(fig)
 
 
-@pytest.mark.parametrize("angle", [0, 45, 90])
+@pytest.mark.parametrize("angle", [0, 45, 89, 63, 90])
 def test_axis_label_anchor(angle):
     """
     Check if the rotation of the xticklabels is correctly handle by xrotation and yrotation
