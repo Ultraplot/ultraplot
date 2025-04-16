@@ -8,7 +8,6 @@ import inspect
 import re
 from numbers import Integral
 
-from matplotlib.artist import get
 import matplotlib.axes as maxes
 import matplotlib.axis as maxis
 import matplotlib.cm as mcm
