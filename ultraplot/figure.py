@@ -1143,8 +1143,9 @@ class Figure(mfigure.Figure):
         for which in "x y view".split():
             self._toggle_axis_sharing(which=which, share=False)
         # Force setting extent
+        # This is necessary to ensure that the axes are properly aligned and we don't get weird scaling issues for geographic axes. This action is expensive for GeoAxes
         for ax in self.axes:
-            ax.set_extent(ax.get_extent())
+            ax.set_global()
 
     def _toggle_axis_sharing(self, *, which="y", share=True, panels=False):
         """
