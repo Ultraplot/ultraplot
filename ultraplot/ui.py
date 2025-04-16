@@ -229,5 +229,6 @@ def subplots(*args, **kwargs):
             kwsubs[key] = kwargs.pop(key)
     kwargs["aspect"] = kwsubs.pop("aspect", None)  # keyword conflict
     fig = figure(rc_kw=rc_kw, **kwargs)
+    print(rc_kw, kwsubs)
     axs = fig.add_subplots(*args, rc_kw=rc_kw, **kwsubs)
     return fig, axs

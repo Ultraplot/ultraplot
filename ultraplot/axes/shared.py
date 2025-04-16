@@ -210,7 +210,9 @@ class _SharedAxes(object):
         other_axis = getattr(other, f"{which}axis")
 
         # Set minor ticker
-        this_axis.minor = other_axis.minor
+        this_axis.set_minor_locator(other_axis.get_minor_locator())
+        this_axis.set_minor_formatter(other_axis.get_minor_formatter())
+        # this_axis.minor = other_axis.minor
 
         # Get and set limits
         limits = getattr(other, f"get_{which}lim")()

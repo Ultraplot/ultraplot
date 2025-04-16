@@ -8,6 +8,7 @@ import inspect
 import re
 from numbers import Integral
 
+from matplotlib.artist import get
 import matplotlib.axes as maxes
 import matplotlib.axis as maxis
 import matplotlib.cm as mcm
@@ -2292,6 +2293,35 @@ class Axes(maxes.Axes):
             return bbox.xmin, bbox.xmax
         else:
             return bbox.ymin, bbox.ymax
+
+    def _unshare(self, *, which: str):
+        """
+        Remove this Axes from the shared Grouper for the given axis ('x', 'y', 'z', or 'view').
+        """
+        if which not in self._shared_axes:
+            return
+
+        grouper = self._shared_axes[which]
+        try:
+            siblings = list(grouper.get_siblings(self))
+            for sibling in siblings:
+                if sibling is not self:
+                    # Unshare by removing them from the grouper
+                    grouper.remove(sibling)
+                    sibling._shared_axes[which].remove(self)
+                    # To be save let's remove this
+                    self._shared_axes[which].remove(sibling)
+
+                    sibling.tick_params(left=True, right=True, top=True)
+
+                    this_ax = getattr(self, f"{which}axis")
+                    sib_ax = getattr(sibling, f"{which}axis")
+
+                    this_ax.set_minor_locator(mticker.AutoLocator())
+                    this_ax.set_minor_formatter(pticker.AutoFormatter())
+
+        except Exception as e:
+            print(f"Could not unshare {which}-axis: {e}")
 
     def _sharex_setup(self, sharex, **kwargs):
         """

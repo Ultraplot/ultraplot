@@ -521,6 +521,9 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
         this_ax.major = other._lataxis.major
         this_ax.minor = other._lataxis.minor
 
+    def _is_rectilinear(self):
+        return _is_rectilinear_projection(self)
+
     def __share_axis_setup(
         self,
         other: "GeoAxes",
@@ -617,9 +620,13 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
         """
         # Check if all projections are rectilinear
         if any(not _is_rectilinear_projection(ax) for ax in self.figure.axes):
-            warnings._warn_ultraplot(
-                "Sharing of axes only allowed for figures that have a rectilinear projection"
-            )
+            # warnings._warn_ultraplot(
+            # "Sharing of axes only allowed for figures that have a rectilinear projection"
+            # )
+            return
+        # Do not allow type mixing
+        # TODO: add
+        elif any([type(ax) is not type(self) for ax in self.figure.axes]):
             return
 
         # Handle X axis sharing
@@ -747,7 +754,7 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
                         + " or a string of single-letter characters like 'lr'."
                     )
                 for char in string:
-                    array["lrtbg".index(char)] = True
+                    array["lrbtg".index(char)] = True
                 if rc["grid.geolabels"] and any(array):
                     array[4] = True  # possibly toggle geo spine labels
         elif not any(isinstance(_, str) for _ in array):
@@ -778,7 +785,7 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
         latgrid=None,
         longridminor=None,
         latgridminor=None,
-        ticklen=None,
+        ticklen=0,  # needs to be set to avoid being filtered out in allowed format signatures
         lonticklen=None,
         latticklen=None,
         latmax=None,
@@ -984,6 +991,8 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
                 nsteps=nsteps,
             )
         # Set tick lengths for flat projections
+        lonticklen = _not_none(lonticklen, ticklen)
+        latticklen = _not_none(latticklen, ticklen)
         if lonticklen or latticklen:
             # Only add warning when ticks are given
             if _is_rectilinear_projection(self):
@@ -1054,6 +1063,7 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
         sizes = [size, 0.6 * size if isinstance(size, (int, float)) else size]
         for size, which in zip(sizes, ["major", "minor"]):
             params.update({"length": size})
+            params.pop("grid_alpha", None)
             self.tick_params(
                 axis=x_or_y,
                 which=which,
@@ -1543,8 +1553,9 @@ class _CartopyAxes(GeoAxes, _GeoAxes):
                 )
                 lonarray = [False] * 5
         sides = dict()
+        # The ordering of these sides are important. The arrays are ordered lrbtg
         for side, lon, lat in zip(
-            "left right top bottom geo".split(), lonarray, latarray
+            "left right bottom top geo".split(), lonarray, latarray
         ):
             if lon and lat:
                 sides[side] = True

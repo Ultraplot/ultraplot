@@ -11,6 +11,7 @@ import matplotlib.axes as maxes
 import matplotlib.figure as mfigure
 import matplotlib.gridspec as mgridspec
 import matplotlib.projections as mproj
+from matplotlib.projections.geo import GeoAxes
 import matplotlib.text as mtext
 import matplotlib.transforms as mtransforms
 import numpy as np
@@ -816,14 +817,8 @@ class Figure(mfigure.Figure):
     @staticmethod
     def _parse_backend(backend=None, basemap=None):
         """
-        Handle deprication of basemap and cartopy package.
+        Handle deprecation of basemap and cartopy package.
         """
-        if basemap is not None:
-            backend = ("cartopy", "basemap")[bool(basemap)]
-            warnings._warn_ultraplot(
-                f"The 'basemap' keyword was deprecated in version 0.10.0 and will be "
-                f"removed in a future release. Please use backend={backend!r} instead."
-            )
         return backend
 
     def _parse_proj(
@@ -1055,6 +1050,7 @@ class Figure(mfigure.Figure):
         """
         # Parse arguments
         kwargs = self._parse_proj(**kwargs)
+
         args = args or (1, 1, 1)
         gs = self.gridspec
 
@@ -1134,7 +1130,52 @@ class Figure(mfigure.Figure):
         ax = super().add_subplot(ss, _subplot_spec=ss, **kwargs)
         if ax.number:
             self._subplot_dict[ax.number] = ax
+
+        # Allow sharing for GeoAxes if rectilinear
+        if self._sharex or self._sharey:
+            for axi in self.axes:
+                if isinstance(axi, paxes.GeoAxes) and not axi._is_rectilinear():
+                    self._unshare_axes()
+                    break
         return ax
+
+    def _unshare_axes(self):
+        for which in "x y which".split():
+            self._toggle_axis_sharing(which=which, share=False)
+
+    def _toggle_axis_sharing(self, *, which="y", share=True, panels=False):
+        """
+        Share or unshare axes in the figure along a given direction.
+
+        Parameters:
+        - which: 'x', 'y' or 'view'.
+        - share: int indicating the levels (see above)
+        - panels: Whether to include panel axes.
+        """
+        seen = set()
+
+        if which == "x":
+            self._sharex = share
+        elif which == "y":
+            self._sharey = share
+
+        # Iterate through all the axes and unshare them if share is False
+        for ax in self._iter_axes(hidden=False, children=False, panels=panels):
+            group = ax._get_share_axes(which, panels=panels)
+            group = [a for a in group if a not in seen]
+            if not group:
+                continue
+            seen.update(group)
+            ref = group[0]
+            for other in group:
+                if share > 0 and other is not ref:
+                    pass
+                    # if other not in ref._shared_axes[which]:
+                    # ref._shared_axes[which].join(ref, other)
+                    # if ref not in other._shared_axes[which]:
+                    # other._shared_axes[which].join(other, ref)
+                if share == 0:
+                    other._unshare(which=which)
 
     def _add_subplots(
         self,
@@ -1251,7 +1292,6 @@ class Figure(mfigure.Figure):
             ss = gs[y0 : y1 + 1, x0 : x1 + 1]
             kw = {**kwargs, **axes_kw[num], "number": num}
             axs[idx] = self.add_subplot(ss, **kw)
-
         self.format(skip_axes=True, **figure_kw)
         return pgridspec.SubplotGrid(axs)
 
@@ -1679,12 +1719,15 @@ class Figure(mfigure.Figure):
         # Update the main axes
         if skip_axes:  # avoid recursion
             return
+
+        # Remove all keywords that are not in the allowed signature parameters
         kws = {
             cls: _pop_params(kwargs, sig)
             for cls, sig in paxes.Axes._format_signatures.items()
         }
         classes = set()  # track used dictionaries
         for ax in axs:
+            # Only remove the properties once for each kind
             kw = {
                 key: value
                 for cls, kw in kws.items()

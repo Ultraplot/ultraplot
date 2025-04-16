@@ -65,9 +65,6 @@ class StoreFailedMplPlugin:
             if report.failed == False:
                 if self._has_mpl_marker(report):
                     self._remove_success(report)
-            else:
-                print(f"{report.failed=}")
-                print(f"Test {report.nodeid} failed!")
 
 
 # Register the plugin if the option is used
