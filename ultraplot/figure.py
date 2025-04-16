@@ -1127,9 +1127,6 @@ class Figure(mfigure.Figure):
         kwargs.setdefault("label", f"subplot_{self._subplot_counter}")
         kwargs.setdefault("number", 1 + max(self._subplot_dict, default=0))
         kwargs.pop("refwidth", None)  # TODO: remove this
-        ax = super().add_subplot(ss, _subplot_spec=ss, **kwargs)
-        if ax.number:
-            self._subplot_dict[ax.number] = ax
 
         # Allow sharing for GeoAxes if rectilinear
         if self._sharex or self._sharey:
@@ -1137,11 +1134,17 @@ class Figure(mfigure.Figure):
                 if isinstance(axi, paxes.GeoAxes) and not axi._is_rectilinear():
                     self._unshare_axes()
                     break
+        ax = super().add_subplot(ss, _subplot_spec=ss, **kwargs)
+        if ax.number:
+            self._subplot_dict[ax.number] = ax
         return ax
 
     def _unshare_axes(self):
-        for which in "x y which".split():
+        for which in "x y view".split():
             self._toggle_axis_sharing(which=which, share=False)
+        # Force setting extent
+        for ax in self.axes:
+            ax.set_extent(ax.get_extent())
 
     def _toggle_axis_sharing(self, *, which="y", share=True, panels=False):
         """
@@ -1162,6 +1165,7 @@ class Figure(mfigure.Figure):
         # Iterate through all the axes and unshare them if share is False
         for ax in self._iter_axes(hidden=False, children=False, panels=panels):
             group = ax._get_share_axes(which, panels=panels)
+            ax._unshare(which=which)
             group = [a for a in group if a not in seen]
             if not group:
                 continue
@@ -1169,11 +1173,10 @@ class Figure(mfigure.Figure):
             ref = group[0]
             for other in group:
                 if share > 0 and other is not ref:
-                    pass
-                    # if other not in ref._shared_axes[which]:
-                    # ref._shared_axes[which].join(ref, other)
-                    # if ref not in other._shared_axes[which]:
-                    # other._shared_axes[which].join(other, ref)
+                    if other not in ref._shared_axes[which]:
+                        ref._shared_axes[which].join(ref, other)
+                    if ref not in other._shared_axes[which]:
+                        other._shared_axes[which].join(other, ref)
                 if share == 0:
                     other._unshare(which=which)
 
