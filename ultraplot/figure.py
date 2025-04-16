@@ -1134,7 +1134,7 @@ class Figure(mfigure.Figure):
                 if isinstance(axi, paxes.GeoAxes) and not axi._is_rectilinear():
                     self._unshare_axes()
                     warnings._warn_ultraplot(
-                        f"GeoAxes can only be shared for rectilinear projections, {axi=} does not have a rectilinear projection."
+                        f"GeoAxes can only be shared for rectilinear projections, {axi.projection=} is not a rectilinear projection."
                     )
                     break
         ax = super().add_subplot(ss, _subplot_spec=ss, **kwargs)
