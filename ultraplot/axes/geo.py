@@ -625,7 +625,7 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
             # )
             return
         # Do not allow type mixing
-        # TODO: add
+        # TODO: add allowing mixing
         elif any([type(ax) is not type(self) for ax in self.figure.axes]):
             return
 
@@ -673,12 +673,30 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
                 gl = self._sharex.gridlines_major
             elif position == "bottom":
                 gl = self.gridlines_major
-        else:  # Y axis
-            if position == "left":
-                gl = self.gridlines_major
-            elif position == "right":
-                gl = self._sharey.gridlines_major
 
+            print("<<", position, gl)
+
+        else:  # Y axis
+            # gl = self._sharey.gridlines_major
+            # if gl:
+            # for label in gl._labels:
+            # if label.loc in ("left", "right"):
+            # label.artist.set_visible(False)
+            match position:
+                case "left" | "default":
+                    gl = self.gridlines_major
+                case "right":
+                    gl = self._sharey.gridlines_major
+                # Case == both
+                case "default":
+                    # Turn the labels to the right off for self
+                    # Turn the labels to the left off for sharey
+                    gl = self.gridlines_major
+                    for lab in gl._labels:
+                        if lab.loc == "right":
+                            lab.set_visible(False)
+
+            print(">>", position, gl)
         # Set null formatter if gridlines exist and have the formatter attribute
         if gl and hasattr(gl, formatter_attribute):
             setattr(gl, formatter_attribute, mticker.NullFormatter())
@@ -785,7 +803,7 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
         latgrid=None,
         longridminor=None,
         latgridminor=None,
-        ticklen=0,  # needs to be set to avoid being filtered out in allowed format signatures
+        ticklen=None,
         lonticklen=None,
         latticklen=None,
         latmax=None,
