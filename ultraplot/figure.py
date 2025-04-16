@@ -1145,7 +1145,8 @@ class Figure(mfigure.Figure):
         # Force setting extent
         # This is necessary to ensure that the axes are properly aligned and we don't get weird scaling issues for geographic axes. This action is expensive for GeoAxes
         for ax in self.axes:
-            ax.set_global()
+            if hasattr(ax, "set_global"):
+                ax.set_global()
 
     def _toggle_axis_sharing(self, *, which="y", share=True, panels=False):
         """
