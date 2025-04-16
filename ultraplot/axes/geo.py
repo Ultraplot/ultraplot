@@ -645,6 +645,36 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
                 is_x_axis=False,
             )
 
+    def _toggle_gridliner_labels(
+        self,
+        top=None,
+        bottom=None,
+        left=None,
+        right=None,
+        geo=None,
+    ):
+        gl = {}
+        # For BasemapAxes the gridlines are dicts with key as the coordinate and  keys the line and label
+        # We override the dict here assuming the labels are mut excl due to the N S E W extra chars
+        if left is not None:
+            gl.update(self.gridlines_major[1])
+        if right is not None:
+            gl.update(self.gridlines_major[1])
+        if top is not None:
+            gl.update(self.gridlines_major[0])
+        if bottom is not None:
+            gl.update(self.gridlines_major[0])
+        for dir, (line, labels) in gl.items():
+            for label in labels:
+                if left is not None and label.get_horizontalalignment() == "right":
+                    label.set_visible(left)
+                if right is not None and label.get_horizontalalignment() == "left":
+                    label.set_visible(right)
+                if top is not None and label.get_verticalalignment() == "bottom":
+                    label.set_visible(top)
+                if bottom is not None and label.get_verticalalignment() == "top":
+                    label.set_visible(bottom)
+
     def _handle_axis_sharing(
         self, source_axis, target_axis, position, formatter_attribute, is_x_axis
     ):
@@ -663,39 +693,28 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
         target_axis.set_minor_locator(source_axis.get_minor_locator())
 
         # Determine which gridlines to use based on axis position
-        gl = None
+        # Set null formatter if gridlines exist and have the formatter attribute
         if is_x_axis:
             if position == "top":
-                gl = self._sharex.gridlines_major
+                self._sharex._toggle_gridliner_labels(top=False)
             elif position == "bottom":
-                gl = self.gridlines_major
+                self._toggle_gridliner_labels(bottom=False)
             elif position == "default":
                 # Turn the labels to the top off for sharex
-                gl = self._sharex.gridlines_major
-                self._sharex._toggle_gridliner_labels(gl, top=False)
-                gl = self.gridlines_major
-                # Turn the labels to the bottom off for self
-                self._toggle_gridliner_labels(gl, bottom=False)
-                gl = None
+                self._sharex._toggle_gridliner_labels(top=False)
+                self._toggle_gridliner_labels(bottom=False)
         else:  # Y axis
             match position:
                 case "left":
-                    gl = self.gridlines_major
+                    self._toggle_gridliner_labels(left=False)
                 case "right":
-                    gl = self._sharey.gridlines_major
+                    self._sharey._toggle_gridliner_labels(right=False)
                 # Case == both
                 case "default":
                     # Turn the labels to the right off for self
-                    gl = self._sharey.gridlines_major
-                    self._sharey._toggle_gridliner_labels(gl, right=False)
-                    gl = self.gridlines_major
+                    self._sharey._toggle_gridliner_labels(right=False)
                     # Turn the labels to the left off for sharey
-                    self._toggle_gridliner_labels(gl, left=False)
-                    gl = None
-
-        # Set null formatter if gridlines exist and have the formatter attribute
-        if gl and hasattr(gl, formatter_attribute):
-            setattr(gl, formatter_attribute, mticker.NullFormatter())
+                    self._toggle_gridliner_labels(left=False)
 
     def draw(self, renderer=None, *args, **kwargs):
         # Perform extra post-processing steps
@@ -1245,7 +1264,6 @@ class _CartopyAxes(GeoAxes, _GeoAxes):
         gl._axes_domain = _axes_domain.__get__(gl)
         gl._draw_gridliner = _draw_gridliner.__get__(gl)
         gl.xlines = gl.ylines = False
-        self._toggle_gridliner_labels(gl, False, False, False, False, False)
         return gl
 
     @staticmethod
@@ -1262,9 +1280,8 @@ class _CartopyAxes(GeoAxes, _GeoAxes):
             top_labels = "xlabels_top"
         return (left_labels, right_labels, bottom_labels, top_labels)
 
-    @staticmethod
     def _toggle_gridliner_labels(
-        gl, left=None, right=None, bottom=None, top=None, geo=None
+        self, left=None, right=None, bottom=None, top=None, geo=None
     ):
         """
         Toggle gridliner labels across different cartopy versions.
@@ -1272,6 +1289,7 @@ class _CartopyAxes(GeoAxes, _GeoAxes):
         left_labels, right_labels, bottom_labels, top_labels = (
             _CartopyAxes._get_side_labels()
         )
+        gl = self.gridlines_major
         if left is not None:
             setattr(gl, left_labels, left)
         if right is not None:
@@ -1579,7 +1597,7 @@ class _CartopyAxes(GeoAxes, _GeoAxes):
                 sides[side] = "y"
             elif lon is not None or lat is not None:
                 sides[side] = False
-        self._toggle_gridliner_labels(gl, **sides)
+        self._toggle_gridliner_labels(**sides)
 
     def _update_minor_gridlines(self, longrid=None, latgrid=None, nsteps=None):
         """
