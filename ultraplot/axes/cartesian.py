@@ -825,6 +825,7 @@ class CartesianAxes(shared._SharedAxes, plot.PlotAxes):
             kw = {"rotation": rotation}
             if rotation not in (0, 90, -90):
                 kw["ha"] = "right" if rotation > 0 else "left"
+                kw["rotation_mode"] = "anchor"
             for label in axis.get_ticklabels():
                 label.update(kw)
             setattr(self, current, rotation)
