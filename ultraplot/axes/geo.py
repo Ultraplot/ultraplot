@@ -700,14 +700,15 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
         # Determine which gridlines to use based on axis position
         # Set null formatter if gridlines exist and have the formatter attribute
         if is_x_axis:
-            if position == "top":
-                self._sharex._toggle_gridliner_labels(top=False)
-            elif position == "bottom":
-                self._toggle_gridliner_labels(bottom=False)
-            elif position == "default":
-                # Turn the labels to the top off for sharex
-                self._sharex._toggle_gridliner_labels(top=False)
-                self._toggle_gridliner_labels(bottom=False)
+            match position:
+                case "top":
+                    self._sharex._toggle_gridliner_labels(top=False)
+                case "bottom":
+                    self._toggle_gridliner_labels(bottom=False)
+                case "default":
+                    # Turn the labels to the top off for sharex
+                    self._sharex._toggle_gridliner_labels(top=False)
+                    self._toggle_gridliner_labels(bottom=False)
         else:  # Y axis
             match position:
                 case "left":
