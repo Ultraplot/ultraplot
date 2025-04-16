@@ -2321,7 +2321,7 @@ class Axes(maxes.Axes):
                     this_ax.set_minor_formatter(pticker.AutoFormatter())
 
         except Exception as e:
-            print(f"Could not unshare {which}-axis: {e}")
+            warnings._warn_ultraplot(f"Could not unshare {which}-axis: {e}")
 
     def _sharex_setup(self, sharex, **kwargs):
         """
