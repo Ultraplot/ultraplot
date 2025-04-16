@@ -516,10 +516,6 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
                 getter = getattr(this_ax, f"get_{func}")
                 if setter and getter:
                     setter(getter())
-        # if sharey._lataxis.isDefault_minfmt and not self._lataxis.isDefault_minfmt:
-        # sharey._lataxis.set_minor_formatter(self._lataxis.get_minor_formatter())
-        this_ax.major = other._lataxis.major
-        this_ax.minor = other._lataxis.minor
 
     def _is_rectilinear(self):
         return _is_rectilinear_projection(self)
@@ -673,30 +669,30 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
                 gl = self._sharex.gridlines_major
             elif position == "bottom":
                 gl = self.gridlines_major
-
-            print("<<", position, gl)
-
+            elif position == "default":
+                # Turn the labels to the top off for sharex
+                gl = self._sharex.gridlines_major
+                self._sharex._toggle_gridliner_labels(gl, top=False)
+                gl = self.gridlines_major
+                # Turn the labels to the bottom off for self
+                self._toggle_gridliner_labels(gl, bottom=False)
+                gl = None
         else:  # Y axis
-            # gl = self._sharey.gridlines_major
-            # if gl:
-            # for label in gl._labels:
-            # if label.loc in ("left", "right"):
-            # label.artist.set_visible(False)
             match position:
-                case "left" | "default":
+                case "left":
                     gl = self.gridlines_major
                 case "right":
                     gl = self._sharey.gridlines_major
                 # Case == both
                 case "default":
                     # Turn the labels to the right off for self
-                    # Turn the labels to the left off for sharey
+                    gl = self._sharey.gridlines_major
+                    self._sharey._toggle_gridliner_labels(gl, right=False)
                     gl = self.gridlines_major
-                    for lab in gl._labels:
-                        if lab.loc == "right":
-                            lab.set_visible(False)
+                    # Turn the labels to the left off for sharey
+                    self._toggle_gridliner_labels(gl, left=False)
+                    gl = None
 
-            print(">>", position, gl)
         # Set null formatter if gridlines exist and have the formatter attribute
         if gl and hasattr(gl, formatter_attribute):
             setattr(gl, formatter_attribute, mticker.NullFormatter())
