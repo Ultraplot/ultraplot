@@ -5,6 +5,7 @@ Axes filled with cartographic projections.
 import copy
 import inspect
 from functools import partial
+from typing import override
 
 import matplotlib.axis as maxis
 import matplotlib.path as mpath
@@ -481,9 +482,11 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
         """
         super().__init__(*args, **kwargs)
 
+    @override
     def _sharey_limits(self, sharey):
         return self._share_limits(sharey, which="y")
 
+    @override
     def _sharex_limits(self, sharex):
         return self._share_limits(sharex, which="x")
 
@@ -548,6 +551,7 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
         if level > 1 and limits:
             self._share_limits(other, which=which)
 
+    @override
     def _sharey_setup(self, sharey, *, labels=True, limits=True):
         """
         Configure shared axes accounting for panels. The input is the
@@ -556,6 +560,7 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
         super()._sharey_setup(sharey, labels=labels, limits=limits)
         return self.__share_axis_setup(sharey, which="y", labels=labels, limits=limits)
 
+    @override
     def _sharex_setup(self, sharex, *, labels=True, limits=True):
         # Share panels across *different* subplots
         super()._sharex_setup(sharex, labels=labels, limits=limits)
@@ -716,6 +721,7 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
                     # Turn the labels to the left off for sharey
                     self._toggle_gridliner_labels(left=False)
 
+    @override
     def draw(self, renderer=None, *args, **kwargs):
         # Perform extra post-processing steps
         # NOTE: In *principle* axis sharing application step goes here. But should
