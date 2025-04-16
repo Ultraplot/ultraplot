@@ -705,6 +705,7 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
                     self._sharex._toggle_gridliner_labels(top=False)
                 case "bottom":
                     self._toggle_gridliner_labels(bottom=False)
+                # Case == both
                 case "default":
                     # Turn the labels to the top off for sharex
                     self._sharex._toggle_gridliner_labels(top=False)
