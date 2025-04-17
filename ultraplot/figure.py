@@ -11,7 +11,6 @@ import matplotlib.axes as maxes
 import matplotlib.figure as mfigure
 import matplotlib.gridspec as mgridspec
 import matplotlib.projections as mproj
-from matplotlib.projections.geo import GeoAxes
 import matplotlib.text as mtext
 import matplotlib.transforms as mtransforms
 import numpy as np
@@ -1131,7 +1130,11 @@ class Figure(mfigure.Figure):
         ax = super().add_subplot(ss, _subplot_spec=ss, **kwargs)
         # Allow sharing for GeoAxes if rectilinear
         if self._sharex or self._sharey:
-            if isinstance(ax, paxes.GeoAxes) and not ax._is_rectilinear():
+            if (
+                len(self.axes) > 1
+                and isinstance(ax, paxes.GeoAxes)
+                and not ax._is_rectilinear()
+            ):
                 self._unshare_axes()
                 warnings._warn_ultraplot(
                     f"GeoAxes can only be shared for rectilinear projections, {ax.projection=} is not a rectilinear projection."
@@ -1141,12 +1144,12 @@ class Figure(mfigure.Figure):
         return ax
 
     def _unshare_axes(self):
-        for which in "x y view".split():
+        for which in "x y z".split():
             self._toggle_axis_sharing(which=which, share=False)
         # Force setting extent
         # This is necessary to ensure that the axes are properly aligned and we don't get weird scaling issues for geographic axes. This action is expensive for GeoAxes
         for ax in self.axes:
-            if hasattr(ax, "set_global"):
+            if isinstance(ax, paxes.GeoAxes) and hasattr(ax, "set_global"):
                 ax.set_global()
 
     def _toggle_axis_sharing(self, *, which="y", share=True, panels=False):
