@@ -1249,11 +1249,40 @@ class Axes(maxes.Axes):
             width=tickwidth * tickwidthratio,
         )  # noqa: E501
         if label is not None:
-            obj.set_label(label)
+            # Note for some reason axis.set_label does not work here. We need to use set_x/ylabel explicitly
+            match loc:
+                case "top" | "bottom":
+                    if labelloc in (None, "top", "bottom"):
+                        obj.set_label(label)
+                    elif labelloc in ("left", "right"):
+                        obj.ax.set_ylabel(label)
+                    else:
+                        raise ValueError("Could not determined position")
+                case "left" | "right":
+                    if labelloc in (None, "left", "right"):
+                        obj.set_label(label)
+                    elif labelloc in ("top", "bottom"):
+                        obj.ax.set_xlabel(label)
+                    else:
+                        raise ValueError("Could not determined position")
+                # Default to setting label on long axis
+                case _:
+                    obj.set_label(label)
         if labelloc is not None:
+            # Temporarily modify the axis to set the label and its properties
+            match loc:
+                case "top" | "bottom":
+                    if labelloc in ("left", "right"):
+                        axis = obj._short_axis()
+                case "left" | "right":
+                    if labelloc in ("top", "bottom"):
+                        axis = obj._short_axis()
+                case _:
+                    raise ValueError("Location not understood.")
             axis.set_label_position(labelloc)
         axis.label.update(kw_label)
-        for label in axis.get_ticklabels():
+        # Assume ticks are set on the long axis(!)
+        for label in obj._long_axis().get_ticklabels():
             label.update(kw_ticklabels)
         kw_outline = {"edgecolor": color, "linewidth": linewidth}
         if obj.outline is not None:
