@@ -286,5 +286,7 @@ def test_label_placement_colorbar():
     fig, ax = uplt.subplots()
     h = ax.imshow(data)
     locs = "top bottom left right".split()
-    for loc, labelloc in zip(locs, locs):
+    from itertools import product
+
+    for loc, labelloc in product(locs, locs):
         ax.colorbar(h, loc=loc, labelloc=labelloc)
