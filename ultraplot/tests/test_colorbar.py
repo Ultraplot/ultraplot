@@ -275,3 +275,11 @@ def test_draw_edges():
         axi.colorbar(h, drawedges=drawedges)
         axi.set_title(f"{drawedges=}")
     return fig
+
+
+def test_label_placement_colorbar():
+    data = np.random.rand(10, 10)
+    fig, ax = uplt.subplots()
+    h = ax.imshow(data)
+    for labelloc in "top bottom left right".split():
+        ax.colorbar(h, loc="right", labelloc=labelloc)
