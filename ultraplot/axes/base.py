@@ -2293,6 +2293,35 @@ class Axes(maxes.Axes):
         else:
             return bbox.ymin, bbox.ymax
 
+    def _unshare(self, *, which: str):
+        """
+        Remove this Axes from the shared Grouper for the given axis ('x', 'y', 'z', or 'view').
+        """
+        if which not in self._shared_axes:
+            return
+
+        grouper = self._shared_axes[which]
+        try:
+            siblings = list(grouper.get_siblings(self))
+            for sibling in siblings:
+                if sibling is not self:
+                    # Unshare by removing them from the grouper
+                    grouper.remove(sibling)
+                    sibling._shared_axes[which].remove(self)
+                    # To be save let's remove this
+                    self._shared_axes[which].remove(sibling)
+
+                    sibling.tick_params(left=True, right=True, top=True)
+
+                    this_ax = getattr(self, f"{which}axis")
+                    sib_ax = getattr(sibling, f"{which}axis")
+
+                    this_ax.set_minor_locator(mticker.AutoLocator())
+                    this_ax.set_minor_formatter(pticker.AutoFormatter())
+
+        except Exception as e:
+            warnings._warn_ultraplot(f"Could not unshare {which}-axis: {e}")
+
     def _sharex_setup(self, sharex, **kwargs):
         """
         Configure x-axis sharing for panels. See also `~CartesianAxes._sharex_setup`.
@@ -2614,6 +2643,8 @@ class Axes(maxes.Axes):
         atext, ttext = aobj.get_text(), tobj.get_text()
         awidth = twidth = 0
         pad = (abcpad / 72) / self._get_size_inches()[0]
+        if np.isnan(pad):
+            pad = 0.0
         ha = aobj.get_ha()
 
         # Get dimensions of non-empty elements

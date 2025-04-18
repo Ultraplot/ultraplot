@@ -162,13 +162,54 @@ def test_geoticks():
 
 
 def test_geoticks_input_handling(recwarn):
-    fig, ax = plt.subplots(proj="aeqd")
+    fig, ax = plt.subplots(proj="aeqd", share=0)
     # Should warn that about non-rectilinear projection.
     with pytest.warns(plt.warnings.UltraplotWarning):
         ax.format(lonticklen=True)
-    # When set to None the latticks are not added.
-    # No warnings should be raised.
     ax.format(lonticklen=None)
     assert len(recwarn) == 0
+    # When set to None the latticks are not added.
+    # No warnings should be raised.
     # Can parse a string
     ax.format(lonticklen="1em")
+
+
+@pytest.mark.parametrize(
+    ("layout", "lonlabels", "latlabels"),
+    [
+        ([1, 2], "tb", "lr"),
+        ([1, 2], "r", "t"),
+        ([[1, 2, 3], [4, 5, 3]], "t", "lr"),
+    ],
+)
+@pytest.mark.mpl_image_compare
+def test_geoticks_shared(layout, lonlabels, latlabels):
+    fig, ax = plt.subplots(layout, proj="cyl", share="all")
+    ax.format(
+        latlim=(0, 10),  # smaller rangers are quicker
+        lonlim=(0, 10),
+        lonlines=10,
+        latlines=10,
+        land=True,  # enable land
+        labels=True,  # enable tick labels
+        latticklen=True,  # show ticks
+        lonticklen=True,  # show ticks
+        grid=True,
+        gridminor=False,
+        lonlabels=lonlabels,
+        latlabels=latlabels,
+    )
+    return fig
+
+
+def test_geoticks_shared_non_rectilinear():
+    with pytest.warns(plt.warnings.UltraplotWarning):
+        fig, ax = plt.subplots(ncols=2, proj="aeqd", share="all")
+        ax.format(
+            land=True,
+            labels=True,
+            lonlabels="all",
+            latlabels="all",
+        )
+        fig.canvas.draw()  # draw is necessary to invoke the warning
+    return fig
