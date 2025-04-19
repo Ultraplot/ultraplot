@@ -971,7 +971,7 @@ class Configurator(MutableMapping, dict):
         kw_matplotlib = {}  # builtin properties
         with warnings.catch_warnings():
             warnings.simplefilter("ignore", mpl.MatplotlibDeprecationWarning)
-            warnings.simplefilter("ignore", warnings.UltraplotWarning)
+            warnings.simplefilter("ignore", warnings.UltraPlotWarning)
             for key in keys:
                 if key in rc_matplotlib:
                     kw_matplotlib[key] = value
@@ -1636,28 +1636,28 @@ class Configurator(MutableMapping, dict):
                 added.add(key)
                 # Get child dictionaries. Careful to have informative messages
                 with warnings.catch_warnings():
-                    warnings.simplefilter("error", warnings.UltraplotWarning)
+                    warnings.simplefilter("error", warnings.UltraPlotWarning)
                     try:
                         key, value = self._validate_key(key, value)
                         value = self._validate_value(key, value)
                     except KeyError:
-                        warnings.simplefilter("default", warnings.UltraplotWarning)
+                        warnings.simplefilter("default", warnings.UltraPlotWarning)
                         warnings._warn_ultraplot(
                             f"Invalid rc key {key!r} on {message}."
                         )
                         continue
                     except ValueError as err:
-                        warnings.simplefilter("default", warnings.UltraplotWarning)
+                        warnings.simplefilter("default", warnings.UltraPlotWarning)
                         warnings._warn_ultraplot(
                             f"Invalid rc value {value!r} for key {key!r} on {message}: {err}"
                         )  # noqa: E501
                         continue
-                    except warnings.UltraplotWarning as err:
-                        warnings.simplefilter("default", warnings.UltraplotWarning)
+                    except warnings.UltraPlotWarning as err:
+                        warnings.simplefilter("default", warnings.UltraPlotWarning)
                         warnings._warn_ultraplot(
                             f"Outdated rc key {key!r} on {message}: {err}"
                         )  # noqa: E501
-                        warnings.simplefilter("ignore", warnings.UltraplotWarning)
+                        warnings.simplefilter("ignore", warnings.UltraPlotWarning)
                         key, value = self._validate_key(key, value)
                         value = self._validate_value(key, value)
                 # Update the settings
