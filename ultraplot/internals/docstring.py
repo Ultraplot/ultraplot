@@ -118,7 +118,7 @@ class _SnippetManager(dict):
         ``%(name)s`` is used rather than ``.format`` to support invalid identifiers.
         """
         if isinstance(obj, str):
-            obj %= self  # add snippets to a string
+            return obj
         else:
             obj.__doc__ = inspect.getdoc(obj)  # also dedents the docstring
             if obj.__doc__:
@@ -133,6 +133,13 @@ class _SnippetManager(dict):
         value = self(value)
         value = value.strip("\n")
         super().__setitem__(key, value)
+
+    def format_snippet(self, key):
+        """
+        Format a snippet when needed (e.g., just before use in a docstring).
+        """
+        snippet = self[key]
+        return snippet % self
 
 
 # Initiate snippets database

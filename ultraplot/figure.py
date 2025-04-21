@@ -1728,17 +1728,17 @@ class Figure(mfigure.Figure):
         Parameters
         ----------
         %(axes.colorbar_args)s
-        length : float, default: :rc:`colorbar.length`
+        length : float, default: :rc:colorbar.length
             The colorbar length. Units are relative to the span of the rows and
             columns of subplots.
         shrink : float, optional
-            Alias for `length`. This is included for consistency with
-            `matplotlib.figure.Figure.colorbar`.
-        width : unit-spec, default: :rc:`colorbar.width`
+            Alias for length. This is included for consistency with
+            matplotlib.figure.Figure.colorbar.
+        width : unit-spec, default: :rc:colorbar.width
             The colorbar width.
             %(units.in)s
         %(figure.colorbar_space)s
-            Has no visible effect if `length` is ``1``.
+            Has no visible effect if length is `1.
 
         Other parameters
         ----------------
@@ -1749,7 +1749,7 @@ class Figure(mfigure.Figure):
         ultraplot.axes.Axes.colorbar
         matplotlib.figure.Figure.colorbar
         """
-        # Backwards compatibility
+        # Backward compatibility handling
         ax = kwargs.pop("ax", None)
         cax = kwargs.pop("cax", None)
         if isinstance(values, maxes.Axes):
@@ -1758,38 +1758,47 @@ class Figure(mfigure.Figure):
         if isinstance(loc, maxes.Axes):
             ax = _not_none(ax_positional=loc, ax=ax)
             loc = None
-        # Helpful warning
+
         if kwargs.pop("use_gridspec", None) is not None:
             warnings._warn_ultraplot(
-                "Ignoring the 'use_gridspec' keyword. ultraplot always allocates "
-                "additional space for colorbars using the figure gridspec "
-                "rather than 'stealing space' from the parent subplot."
+                "Ignoring 'use_gridspec'. ultraplot allocates space for colorbars via the figure gridspec."
             )
-        # Fill this axes
+
+        # User provided their own axes (cax): pass to mpl colorbar
         if cax is not None:
-            with context._state_context(cax, _internal_call=True):  # do not wrap pcolor
-                cb = super().colorbar(mappable, cax=cax, **kwargs)
-        # Axes panel colorbar
-        elif ax is not None:
-            cb = ax.colorbar(
+            with context._state_context(cax, _internal_call=True):
+                return super().colorbar(mappable, cax=cax, **kwargs)
+
+        # Axes-local colorbar
+        if ax is not None:
+            return ax.colorbar(
                 mappable, values, space=space, pad=pad, width=width, **kwargs
             )
-        # Figure panel colorbar
-        else:
-            loc = _not_none(loc=loc, location=location, default="r")
-            ax = self._add_figure_panel(
-                loc,
-                row=row,
-                col=col,
-                rows=rows,
-                cols=cols,
-                span=span,
-                width=width,
-                space=space,
-                pad=pad,
-            )
-            cb = ax.colorbar(mappable, values, loc="fill", **kwargs)
-        return cb
+
+        # Figure panel colorbar (default)
+        loc = _not_none(loc=loc, location=location, default="r")
+        ax = self._add_figure_panel(
+            loc,
+            row=row,
+            col=col,
+            rows=rows,
+            cols=cols,
+            span=span,
+            width=width,
+            space=space,
+            pad=pad,
+        )
+        return UltraColorbar(
+            ax=ax,
+            mappable=mappable,
+            values=values,
+            loc="fill",
+            align=None,  # or infer from user args if you want
+            space=space,
+            pad=pad,
+            width=width,
+            **kwargs,
+        )
 
     @docstring._concatenate_inherited
     @docstring._snippet_manager

@@ -258,7 +258,7 @@ def test_minor_override():
     levels = np.linspace(left, right, n)
     fig, ax = uplt.subplots()
     m = ax.pcolormesh(data, colorbar="b", levels=levels)
-    cax = ax.colorbar(m, minorticks=minor)
+    cax = fig.colorbar(m, ax=ax, minorticks=minor)
     assert np.allclose(
         cax.minorlocator.tick_values(left, right),
         np.linspace(left - minor, right + minor, n * 2 + 1),
