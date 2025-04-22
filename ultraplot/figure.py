@@ -1684,7 +1684,11 @@ class Figure(mfigure.Figure):
             for cls, sig in paxes.Axes._format_signatures.items()
         }
         classes = set()  # track used dictionaries
-        for ax in axs:
+        for number, ax in enumerate(axs):
+            number = number + 1  # number from 1
+            store_old_number = ax.number
+            if ax.number != number:
+                ax.number = number
             kw = {
                 key: value
                 for cls, kw in kws.items()
@@ -1692,6 +1696,7 @@ class Figure(mfigure.Figure):
                 if isinstance(ax, cls) and not classes.add(cls)
             }
             ax.format(rc_kw=rc_kw, rc_mode=rc_mode, skip_figure=True, **kw, **kwargs)
+            ax.number = store_old_number
 
         # Warn unused keyword argument(s)
         kw = {
