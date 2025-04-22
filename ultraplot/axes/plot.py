@@ -1120,6 +1120,9 @@ See also
 --------
 networkx.draw
 networkx.draw_networkx
+networkx.draw_networkx_nodes
+networkx.draw_networkx_edges
+networkx.draw_networkx_labels
 """
 
 docstring._snippet_manager["plot.graph"] = _graph_docstring
