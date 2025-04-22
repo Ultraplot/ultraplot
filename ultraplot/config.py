@@ -822,7 +822,12 @@ class Configurator(MutableMapping, dict):
         rc_new = context.rc_new  # used for context-based _get_item_context
         rc_old = context.rc_old  # used to re-apply settings without copying whole dict
         for key, value in kwargs.items():
-            kw_ultraplot, kw_matplotlib = self._get_item_dicts(key, value)
+            try:
+                kw_ultraplot, kw_matplotlib = self._get_item_dicts(key, value)
+            except Exception as e:
+                self.__exit__()
+                raise e
+
             for rc_dict, kw_new in zip(
                 (rc_ultraplot, rc_matplotlib),
                 (kw_ultraplot, kw_matplotlib),
