@@ -175,3 +175,15 @@ def test_twin_axes_3():
         ax.format(ylabel="%s Thing" % color, ycolor=color)
     axs[0].format(xlabel="xlabel")
     return fig
+
+
+def test_subset_format():
+    fig, axs = uplt.subplots(nrows=1, ncols=3)
+    axs[1:].format(title=["a", "b"])  # allowed
+    # Subset formatting
+    axs[1:].format(title=["c", "d", "e"])  # allowed but does not use e
+    assert axs[-1].get_title() == "d"
+    assert axs[0].get_title() == ""
+    # Shorter than number of axs
+    with pytest.raises(ValueError):
+        axs.format(title=["a"])
