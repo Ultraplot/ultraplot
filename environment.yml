@@ -26,5 +26,6 @@ dependencies:
   - pre-commit
   - sphinx-design
   - networkx
+  - pyarrow
   - pip:
       - git+https://github.com/ultraplot/UltraTheme.git
