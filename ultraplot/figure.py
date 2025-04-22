@@ -30,6 +30,7 @@ from .internals import (
     labels,
     warnings,
 )
+from .colorbar import UltraColorbar
 from .utils import units
 
 __all__ = [
@@ -1793,7 +1794,7 @@ class Figure(mfigure.Figure):
             mappable=mappable,
             values=values,
             loc="fill",
-            align=None,  # or infer from user args if you want
+            align="center",  # just default
             space=space,
             pad=pad,
             width=width,

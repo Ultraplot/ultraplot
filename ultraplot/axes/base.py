@@ -848,7 +848,59 @@ class Axes(maxes.Axes):
 
     @warnings._rename_kwargs("0.10", rasterize="rasterized")
     def _add_colorbar(
-        self, mappable: mcm.ScalarMappable, values=None, **kwargs
+        self,
+        mappable,
+        values=None,
+        *,
+        loc=None,
+        align=None,
+        space=None,
+        pad=None,
+        width=None,
+        length=None,
+        shrink=None,
+        label=None,
+        title=None,
+        reverse=False,
+        rotation=None,
+        grid=None,
+        edges=None,
+        drawedges=None,
+        extend=None,
+        extendsize=None,
+        extendfrac=None,
+        ticks=None,
+        locator=None,
+        locator_kw=None,
+        format=None,
+        formatter=None,
+        ticklabels=None,
+        formatter_kw=None,
+        minorticks=None,
+        minorlocator=None,
+        minorlocator_kw=None,
+        tickminor=None,
+        ticklen=None,
+        ticklenratio=None,
+        tickdir=None,
+        tickdirection=None,
+        tickwidth=None,
+        tickwidthratio=None,
+        ticklabelsize=None,
+        ticklabelweight=None,
+        ticklabelcolor=None,
+        labelloc=None,
+        labellocation=None,
+        labelsize=None,
+        labelweight=None,
+        labelcolor=None,
+        c=None,
+        color=None,
+        lw=None,
+        linewidth=None,
+        edgefix=None,
+        rasterized=None,
+        **kwargs,
     ) -> UltraColorbar:
         """
         The driver function for adding axes colorbars.
@@ -856,7 +908,10 @@ class Axes(maxes.Axes):
         Creates an UltraColorbar instance and registers it with the parent figure.
         """
         # Create the enhanced colorbar
-        colorbar = UltraColorbar(ax=self, mappable=mappable, values=values, **kwargs)
+        params = locals()
+        params["ax"] = params.pop("self")
+        kwargs = params.pop("kwargs")
+        colorbar = UltraColorbar(**params, **kwargs)
 
         # Register the colorbar and return
         loc = kwargs.get("loc")
@@ -1341,115 +1396,6 @@ class Axes(maxes.Axes):
         kw_frame["fancybox"] = _not_none(fancybox, rc[f"{guide}.fancybox"])
         kw_frame["shadow"] = _not_none(shadow, rc[f"{guide}.shadow"])
         return kw_frame, kwargs
-
-    @staticmethod
-    def _parse_colorbar_arg(
-        mappable, values=None, norm=None, norm_kw=None, vmin=None, vmax=None, **kwargs
-    ):
-        """
-        Generate a mappable from flexible non-mappable input. Useful in bridging
-        the gap between legends and colorbars (e.g., creating colorbars from line
-        objects whose data values span a natural colormap range).
-        """
-        # For container objects, we just assume color is the same for every item.
-        # Works for ErrorbarContainer, StemContainer, BarContainer.
-        if (
-            np.iterable(mappable)
-            and len(mappable) > 0
-            and all(isinstance(obj, mcontainer.Container) for obj in mappable)
-        ):
-            mappable = [obj[0] for obj in mappable]
-
-        # Colormap instance
-        if isinstance(mappable, mcolors.Colormap) or isinstance(mappable, str):
-            cmap = constructor.Colormap(mappable)
-            if values is None and isinstance(cmap, pcolors.DiscreteColormap):
-                values = [None] * cmap.N  # sometimes use discrete norm
-
-        # List of colors
-        elif np.iterable(mappable) and all(map(mcolors.is_color_like, mappable)):
-            cmap = pcolors.DiscreteColormap(list(mappable), "_no_name")
-            if values is None:
-                values = [None] * len(mappable)  # always use discrete norm
-
-        # List of artists
-        # NOTE: Do not check for isinstance(Artist) in case it is an mpl collection
-        elif np.iterable(mappable) and all(
-            hasattr(obj, "get_color") or hasattr(obj, "get_facecolor")
-            for obj in mappable  # noqa: E501
-        ):
-            # Generate colormap from colors and infer tick labels
-            colors = []
-            for obj in mappable:
-                if hasattr(obj, "update_scalarmappable"):  # for e.g. pcolor
-                    obj.update_scalarmappable()
-                color = (
-                    obj.get_color()
-                    if hasattr(obj, "get_color")
-                    else obj.get_facecolor()
-                )  # noqa: E501
-                if isinstance(color, np.ndarray):
-                    color = color.squeeze()  # e.g. single color scatter plot
-                if not mcolors.is_color_like(color):
-                    raise ValueError(
-                        "Cannot make colorbar from artists with more than one color."
-                    )  # noqa: E501
-                colors.append(color)
-            # Try to infer tick values and tick labels from Artist labels
-            cmap = pcolors.DiscreteColormap(colors, "_no_name")
-            if values is None:
-                values = [None] * len(mappable)
-            else:
-                values = list(values)
-            for i, (obj, val) in enumerate(zip(mappable, values)):
-                if val is not None:
-                    continue
-                val = obj.get_label()
-                if val and val[0] == "_":
-                    continue
-                values[i] = val
-
-        else:
-            raise ValueError(
-                "Input colorbar() argument must be a scalar mappable, colormap name "
-                f"or object, list of colors, or list of artists. Got {mappable!r}."
-            )
-
-        # Generate continuous normalizer, and possibly discrete normalizer. Update
-        # the outgoing locator and formatter if user does not override.
-        norm_kw = norm_kw or {}
-        norm = norm or "linear"
-        vmin = _not_none(vmin=vmin, norm_kw_vmin=norm_kw.pop("vmin", None), default=0)
-        vmax = _not_none(vmax=vmax, norm_kw_vmax=norm_kw.pop("vmax", None), default=1)
-        norm = constructor.Norm(norm, vmin=vmin, vmax=vmax, **norm_kw)
-        if values is not None:
-            ticks = []
-            labels = None
-            for i, val in enumerate(values):
-                try:
-                    val = float(val)
-                except (TypeError, ValueError):
-                    pass
-                if val is None:
-                    val = i
-                ticks.append(val)
-            if any(isinstance(_, str) for _ in ticks):
-                labels = list(map(str, ticks))
-                ticks = np.arange(len(ticks))
-            if len(ticks) == 1:
-                levels = [ticks[0] - 1, ticks[0] + 1]
-            else:
-                levels = edges(ticks)
-            from . import PlotAxes
-
-            norm, cmap, _ = PlotAxes._parse_level_norm(
-                levels, norm, cmap, discrete_ticks=ticks, discrete_labels=labels
-            )
-
-        # Return ad hoc ScalarMappable and update locator and formatter
-        # NOTE: If value list doesn't match this may cycle over colors.
-        mappable = mcm.ScalarMappable(norm, cmap)
-        return mappable, kwargs
 
     def _parse_colorbar_filled(
         self,
