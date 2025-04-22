@@ -186,3 +186,13 @@
         display: none; /* Hide on smaller screens */
     }
 }
+
+.output_area.docutils.container {
+    text-align: center; /* Centers inline or inline-block children horizontally */
+}
+
+/* Optional: Ensure image respects container boundaries */
+.output_area.docutils.container img {
+    max-width: 100%; /* Prevents image from overflowing its container */
+    height: auto; /* Maintains aspect ratio */
+}
