@@ -130,6 +130,7 @@ For more details, check the full :doc:`User guide <usage>` and :doc:`API Referen
    basics
    subplots
    cartesian
+   networks
    projections
    colorbars_legends
    insets_panels

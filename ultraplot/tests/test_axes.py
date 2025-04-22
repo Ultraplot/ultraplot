@@ -187,3 +187,20 @@ def test_subset_format():
     # Shorter than number of axs
     with pytest.raises(ValueError):
         axs.format(title=["a"])
+
+
+def test_toggling_spines():
+    """Test private function to toggle spines"""
+    fig, ax = uplt.subplots()
+    # Need to get the actual ax not the SubplotGridspec
+    ax[0]._toggle_spines(True)
+    assert ax.spines["bottom"].get_visible()
+    assert ax.spines["top"].get_visible()
+    assert ax.spines["left"].get_visible()
+    assert ax.spines["right"].get_visible()
+    ax[0]._toggle_spines(False)
+    assert not ax.spines["bottom"].get_visible()
+    assert not ax.spines["top"].get_visible()
+    assert not ax.spines["left"].get_visible()
+    ax[0]._toggle_spines(spines=["left"])
+    assert ax.spines["left"].get_visible()

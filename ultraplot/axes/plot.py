@@ -9,7 +9,8 @@ import itertools
 import re
 import sys
 from numbers import Integral, Number
-from typing import Any
+from typing import Any, Union
+from collections.abc import Callable
 from collections.abc import Iterable
 
 import matplotlib.artist as martist
@@ -1066,6 +1067,62 @@ docstring._snippet_manager["plot.tricontourf"] = _contour_docstring.format(
     command="tricontourf",
     edgefix="\n%(axes.edgefix)s",  # noqa: E501
 )
+
+_graph_docstring = r"""
+Plot a networkx graph with flexible node, edge, and label options.
+
+Parameters
+----------
+g : networkx.Graph
+    The graph object to be plotted. Can be any subclass of `networkx.Graph`, such as
+    `networkx.DiGraph` or `networkx.MultiGraph`.
+layout : callable or dict, optional
+    A layout function or a precomputed dict mapping nodes to 2D positions. If a function
+    is given, it is called as ``layout(g, **layout_kw)`` to compute positions.
+layout_kw : dict, default: {}
+    Keyword arguments passed to the layout function, if `layout` is callable.
+node_kw : dict, default: {}
+    Additional keyword arguments passed to the node drawing function. These can include
+    size, color, edgecolor, cmap, alpha, etc., depending on the backend used.
+edge_kw : dict, default: {}
+    Additional keyword arguments passed to the edge drawing function. These can include
+    width, color, style, alpha, arrows, etc.
+label_kw : dict, default: {}
+    Additional keyword arguments passed to the label drawing function, such as font size,
+    font color, background color, alignment, etc.
+labels : bool or iterable, default: False
+    Whether to show node labels. If `True`, labels are drawn using node names. If an
+    iterable is given, only those nodes are labeled.
+nodes : bool or iterable, default: True
+    Which nodes to draw. If `True`, all nodes are drawn. If an iterable is provided, only
+    the specified nodes are included.
+edges : bool or iterable, default: True
+    Which edges to draw. If `True`, all edges are drawn. If an iterable of edge tuples is
+    provided, only those edges are included.
+grid : bool, default: False
+    Whether to show a background grid.
+aspect : {'equal', 'auto'} or float, default: 'equal'
+    The aspect ratio of the plot. `'equal'` ensures that the units are the same in every direction.
+    `'auto'` lets the axes scale independently. A float can specify a custom aspect ratio.
+facecolor : str or None, default: None
+    The background color of the plot area. If ``None``, the default facecolor is used.
+spines : bool or iterable, default: False
+    Whether to show axis spines (borders around the plot). If `True`, all spines are shown.
+    If an iterable is given, only the specified spines (e.g., ``['left', 'bottom']``) are displayed.
+rescale : bool, default: False
+    Whether to rescale the plot to fit the data. See networkx docs for more information
+
+Returns
+-------
+Nodes, edges, labels output from the networkx drawing functions.
+
+See also
+--------
+networkx.draw
+networkx.draw_networkx
+"""
+
+docstring._snippet_manager["plot.graph"] = _graph_docstring
 
 
 # Pcolor docstring
@@ -3665,6 +3722,134 @@ class PlotAxes(base.Axes):
         # wrappers using the function name.
         kwargs = _parse_vert(default_vert=False, **kwargs)
         return self._apply_fill(*args, **kwargs)
+
+    @docstring._snippet_manager
+    def graph(
+        self,
+        g: Union["nx.Graph", np.ndarray],
+        layout=None,
+        layout_kw={},
+        node_kw={},
+        edge_kw={},
+        label_kw={},
+        labels: Union[bool, Iterable] = False,
+        nodes: Union[bool, Iterable] = True,
+        edges: Union[bool, Iterable] = True,
+        grid=False,
+        aspect="equal",
+        facecolor: Union[str, None] = None,
+        spines: Union[bool, Iterable] = False,
+        rescale=True,
+    ):
+        """
+        %(plot.graph)s
+        """
+        import networkx as nx
+
+        match g:
+            case np.ndarray():
+                # Check if g is an adjacency matrix
+                assert len(g.shape) == 2
+                x, y = g.shape[:2]
+                if x == y:
+                    g = nx.from_numpy_array(g)
+                else:
+                    # Assume edgelist
+                    g = nx.from_edgelist(g)
+            case nx.Graph() | nx.DiGraph() | nx.MultiGraph() | nx.MultiDiGraph():
+                pass
+            case _:
+                raise TypeError(f"Unsupported graph type: {type(g)}")
+
+        match layout:
+            case str():
+                layout_name = (
+                    layout if layout.endswith("_layout") else layout + "_layout"
+                )
+                pos = getattr(nx, layout_name)(g, **layout_kw)
+            case layout if isinstance(layout, Callable):
+                pos = layout(g, **layout_kw)
+            case dict():
+                pos = layout
+            case _:
+                pos = nx.kamada_kawai_layout(g)
+
+        if rescale:
+            # Normalize node positions to fit in a [0, 1] x [0, 1] box.
+
+            xs = [x for x, y in pos.values()]
+            ys = [y for x, y in pos.values()]
+
+            min_x, max_x = min(xs), max(xs)
+            min_y, max_y = min(ys), max(ys)
+
+            width = max_x - min_x
+            height = max_y - min_y
+            pos = {
+                k: (
+                    (x - min_x) / width if width else 0.5,
+                    (y - min_y) / height if height else 0.5,
+                )
+                for k, (x, y) in pos.items()
+            }
+        # Set a sensible default if not given
+        if "node_size" not in node_kw:
+            coords = np.array(list(pos.values()))
+            xlim = self.get_xlim()
+            ylim = self.get_ylim()
+
+            # Size of data space shown
+            data_span = np.array([xlim[1] - xlim[0], ylim[1] - ylim[0]])
+            axis_bbox = self.get_window_extent().transformed(
+                self.figure.dpi_scale_trans.inverted()
+            )
+            axis_size_inch = np.array([axis_bbox.width, axis_bbox.height])
+            dpi = self.figure.dpi
+            axis_size_px = axis_size_inch * dpi
+
+            # Convert a fixed pixel diameter  into data units
+            desired_px_diameter = 7  # px
+            data_units_per_px = data_span / axis_size_px
+            data_diameter = np.mean(data_units_per_px) * desired_px_diameter
+
+            # Convert to `node_size` in pt² (as required by nx.draw)
+            # 1 point = 1/72 inch → diameter in points = (desired_px / dpi) * 72
+            diameter_inch = desired_px_diameter / dpi
+            diameter_pt = diameter_inch * 72
+            radius_pt = diameter_pt / 2
+            node_size = np.pi * radius_pt**2  # area in pt²
+            node_kw["node_size"] = node_size
+
+        # By default soften the edge alpha to prevent "hairball " effect
+        if "alpha" not in edge_kw:
+            n_edges = g.number_of_edges()
+            n = g.number_of_nodes()
+            # For more edges reduce the alpha for the edges
+            alpha = 1 - np.exp(-n_edges / (n - 1))
+            edge_kw["alpha"] = max(
+                alpha, 0.1
+            )  # with a cutt-off to prevent dissapearence for complete graphs
+
+        # Draw the graph using networks functions
+        if nodes:
+            if np.iterable(nodes):
+                node_kw["nodelist"] = nodes
+            nodes = nx.draw_networkx_nodes(g, pos=pos, ax=self, **node_kw)
+        if edges:
+            if np.iterable(edges):
+                edge_kw["edgelist"] = edges
+            edges = nx.draw_networkx_edges(g, pos=pos, ax=self, **edge_kw)
+        if labels:
+            if np.iterable(labels):
+                label_kw["labels"] = labels
+            labels = nx.draw_networkx_labels(g, pos=pos, ax=self, **label_kw)
+
+        # Apply styling
+        self.set_aspect(aspect)
+        self.grid(grid)
+        self.set_facecolor("none")
+        self._toggle_spines(spines)
+        return nodes, edges, labels
 
     @staticmethod
     def _convert_bar_width(x, width=1):
