@@ -193,6 +193,7 @@
 
 /* Optional: Ensure image respects container boundaries */
 .output_area.docutils.container img {
-    max-width: 100%; /* Prevents image from overflowing its container */
-    height: auto; /* Maintains aspect ratio */
+    width: 100%;
+    height: auto;
+    display: block;
 }
