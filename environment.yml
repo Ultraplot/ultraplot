@@ -25,5 +25,6 @@ dependencies:
   - basemap >=1.4.1
   - pre-commit
   - sphinx-design
+  - pyarrow
   - pip:
       - git+https://github.com/ultraplot/UltraTheme.git
