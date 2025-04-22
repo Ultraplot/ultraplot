@@ -183,6 +183,7 @@ def test_subset_format():
     # Subset formatting
     axs[1:].format(title=["c", "d", "e"])  # allowed but does not use e
     assert axs[-1].get_title() == "d"
+    assert axs[0].get_title() == ""
     # Shorter than number of axs
     with pytest.raises(ValueError):
         axs.format(title=["a"])
