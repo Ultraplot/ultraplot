@@ -204,3 +204,7 @@ def test_toggling_spines():
     assert not ax.spines["left"].get_visible()
     ax[0]._toggle_spines(spines=["left"])
     assert ax.spines["left"].get_visible()
+    ax[0]._toggle_spines(spines="right")
+    assert ax.spines["right"].get_visible()
+    with pytest.raises(ValueError):
+        ax[0]._toggle_spines(spines=1)

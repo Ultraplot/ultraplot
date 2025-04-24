@@ -3325,13 +3325,13 @@ class Axes(maxes.Axes):
         """
         if spines:
             match spines:
+                case str():
+                    toggle_spines = {spines: True}
                 case IterableType():
                     toggle_spines = {spine: True for spine in spines}
                 case bool():
                     toggler = spines
                     toggle_spines = {spine: toggler for spine in self.spines}
-                case str():
-                    toggle_spines = dict(spines=True)
                 case _:
                     raise ValueError(
                         f"Invalid input for spines. Received {type(spines)} expecting iterable, string or boolean"
