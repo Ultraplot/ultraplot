@@ -72,7 +72,9 @@ def test_graph_layout_input():
 
 
 def test_graph_rescale():
-    """ """
+    """
+    Graphs can be normalized within a box [0,1]^2 using rescale.
+    """
     import networkx as nx
 
     g = nx.path_graph(5)
