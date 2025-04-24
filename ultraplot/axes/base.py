@@ -8,6 +8,7 @@ import inspect
 import re
 from numbers import Integral
 from typing import Union, Iterable
+from collections.abc import Iterable as IterableType
 
 import matplotlib.axes as maxes
 import matplotlib.axis as maxis
@@ -3323,17 +3324,18 @@ class Axes(maxes.Axes):
         Turns spines on or off depending on input. Spines can be a list such as ['left', 'right'] etc
         """
         if spines:
-            if np.iterable(spines):
-                toggle_spines = {spine: True for spine in spines}
-            elif spines is bool:
-                toggler = spines
-                toggle_spines = {spine: toggler for spine in self.spines}
-            elif spines is str:
-                toggle_spines = dict(spines=True)
-            else:
-                raise ValueError(
-                    f"Invalid input for spines. Received {type(spines)} expecting iterable, string or boolean"
-                )
+            match spines:
+                case IterableType():
+                    toggle_spines = {spine: True for spine in spines}
+                case bool():
+                    toggler = spines
+                    toggle_spines = {spine: toggler for spine in self.spines}
+                case str():
+                    toggle_spines = dict(spines=True)
+                case _:
+                    raise ValueError(
+                        f"Invalid input for spines. Received {type(spines)} expecting iterable, string or boolean"
+                    )
             for side, spine in self.spines.items():
                 spine.set_visible(False)
                 if side in toggle_spines:
