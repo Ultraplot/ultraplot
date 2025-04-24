@@ -3850,7 +3850,7 @@ class PlotAxes(base.Axes):
         # Apply styling
         self.set_aspect(aspect)
         self.grid(grid)
-        self.set_facecolor("none")
+        self.set_facecolor(facecolor)
         self._toggle_spines(spines)
         return nodes, edges, labels
 
