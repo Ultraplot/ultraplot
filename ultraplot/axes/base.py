@@ -2296,6 +2296,7 @@ class Axes(maxes.Axes):
     def _unshare(self, *, which: str):
         """
         Remove this Axes from the shared Grouper for the given axis ('x', 'y', 'z', or 'view').
+        Note this isolates the axis and does not preserve the transitivity of sharing.
         """
         if which not in self._shared_axes:
             return
@@ -2315,9 +2316,13 @@ class Axes(maxes.Axes):
 
                     this_ax = getattr(self, f"{which}axis")
                     sib_ax = getattr(sibling, f"{which}axis")
-
+                    # Reset formatters
+                    this_ax.set_major_locator(mticker.AutoLocator())
+                    this_ax.set_major_formatter(pticker.AutoFormatter())
                     this_ax.set_minor_locator(mticker.AutoLocator())
                     this_ax.set_minor_formatter(pticker.AutoFormatter())
+            if which in "xy":
+                setattr(self, f"_{which}share", None)  # essential
 
         except Exception as e:
             warnings._warn_ultraplot(f"Could not unshare {which}-axis: {e}")
