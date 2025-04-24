@@ -1106,7 +1106,7 @@ aspect : {'equal', 'auto'} or float, default: 'equal'
     `'auto'` lets the axes scale independently. A float can specify a custom aspect ratio.
 facecolor : str or None, default: None
     The background color of the plot area. If ``None``, the default facecolor is used.
-spines : bool or iterable, default: False
+spines : bool, iterable or str, default: False
     Whether to show axis spines (borders around the plot). If `True`, all spines are shown.
     If an iterable is given, only the specified spines (e.g., ``['left', 'bottom']``) are displayed.
 rescale : bool, default: False
@@ -3741,7 +3741,7 @@ class PlotAxes(base.Axes):
         grid=False,
         aspect="equal",
         facecolor: Union[str, None] = None,
-        spines: Union[bool, Iterable] = False,
+        spines: Union[bool, Iterable, str] = False,
         rescale=True,
     ):
         """
