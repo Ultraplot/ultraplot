@@ -3324,10 +3324,19 @@ class Axes(maxes.Axes):
         """
         if spines:
             if np.iterable(spines):
-                for spine in spines:
-                    self.spines[spine].set_visible(True)
+                toggle_spines = {spine: True for spine in spines}
+            elif spines is bool:
+                toggler = spines
+                toggle_spines = {spine: toggler for spine in self.spines}
+            elif spines is str:
+                toggle_spines = dict(spines=True)
             else:
-                for spine in self.spines.values():
+                raise ValueError(
+                    f"Invalid input for spines. Received {type(spines)} expecting iterable, string or boolean"
+                )
+            for side, spine in self.spines.items():
+                spine.set_visible(False)
+                if side in toggle_spines:
                     spine.set_visible(True)
         else:
             for spine in self.spines.values():
