@@ -92,7 +92,7 @@ def test_graph_rescale():
     xlim_not_scaled = ax.get_xlim()
     ylim_not_scaled = ax.get_ylim()
 
-    assert xlim_not_scaled[0] != xlim_scaled[0]
-    assert xlim_not_scaled[1] != xlim_scaled[1]
-    assert ylim_not_scaled[0] != ylim_scaled[0]
-    assert ylim_not_scaled[1] != ylim_scaled[1]
+    assert not np.allclose(xlim_not_scaled[0], xlim_scaled[0])
+    assert not np.allclose(xlim_not_scaled[1], xlim_scaled[1])
+    assert not np.allclose(ylim_not_scaled[0], ylim_scaled[0])
+    assert not np.allclose(ylim_not_scaled[1], ylim_scaled[1])
