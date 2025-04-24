@@ -3318,7 +3318,7 @@ class Axes(maxes.Axes):
         )
         return obj
 
-    def _toggle_spines(self, spines: Union[bool, Iterable]):
+    def _toggle_spines(self, spines: Union[bool, Iterable, str]):
         """
         Turns spines on or off depending on input. Spines can be a list such as ['left', 'right'] etc
         """
