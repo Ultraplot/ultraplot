@@ -1735,16 +1735,11 @@ class Figure(mfigure.Figure):
             for cls, sig in paxes.Axes._format_signatures.items()
         }
         classes = set()  # track used dictionaries
-<<<<<<< HEAD
-        for ax in axs:
-            # Only remove the properties once for each kind
-=======
         for number, ax in enumerate(axs):
             number = number + 1  # number from 1
             store_old_number = ax.number
             if ax.number != number:
                 ax.number = number
->>>>>>> main
             kw = {
                 key: value
                 for cls, kw in kws.items()
