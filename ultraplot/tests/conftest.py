@@ -60,7 +60,7 @@ class StoreFailedMplPlugin:
     def pytest_runtest_logreport(self, report):
         """Hook that processes each test report."""
         # Delete successfull tests
-        if not report.failed:
+        if report.when == "call" and report.failed == False:
             if self._has_mpl_marker(report):
                 self._remove_success(report)
 
