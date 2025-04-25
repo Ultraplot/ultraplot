@@ -190,8 +190,9 @@ def test_subset_format():
     # Dummy failure of existing
     assert False
 
+
 @pytest.mark.mpl_image_compare
-def test_dummy:
+def test_dummy():
     # should not show up in compare
     fig, ax = uplt.subplots()
     return fig
