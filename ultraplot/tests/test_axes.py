@@ -187,4 +187,3 @@ def test_subset_format():
     # Shorter than number of axs
     with pytest.raises(ValueError):
         axs.format(title=["a"])
-    # Dummy failure of existing
