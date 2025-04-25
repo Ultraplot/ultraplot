@@ -187,9 +187,3 @@ def test_subset_format():
     # Shorter than number of axs
     with pytest.raises(ValueError):
         axs.format(title=["a"])
-
-
-@pytest.mark.mpl_image_compare()
-def test_dymmy():
-    fig, ax = uplt.subplots()
-    return fig
