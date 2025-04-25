@@ -81,6 +81,7 @@ class SkipMissingBaseline:
 
     def baseline_exists(self, item):
         name = item.originalname
+        print(f"Checking for baseline at: {self.baseline_dir / f'{name}.png'}")
         return Path(self.baseline_dir / f"{name}.png").exists()
 
     def skip_baseline_if_not_exists(self, item):
