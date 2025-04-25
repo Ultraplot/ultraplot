@@ -68,6 +68,7 @@ class SkipMissingBaseline:
     def __init__(self, config):
         self.config = config
         baseline_path = config.getoption("--mpl-baseline-path", default=None)
+        self.baseline_dir = None
         if baseline_path:
             self.baseline_dir = Path(baseline_path)
         self.run = (
@@ -81,7 +82,7 @@ class SkipMissingBaseline:
         return Path(self.baseline_dir / f"{name}.png").exists()
 
     def skip_baseline_if_not_exists(self, item):
-        if not self.run:
+        if self.run == False or self.baseline_dir is None:
             return
         for mark in item.own_markers:
             if mark.name == "mpl_image_compare":
