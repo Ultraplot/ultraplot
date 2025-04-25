@@ -1,6 +1,6 @@
 import os, shutil, pytest, re, numpy as np, ultraplot as uplt
 from pathlib import Path
-import warnings
+import warnings, logging
 
 
 @pytest.fixture(autouse=True)
@@ -74,6 +74,7 @@ class StoreFailedMplPlugin:
 def pytest_configure(config):
     print("Configuring StoreFailedMplPlugin")
     # Surpress ultraplot config loading which mpl does not recognize
+    logging.getLogger("matplotlib").setLevel(logging.ERROR)
     if rc_file := config.getoption("--mpl-default-style", None):
         warnings.filterwarnings(
             "ignore",
