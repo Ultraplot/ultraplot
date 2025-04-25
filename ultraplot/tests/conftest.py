@@ -75,6 +75,7 @@ def pytest_configure(config):
     print("Configuring StoreFailedMplPlugin")
     # Surpress ultraplot config loading which mpl does not recognize
     logging.getLogger("matplotlib").setLevel(logging.ERROR)
+    logging.getLogger("ultraplot").setLevel(logging.WARNING)
     if rc_file := config.getoption("--mpl-default-style", None):
         warnings.filterwarnings(
             "ignore",
