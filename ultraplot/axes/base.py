@@ -2345,7 +2345,6 @@ class Axes(maxes.Axes):
                 self._shared_axes[which].remove(sibling)
                 if which in "xy":
                     setattr(sibling, f"_share{which}", None)
-                    print(which, sibling._sharex, sibling._sharey, sibling)
 
                 sibling.tick_params(left=True, right=True, top=True)
 
