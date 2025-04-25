@@ -1265,6 +1265,13 @@ class Axes(maxes.Axes):
                         obj.ax.set_xlabel(label)
                     else:
                         raise ValueError("Could not determined position")
+                case "fill":
+                    if labelloc in ("left", "right"):
+                        obj.ax.set_ylabel(label)
+                    elif labelloc in ("top", "bottom"):
+                        obj.ax.set_xlabel(label)
+                    else:
+                        raise ValueError("Could not determined position")
                 # Default to setting label on long axis
                 case _:
                     obj.set_label(label)
@@ -1276,6 +1283,11 @@ class Axes(maxes.Axes):
                         axis = obj._short_axis()
                 case "left" | "right":
                     if labelloc in ("top", "bottom"):
+                        axis = obj._short_axis()
+                case "fill":
+                    if labelloc in ("top", "bottom"):
+                        axis = obj._long_axis()
+                    elif labelloc in ("left", "right"):
                         axis = obj._short_axis()
                 case _:
                     raise ValueError("Location not understood.")
