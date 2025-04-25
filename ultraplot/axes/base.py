@@ -1257,14 +1257,14 @@ class Axes(maxes.Axes):
                     elif labelloc in ("left", "right"):
                         obj.ax.set_ylabel(label)
                     else:
-                        raise ValueError("Could not determined position")
+                        raise ValueError("Could not determine position")
                 case "left" | "right":
                     if labelloc in (None, "left", "right"):
                         obj.set_label(label)
                     elif labelloc in ("top", "bottom"):
                         obj.ax.set_xlabel(label)
                     else:
-                        raise ValueError("Could not determined position")
+                        raise ValueError("Could not determine position")
                 case "fill":
                     if labelloc in ("left", "right"):
                         obj.ax.set_ylabel(label)
