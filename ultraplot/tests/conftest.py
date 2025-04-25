@@ -54,8 +54,6 @@ class StoreFailedMplPlugin:
         target = (self.result_dir / name).absolute()
         if target.is_dir():
             shutil.rmtree(target)
-        else:
-            print(f"Did not find {report.nodeid}")
 
     @pytest.hookimpl(trylast=True)
     def pytest_runtest_logreport(self, report):
@@ -64,6 +62,12 @@ class StoreFailedMplPlugin:
             # Delete successfull tests
             if report.failed == False:
                 if self._has_mpl_marker(report):
+                    msg = str(report.longrepr)
+                    conditions = ("baseline_image", "does not exist")
+                    if all(cond in msg for cond in conditions):
+                        report.outcome = "skipped"
+                        report.wasxfail = False
+                        report.longexpr = "Skipped. Basline Image does not exist. Probably a new test was added."
                     self._remove_success(report)
             else:
                 print(f"{report.failed=}")
