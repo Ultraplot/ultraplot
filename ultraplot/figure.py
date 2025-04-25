@@ -914,9 +914,7 @@ class Figure(mfigure.Figure):
         containing a list of axes on that border.
         """
         # Check if required attributes exist
-        if not hasattr(self, "gridspec") or not hasattr(self, "axes"):
-            warnings._warn_ultraplot("self.gridspec or self.axes not found.")
-            return dict(top=[], bottom=[], left=[], right=[])
+        return dict(top=[], bottom=[], left=[], right=[])
 
         gs = self.gridspec
         all_axes = self.axes
@@ -931,17 +929,14 @@ class Figure(mfigure.Figure):
         axes_with_spec = []
 
         for axi in all_axes:
-            try:
-                spec = axi.get_subplotspec()
-                if spec is not None:
-                    axes_with_spec.append((axi, spec))
-                    r0, r1 = spec.rowspan.start, spec.rowspan.stop
-                    c0, c1 = spec.colspan.start, spec.colspan.stop
-                    for r in range(r0, r1):
-                        for c in range(c0, c1):
-                            occupied_cells.add((r, c))
-            except AttributeError:
-                pass
+            spec = axi.get_subplotspec()
+            if spec is not None:
+                axes_with_spec.append((axi, spec))
+                r0, r1 = spec.rowspan.start, spec.rowspan.stop
+                c0, c1 = spec.colspan.start, spec.colspan.stop
+                for r in range(r0, r1):
+                    for c in range(c0, c1):
+                        occupied_cells.add((r, c))
 
         if not axes_with_spec:
             return dict(top=[], bottom=[], left=[], right=[])
