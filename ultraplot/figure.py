@@ -1137,9 +1137,13 @@ class Figure(mfigure.Figure):
                 and not ax._is_rectilinear()
             ):
                 self._unshare_axes()
-                warnings._warn_ultraplot(
-                    f"GeoAxes can only be shared for rectilinear projections, {ax.projection=} is not a rectilinear projection."
-                )
+                if self._WARN_SHARING_GEOAXIS:
+                    warnings._warn_ultraplot(
+                        f"GeoAxes can only be shared for rectilinear projections, {ax.projection=} is not a rectilinear projection."
+                    )
+                    # Only warn once
+                    self._WARN_SHARING_GEOAXIS = False
+
         if ax.number:
             self._subplot_dict[ax.number] = ax
         return ax
@@ -1177,14 +1181,16 @@ class Figure(mfigure.Figure):
             self._sharey = share
 
         # Iterate through all the axes and unshare them if share is False
-        for ax in self._iter_axes(hidden=False, children=False, panels=panels):
+        seen = set()
+        for ax in self._iter_axes(hidden=hidden, children=children, panels=panels):
             group = ax._get_share_axes(which, panels=panels)
-            ax._unshare(which=which)
+            if share == 0:
+                ax._unshare(which=which)
             group = [a for a in group if a not in seen]
             if not group:
                 continue
             seen.update(group)
-            ref = group[0]
+            ref = group[0]  # this should be the parent
             for other in group:
                 if share > 0 and other is not ref:
                     if other not in ref._shared_axes[which]:
