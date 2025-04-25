@@ -1273,7 +1273,7 @@ class Axes(maxes.Axes):
                     elif labelloc is None:
                         obj.set_label(label)
                     else:
-                        raise ValueError("Could not determined position")
+                        raise ValueError("Could not determine position")
                 # Default to setting label on long axis
                 case _:
                     obj.set_label(label)
