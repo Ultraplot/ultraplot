@@ -288,3 +288,15 @@ def test_label_placement_colorbar():
     locs = "top bottom left right".split()
     for loc, labelloc in zip(locs, locs):
         ax.colorbar(h, loc=loc, labelloc=labelloc)
+
+
+@pytest.mark.mpl_image_compare
+def test_label_placement_fig_colorbar2():
+    """
+    Ensure that all potential combinations of colorbar
+    label placement is possible.
+    """
+    cmap = uplt.Colormap("plasma_r")
+    fig, axs = uplt.subplots(nrows=1, ncols=2)
+    fig.colorbar(cmap, loc="bottom", label="My Label", labelloc="right")
+    return fig
