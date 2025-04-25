@@ -229,6 +229,8 @@ def test_sharing_labels_top_right_odd_layout():
             for label in getattr(ax[number], f"get_{which}ticklabels")():
                 assert label.get_visible() == state
 
+    # these correspond to the indices of the axis
+    # in the axes array (so the grid number minus 1)
     check_state([0, 2], False, which="y")
     check_state([1, 3, 4], True, which="y")
     check_state([2, 3], False, which="x")
@@ -246,6 +248,8 @@ def test_sharing_labels_top_right_odd_layout():
         xticklabelloc="t",
         yticklabelloc="r",
     )
+    # these correspond to the indices of the axis
+    # in the axes array (so the grid number minus 1)
     check_state([0, 3], False, which="y")
     check_state([1, 2, 4], True, which="y")
     check_state([0, 1, 2], True, which="x")
