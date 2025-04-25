@@ -1,6 +1,6 @@
 import os, shutil, pytest, re, numpy as np, ultraplot as uplt
 from pathlib import Path
-import warnings, logging, sys
+import warnings, logging
 
 
 @pytest.fixture(autouse=True)
@@ -54,57 +54,33 @@ class StoreFailedMplPlugin:
         target = (self.result_dir / name).absolute()
         if target.is_dir():
             shutil.rmtree(target)
+        else:
+            print(f"Did not find {report.nodeid}")
 
     @pytest.hookimpl(trylast=True)
     def pytest_runtest_logreport(self, report):
         """Hook that processes each test report."""
-        # Delete successfull tests
-        if not report.failed:
-            if self._has_mpl_marker(report):
-                self._remove_success(report)
-
-
-class SkipMissingBaseline:
-    def __init__(self, config):
-        self.config = config
-        baseline_path = config.getoption("--mpl-baseline-path", default=None)
-        self.baseline_dir = None
-        if baseline_path:
-            self.baseline_dir = Path(baseline_path)
-
-        # Don't run if we are generating baselines
-        self.run = False
-        if config.getoption("--mpl-generate-path", default=None):
-            self.run = False
-        if self.run:
-            print(f"Skipping baseline images that don't exist")
-
-    def baseline_exists(self, item):
-        name = item.originalname
-        print(f"Checking for baseline at: {self.baseline_dir / f'{name}.png'}")
-        return Path(self.baseline_dir / f"{name}.png").exists()
-
-    def skip_baseline_if_not_exists(self, item):
-        if self.run == False or self.baseline_dir is None:
-            return
-        for mark in item.own_markers:
-            if mark.name == "mpl_image_compare":
-                if not self.baseline_exists(item):
-                    pytest.skip(f"Baseline image does not exist")
-
-
-def pytest_collection_modifyitems(config, items):
-    helper = SkipMissingBaseline(config)
-    for item in items:
-        helper.skip_baseline_if_not_exists(item)
+        if report.when == "call":
+            # Delete successfull tests
+            if report.failed == False:
+                if self._has_mpl_marker(report):
+                    self._remove_success(report)
+            else:
+                print(f"{report.failed=}")
+                print(f"Test {report.nodeid} failed!")
 
 
 # Register the plugin if the option is used
 def pytest_configure(config):
     print("Configuring StoreFailedMplPlugin")
     # Surpress ultraplot config loading which mpl does not recognize
-    logging.getLogger("matplotlib").setLevel(logging.ERROR)
-    logging.getLogger("ultraplot").setLevel(logging.WARNING)
+    if rc_file := config.getoption("--mpl-default-style", None):
+        warnings.filterwarnings(
+            "ignore",
+            message=rf"Bad key .* in file .*" + rc_file,
+            category=UserWarning,
+            module="matplotlib",
+        )
     try:
         if config.getoption("--store-failed-only", False):
             print("Registering StoreFailedMplPlugin")
