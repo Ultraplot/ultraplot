@@ -2329,32 +2329,33 @@ class Axes(maxes.Axes):
         """
         if which not in self._shared_axes:
             return
+        if which in "xy":
+            setattr(self, f"_share{which}", None)  # essential
+        # Note _scale is also set when calling sharex or y.
+        # I think it is fine to leave it as otherwise we would need to determine the scale, which may get messy.
 
         grouper = self._shared_axes[which]
-        try:
-            siblings = list(grouper.get_siblings(self))
-            for sibling in siblings:
-                if sibling is not self:
-                    # Unshare by removing them from the grouper
-                    grouper.remove(sibling)
-                    sibling._shared_axes[which].remove(self)
-                    # To be save let's remove this
-                    self._shared_axes[which].remove(sibling)
+        siblings = list(grouper.get_siblings(self))
+        for sibling in siblings:
+            if sibling is not self:
+                # Unshare by removing them from the grouper
+                grouper.remove(sibling)
+                sibling._shared_axes[which].remove(self)
+                # To be save let's remove this
+                self._shared_axes[which].remove(sibling)
+                if which in "xy":
+                    setattr(sibling, f"_share{which}", None)
+                    print(which, sibling._sharex, sibling._sharey, sibling)
 
-                    sibling.tick_params(left=True, right=True, top=True)
+                sibling.tick_params(left=True, right=True, top=True)
 
-                    this_ax = getattr(self, f"{which}axis")
-                    sib_ax = getattr(sibling, f"{which}axis")
-                    # Reset formatters
-                    this_ax.set_major_locator(mticker.AutoLocator())
-                    this_ax.set_major_formatter(pticker.AutoFormatter())
-                    this_ax.set_minor_locator(mticker.AutoLocator())
-                    this_ax.set_minor_formatter(pticker.AutoFormatter())
-            if which in "xy":
-                setattr(self, f"_{which}share", None)  # essential
-
-        except Exception as e:
-            warnings._warn_ultraplot(f"Could not unshare {which}-axis: {e}")
+                this_ax = getattr(self, f"{which}axis")
+                sib_ax = getattr(sibling, f"{which}axis")
+                # Reset formatters
+                this_ax.set_major_locator(mticker.AutoLocator())
+                this_ax.set_major_formatter(pticker.AutoFormatter())
+                this_ax.set_minor_locator(mticker.AutoLocator())
+                this_ax.set_minor_formatter(pticker.AutoFormatter())
 
     def _sharex_setup(self, sharex, **kwargs):
         """

@@ -1128,6 +1128,7 @@ class Figure(mfigure.Figure):
         kwargs.pop("refwidth", None)  # TODO: remove this
 
         ax = super().add_subplot(ss, _subplot_spec=ss, **kwargs)
+        self._WARN_SHARING_GEOAXIS = True
         # Allow sharing for GeoAxes if rectilinear
         if self._sharex or self._sharey:
             if (
@@ -1152,7 +1153,15 @@ class Figure(mfigure.Figure):
             if isinstance(ax, paxes.GeoAxes) and hasattr(ax, "set_global"):
                 ax.set_global()
 
-    def _toggle_axis_sharing(self, *, which="y", share=True, panels=False):
+    def _toggle_axis_sharing(
+        self,
+        *,
+        which="y",
+        share=True,
+        panels=False,
+        children=False,
+        hidden=False,
+    ):
         """
         Share or unshare axes in the figure along a given direction.
 
@@ -1161,7 +1170,6 @@ class Figure(mfigure.Figure):
         - share: int indicating the levels (see above)
         - panels: Whether to include panel axes.
         """
-        seen = set()
 
         if which == "x":
             self._sharex = share
