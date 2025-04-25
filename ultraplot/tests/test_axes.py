@@ -187,3 +187,22 @@ def test_subset_format():
     # Shorter than number of axs
     with pytest.raises(ValueError):
         axs.format(title=["a"])
+
+
+def test_unsharing():
+    """
+    Test some basic properties of unsharing axes.
+    """
+    fig, ax = uplt.subplots(ncols=2)
+    # Does nothing since key is not an axis or a view
+    ax[0]._unshare(which="key does not exist")
+    # 1 shares with 0 but not vice versa
+    assert ax[1]._sharey == ax[0]
+    assert ax[0]._sharey is None
+
+    ax[0]._unshare(which="y")
+    # Nothing should be sharing now
+    assert ax[0]._sharey == None
+    assert ax[0]._sharex == None
+    assert ax[1]._sharey == None
+    assert ax[1]._sharex == None
