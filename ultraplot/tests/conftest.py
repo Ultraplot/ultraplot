@@ -71,9 +71,11 @@ class SkipMissingBaseline:
         self.baseline_dir = None
         if baseline_path:
             self.baseline_dir = Path(baseline_path)
-        self.run = (
-            False if config.getoption("--mpl-generate-path", default=None) else True
-        )
+
+        # Don't run if we are generating baselines
+        self.run = False
+        if config.getoption("--mpl-generate-path", default=None):
+            self.run = False
         if self.run:
             print(f"Skipping baseline images that don't exist")
 
