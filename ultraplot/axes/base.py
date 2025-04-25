@@ -1270,6 +1270,8 @@ class Axes(maxes.Axes):
                         obj.ax.set_ylabel(label)
                     elif labelloc in ("top", "bottom"):
                         obj.ax.set_xlabel(label)
+                    elif labelloc is None:
+                        obj.set_label(label)
                     else:
                         raise ValueError("Could not determined position")
                 # Default to setting label on long axis
