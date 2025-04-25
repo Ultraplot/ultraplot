@@ -1141,7 +1141,10 @@ class Figure(mfigure.Figure):
                     warnings._warn_ultraplot(
                         f"GeoAxes can only be shared for rectilinear projections, {ax.projection=} is not a rectilinear projection."
                     )
-                    # Only warn once
+                    # Only warn once. Note, if axes are reshared
+                    # the warning is not reset. This is however,
+                    # very unlikely to happen as GeoAxes are not
+                    # typically shared and unshared.
                     self._WARN_SHARING_GEOAXIS = False
 
         if ax.number:
