@@ -923,16 +923,28 @@ class CartesianAxes(shared._SharedAxes, plot.PlotAxes):
                 # won't appear
                 if labellright and side == "right":
                     axi._sharey = None
+                    siblings = list(axi._shared_axes["y"].get_siblings(axi))
+                    for sibling in siblings:
+                        if sibling is axi:
+                            continue
+                        if sibling._sharey is not None:
+                            continue
+                        sibling._sharey = axi
                     axi.tick_params(labelright=labellright)
                 elif labellright and side == "left":
-                    axi._sharey = None
                     if axi not in border_axes["right"]:
                         axi.tick_params(labelright=not labellright)
                 elif labeltop and side == "top":
                     axi._sharex = None
+                    siblings = list(axi._shared_axes["x"].get_siblings(axi))
+                    for sibling in siblings:
+                        if sibling is axi:
+                            continue
+                        if sibling._sharex is not None:
+                            continue
+                        sibling._sharex = axi
                     axi.tick_params(labeltop=labeltop)
                 elif labeltop and side == "bottom":
-                    axi._sharex = None
                     if axi not in border_axes["top"]:
                         axi.tick_params(labeltop=not labeltop)
 
