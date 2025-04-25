@@ -67,7 +67,7 @@ class StoreFailedMplPlugin:
 class SkipMissingBaseline:
     def __init__(self, config):
         self.config = config
-        baseline_path = config.getoption("--mpl-baseline-path", default="./baseline")
+        baseline_path = config.getoption("--mpl-baseline-path", default=None)
         if baseline_path:
             self.baseline_dir = Path(baseline_path)
         self.run = (
