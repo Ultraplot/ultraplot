@@ -64,6 +64,7 @@ class StoreFailedMplPlugin:
                 if self._has_mpl_marker(report):
                     self._remove_success(report)
             else:
+                # Skip tests that fail because the baseline image does not exist
                 if self._has_mpl_marker(report):
                     msg = str(report.longrepr)
                     conditions = ("baseline_image", "does not exist")
