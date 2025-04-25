@@ -1,6 +1,6 @@
 import os, shutil, pytest, re, numpy as np, ultraplot as uplt
 from pathlib import Path
-import warnings
+import warnings, logging
 
 
 @pytest.fixture(autouse=True)
