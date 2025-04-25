@@ -2,6 +2,8 @@ import os, shutil, pytest, re, numpy as np, ultraplot as uplt
 from pathlib import Path
 import warnings, logging
 
+logging.captureWarnings(True)
+
 
 @pytest.fixture(autouse=True)
 def _reset_numpy_seed():
