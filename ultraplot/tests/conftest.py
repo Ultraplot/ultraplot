@@ -68,7 +68,8 @@ class StoreFailedMplPlugin:
                         report.outcome = "skipped"
                         report.wasxfail = False
                         report.longexpr = "Skipped. Basline Image does not exist. Probably a new test was added."
-                    self._remove_success(report)
+                    else:
+                        self._remove_success(report)
             else:
                 print(f"{report.failed=}")
                 print(f"Test {report.nodeid} failed!")
