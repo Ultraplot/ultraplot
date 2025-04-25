@@ -913,8 +913,6 @@ class Figure(mfigure.Figure):
         Returns a dictionary with keys 'top', 'bottom', 'left', 'right', each
         containing a list of axes on that border.
         """
-        # Check if required attributes exist
-        return dict(top=[], bottom=[], left=[], right=[])
 
         gs = self.gridspec
         all_axes = self.axes
