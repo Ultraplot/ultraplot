@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     defaults:
-      run: 
+      run:
         shell: bash -el {0}
     steps:
       - uses: actions/checkout@v4
@@ -50,13 +50,13 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: Ultraplot/ultraplot
-  
+
   compare-baseline:
     needs: build-ultraplot
     runs-on: ubuntu-latest
     defaults:
-      run: 
-        shell: bash -el {0}    
+      run:
+        shell: bash -el {0}
     steps:
       - uses: actions/checkout@v4
 
