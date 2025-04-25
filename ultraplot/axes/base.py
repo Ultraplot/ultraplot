@@ -2678,8 +2678,6 @@ class Axes(maxes.Axes):
         atext, ttext = aobj.get_text(), tobj.get_text()
         awidth = twidth = 0
         pad = (abcpad / 72) / self._get_size_inches()[0]
-        if np.isnan(pad):
-            pad = 0.0
         ha = aobj.get_ha()
 
         # Get dimensions of non-empty elements

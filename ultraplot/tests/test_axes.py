@@ -5,6 +5,7 @@ Test twin, inset, and panel axes.
 import numpy as np
 import pytest
 import ultraplot as uplt
+from unittest.mock import patch
 
 
 def test_axis_access():
