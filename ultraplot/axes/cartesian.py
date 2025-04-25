@@ -904,7 +904,7 @@ class CartesianAxes(shared._SharedAxes, plot.PlotAxes):
         # When axes are shared, the reference
         # is the top left and bottom left plot
         # for labels that are top or right
-        # this will plot them on thos first two plots
+        # this will plot them on those first two plots
         # we can fool mpl to share them by turning
         # sharex/y  off for those plots. We still
         # update the ticks with the prior step, and
