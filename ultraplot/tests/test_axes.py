@@ -187,3 +187,19 @@ def test_subset_format():
     # Shorter than number of axs
     with pytest.raises(ValueError):
         axs.format(title=["a"])
+    # Dummy failure of existing
+    assert False
+
+@pytest.mark.mpl_image_compare
+def test_dummy:
+    # should not show up in compare
+    fig, ax = uplt.subplots()
+    return fig
+
+
+@pytest.mark.mpl_image_compare
+def test_dummy2():
+    # should show up but not in compare
+    assert 0
+    fig, ax = uplt.subplots()
+    return fig
