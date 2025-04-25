@@ -1,6 +1,6 @@
 import os, shutil, pytest, re, numpy as np, ultraplot as uplt
 from pathlib import Path
-import warnings, logging
+import warnings, logging, sys
 
 
 @pytest.fixture(autouse=True)
@@ -58,37 +58,49 @@ class StoreFailedMplPlugin:
     @pytest.hookimpl(trylast=True)
     def pytest_runtest_logreport(self, report):
         """Hook that processes each test report."""
-        if report.when == "call":
-            # Delete successfull tests
-            if report.failed == False:
-                if self._has_mpl_marker(report):
-                    self._remove_success(report)
-            else:
-                # Skip tests that fail because the baseline image does not exist
-                if self._has_mpl_marker(report):
-                    msg = str(report.longrepr)
-                    conditions = ("baseline_image", "does not exist")
-                    if all(cond in msg for cond in conditions):
-                        report.failed = False
-                        report.outcome = "skipped"
-                        report.wasxfail = False
-                        report.longexpr = "Skipped. Basline Image does not exist. Probably a new test was added."
-                if report.failed:
-                    print(f"{report.failed=}")
-                    print(f"Test {report.nodeid} failed!")
+        # Delete successfull tests
+        if not report.failed:
+            if self._has_mpl_marker(report):
+                self._remove_success(report)
+
+
+class SkipMissingBaseline:
+    def __init__(self, config):
+        self.config = config
+        baseline_path = config.getoption("--mpl-baseline-path", default="./baseline")
+        if baseline_path:
+            self.baseline_dir = Path(baseline_path)
+        self.run = (
+            False if config.getoption("--mpl-generate-path", default=None) else True
+        )
+        if self.run:
+            print(f"Skipping baseline images that don't exist")
+
+    def baseline_exists(self, item):
+        name = item.originalname
+        return Path(self.baseline_dir / f"{name}.png").exists()
+
+    def skip_baseline_if_not_exists(self, item):
+        if not self.run:
+            return
+        for mark in item.own_markers:
+            if mark.name == "mpl_image_compare":
+                if not self.baseline_exists(item):
+                    pytest.skip(f"Baseline image does not exist")
+
+
+def pytest_collection_modifyitems(config, items):
+    helper = SkipMissingBaseline(config)
+    for item in items:
+        helper.skip_baseline_if_not_exists(item)
 
 
 # Register the plugin if the option is used
 def pytest_configure(config):
     print("Configuring StoreFailedMplPlugin")
     # Surpress ultraplot config loading which mpl does not recognize
-    if rc_file := config.getoption("--mpl-default-style", None):
-        warnings.filterwarnings(
-            "ignore",
-            message=rf"Bad key .* in file .*" + rc_file,
-            category=UserWarning,
-            module="matplotlib",
-        )
+    logging.getLogger("matplotlib").setLevel(logging.ERROR)
+    logging.getLogger("ultraplot").setLevel(logging.WARNING)
     try:
         if config.getoption("--store-failed-only", False):
             print("Registering StoreFailedMplPlugin")
