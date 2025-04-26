@@ -544,8 +544,8 @@ rasterize : bool, default: :rc:`colorbar.rasterize`
     Whether to rasterize the colorbar solids. The matplotlib default was ``True``
     but ultraplot changes this to ``False`` since rasterization can cause misalignment
     between the color patches and the colorbar outline.
-outline : bool, default : True
-    Controls the visibility of the frame. When set to False, the spines of the colorbar are hidden.
+outline : bool, None default : None
+    Controls the visibility of the frame. When set to False, the spines of the colorbar are hidden. If set to `None` it uses the `rc['colorbar.outline']` value.
 labelrotation : str, float, default: "auto"
     Controls the rotation of the colorbar label. When set to auto it produces a sensible default where the rotation is adjusted to where the colorbar is located. For example, a horizontal colorbar with a label to the left or right will match the horizontal alignment and rotate the label to 0 degrees. Users can provide a float to rotate to any arbitrary angle.
 
@@ -1042,7 +1042,7 @@ class Axes(maxes.Axes):
         linewidth=None,
         edgefix=None,
         rasterized=None,
-        outline: bool = True,
+        outline: Union[bool, None] = None,
         labelrotation: Union[str, float] = "auto",
         **kwargs,
     ):
@@ -1236,6 +1236,7 @@ class Axes(maxes.Axes):
             orientation=orientation,
             **kwargs,
         )
+        outline = _not_none(outline, rc["colorbar.outline"])
         obj.outline.set_visible(outline)
         obj.ax.grid(False)
         # obj.minorlocator = minorlocator  # backwards compatibility

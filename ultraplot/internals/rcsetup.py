@@ -992,6 +992,11 @@ _rc_ultraplot_table = {
         'Length of rectangular or triangular "extensions" for panel colorbars.'
         + _addendum_em,
     ),
+    "colorbar.outline": (
+        True,
+        _validate_bool,
+        "Whether to draw a frame around the colorbar.",
+    ),
     "colorbar.fancybox": (
         False,
         _validate_bool,
