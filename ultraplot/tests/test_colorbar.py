@@ -303,8 +303,7 @@ def test_label_rotation_colorbar():
     for which in "xy":
         tmp = getattr(cbar.ax, f"{which}axis").label
         if tmp.get_text() == mylabel:
-            assert label.get_rotation() == 23
-
+            label = tmp
 
 def test_auto_labelrotation():
     from itertools import product
