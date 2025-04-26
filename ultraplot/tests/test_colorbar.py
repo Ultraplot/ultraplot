@@ -341,6 +341,7 @@ def test_auto_labelrotation():
         assert actual_rotation == expected_rotation
         uplt.close(fig)
 
+
 @pytest.mark.mpl_image_compare
 def test_label_placement_fig_colorbar2():
     """
@@ -351,4 +352,3 @@ def test_label_placement_fig_colorbar2():
     fig, axs = uplt.subplots(nrows=1, ncols=2)
     fig.colorbar(cmap, loc="bottom", label="My Label", labelloc="right")
     return fig
-
