@@ -1222,6 +1222,10 @@ class Axes(maxes.Axes):
         # Create colorbar and update ticks and axis direction
         # NOTE: This also adds the guides._update_ticks() monkey patch that triggers
         # updates to DiscreteLocator when parent axes is drawn.
+        orientation = _not_none(
+            kwargs.pop("orientation", None), kwargs.pop("vert", None)
+        )
+
         obj = cax._colorbar_fill = cax.figure.colorbar(
             mappable,
             cax=cax,
@@ -1229,6 +1233,7 @@ class Axes(maxes.Axes):
             format=formatter,
             drawedges=grid,
             extendfrac=extendfrac,
+            orientation=orientation,
             **kwargs,
         )
         obj.outline.set_visible(outline)
@@ -1319,6 +1324,8 @@ class Axes(maxes.Axes):
                     elif labelloc == "left":
                         kw_label["va"] = "top"
                     labelrotation = -90
+                case (True, None, _):
+                    labelrotation = 90
                 # Horizontal colorbar
                 case (False, _, _):
                     if labelloc == "left":

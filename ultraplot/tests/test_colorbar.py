@@ -296,9 +296,14 @@ def test_label_rotation_colorbar():
     label rotation is possible.
     """
     cmap = uplt.colormaps.get_cmap("viridis")
+    mylabel = "My Label"
     fig, ax = uplt.subplots()
     cbar = ax.colorbar(cmap, labelloc="top", loc="right", vert=False, labelrotation=23)
-    assert cbar.get_label().get_rotation() == 23
+    # Get the label Text object
+    for which in "xy":
+        tmp = getattr(cbar.ax, f"{which}axis").label
+        if tmp.get_text() == mylabel:
+            assert label.get_rotation() == 23
 
 
 def test_auto_labelrotation():
