@@ -305,6 +305,7 @@ def test_label_rotation_colorbar():
         if tmp.get_text() == mylabel:
             label = tmp
 
+
 def test_auto_labelrotation():
     from itertools import product
 
