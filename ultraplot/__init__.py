@@ -13,8 +13,8 @@ except ImportError:
 version = __version__
 
 # Import dependencies early to isolate import times
-from . import internals, externals, tests  # noqa: F401
-from .internals.benchmarks import _benchmark
+from . import internals, externals, tests  # noqa: F401 E402
+from .internals.benchmarks import _benchmark  # noqa: E402
 
 with _benchmark("pyplot"):
     from matplotlib import pyplot  # noqa: F401
@@ -56,8 +56,8 @@ with _benchmark("demos"):
     from .demos import *  # noqa: F401 F403
 
 # Dynamically add registered classes to top-level namespace
-from . import proj as crs  # backwards compatibility  # noqa: F401
-from .constructor import NORMS, LOCATORS, FORMATTERS, SCALES, PROJS
+from . import proj as crs  # backwards compatibility  # noqa: F401 E402
+from .constructor import NORMS, LOCATORS, FORMATTERS, SCALES, PROJS  # noqa: E402
 
 _globals = globals()
 for _src in (NORMS, LOCATORS, FORMATTERS, SCALES, PROJS):
@@ -65,7 +65,7 @@ for _src in (NORMS, LOCATORS, FORMATTERS, SCALES, PROJS):
         if isinstance(_cls, type):  # i.e. not a scale preset
             _globals[_cls.__name__] = _cls  # may overwrite ultraplot names
 # Register objects
-from .config import register_cmaps, register_cycles, register_colors, register_fonts
+from .config import register_cmaps, register_cycles, register_colors, register_fonts  #noqa: E402
 
 with _benchmark("cmaps"):
     register_cmaps(default=True)
@@ -78,8 +78,8 @@ with _benchmark("fonts"):
 
 # Validate colormap names and propagate 'cycle' to 'axes.prop_cycle'
 # NOTE: cmap.sequential also updates siblings 'cmap' and 'image.cmap'
-from .config import rc
-from .internals import rcsetup, warnings
+from .config import rc  #noqa: E402
+from .internals import rcsetup, warnings  #noqa: E402
 
 
 rcsetup.VALIDATE_REGISTERED_CMAPS = True
@@ -98,7 +98,7 @@ for _key in (
 
 # Validate color names now that colors are registered
 # NOTE: This updates all settings with 'color' in name (harmless if it's not a color)
-from .config import rc_ultraplot, rc_matplotlib
+from .config import rc_ultraplot, rc_matplotlib  #noqa: E402
 
 rcsetup.VALIDATE_REGISTERED_COLORS = True
 for _src in (rc_ultraplot, rc_matplotlib):
@@ -110,4 +110,4 @@ for _src in (rc_ultraplot, rc_matplotlib):
         except ValueError as err:
             warnings._warn_ultraplot(f"Invalid user rc file setting: {err}")
             _src[_key] = "black"  # fill value
-from .colors import _cmap_database as colormaps
+from .colors import _cmap_database as colormaps  # noqa: E402 F401
