@@ -13,7 +13,7 @@ from . import ic  # noqa: F401
 REGEX_INTERNAL = re.compile(r"\A(matplotlib|mpl_toolkits|ultraplot)\.")
 
 # Trivial warning class meant only to communicate the source of the warning
-UltraplotWarning = type("UltraPlotWarning", (UserWarning,), {})
+UltraplotWarning = type("UltraplotWarning", (UserWarning,), {})
 
 # Add due to overwriting the module name
 catch_warnings = warnings.catch_warnings
@@ -40,7 +40,7 @@ def next_release():
 
 def _warn_ultraplot(message):
     """
-    Emit a `UltraPlotWarning` and show the stack level outside of matplotlib and
+    Emit a `UltraplotWarning` and show the stack level outside of matplotlib and
     ultraplot. This is adapted from matplotlib's warning system.
     """
     frame = sys._getframe()
