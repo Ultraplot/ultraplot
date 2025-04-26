@@ -288,3 +288,55 @@ def test_label_placement_colorbar():
     locs = "top bottom left right".split()
     for loc, labelloc in zip(locs, locs):
         ax.colorbar(h, loc=loc, labelloc=labelloc)
+
+
+def test_label_rotation_colorbar():
+    """
+    Ensure that all potential combinations of colorbar
+    label rotation is possible.
+    """
+    cmap = uplt.colormaps.get_cmap("viridis")
+    fig, ax = uplt.subplots()
+    cbar = ax.colorbar(cmap, labelloc="top", loc="right", vert=False, labelrotation=23)
+    assert cbar.get_label().get_rotation() == 23
+
+
+def test_auto_labelrotation():
+    from itertools import product
+
+    locs = ["top", "bottom", "left", "right"]
+    labellocs = ["top", "bottom", "left", "right"]
+
+    cmap = uplt.colormaps.get_cmap("viridis")
+    mylabel = "My Label"
+
+    for loc, labelloc in product(locs, labellocs):
+        fig, ax = uplt.subplots()
+        cbar = ax.colorbar(cmap, loc=loc, labelloc=labelloc, label=mylabel)
+
+        # Get the label Text object
+        for which in "xy":
+            tmp = getattr(cbar.ax, f"{which}axis").label
+            if tmp.get_text() == mylabel:
+                label = tmp
+                break
+
+        is_vertical = loc in ("left", "right")
+        is_horizontal = not is_vertical
+
+        expected_rotation = 0
+        if is_vertical:
+            if labelloc == "left":
+                expected_rotation = 90
+            elif labelloc == "right":
+                expected_rotation = 270
+        actual_rotation = label.get_rotation()
+        ax.set_title(f"loc={loc}, labelloc={labelloc}, rotation={actual_rotation}")
+
+        try:
+            assert actual_rotation == expected_rotation
+        except:
+            print(is_horizontal, labelloc, loc)
+        uplt.show(block=1)
+
+        uplt.close(fig)

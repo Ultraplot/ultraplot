@@ -21,6 +21,8 @@ import matplotlib.projections as mproj
 import matplotlib.text as mtext
 import matplotlib.ticker as mticker
 import matplotlib.transforms as mtransforms
+from typing import Union
+from numbers import Number
 import numpy as np
 from matplotlib import cbook
 
@@ -542,6 +544,13 @@ rasterize : bool, default: :rc:`colorbar.rasterize`
     Whether to rasterize the colorbar solids. The matplotlib default was ``True``
     but ultraplot changes this to ``False`` since rasterization can cause misalignment
     between the color patches and the colorbar outline.
+outline : bool, default : True
+    Controls the visibility of the frame. When set to False, the spines of the colorbar are hidden.
+labelrotation : str, float, default: "auto"
+    Controls the rotation of the colorbar label. When set to auto it produces a sensible default where the rotation is adjusted to where the colorbar is located. For example, a horizontal colorbar with a label to the left or right will match the horizontal alignment and rotate the label to 0 degrees. Users can provide a float to rotate to any arbitrary angle.
+
+
+
 **kwargs
     Passed to `~matplotlib.figure.Figure.colorbar`.
 """
@@ -1033,6 +1042,8 @@ class Axes(maxes.Axes):
         linewidth=None,
         edgefix=None,
         rasterized=None,
+        outline: bool = True,
+        labelrotation: Union[str, float] = "auto",
         **kwargs,
     ):
         """
@@ -1220,6 +1231,7 @@ class Axes(maxes.Axes):
             extendfrac=extendfrac,
             **kwargs,
         )
+        obj.outline.set_visible(outline)
         obj.ax.grid(False)
         # obj.minorlocator = minorlocator  # backwards compatibility
         obj.update_ticks = guides._update_ticks.__get__(obj)  # backwards compatible
@@ -1280,6 +1292,35 @@ class Axes(maxes.Axes):
                 case _:
                     raise ValueError("Location not understood.")
             axis.set_label_position(labelloc)
+        if labelrotation == "auto":
+            # When set to auto, we make the colorbar appear "natural". For example, when we have a
+            # horizontal colorbar on the top, but we want the label to the sides, we make sure that the horizontal alignment is correct and the labelrotation is horizontal. Below produces "sensible defaults", but can be overridden by the user.
+            match (vert, labelloc, loc):
+                # Vertical colorbars
+                case (True, "left", "left" | "right"):
+                    labelrotation = 90
+                case (True, "right", "left" | "right"):
+                    if labelloc == "right":
+                        kw_label["va"] = "bottom"
+                    elif labelloc == "left":
+                        kw_label["va"] = "top"
+                    labelrotation = -90
+                # Horizontal colorbar
+                case (False, _, _):
+                    if labelloc == "left":
+                        kw_label["ha"] = "right"
+                        kw_label["va"] = "center"
+                    elif labelloc == "right":
+                        kw_label["ha"] = "left"
+                        kw_label["va"] = "center"
+
+                    labelrotation = 0
+                case Number():
+                    pass
+                case _:
+                    labelrotation = 0
+
+            kw_label.update({"rotation": labelrotation})
         axis.label.update(kw_label)
         # Assume ticks are set on the long axis(!)
         for label in obj._long_axis().get_ticklabels():
