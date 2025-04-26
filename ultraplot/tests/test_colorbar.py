@@ -333,10 +333,5 @@ def test_auto_labelrotation():
         actual_rotation = label.get_rotation()
         ax.set_title(f"loc={loc}, labelloc={labelloc}, rotation={actual_rotation}")
 
-        try:
-            assert actual_rotation == expected_rotation
-        except:
-            print(is_horizontal, labelloc, loc)
-        uplt.show(block=1)
-
+        assert actual_rotation == expected_rotation
         uplt.close(fig)
