@@ -30,3 +30,4 @@ coverage:
           - "ultraplot/tests/*"
           - "!logo/*"
           - "!docs/*"
+          - "!ultraplot/tests/conftest.py"
