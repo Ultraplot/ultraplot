@@ -97,6 +97,10 @@ def pytest_terminal_summary(terminalreporter, exitstatus, config):
     if hasattr(config, "workerinput"):
         return
 
+    # skip if not doing mpl
+    if not hasattr(config.option, "mpl"):
+        return
+
     print("\nGenerating HTML report for image comparison tests...")
 
     # Get the results directory
