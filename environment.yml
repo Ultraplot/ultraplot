@@ -12,6 +12,7 @@ dependencies:
   - pytest
   - pytest-mpl
   - pytest-cov
+  - pytest-xdist
   - jupyter
   - pip
   - pint
