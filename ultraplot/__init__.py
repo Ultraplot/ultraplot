@@ -65,7 +65,12 @@ for _src in (NORMS, LOCATORS, FORMATTERS, SCALES, PROJS):
         if isinstance(_cls, type):  # i.e. not a scale preset
             _globals[_cls.__name__] = _cls  # may overwrite ultraplot names
 # Register objects
-from .config import register_cmaps, register_cycles, register_colors, register_fonts  #noqa: E402
+from .config import (
+    register_cmaps,
+    register_cycles,
+    register_colors,
+    register_fonts,
+)  # noqa: E402
 
 with _benchmark("cmaps"):
     register_cmaps(default=True)
@@ -78,8 +83,8 @@ with _benchmark("fonts"):
 
 # Validate colormap names and propagate 'cycle' to 'axes.prop_cycle'
 # NOTE: cmap.sequential also updates siblings 'cmap' and 'image.cmap'
-from .config import rc  #noqa: E402
-from .internals import rcsetup, warnings  #noqa: E402
+from .config import rc  # noqa: E402
+from .internals import rcsetup, warnings  # noqa: E402
 
 
 rcsetup.VALIDATE_REGISTERED_CMAPS = True
@@ -98,7 +103,7 @@ for _key in (
 
 # Validate color names now that colors are registered
 # NOTE: This updates all settings with 'color' in name (harmless if it's not a color)
-from .config import rc_ultraplot, rc_matplotlib  #noqa: E402
+from .config import rc_ultraplot, rc_matplotlib  # noqa: E402
 
 rcsetup.VALIDATE_REGISTERED_COLORS = True
 for _src in (rc_ultraplot, rc_matplotlib):
