@@ -29,7 +29,6 @@ def pytest_addoption(parser):
 
 class StoreFailedMplPlugin:
     def __init__(self, config):
-        print("Adding StoreFailedMplPlugin")
         self.config = config
 
         # Get base directories as Path objects
