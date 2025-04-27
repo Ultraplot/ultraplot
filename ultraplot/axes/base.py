@@ -2342,6 +2342,7 @@ class Axes(maxes.Axes):
         Note this isolates the axis and does not preserve the transitivity of sharing.
         """
         if which not in self._shared_axes:
+            warnings._warn_ultraplot(f"Axis {which} is not shared")
             return
         if which in "xy":
             setattr(self, f"_share{which}", None)  # essential
