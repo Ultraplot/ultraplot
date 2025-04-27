@@ -3264,8 +3264,14 @@ class PlotAxes(base.Axes):
             ctx["axes.prop_cycle"] = cycle
         if orientation == "horizontal":  # may raise error
             kw["orientation"] = orientation
+        labels = kw.pop("labels", None)
         with rc.context(ctx):
-            obj = self._call_native("stem", x, y, **kw)
+            for yi in y:
+                obj = self._call_native("stem", x, yi, **kw)
+        if labels is not None:
+            self.set_xticks(x)
+            self.set_xticklabels(labels)
+
         self._inbounds_xylim(extents, x, y, orientation=orientation)
         self._update_guide(obj, **guide_kw)
         return obj
@@ -3721,13 +3727,16 @@ class PlotAxes(base.Axes):
         hs, kw = inputs._dist_reduce(hs, **kw)
         guide_kw = _pop_params(kw, self._update_guide)
         alphas = kw.pop("alpha", None)
+
+        # We apply alphas over the columns
+        ncols = hs.size
         if alphas is None:
-            alphas = xs.size * [None]
+            alphas = ncols * [None]
         elif isinstance(alphas, Number):
-            alphas = xs.size * [alphas]
-        elif len(alphas) != xs.size:
+            alphas = ncols * [alphas]
+        elif len(alphas) != ncols:
             raise ValueError(
-                f"Received {len(alphas)} values for alpha but needed {xs.size}"
+                f"Received {len(alphas)} values for alpha but needed {ncols}"
             )
         for i, n, x, h, w, b, kw in self._iter_arg_cols(xs, hs, ws, bs, **kw):
             kw = self._parse_cycle(n, **kw)
