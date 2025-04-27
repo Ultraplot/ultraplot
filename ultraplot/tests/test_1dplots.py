@@ -523,3 +523,24 @@ def test_heatmap_labels():
     fig, ax = uplt.subplots()
     ax.heatmap(x, labels=True)
     return fig
+
+
+def test_bar_alpha():
+    """
+    Verify that alphas are applied over the columns
+    """
+    # No img comp needed just internal testing
+    import pandas as pd
+
+    data = np.random.rand(5, 5).cumsum(axis=0).cumsum(axis=1)[:, ::-1]
+    data = pd.DataFrame(
+        data,
+        columns=pd.Index(np.arange(1, 6), name="column"),
+        index=pd.Index(["a", "b", "c", "d", "e"], name="row idx"),
+    )
+    fig, ax = uplt.subplots()
+    ax.bar(data)
+    ax.bar(data, alphas=np.zeros(data.shape[1]))
+    with pytest.raises(ValueError):
+        ax.bar(data, alphas=np.zeros(data.shape[0]))
+    return fig
