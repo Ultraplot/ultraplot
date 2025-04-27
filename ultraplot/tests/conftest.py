@@ -54,36 +54,35 @@ class StoreFailedMplPlugin:
         target = (self.result_dir / name).absolute()
         if target.is_dir():
             shutil.rmtree(target)
-        else:
-            print(f"Did not find {report.nodeid}")
 
     @pytest.hookimpl(trylast=True)
     def pytest_runtest_logreport(self, report):
         """Hook that processes each test report."""
-        if report.when == "call":
-            # Delete successfull tests
-            if report.failed == False:
-                if self._has_mpl_marker(report):
-                    self._remove_success(report)
-            else:
-                print(f"{report.failed=}")
-                print(f"Test {report.nodeid} failed!")
+        # Delete successfull tests
+        if report.when == "call" and report.failed == False:
+            if self._has_mpl_marker(report):
+                self._remove_success(report)
+
+
+def pytest_collection_modifyitems(config, items):
+    for item in items:
+        for mark in item.own_markers:
+            if base_dir := config.getoption("--mpl-baseline-path", default=None):
+                if mark.name == "mpl_image_compare":
+                    name = item.name
+                    if not (Path(base_dir) / f"{name}.png").exists():
+                        item.add_marker(
+                            pytest.mark.skip(reason="Baseline image does not exist")
+                        )
 
 
 # Register the plugin if the option is used
 def pytest_configure(config):
-    print("Configuring StoreFailedMplPlugin")
     # Surpress ultraplot config loading which mpl does not recognize
-    if rc_file := config.getoption("--mpl-default-style", None):
-        warnings.filterwarnings(
-            "ignore",
-            message=rf"Bad key .* in file .*" + rc_file,
-            category=UserWarning,
-            module="matplotlib",
-        )
+    logging.getLogger("matplotlib").setLevel(logging.ERROR)
+    logging.getLogger("ultraplot").setLevel(logging.WARNING)
     try:
         if config.getoption("--store-failed-only", False):
-            print("Registering StoreFailedMplPlugin")
             config.pluginmanager.register(StoreFailedMplPlugin(config))
     except Exception as e:
         print(f"Error during plugin configuration: {e}")
