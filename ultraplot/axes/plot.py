@@ -1110,7 +1110,7 @@ spines : bool, iterable or str, default: False
     Whether to show axis spines (borders around the plot). If `True`, all spines are shown.
     If an iterable is given, only the specified spines (e.g., ``['left', 'bottom']``) are displayed.
 rescale : bool, default: False
-    Whether to rescale the plot to fit the data. See networkx docs for more information
+    Whether to rescale the plot to fit the data. See networkx docs for more information.
 
 Returns
 -------
