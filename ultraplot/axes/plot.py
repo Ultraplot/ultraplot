@@ -699,7 +699,6 @@ matplotlib.axes.Axes.scatter
 docstring._snippet_manager["plot.scatter"] = _scatter_docstring.format(y="y")
 docstring._snippet_manager["plot.scatterx"] = _scatter_docstring.format(y="x")
 
-
 # Bar function docstring
 _bar_docstring = """
 Plot individual, grouped, or stacked bars.
@@ -749,6 +748,29 @@ docstring._snippet_manager["plot.bar"] = _bar_docstring.format(
 docstring._snippet_manager["plot.barh"] = _bar_docstring.format(
     x="y", y="x", bottom="left", suffix="h"
 )
+
+
+_lollipop_docstring = """
+Plot individual or group lollipop graphs.
+
+A lollipop graph is a bar graph with the bars replaced by dots connected to the
+{which}-axis by lines.
+
+Parameters
+----------
+linecolor: str, default None
+    Line color of the lines connecting the dots to the {which}-axis. Defaults to `rc["lollipop.linecolor"]`.
+linestyle: str, default: None
+    The style of the lines connecting the dots to the {which}-axis. Defaults to `rc["lines.style"]`.
+size: float, default None
+Controls the size of the lollipops. Defaults to `rc["lollipop.size"]`.
+
+Other parameters
+----------------
+%(plot.bar)s
+"""
+docstring._snippet_manager["plot.lollipop"] = _lollipop_docstring.format(which="x")
+docstring._snippet_manager["plot.lollipoph"] = _lollipop_docstring.format(which="y")
 
 
 # Area plot docstring
@@ -3146,6 +3168,83 @@ class PlotAxes(base.Axes):
         %(plot.plotx)s
         """
         return self.plotx(*args, **kwargs)
+
+    def _apply_lollipop(self, *args, horizontal=False, **kwargs):
+        linecolor = kwargs.pop("linecolor", None)
+        linecolor = _not_none(linecolor, rc["lollipop.linecolor"])
+        linestyle = kwargs.pop("linestyle", None)
+        linestyle = _not_none(linestyle, rc["lollipop.linestyle"])
+        size = kwargs.pop("size", None)
+        size = _not_none(size, rc["lollipop.size"])
+        if horizontal:
+            bars = self.barh(*args, **kwargs)
+        else:
+            bars = self.bar(*args, **kwargs)
+
+        xmin = np.inf
+        xmax = -np.inf
+        all_lines = []
+        patch_collection = []
+
+        for bar in bars:
+            xy = np.zeros((len(bar.patches), 2))
+            for idx, patch in enumerate(bar.patches):
+                patch.set_visible(False)
+                color = patch.get_facecolor()
+
+                x0, y0 = patch.xy
+                if horizontal:
+                    x, y = bar.datavalues[idx], y0
+                    all_lines.append([(0, y), (x, y)])
+                else:
+                    x, y = x0, bar.datavalues[idx]
+                    all_lines.append([(x, 0), (x, y)])
+                xy[idx] = x, y
+
+                pos = y if horizontal else x
+                if pos < xmin:
+                    xmin = pos
+                if pos > xmax:
+                    xmax = pos
+            color = bar.patches[0].get_facecolor()
+            bar_patch = self.scatter(*xy.T, color=color, s=size)
+            patch_collection.append(bar_patch)
+
+        line_collection = mcollections.LineCollection(
+            all_lines,
+            colors=linecolor,
+            linestyles=linestyle,
+            zorder=bar.patches[0].zorder - 1,
+        )
+        self.add_collection(line_collection)
+
+        # Add some padding to make it look nicer
+        pad = 0
+        if horizontal:
+            pad = 2 * patch.get_height()
+        else:
+            pad = 2 * patch.get_width()
+        if horizontal:
+            self.set_ylim(xmin - pad, xmax + pad)
+        else:
+            self.set_xlim(xmin - pad, xmax + pad)
+        return patch_collection, line_collection
+
+    @inputs._preprocess_or_redirect("x", "y", allow_extra=True)
+    @docstring._snippet_manager
+    def lollipop(self, *args, **kwargs):
+        """
+        %(plot.lollipop)s
+        """
+        return self._apply_lollipop(*args, horizontal=False, **kwargs)
+
+    @inputs._preprocess_or_redirect("x", "y", allow_extra=True)
+    @docstring._snippet_manager
+    def lollipoph(self, *args, **kwargs):
+        """
+        %(plot.lollipop)s (horizontal lollipop)
+        """
+        return self._apply_lollipop(*args, horizontal=True, **kwargs)
 
     @inputs._preprocess_or_redirect("x", "y", allow_extra=True)
     @docstring._concatenate_inherited
