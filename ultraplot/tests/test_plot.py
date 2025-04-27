@@ -41,7 +41,7 @@ def test_graph_edges_kw():
 
 def test_graph_input():
     """
-    Graph function should show labels when asked
+    Test graph input methods. We allow for graphs, adjacency matrices, and edgelists.
     """
     import networkx as nx
 
@@ -59,7 +59,7 @@ def test_graph_input():
 
 def test_graph_layout_input():
     """
-    Graph function should show labels when asked
+    Test for different input methods for layout. We allow for None, strings, dicts, and functions.
     """
     import networkx as nx
 
