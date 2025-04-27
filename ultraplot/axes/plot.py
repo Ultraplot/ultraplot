@@ -3225,7 +3225,9 @@ class PlotAxes(base.Axes):
         # Add some padding to make it look nicer
         pad = 0
         if horizontal:
-            max_height = max(patch.get_height() for bar in bars for patch in bar.patches)
+            max_height = max(
+                patch.get_height() for bar in bars for patch in bar.patches
+            )
             pad = 2 * max_height
         else:
             max_width = max(patch.get_width() for bar in bars for patch in bar.patches)
