@@ -42,7 +42,7 @@ uplt.show()
 # %% [raw] raw_mimetype="text/restructuredtext"
 # More Advanced Customization
 # ===========================
-# To customize a network plot, you can pass a dictionary of parameters to the :func:`~ultraplot.axes.PlotAxes.graph` function. These parameters are passed to the networkx backend, so you can refer to their documentation for more details. A more complicated example is shown below.
+# To customize a network plot, you can pass a dictionary of parameters to the :func:`~ultraplot.axes.PlotAxes.graph` function. These parameters are passed to the networkx backend, so you can refer to their documentation for more details (:func:`~networkx.draw`, :func:`~networkx.draw_networkx`, :func:`~networkx.draw_networkx_nodes`, :func:`~networkx.draw_networkx_edges`, :func:`~networkx.draw_networkx_labels`). A more complicated example is shown below.
 # %%
 import networkx as nx, ultraplot as uplt, numpy as np
 
