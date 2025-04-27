@@ -761,8 +761,7 @@ Parameters
 linecolor: str, default None
     Line color of the lines connecting the dots to the {which}-axis. Defaults to `rc["lollipop.linecolor"]`.
 linestyle: str, default: None
-    The style of the lines connecting the dots to the {which}-axis. Defaults to `rc["lines.style"]`.
-size: float, default None
+    The style of the lines connecting the dots to the {which}-axis. Defaults to `rc["lollipop.linestyle"]`.
 Controls the size of the lollipops. Defaults to `rc["lollipop.size"]`.
 
 Other parameters
