@@ -1082,23 +1082,23 @@ layout : callable or dict, optional
 layout_kw : dict, default: {}
     Keyword arguments passed to the layout function, if `layout` is callable.
 node_kw : dict, default: {}
-    Additional keyword arguments passed to the node drawing function. These can include
+    Additional keyword arguments passed to the node drawing function (see :func:`networkx.draw_networkx_nodes`). These can include
     size, color, edgecolor, cmap, alpha, etc., depending on the backend used.
 edge_kw : dict, default: {}
     Additional keyword arguments passed to the edge drawing function. These can include
-    width, color, style, alpha, arrows, etc.
+    width, color, style, alpha, arrows, etc (see :func:`networkx.draw_networkx_edges`).
 label_kw : dict, default: {}
     Additional keyword arguments passed to the label drawing function, such as font size,
-    font color, background color, alignment, etc.
+    font color, background color, alignment, etc (see :func:`networkx.draw_networkx_labels`).
 labels : bool or iterable, default: False
     Whether to show node labels. If `True`, labels are drawn using node names. If an
     iterable is given, only those nodes are labeled.
 nodes : bool or iterable, default: True
     Which nodes to draw. If `True`, all nodes are drawn. If an iterable is provided, only
-    the specified nodes are included.
+    the specified nodes are included. This effectively acts as `nodelist` in :func:`networkx.draw_networkx_nodes`.
 edges : bool or iterable, default: True
     Which edges to draw. If `True`, all edges are drawn. If an iterable of edge tuples is
-    provided, only those edges are included.
+    provided, only those edges are included. This effectively acts as `edgelist` in :func:`networkx.draw_networkx_edges`.
 grid : bool, default: False
     Whether to show a background grid.
 aspect : {'equal', 'auto'} or float, default: 'equal'
