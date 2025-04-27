@@ -579,6 +579,7 @@ def test_networks():
         for spine in inax.spines.values():
             spine.set_linewidth(3)
 
+
 def test_bar_alpha():
     """
     Verify that alphas are applied over the columns
