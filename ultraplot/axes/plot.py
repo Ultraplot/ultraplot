@@ -3735,19 +3735,28 @@ class PlotAxes(base.Axes):
         node_kw={},
         edge_kw={},
         label_kw={},
-        labels: Union[bool, Iterable] = False,
-        nodes: Union[bool, Iterable] = True,
-        edges: Union[bool, Iterable] = True,
-        grid=False,
-        aspect="equal",
-        facecolor: Union[str, None] = "none",
-        spines: Union[bool, Iterable, str] = False,
-        rescale=True,
+        labels: Union[None, bool, Iterable] = None,
+        nodes: Union[None, bool, Iterable] = None,
+        edges: Union[None, bool, Iterable] = None,
+        grid: Union[None, str] = None,
+        aspect: Union[None, str] = None,
+        facecolor: Union[None, str] = None,
+        spines: Union[None, bool, Iterable, str] = None,
+        rescale: Union[None, bool] = None,
     ):
         """
         %(plot.graph)s
         """
         import networkx as nx
+
+        labels = _not_none(labels, rc["graph.draw_labels"])
+        nodes = _not_none(nodes, rc["graph.draw_nodes"])
+        edges = _not_none(edges, rc["graph.draw_edges"])
+        grid = _not_none(grid, rc["graph.draw_grid"])
+        aspect = _not_none(aspect, rc["graph.aspect"])
+        facecolor = _not_none(facecolor, rc["graph.facecolor"])
+        spines = _not_none(spines, rc["graph.spines"])
+        rescale = _not_none(rescale, rc["graph.rescale"])
 
         match g:
             case np.ndarray():
