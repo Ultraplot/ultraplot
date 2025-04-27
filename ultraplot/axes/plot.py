@@ -3264,14 +3264,8 @@ class PlotAxes(base.Axes):
             ctx["axes.prop_cycle"] = cycle
         if orientation == "horizontal":  # may raise error
             kw["orientation"] = orientation
-        labels = kw.pop("labels", None)
         with rc.context(ctx):
-            for yi in y:
-                obj = self._call_native("stem", x, yi, **kw)
-        if labels is not None:
-            self.set_xticks(x)
-            self.set_xticklabels(labels)
-
+            obj = self._call_native("stem", x, y, **kw)
         self._inbounds_xylim(extents, x, y, orientation=orientation)
         self._update_guide(obj, **guide_kw)
         return obj
@@ -3729,7 +3723,7 @@ class PlotAxes(base.Axes):
         alphas = kw.pop("alpha", None)
 
         # We apply alphas over the columns
-        ncols = hs.size
+        ncols = hs.shape[-1]
         if alphas is None:
             alphas = ncols * [None]
         elif isinstance(alphas, Number):
