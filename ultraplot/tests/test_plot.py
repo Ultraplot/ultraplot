@@ -59,7 +59,7 @@ def test_graph_input():
 
 def test_graph_layout_input():
     """
-    Test for different input methods for layout. We allow for None, strings, dicts, and functions.
+    Test if layout is in a [0, 1] x [0, 1] box
     """
     import networkx as nx
 
@@ -73,26 +73,27 @@ def test_graph_layout_input():
 
 def test_graph_rescale():
     """
-    Graphs can be normalized within a box [0,1]^2 using rescale.
+    Graphs can be normalized such that the node size is the same independnt of the fig size
     """
     import networkx as nx
 
     g = nx.path_graph(5)
     layout = nx.spring_layout(g)
+    # shift layout outside the box
+    layout = {node: np.array(pos) + np.array([10, 10]) for node, pos in layout.items()}
 
     fig, ax = uplt.subplots()
-    nodes_rescaled = ax.graph(g, layout=layout, rescale=True)[0]
+    nodes1 = ax.graph(g, layout=layout, rescale=True)[0]
 
-    xlim_scaled = ax.get_xlim()
-    ylim_scaled = ax.get_ylim()
+    xlim_scaled = np.array(ax.get_xlim())
+    ylim_scaled = np.array(ax.get_ylim())
 
     fig, ax = uplt.subplots()
-    nodes_not_rescaled = ax.graph(g, layout=layout, rescale=False)[0]
+    nodes2 = ax.graph(g, layout=layout, rescale=False)[0]
 
-    xlim_not_scaled = ax.get_xlim()
-    ylim_not_scaled = ax.get_ylim()
-
-    assert not np.allclose(xlim_not_scaled[0], xlim_scaled[0])
-    assert not np.allclose(xlim_not_scaled[1], xlim_scaled[1])
-    assert not np.allclose(ylim_not_scaled[0], ylim_scaled[0])
-    assert not np.allclose(ylim_not_scaled[1], ylim_scaled[1])
+    for x, y in nodes1.get_offsets():
+        assert x >= 0 and x <= 1
+        assert y >= 0 and y <= 1
+    for x, y in nodes2.get_offsets():
+        assert x > 1
+        assert y > 1

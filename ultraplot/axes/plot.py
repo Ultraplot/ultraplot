@@ -1109,8 +1109,7 @@ facecolor : str or None, default: 'none'
 spines : bool, iterable or str, default: False
     Whether to show axis spines (borders around the plot). If `True`, all spines are shown.
     If an iterable is given, only the specified spines (e.g., ``['left', 'bottom']``) are displayed.
-rescale : bool,  None, default: None. When set to none it checks for `rc["graph.rescale"]` which defaults to `True`. This performs a rescale such that the node size is proportional to the figure size.  This attempts to prevent manual rescaling of the node_size. When `node_size` is not provided in `node_kw`, this option is ignored.
-
+rescale : bool,  None, default: None. When set to none it checks for `rc["graph.rescale"]` which defaults to `True`. This performs a rescale such that the node position is within a [0, 1] x [0, 1] box.
 Returns
 -------
 Nodes, edges, labels output from the networkx drawing functions.
@@ -3785,9 +3784,6 @@ class PlotAxes(base.Axes):
             case _:
                 pos = nx.kamada_kawai_layout(g)
 
-        # Ignore rescaling if user wants to set node_size
-        if node_kw.get("node_size", None):
-            rescale = False
         if rescale:
             # Normalize node positions to fit in a [0, 1] x [0, 1] box.
 
