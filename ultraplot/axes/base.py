@@ -2355,7 +2355,7 @@ class Axes(maxes.Axes):
                 # Unshare by removing them from the grouper
                 grouper.remove(sibling)
                 sibling._shared_axes[which].remove(self)
-                # To be save let's remove this
+                # To be safe let's remove this
                 self._shared_axes[which].remove(sibling)
                 if which in "xy":
                     setattr(sibling, f"_share{which}", None)
