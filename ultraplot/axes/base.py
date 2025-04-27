@@ -1043,7 +1043,7 @@ class Axes(maxes.Axes):
         edgefix=None,
         rasterized=None,
         outline: Union[bool, None] = None,
-        labelrotation: Union[str, float] = "auto",
+        labelrotation: Union[str, float] = None,
         **kwargs,
     ):
         """
@@ -1312,6 +1312,7 @@ class Axes(maxes.Axes):
                 case _:
                     raise ValueError("Location not understood.")
             axis.set_label_position(labelloc)
+        labelrotation = _not_none(labelrotation, rc["colorbar.labelrotation"])
         if labelrotation == "auto":
             # When set to auto, we make the colorbar appear "natural". For example, when we have a
             # horizontal colorbar on the top, but we want the label to the sides, we make sure that the horizontal alignment is correct and the labelrotation is horizontal. Below produces "sensible defaults", but can be overridden by the user.
