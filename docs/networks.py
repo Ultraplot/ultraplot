@@ -23,7 +23,7 @@
 
 # Minimal Example
 # ===============
-# To plot a graph, use :func:`~ultraplot.axes.PlotAxes.graph`. You need to merely provide a graph and ultraplot will take care of the rest. UltraPlot will automatically style the layout to give sensible default. Every setting can be overidden if the user wants to customize the nodes, edges, or layout.
+# To plot a graph, use :func:`~ultraplot.axes.PlotAxes.graph`. You need to merely provide a graph and UltraPlot will take care of the rest. UltraPlot will automatically style the layout to give sensible default. Every setting can be overidden if the user wants to customize the nodes, edges, or layout.
 # %%
 import networkx as nx, ultraplot as uplt, numpy as np
 
