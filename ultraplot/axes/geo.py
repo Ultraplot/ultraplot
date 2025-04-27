@@ -2043,3 +2043,67 @@ class _BasemapAxes(GeoAxes):
 # Apply signature obfuscation after storing previous signature
 GeoAxes._format_signatures[GeoAxes] = inspect.signature(GeoAxes.format)
 GeoAxes.format = docstring._obfuscate_kwargs(GeoAxes.format)
+
+
+def _is_rectilinear_projection(ax):
+    """Check if the axis has a flat projection (works with Cartopy)."""
+    # Determine what the projection function is
+    # Create a square and determine if the lengths are preserved
+    # For geoaxes projc is always set in format, and thus is not None
+    proj = getattr(ax, "projection", None)
+    transform = None
+    if hasattr(proj, "transform_point"):  # cartopy
+        if proj.transform_point is not None:
+            transform = partial(proj.transform_point, src_crs=proj.as_geodetic())
+    elif hasattr(proj, "projection"):  # basemap
+        transform = proj
+
+    if transform is not None:
+        # Create three collinear points (in a straight line)
+        line_points = [(0, 0), (10, 10), (20, 20)]
+
+        # Transform the points using the projection
+        transformed_points = [transform(x, y) for x, y in line_points]
+
+        # Check if the transformed points are still collinear
+        # Points are collinear if the slopes between consecutive points are equal
+        x0, y0 = transformed_points[0]
+        x1, y1 = transformed_points[1]
+        x2, y2 = transformed_points[2]
+
+        # Calculate slopes
+        xdiff1 = x1 - x0
+        xdiff2 = x2 - x1
+        if np.allclose(xdiff1, 0) or np.allclose(xdiff2, 0):  # Avoid division by zero
+            # Check if both are vertical lines
+            return np.allclose(xdiff1, 0) and np.allclose(xdiff2, 0)
+
+        slope1 = (y1 - y0) / xdiff1
+        slope2 = (y2 - y1) / xdiff2
+
+        # If slopes are equal (within a small tolerance), the projection preserves straight lines
+        return np.allclose(slope1 - slope2, 0)
+    # Cylindrical projections are generally rectilinear
+    rectilinear_projections = {
+        # Cartopy projections
+        "platecarree",
+        "mercator",
+        "lambertcylindrical",
+        "miller",
+        # Basemap projections
+        "cyl",
+        "merc",
+        "mill",
+        "rect",
+        "rectilinear",
+        "unknown",
+    }
+
+    # For Cartopy
+    if hasattr(proj, "name"):
+        return proj.name.lower() in rectilinear_projections
+    # For Basemap
+    elif hasattr(proj, "projection"):
+        return proj.projection.lower() in rectilinear_projections
+    # If we can't determine, assume it's not rectilinear
+    return False
