@@ -1173,6 +1173,8 @@ class Figure(mfigure.Figure):
         - which: 'x', 'y' or 'view'.
         - share: int indicating the levels (see above)
         - panels: Whether to include panel axes.
+        - children: Whether to include child axes.
+        - hidden: Whether to include hidden axes.
         """
 
         if which == "x":
