@@ -330,11 +330,11 @@ def test_auto_labelrotation():
         is_horizontal = not is_vertical
 
         expected_rotation = 0
-        if is_vertical:
-            if labelloc == "left":
-                expected_rotation = 90
-            elif labelloc == "right":
-                expected_rotation = 270
+        if labelloc == "left":
+            expected_rotation = 90
+        elif labelloc == "right":
+            expected_rotation = 270
+
         actual_rotation = label.get_rotation()
         ax.set_title(f"loc={loc}, labelloc={labelloc}, rotation={actual_rotation}")
         assert actual_rotation == expected_rotation

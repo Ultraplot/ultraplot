@@ -1331,17 +1331,18 @@ class Axes(maxes.Axes):
                 # Horizontal colorbar
                 case (False, _, _):
                     if labelloc == "left":
-                        kw_label["ha"] = "right"
                         kw_label["va"] = "center"
+                        labelrotation = 90
                     elif labelloc == "right":
-                        kw_label["ha"] = "left"
                         kw_label["va"] = "center"
-
-                    labelrotation = 0
+                        labelrotation = 270
+                    else:
+                        labelrotation = 0
                 case Number():
                     pass
                 case _:
                     labelrotation = 0
+            print(labelrotation)
 
             kw_label.update({"rotation": labelrotation})
         axis.label.update(kw_label)
