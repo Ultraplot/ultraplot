@@ -919,6 +919,8 @@ class CartesianAxes(shared._SharedAxes, plot.PlotAxes):
         # Only update if above is conditions above are true
         for side, axs in border_axes.items():
             for axi in axs:
+                if axi in self._twinned_axes:
+                    continue
                 # Unset sharex/y otherwise ticks
                 # won't appear
                 if labellright and side == "right":
