@@ -768,6 +768,11 @@ Controls the size of the lollipops. Defaults to `rc["lollipop.size"]`.
 Other parameters
 ----------------
 %(plot.bar)s
+
+
+Returns
+-------
+List of ~matplotlib.collections.PatchCollection, and a ~matplotlib.collections.LineCollection
 """
 docstring._snippet_manager["plot.lollipop"] = _lollipop_docstring.format(which="x")
 docstring._snippet_manager["plot.lollipoph"] = _lollipop_docstring.format(which="y")
