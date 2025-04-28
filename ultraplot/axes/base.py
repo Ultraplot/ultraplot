@@ -21,6 +21,8 @@ import matplotlib.projections as mproj
 import matplotlib.text as mtext
 import matplotlib.ticker as mticker
 import matplotlib.transforms as mtransforms
+from typing import Union
+from numbers import Number
 import numpy as np
 from matplotlib import cbook
 
@@ -542,6 +544,13 @@ rasterize : bool, default: :rc:`colorbar.rasterize`
     Whether to rasterize the colorbar solids. The matplotlib default was ``True``
     but ultraplot changes this to ``False`` since rasterization can cause misalignment
     between the color patches and the colorbar outline.
+outline : bool, None default : None
+    Controls the visibility of the frame. When set to False, the spines of the colorbar are hidden. If set to `None` it uses the `rc['colorbar.outline']` value.
+labelrotation : str, float, default: None
+    Controls the rotation of the colorbar label. When set to None it takes on the value of `rc["colorbar.labelrotation"]`. When set to auto it produces a sensible default where the rotation is adjusted to where the colorbar is located. For example, a horizontal colorbar with a label to the left or right will match the horizontal alignment and rotate the label to 0 degrees. Users can provide a float to rotate to any arbitrary angle.
+
+
+
 **kwargs
     Passed to `~matplotlib.figure.Figure.colorbar`.
 """
@@ -1033,6 +1042,8 @@ class Axes(maxes.Axes):
         linewidth=None,
         edgefix=None,
         rasterized=None,
+        outline: Union[bool, None] = None,
+        labelrotation: Union[str, float] = None,
         **kwargs,
     ):
         """
@@ -1211,6 +1222,10 @@ class Axes(maxes.Axes):
         # Create colorbar and update ticks and axis direction
         # NOTE: This also adds the guides._update_ticks() monkey patch that triggers
         # updates to DiscreteLocator when parent axes is drawn.
+        orientation = _not_none(
+            kwargs.pop("orientation", None), kwargs.pop("vert", None)
+        )
+
         obj = cax._colorbar_fill = cax.figure.colorbar(
             mappable,
             cax=cax,
@@ -1218,8 +1233,11 @@ class Axes(maxes.Axes):
             format=formatter,
             drawedges=grid,
             extendfrac=extendfrac,
+            orientation=orientation,
             **kwargs,
         )
+        outline = _not_none(outline, rc["colorbar.outline"])
+        obj.outline.set_visible(outline)
         obj.ax.grid(False)
         # obj.minorlocator = minorlocator  # backwards compatibility
         obj.update_ticks = guides._update_ticks.__get__(obj)  # backwards compatible
@@ -1294,6 +1312,38 @@ class Axes(maxes.Axes):
                 case _:
                     raise ValueError("Location not understood.")
             axis.set_label_position(labelloc)
+        labelrotation = _not_none(labelrotation, rc["colorbar.labelrotation"])
+        if labelrotation == "auto":
+            # When set to auto, we make the colorbar appear "natural". For example, when we have a
+            # horizontal colorbar on the top, but we want the label to the sides, we make sure that the horizontal alignment is correct and the labelrotation is horizontal. Below produces "sensible defaults", but can be overridden by the user.
+            match (vert, labelloc, loc):
+                # Vertical colorbars
+                case (True, "left", "left" | "right"):
+                    labelrotation = 90
+                case (True, "right", "left" | "right"):
+                    if labelloc == "right":
+                        kw_label["va"] = "bottom"
+                    elif labelloc == "left":
+                        kw_label["va"] = "top"
+                    labelrotation = -90
+                case (True, None, _):
+                    labelrotation = 90
+                # Horizontal colorbar
+                case (False, _, _):
+                    if labelloc == "left":
+                        kw_label["va"] = "center"
+                        labelrotation = 90
+                    elif labelloc == "right":
+                        kw_label["va"] = "center"
+                        labelrotation = 270
+                    else:
+                        labelrotation = 0
+                case Number():
+                    pass
+                case _:
+                    labelrotation = 0
+
+            kw_label.update({"rotation": labelrotation})
         axis.label.update(kw_label)
         # Assume ticks are set on the long axis(!)
         for label in obj._long_axis().get_ticklabels():
