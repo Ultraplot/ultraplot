@@ -187,3 +187,71 @@ def test_subset_format():
     # Shorter than number of axs
     with pytest.raises(ValueError):
         axs.format(title=["a"])
+
+
+def test_sharing_labels_top_right():
+    fig, ax = uplt.subplots(ncols=3, nrows=3, share="all")
+    # On the first format sharexy is modified
+    ax.format(
+        xticklabelloc="t",
+        yticklabelloc="r",
+    )
+    # If we format again, we expect all the limits to be changed
+    # Plot on one shared axis a non-trivial point
+    # and check whether the limits are correctly adjusted
+    # for all other plots
+    ax[0].scatter([30, 40], [30, 40])
+    xlim = ax[0].get_xlim()
+    ylim = ax[0].get_ylim()
+
+    for axi in ax:
+        for i, j in zip(axi.get_xlim(), xlim):
+            assert i == j
+        for i, j in zip(axi.get_ylim(), ylim):
+            assert i == j
+
+
+def test_sharing_labels_top_right_odd_layout():
+    layout = [
+        [1, 2, 0],
+        [1, 2, 5],
+        [3, 4, 5],
+        [3, 4, 0],
+    ]
+    fig, ax = uplt.subplots(layout)
+    ax.format(
+        xticklabelloc="t",
+        yticklabelloc="r",
+    )
+
+    def check_state(numbers: list, state: bool, which: str):
+        for number in numbers:
+            for label in getattr(ax[number], f"get_{which}ticklabels")():
+                assert label.get_visible() == state
+
+    # these correspond to the indices of the axis
+    # in the axes array (so the grid number minus 1)
+    check_state([0, 2], False, which="y")
+    check_state([1, 3, 4], True, which="y")
+    check_state([2, 3], False, which="x")
+    check_state([0, 1, 4], True, which="x")
+    uplt.close(fig)
+
+    layout = [
+        [1, 0, 2],
+        [0, 3, 0],
+        [4, 0, 5],
+    ]
+
+    fig, ax = uplt.subplots(layout)
+    ax.format(
+        xticklabelloc="t",
+        yticklabelloc="r",
+    )
+    # these correspond to the indices of the axis
+    # in the axes array (so the grid number minus 1)
+    check_state([0, 3], False, which="y")
+    check_state([1, 2, 4], True, which="y")
+    check_state([0, 1, 2], True, which="x")
+    check_state([3, 4], False, which="x")
+    uplt.close(fig)
