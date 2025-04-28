@@ -823,6 +823,7 @@ class Figure(mfigure.Figure):
         """
         Handle deprecation of basemap and cartopy package.
         """
+        # Basemap is currently being developed again so are removing the deprecation warning
         return backend
 
     def _parse_proj(

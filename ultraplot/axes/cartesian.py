@@ -675,7 +675,13 @@ class CartesianAxes(shared._SharedAxes, plot.PlotAxes):
         # See: https://matplotlib.org/api/units_api.html
         # And: https://matplotlib.org/api/dates_api.html
         axis = getattr(self, f"{s}axis")
-        date = isinstance(axis.converter, DATE_CONVERTERS)
+        # TODO(compat): Drop this function when mpl 3.12 is deprecated.
+        # Introduced in mpl 3.10 and deprecated in mpl 3.12
+        # Save the original if it exists
+        converter = (
+            axis.converter if hasattr(axis, "converter") else axis.get_converter()
+        )
+        date = isinstance(converter, DATE_CONVERTERS)
 
         # Major formatter
         # NOTE: The default axis formatter accepts lots of keywords. So unlike
@@ -810,11 +816,17 @@ class CartesianAxes(shared._SharedAxes, plot.PlotAxes):
         current = f"_{s}axis_current_rotation"
         default = f"_{s}axis_isdefault_rotation"
         axis = getattr(self, f"{s}axis")
+        # TODO(compat): Drop this function when mpl 3.12 is deprecated.
+        # Introduced in mpl 3.10 and deprecated in mpl 3.12
+        # Save the original if it exists
+        converter = (
+            axis.converter if hasattr(axis, "converter") else axis.get_converter()
+        )
         if rotation is not None:
             setattr(self, default, False)
         elif not getattr(self, default):
             return  # do not rotate
-        elif s == "x" and isinstance(axis.converter, DATE_CONVERTERS):
+        elif s == "x" and isinstance(converter, DATE_CONVERTERS):
             rotation = rc["formatter.timerotation"]
         else:
             rotation = "horizontal"
