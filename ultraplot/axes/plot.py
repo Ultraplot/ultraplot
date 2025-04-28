@@ -3721,13 +3721,16 @@ class PlotAxes(base.Axes):
         hs, kw = inputs._dist_reduce(hs, **kw)
         guide_kw = _pop_params(kw, self._update_guide)
         alphas = kw.pop("alpha", None)
+
+        # We apply alphas over the columns
+        ncols = hs.shape[-1]
         if alphas is None:
-            alphas = xs.size * [None]
+            alphas = ncols * [None]
         elif isinstance(alphas, Number):
-            alphas = xs.size * [alphas]
-        elif len(alphas) != xs.size:
+            alphas = ncols * [alphas]
+        elif len(alphas) != ncols:
             raise ValueError(
-                f"Received {len(alphas)} values for alpha but needed {xs.size}"
+                f"Received {len(alphas)} values for alpha but needed {ncols}"
             )
         for i, n, x, h, w, b, kw in self._iter_arg_cols(xs, hs, ws, bs, **kw):
             kw = self._parse_cycle(n, **kw)
