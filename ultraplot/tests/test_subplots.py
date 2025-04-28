@@ -113,7 +113,6 @@ def test_gridspec_copies():
     """
     fig1, ax = uplt.subplots(ncols=2)
     gs = fig1.gridspec.copy(left=5, wspace=0, right=5)
-    return fig1
     fig2 = uplt.figure()
     fig2.add_subplots(gs)
     fig = uplt.figure()
@@ -142,6 +141,7 @@ def test_aligned_outer_guides():
     return fig
 
 
+@pytest.mark.mpl_image_compare
 def test_reference_aspect():
     """
     Rigorous test of reference aspect ratio accuracy.
