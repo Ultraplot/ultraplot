@@ -9,7 +9,7 @@ import itertools
 import re
 import sys
 from numbers import Integral, Number
-from typing import Any
+from typing import Any, Union, Iterable
 from collections.abc import Iterable
 
 import matplotlib.artist as martist
