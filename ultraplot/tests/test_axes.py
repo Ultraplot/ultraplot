@@ -5,6 +5,7 @@ Test twin, inset, and panel axes.
 import numpy as np
 import pytest
 import ultraplot as uplt
+from ultraplot.internals.warnings import UltraplotWarning
 
 
 def test_axis_access():
@@ -195,7 +196,8 @@ def test_unsharing():
     """
     fig, ax = uplt.subplots(ncols=2)
     # Does nothing since key is not an axis or a view
-    ax[0]._unshare(which="key does not exist")
+    with pytest.warns(uplt.internals.warnings.UltraplotWarning):
+        ax[0]._unshare(which="key does not exist")
     # 1 shares with 0 but not vice versa
     assert ax[1]._sharey == ax[0]
     assert ax[0]._sharey is None
