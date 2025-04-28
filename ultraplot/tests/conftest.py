@@ -104,7 +104,7 @@ def pytest_terminal_summary(terminalreporter, exitstatus, config):
     print("\nGenerating HTML report for image comparison tests...")
 
     # Get the results directory
-    results_dir = Path(getattr(config.option, "mpl_results_path", "./mpl-results"))
+    results_dir = Path(getattr(config.option, "mpl_results_path", "./results"))
     if not results_dir.exists():
         print(f"Results directory not found: {results_dir}")
         return
@@ -185,7 +185,7 @@ def pytest_terminal_summary(terminalreporter, exitstatus, config):
             data["display_name"] = test_name
 
     # Generate the HTML
-    html_output = generate_summary_html(results_dir, test_results)
+    html_output = generate_summary_html(test_results, results_dir)
 
     # Write the HTML report
     report_path = results_dir / "mpl_comparison_report.html"
