@@ -209,6 +209,7 @@ def test_unsharing():
     assert ax[1]._sharey == None
     assert ax[1]._sharex == None
 
+
 def test_sharing_labels_top_right():
     fig, ax = uplt.subplots(ncols=3, nrows=3, share="all")
     # On the first format sharexy is modified
@@ -275,4 +276,3 @@ def test_sharing_labels_top_right_odd_layout():
     check_state([0, 1, 2], True, which="x")
     check_state([3, 4], False, which="x")
     uplt.close(fig)
-
