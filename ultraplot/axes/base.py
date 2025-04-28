@@ -1603,11 +1603,17 @@ class Axes(maxes.Axes):
         **kwargs,
     ) -> "InsetIndicator":
         # Implementation for matplotlib >= 3.10
-        # NOTE: if the api changes we need to deprecate the old one. At the time of writing the IndicateInset is experimental and may change in the future. This would require us to change potentially the return signature of this function.
+        # NOTE: if the api changes we need to deprecate the old
+        # one. At the time of writing the IndicateInset is
+        # experimental and may change in the future. This would
+        # require us to change potentially the return signature
+        # of this function.
         kwargs.setdefault("label", "_indicate_inset")
 
-        # If we already have a zoom indicator we need to update the properties or add them
-        # Note the first time we enter this function, we create the object. Afterwards the function is accessed again but with different updates
+        # If we already have a zoom indicator we need to update
+        # the properties or add them
+        # Note the first time we enter this function, we create
+        #  the object. Afterwards the function is accessed again but with different updates
         if self._inset_zoom_artists:
             indicator = self._inset_zoom_artists
             indicator.rectangle.update(kwargs)
