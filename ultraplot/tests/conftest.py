@@ -83,11 +83,11 @@ def pytest_configure(config):
     # Surpress ultraplot config loading which mpl does not recognize
     logging.getLogger("matplotlib").setLevel(logging.ERROR)
     logging.getLogger("ultraplot").setLevel(logging.WARNING)
-    try:
-        if config.getoption("--store-failed-only", False):
-            config.pluginmanager.register(StoreFailedMplPlugin(config))
-    except Exception as e:
-        print(f"Error during plugin configuration: {e}")
+    # try:
+    #     if config.getoption("--store-failed-only", False):
+    #         config.pluginmanager.register(StoreFailedMplPlugin(config))
+    # except Exception as e:
+    #     print(f"Error during plugin configuration: {e}")
 
 
 @pytest.hookimpl(trylast=True)
