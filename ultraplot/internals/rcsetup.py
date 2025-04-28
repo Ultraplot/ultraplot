@@ -1437,7 +1437,7 @@ _rc_ultraplot_table = {
         _validate_fontsize,
         "Font size for row labels on the left-hand side." + _addendum_font,
     ),
-    "lollipop.size": (
+    "lollipop.markersize": (
         36,
         _validate_float,
         "Size of lollipops in the lollipop plot.",

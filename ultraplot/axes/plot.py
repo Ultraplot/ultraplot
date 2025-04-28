@@ -765,7 +765,8 @@ linecolor: str, default None
     Line color of the lines connecting the dots to the {which}-axis. Defaults to `rc["lollipop.linecolor"]`.
 linestyle: str, default: None
     The style of the lines connecting the dots to the {which}-axis. Defaults to `rc["lollipop.linestyle"]`.
-Controls the size of the lollipops. Defaults to `rc["lollipop.size"]`.
+markersize: float, default: None
+    Controls the size of the lollipops. Defaults to `rc["lollipop.markersize"]`.
 
 Other parameters
 ----------------
@@ -3181,8 +3182,8 @@ class PlotAxes(base.Axes):
         linecolor = _not_none(linecolor, rc["lollipop.linecolor"])
         linestyle = kwargs.pop("linestyle", None)
         linestyle = _not_none(linestyle, rc["lollipop.linestyle"])
-        size = kwargs.pop("size", None)
-        size = _not_none(size, rc["lollipop.size"])
+        markersize = kwargs.pop("markersize", None)
+        markersize = _not_none(markersize, rc["lollipop.markersize"])
         if horizontal:
             bars = self.barh(*args, **kwargs)
         else:
