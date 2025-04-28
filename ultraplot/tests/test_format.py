@@ -81,24 +81,28 @@ def test_multi_formatting():
     """
     Support formatting in multiple projections.
     """
+    # Mix Cartesian with a projection
     fig, axs = uplt.subplots(ncols=2, proj=("cart", "cyl"))
     axs[0].pcolormesh(np.random.rand(5, 5))
-    fig.format(
-        land=1,
-        labels=1,
-        lonlim=(0, 90),
-        latlim=(0, 90),
-        xlim=(0, 10),
-        ylim=(0, 10),
-    )
-    axs[:1].format(
-        land=1,
-        labels=1,
-        lonlim=(0, 90),
-        latlim=(0, 90),
-        xlim=(0, 10),
-        ylim=(0, 10),
-    )
+
+    # Warning is raised based on projection. Cart does not have lonlim, latllim or labels
+    with pytest.warns(uplt.warnings.UltraPlotWarning):
+        fig.format(
+            land=1,
+            labels=1,
+            lonlim=(0, 90),
+            latlim=(0, 90),
+            xlim=(0, 10),
+            ylim=(0, 10),
+        )
+        axs[:1].format(
+            land=1,
+            labels=1,
+            lonlim=(0, 90),
+            latlim=(0, 90),
+            xlim=(0, 10),
+            ylim=(0, 10),
+        )
     return fig
 
 
