@@ -3177,17 +3177,29 @@ class PlotAxes(base.Axes):
         """
         return self.plotx(*args, **kwargs)
 
-    def _apply_lollipop(self, *args, horizontal=False, **kwargs):
-        linecolor = kwargs.pop("linecolor", None)
+    def _apply_lollipop(
+        self,
+        xs: Union[Iterable, np.ndarray, "DataFrame"],
+        hs: Union[Iterable, np.ndarray, "DataFrame"],
+        *args,
+        horizontal=False,
+        **kwargs,
+    ):
+        """
+        Lollipop graphs are an alternative way to visualize bar charts. We can utilize the bar internal mechanics to generate the charts and then replace the look with the lollipop graphs
+        """
+
+        xs, hs, kw = self._parse_1d_args(xs, hs, **kwargs)
+        linecolor = kw.pop("linecolor", None)
         linecolor = _not_none(linecolor, rc["lollipop.linecolor"])
-        linestyle = kwargs.pop("linestyle", None)
+        linestyle = kw.pop("linestyle", None)
         linestyle = _not_none(linestyle, rc["lollipop.linestyle"])
-        markersize = kwargs.pop("markersize", None)
+        markersize = kw.pop("markersize", None)
         markersize = _not_none(markersize, rc["lollipop.markersize"])
         if horizontal:
-            bars = self.barh(*args, **kwargs)
+            bars = self.barh(y=xs, width=hs, **kw)
         else:
-            bars = self.bar(*args, **kwargs)
+            bars = self.bar(x=xs, height=hs, **kw)
 
         xmin = np.inf
         xmax = -np.inf
