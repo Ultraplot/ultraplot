@@ -3215,7 +3215,7 @@ class PlotAxes(base.Axes):
                 if pos > xmax:
                     xmax = pos
             color = bar.patches[0].get_facecolor()
-            bar_patch = self.scatter(*xy.T, color=color, s=size)
+            bar_patch = self.scatter(*xy.T, color=color, s=markersize)
             patch_collection.append(bar_patch)
 
         line_collection = mcollections.LineCollection(
