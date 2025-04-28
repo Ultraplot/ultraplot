@@ -901,6 +901,55 @@ class CartesianAxes(shared._SharedAxes, plot.PlotAxes):
             kw.update({"label" + side: False for side in sides if side not in tickloc})
         self.tick_params(axis=s, which="both", **kw)
 
+        # When axes are shared, the reference
+        # is the top left and bottom left plot
+        # for labels that are top or right
+        # this will plot them on those first two plots
+        # we can fool mpl to share them by turning
+        # sharex/y  off for those plots. We still
+        # update the ticks with the prior step, and
+        # keep the references in _shared_axes for all plots
+        labellright = kw.pop("labelright", None)
+        labeltop = kw.pop("labeltop", None)
+
+        nrows, ncols = self.figure.gridspec.nrows, self.figure.gridspec.ncols
+        border_axes = {}
+        if labellright and self.figure._sharey or labeltop and self.figure._sharex:
+            border_axes = self.figure._get_border_axes()
+        # Only update if above is conditions above are true
+        for side, axs in border_axes.items():
+            for axi in axs:
+                if axi in self._twinned_axes:
+                    continue
+                # Unset sharex/y otherwise ticks
+                # won't appear
+                if labellright and side == "right":
+                    axi._sharey = None
+                    siblings = list(axi._shared_axes["y"].get_siblings(axi))
+                    for sibling in siblings:
+                        if sibling is axi:
+                            continue
+                        if sibling._sharey is not None:
+                            continue
+                        sibling._sharey = axi
+                    axi.tick_params(labelright=labellright)
+                elif labellright and side == "left":
+                    if axi not in border_axes["right"]:
+                        axi.tick_params(labelright=not labellright)
+                elif labeltop and side == "top":
+                    axi._sharex = None
+                    siblings = list(axi._shared_axes["x"].get_siblings(axi))
+                    for sibling in siblings:
+                        if sibling is axi:
+                            continue
+                        if sibling._sharex is not None:
+                            continue
+                        sibling._sharex = axi
+                    axi.tick_params(labeltop=labeltop)
+                elif labeltop and side == "bottom":
+                    if axi not in border_axes["top"]:
+                        axi.tick_params(labeltop=not labeltop)
+
         # Apply the axis label and offset label locations
         # Uses ugly mpl 3.3+ tick_top() tick_bottom() kludge for offset location
         # See: https://matplotlib.org/3.3.1/users/whats_new.html

@@ -7,6 +7,11 @@ import inspect
 import os
 from numbers import Integral
 
+try:
+    from typing import List
+except:
+    from typing_extensions import List
+
 import matplotlib.axes as maxes
 import matplotlib.figure as mfigure
 import matplotlib.gridspec as mgridspec
@@ -900,6 +905,76 @@ class Figure(mfigure.Figure):
         axs = [ax for ax in sorted(axs, key=lambda ax: ax._range_subplotspec(y)[0])]
         axs = [ax for ax in axs if ax.get_visible()]
         return axs
+
+    def _get_border_axes(self) -> dict[str, list[paxes.Axes]]:
+        """
+        Identifies axes located on the outer boundaries of the GridSpec layout.
+
+        Returns a dictionary with keys 'top', 'bottom', 'left', 'right', each
+        containing a list of axes on that border.
+        """
+
+        gs = self.gridspec
+        all_axes = self.axes
+
+        # Handle empty cases
+        nrows, ncols = gs.nrows, gs.ncols
+        if nrows == 0 or ncols == 0 or not all_axes:
+            return dict(top=[], bottom=[], left=[], right=[])
+
+        # Find occupied grid cells and valid axes
+        occupied_cells = set()
+        axes_with_spec = []
+
+        for axi in all_axes:
+            spec = axi.get_subplotspec()
+            if spec is not None:
+                axes_with_spec.append((axi, spec))
+                r0, r1 = spec.rowspan.start, spec.rowspan.stop
+                c0, c1 = spec.colspan.start, spec.colspan.stop
+                for r in range(r0, r1):
+                    for c in range(c0, c1):
+                        occupied_cells.add((r, c))
+
+        if not axes_with_spec:
+            return dict(top=[], bottom=[], left=[], right=[])
+
+        # Initialize border axes sets
+        border_axes_sets = dict(top=set(), bottom=set(), left=set(), right=set())
+
+        # Check each axis against border criteria
+        for axi, spec in axes_with_spec:
+            r0, r1 = spec.rowspan.start, spec.rowspan.stop
+            c0, c1 = spec.colspan.start, spec.colspan.stop
+
+            # Check top border
+            if r0 == 0 or (
+                r0 == 1 and any((0, c) not in occupied_cells for c in range(c0, c1))
+            ):
+                border_axes_sets["top"].add(axi)
+
+            # Check bottom border
+            if r1 == nrows or (
+                r1 == nrows - 1
+                and any((nrows - 1, c) not in occupied_cells for c in range(c0, c1))
+            ):
+                border_axes_sets["bottom"].add(axi)
+
+            # Check left border
+            if c0 == 0 or (
+                c0 == 1 and any((r, 0) not in occupied_cells for r in range(r0, r1))
+            ):
+                border_axes_sets["left"].add(axi)
+
+            # Check right border
+            if c1 == ncols or (
+                c1 == ncols - 1
+                and any((r, ncols - 1) not in occupied_cells for r in range(r0, r1))
+            ):
+                border_axes_sets["right"].add(axi)
+
+        # Convert sets to lists
+        return {key: list(val) for key, val in border_axes_sets.items()}
 
     def _get_align_coord(self, side, axs, includepanels=False):
         """
