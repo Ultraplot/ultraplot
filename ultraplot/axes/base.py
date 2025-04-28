@@ -2339,8 +2339,6 @@ class Axes(maxes.Axes):
             else:
                 hs = hs[0] if len(hs) == 1 else hs  # unfurl for better error messages
                 label = label if label is not None else labs[0] if labs else "_no_label"
-                if label and str(label).startswith("_"):
-                    continue
                 ihandles.append(hs)
                 ilabels.append(label)
         return ihandles, ilabels
