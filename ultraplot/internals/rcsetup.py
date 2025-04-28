@@ -421,6 +421,15 @@ def _validate_units(dest):
     return _validate_units
 
 
+def _validate_float_or_auto(value):
+    if value == "auto":
+        return value
+    try:
+        return float(value)
+    except (ValueError, TypeError):
+        raise ValueError(f"Value must be a float or 'auto', got {value!r}")
+
+
 def _rst_table():
     """
     Return the setting names and descriptions in an RST-style table.
@@ -991,6 +1000,16 @@ _rc_ultraplot_table = {
         _validate_em,
         'Length of rectangular or triangular "extensions" for panel colorbars.'
         + _addendum_em,
+    ),
+    "colorbar.outline": (
+        True,
+        _validate_bool,
+        "Whether to draw a frame around the colorbar.",
+    ),
+    "colorbar.labelrotation": (
+        "auto",
+        _validate_float_or_auto,
+        "Rotation of colorbar labels.",
     ),
     "colorbar.fancybox": (
         False,
