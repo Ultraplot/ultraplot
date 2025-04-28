@@ -6,6 +6,7 @@ Implements basic shared functionality.
 import copy
 import inspect
 import re
+import types
 from numbers import Integral
 
 import matplotlib.axes as maxes
@@ -21,8 +22,11 @@ import matplotlib.projections as mproj
 import matplotlib.text as mtext
 import matplotlib.ticker as mticker
 import matplotlib.transforms as mtransforms
+from typing import Union
+from numbers import Number
 import numpy as np
 from matplotlib import cbook
+from packaging import version
 
 from .. import colors as pcolors
 from .. import constructor
@@ -542,6 +546,13 @@ rasterize : bool, default: :rc:`colorbar.rasterize`
     Whether to rasterize the colorbar solids. The matplotlib default was ``True``
     but ultraplot changes this to ``False`` since rasterization can cause misalignment
     between the color patches and the colorbar outline.
+outline : bool, None default : None
+    Controls the visibility of the frame. When set to False, the spines of the colorbar are hidden. If set to `None` it uses the `rc['colorbar.outline']` value.
+labelrotation : str, float, default: None
+    Controls the rotation of the colorbar label. When set to None it takes on the value of `rc["colorbar.labelrotation"]`. When set to auto it produces a sensible default where the rotation is adjusted to where the colorbar is located. For example, a horizontal colorbar with a label to the left or right will match the horizontal alignment and rotate the label to 0 degrees. Users can provide a float to rotate to any arbitrary angle.
+
+
+
 **kwargs
     Passed to `~matplotlib.figure.Figure.colorbar`.
 """
@@ -1033,6 +1044,8 @@ class Axes(maxes.Axes):
         linewidth=None,
         edgefix=None,
         rasterized=None,
+        outline: Union[bool, None] = None,
+        labelrotation: Union[str, float] = None,
         **kwargs,
     ):
         """
@@ -1203,7 +1216,7 @@ class Axes(maxes.Axes):
         ):
             minorlocator, tickminor = None, False  # attempted fix
         for ticker in (locator, formatter, minorlocator):
-            if _version_mpl < "3.2":
+            if version.parse(str(_version_mpl)) < version.parse("3.2"):
                 pass  # see notes above
             elif isinstance(ticker, mticker.TickHelper):
                 ticker.set_axis(axis)
@@ -1211,6 +1224,10 @@ class Axes(maxes.Axes):
         # Create colorbar and update ticks and axis direction
         # NOTE: This also adds the guides._update_ticks() monkey patch that triggers
         # updates to DiscreteLocator when parent axes is drawn.
+        orientation = _not_none(
+            kwargs.pop("orientation", None), kwargs.pop("vert", None)
+        )
+
         obj = cax._colorbar_fill = cax.figure.colorbar(
             mappable,
             cax=cax,
@@ -1218,8 +1235,11 @@ class Axes(maxes.Axes):
             format=formatter,
             drawedges=grid,
             extendfrac=extendfrac,
+            orientation=orientation,
             **kwargs,
         )
+        outline = _not_none(outline, rc["colorbar.outline"])
+        obj.outline.set_visible(outline)
         obj.ax.grid(False)
         # obj.minorlocator = minorlocator  # backwards compatibility
         obj.update_ticks = guides._update_ticks.__get__(obj)  # backwards compatible
@@ -1294,6 +1314,38 @@ class Axes(maxes.Axes):
                 case _:
                     raise ValueError("Location not understood.")
             axis.set_label_position(labelloc)
+        labelrotation = _not_none(labelrotation, rc["colorbar.labelrotation"])
+        if labelrotation == "auto":
+            # When set to auto, we make the colorbar appear "natural". For example, when we have a
+            # horizontal colorbar on the top, but we want the label to the sides, we make sure that the horizontal alignment is correct and the labelrotation is horizontal. Below produces "sensible defaults", but can be overridden by the user.
+            match (vert, labelloc, loc):
+                # Vertical colorbars
+                case (True, "left", "left" | "right"):
+                    labelrotation = 90
+                case (True, "right", "left" | "right"):
+                    if labelloc == "right":
+                        kw_label["va"] = "bottom"
+                    elif labelloc == "left":
+                        kw_label["va"] = "top"
+                    labelrotation = -90
+                case (True, None, _):
+                    labelrotation = 90
+                # Horizontal colorbar
+                case (False, _, _):
+                    if labelloc == "left":
+                        kw_label["va"] = "center"
+                        labelrotation = 90
+                    elif labelloc == "right":
+                        kw_label["va"] = "center"
+                        labelrotation = 270
+                    else:
+                        labelrotation = 0
+                case Number():
+                    pass
+                case _:
+                    labelrotation = 0
+
+            kw_label.update({"rotation": labelrotation})
         axis.label.update(kw_label)
         # Assume ticks are set on the long axis(!)
         for label in obj._long_axis().get_ticklabels():
@@ -1582,6 +1634,70 @@ class Axes(maxes.Axes):
                 and clip_path._patch is self.patch
             )
         )
+
+    def _format_inset(
+        self,
+        bounds: tuple[float, float, float, float],
+        parent: "Axes",
+        **kwargs,
+    ) -> "tuple | InsetIndicator":
+
+        if version.parse(str(_version_mpl)) >= version.parse("3.10.0"):
+            return self.__format_inset(bounds, parent, **kwargs)
+        return self.__format_inset_legacy(bounds, parent, **kwargs)
+
+    def __format_inset(
+        self,
+        bounds: tuple[float, float, float, float],
+        parent: "Axes",
+        **kwargs,
+    ) -> "InsetIndicator":
+        # Implementation for matplotlib >= 3.10
+        # NOTE: if the api changes we need to deprecate the old
+        # one. At the time of writing the IndicateInset is
+        # experimental and may change in the future. This would
+        # require us to change potentially the return signature
+        # of this function.
+        kwargs.setdefault("label", "_indicate_inset")
+
+        # If we already have a zoom indicator we need to update
+        # the properties or add them
+        # Note the first time we enter this function, we create
+        #  the object. Afterwards the function is accessed again but with different updates
+        if self._inset_zoom_artists:
+            indicator = self._inset_zoom_artists
+            indicator.rectangle.update(kwargs)
+            indicator.rectangle.set_bounds(bounds)  # otherwise the patch is not updated
+            for connector in indicator.connectors:
+                connector.update(kwargs)
+        else:
+            indicator = parent.indicate_inset(bounds, self, **kwargs)
+            self._inset_zoom_artists = indicator
+        return indicator
+
+    def __format_inset_legacy(
+        self, bounds: tuple[float, float, float, float], parent: "Axes", **kwargs
+    ) -> tuple[mpatches.Rectangle, list[mpatches.ConnectionPatch]]:
+        # Implementation for matplotlib < 3.10
+        rectpatch, connects = parent.indicate_inset(bounds, self)
+
+        # Update indicator properties
+        if self._inset_zoom_artists:
+            rectpatch_prev, connects_prev = self._inset_zoom_artists
+            rectpatch.update_from(rectpatch_prev)
+            rectpatch.set_zorder(rectpatch_prev.get_zorder())
+            rectpatch_prev.remove()
+            for line, line_prev in zip(connects, connects_prev):
+                line.update_from(line_prev)
+                line.set_zorder(line_prev.get_zorder())  # not included in update_from
+                line_prev.remove()
+
+        rectpatch.update(kwargs)
+        for line in connects:
+            line.update(kwargs)
+
+        self._inset_zoom_artists = (rectpatch, connects)
+        return rectpatch, connects
 
     def _get_legend_handles(self, handler_map=None):
         """
@@ -2161,7 +2277,7 @@ class Axes(maxes.Axes):
             for obj in objs:
                 if hasattr(obj, "get_label"):  # e.g. silent list
                     lab = obj.get_label()
-                    if lab is not None and str(lab)[:1] != "_":
+                    if lab is not None and not str(lab).startswith("_"):
                         labs.append(lab)
             return tuple(labs)
 
@@ -2396,7 +2512,7 @@ class Axes(maxes.Axes):
         if not isinstance(self, maxes.SubplotBase):
             raise RuntimeError("Axes must be a subplot.")
         setter = getattr(self, "_set_position", self.set_position)
-        if _version_mpl >= "3.4":
+        if version.parse(str(_version_mpl)) >= version.parse("3.4"):
             setter(self.get_subplotspec().get_position(self.figure))
         else:
             self.update_params()
@@ -3002,8 +3118,6 @@ class Axes(maxes.Axes):
         """
         %(axes.indicate_inset)s
         """
-        import matplotlib as mpl
-        from packaging import version
 
         # Add the inset indicators
         parent = self._inset_parent
@@ -3020,52 +3134,7 @@ class Axes(maxes.Axes):
         xlim, ylim = self.get_xlim(), self.get_ylim()
         bounds = (xlim[0], ylim[0], xlim[1] - xlim[0], ylim[1] - ylim[0])
 
-        if version.parse(mpl.__version__) >= version.parse("3.10"):
-            # Implementation for matplotlib >= 3.10
-            # NOTE: if the api changes we need to deprecate the old one. At the time of writing the IndicateInset is experimental and may change in the future. This would require us to change potentially the return signature of this function.
-            self.apply_aspect()
-            kwargs.setdefault("label", "_indicate_inset")
-            if kwargs.get("transform") is None:
-                kwargs["transform"] = self.transData
-
-            from matplotlib.inset import InsetIndicator
-
-            indicator = InsetIndicator(bounds=bounds, inset_ax=self, **kwargs)
-
-            if self._inset_zoom_artists:
-                indicator = self._inset_zoom_artists
-                indicator.update(kwargs)
-                indicator.rectangle.update(kwargs)
-                [c.update(kwargs) for c in indicator.connectors]
-            else:
-                self._inset_zoom_artists = indicator
-                self.add_artist(indicator)
-
-            return (indicator.rectangle, indicator.connectors)
-
-        else:
-            # Implementation for matplotlib < 3.10
-            rectpatch, connects = parent.indicate_inset(bounds, self)
-
-            # Update indicator properties
-            if self._inset_zoom_artists:
-                rectpatch_prev, connects_prev = self._inset_zoom_artists
-                rectpatch.update_from(rectpatch_prev)
-                rectpatch.set_zorder(rectpatch_prev.get_zorder())
-                rectpatch_prev.remove()
-                for line, line_prev in zip(connects, connects_prev):
-                    line.update_from(line_prev)
-                    line.set_zorder(
-                        line_prev.get_zorder()
-                    )  # not included in update_from
-                    line_prev.remove()
-
-            rectpatch.update(kwargs)
-            for line in connects:
-                line.update(kwargs)
-
-            self._inset_zoom_artists = (rectpatch, connects)
-            return rectpatch, connects
+        return self._format_inset(bounds, parent, **kwargs)
 
     @docstring._snippet_manager
     def panel(self, side=None, **kwargs):
@@ -3309,7 +3378,7 @@ class Axes(maxes.Axes):
         else:
             transform = self._get_transform(transform)
         with warnings.catch_warnings():  # ignore duplicates (internal issues?)
-            warnings.simplefilter("ignore", warnings.UltraplotWarning)
+            warnings.simplefilter("ignore", warnings.UltraPlotWarning)
             kwargs.update(_pop_props(kwargs, "text"))
 
         # Update the text object using a monkey patch
