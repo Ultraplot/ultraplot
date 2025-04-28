@@ -160,7 +160,6 @@ def test_geoticks():
 
 
 def test_geoticks_input_handling(recwarn):
-    fig, ax = plt.subplots(proj="aeqd", share=0)
     fig, ax = uplt.subplots(proj="aeqd")
     # Should warn that about non-rectilinear projection.
     with pytest.warns(uplt.warnings.UltraplotWarning):
@@ -183,7 +182,7 @@ def test_geoticks_input_handling(recwarn):
 )
 @pytest.mark.mpl_image_compare
 def test_geoticks_shared(layout, lonlabels, latlabels):
-    fig, ax = plt.subplots(layout, proj="cyl", share="all")
+    fig, ax = uplt.subplots(layout, proj="cyl", share="all")
     ax.format(
         latlim=(0, 10),  # smaller rangers are quicker
         lonlim=(0, 10),
@@ -202,8 +201,8 @@ def test_geoticks_shared(layout, lonlabels, latlabels):
 
 
 def test_geoticks_shared_non_rectilinear():
-    with pytest.warns(plt.warnings.UltraplotWarning):
-        fig, ax = plt.subplots(ncols=2, proj="aeqd", share="all")
+    with pytest.warns(uplt.warnings.UltraplotWarning):
+        fig, ax = uplt.subplots(ncols=2, proj="aeqd", share="all")
         ax.format(
             land=True,
             labels=True,
