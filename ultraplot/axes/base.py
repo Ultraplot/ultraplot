@@ -1342,7 +1342,6 @@ class Axes(maxes.Axes):
                     pass
                 case _:
                     labelrotation = 0
-            print(labelrotation)
 
             kw_label.update({"rotation": labelrotation})
         axis.label.update(kw_label)
