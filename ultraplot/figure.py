@@ -821,14 +821,9 @@ class Figure(mfigure.Figure):
     @staticmethod
     def _parse_backend(backend=None, basemap=None):
         """
-        Handle deprication of basemap and cartopy package.
+        Handle deprecation of basemap and cartopy package.
         """
-        if basemap is not None:
-            backend = ("cartopy", "basemap")[bool(basemap)]
-            warnings._warn_ultraplot(
-                f"The 'basemap' keyword was deprecated in version 0.10.0 and will be "
-                f"removed in a future release. Please use backend={backend!r} instead."
-            )
+        # Basemap is currently being developed again so are removing the deprecation warning
         return backend
 
     def _parse_proj(

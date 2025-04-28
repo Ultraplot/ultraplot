@@ -23,6 +23,8 @@ import matplotlib.image as mimage
 import matplotlib.lines as mlines
 import matplotlib.patches as mpatches
 import matplotlib.ticker as mticker
+import matplotlib as mpl
+from packaging import version
 import numpy as np
 import numpy.ma as ma
 
@@ -41,6 +43,7 @@ from ..internals import (
     guides,
     inputs,
     warnings,
+    _version_mpl,
 )
 from . import base
 
@@ -3807,7 +3810,7 @@ class PlotAxes(base.Axes):
         )
         kw = self._parse_cycle(x.size, **kw)
         objs = self._call_native(
-            "pie", x, explode, labeldistance=pad, wedgeprops=wedge_kw, **kw
+            "pie", x, explode=explode, labeldistance=pad, wedgeprops=wedge_kw, **kw
         )
         objs = tuple(cbook.silent_list(type(seq[0]).__name__, seq) for seq in objs)
         self._fix_patch_edges(objs[0], **edgefix_kw, **wedge_kw)
@@ -3911,7 +3914,19 @@ class PlotAxes(base.Axes):
         if hatch is None:
             hatch = [None for _ in range(x.size)]
 
-        artists = self._call_native("boxplot", y, vert=vert, **kw)
+        # TODO(compat) remove this when 3.9 is deprecated
+        # Convert vert boolean to orientation string for newer versions
+        orientation = "vertical" if vert else "horizontal"
+
+        if version.parse(str(_version_mpl)) >= version.parse("3.10.0"):
+            # For matplotlib 3.10+:
+            # Use the orientation parameters
+            artists = self._call_native("boxplot", y, orientation=orientation, **kw)
+        else:
+            # For older matplotlib versions:
+            # Use vert parameter
+            artists = self._call_native("boxplot", y, vert=vert, **kw)
+
         artists = artists or {}  # necessary?
         artists = {
             key: cbook.silent_list(type(objs[0]).__name__, objs) if objs else objs
@@ -4043,7 +4058,6 @@ class PlotAxes(base.Axes):
         *eb, kw = self._add_error_bars(
             x, y, vert=vert, default_boxstds=True, default_marker=True, **kw
         )  # noqa: E501
-        kw.pop("labels", None)  # already applied in _parse_1d_args
         kw.setdefault("positions", x)  # coordinates passed as keyword
         y = _not_none(kw.pop("distribution"), y)  # i.e. was reduced
         y = inputs._dist_clean(y)
@@ -4059,15 +4073,32 @@ class PlotAxes(base.Axes):
         elif len(hatches) != len(y):
             raise ValueError(f"Retrieved {len(hatches)} hatches but need {len(y)}")
 
-        artists = self._call_native(
-            "violinplot",
-            y,
-            vert=vert,
-            showmeans=False,
-            showmedians=False,
-            showextrema=False,
-            **kw,
-        )
+        legend_labels = kw.pop("labels", None)
+        if version.parse(str(_version_mpl)) >= version.parse("3.10.0"):
+            # For matplotlib 3.10+:
+            # Use orientation parameter
+            orientation = "vertical" if vert else "horizontal"
+            artists = self._call_native(
+                "violinplot",
+                y,
+                orientation=orientation,
+                showmeans=False,
+                showmedians=False,
+                showextrema=False,
+                **kw,
+            )
+        else:
+            # For older matplotlib versions:
+            # Use vert parameter
+            artists = self._call_native(
+                "violinplot",
+                y,
+                vert=vert,  # Use the original vert boolean
+                showmeans=False,
+                showmedians=False,
+                showextrema=False,
+                **kw,
+            )
 
         # Modify body settings
         artists = artists or {}  # necessary?
@@ -4075,6 +4106,15 @@ class PlotAxes(base.Axes):
         if bodies:
             bodies = cbook.silent_list(type(bodies[0]).__name__, bodies)
 
+        # Pad body names if less available
+        if legend_labels is None:
+            legend_labels = np.full(len(bodies), None)
+        elif len(legend_labels) < len(bodies):
+            warnings._warn_ultraplot(
+                f"Warning: More bodies ({len(bodies)}) than labels ({len(legend_labels)})"
+            )
+            for i in range(len(legend_labels), len(bodies)):
+                legend_labels = np.append(legend_labels, None)
         for i, body in enumerate(bodies):
             body.set_alpha(1.0)  # change default to 1.0
             if fillcolor[i] is not None:
@@ -4087,6 +4127,8 @@ class PlotAxes(base.Axes):
                 body.set_linewidths(linewidth)
             if hatches[i] is not None:
                 body.set_hatch(hatches[i])
+            if legend_labels[i] is not None:
+                body.set_label(legend_labels[i])
         return (bodies, *eb) if eb else bodies
 
     @docstring._snippet_manager

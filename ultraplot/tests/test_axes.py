@@ -24,10 +24,7 @@ def test_inset_colors_1():
     """
     fig, ax = uplt.subplots()
     ax.format(xlim=(0, 100), ylim=(0, 100))
-    ix = ax.inset_axes(
-        (0.5, 0.5, 0.3, 0.3), zoom=True, zoom_kw={"color": "r", "fc": "r", "ec": "b"}
-    )  # zoom_kw={'alpha': 1})
-    # ix = ax.inset_axes((40, 40, 20, 20), zoom=True, transform='data')
+    ix = ax.inset_axes((0.5, 0.5, 0.3, 0.3), zoom=True, zoom_kw={"fc": "r", "ec": "b"})
     ix.format(xlim=(10, 20), ylim=(10, 20), grid=False)
     return fig
 
@@ -39,7 +36,7 @@ def test_inset_colors_2():
     ix = ax.inset_axes(
         (0.3, 0.5, 0.5, 0.3),
         zoom=True,
-        zoom_kw={"lw": 3, "ec": "red9", "a": 1, "c": uplt.set_alpha("red4", 0.5)},
+        zoom_kw={"lw": 3, "ec": "red9", "a": 1, "fc": uplt.set_alpha("red4", 0.5)},
     )
     ix.format(xlim=(10, 20), ylim=(10, 20))
     return fig
@@ -109,6 +106,7 @@ def test_panels_suplabels_three_hor_panels():
     return fig
 
 
+@pytest.mark.mpl_image_compare
 def test_panels_suplabels_three_hor_panels_donotinlcude():
     """
     Test label sharing for `includepanels=True`.
