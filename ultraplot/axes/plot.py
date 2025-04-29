@@ -3737,10 +3737,6 @@ class PlotAxes(base.Axes):
         labels = _not_none(labels, rc["graph.draw_labels"])
         nodes = _not_none(nodes, rc["graph.draw_nodes"])
         edges = _not_none(edges, rc["graph.draw_edges"])
-        grid = _not_none(grid, rc["graph.draw_grid"])
-        aspect = _not_none(aspect, rc["graph.aspect"])
-        facecolor = _not_none(facecolor, rc["graph.facecolor"])
-        spines = _not_none(spines, rc["graph.spines"])
         rescale = _not_none(rescale, rc["graph.rescale"])
 
         match g:
