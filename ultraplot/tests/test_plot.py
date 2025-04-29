@@ -205,11 +205,9 @@ def test_quiver_discrete_colors():
     X = np.array([0, 1, 2])
     Y = np.array([0, 1, 2])
 
-    # Composantes des vecteurs
     U = np.array([1, 1, 0])
     V = np.array([0, 1, 1])
 
-    # Liste de couleurs (une par vecteur)
     colors = ["r", "g", "b"]
 
     fig, ax = uplt.subplots()
