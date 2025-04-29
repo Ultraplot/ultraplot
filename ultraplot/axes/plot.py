@@ -3842,10 +3842,10 @@ class PlotAxes(base.Axes):
             labels = nx.draw_networkx_labels(g, pos=pos, ax=self, **label_kw)
 
         # Apply styling
-        self.set_aspect(aspect)
-        self.grid(grid)
-        self.set_facecolor(facecolor)
-        self._toggle_spines(spines)
+        self.set_aspect(rc["graph.aspect"])
+        self.grid(rc["graph.draw_grid"])
+        self.set_facecolor(rc["graph.facecolor"])
+        self._toggle_spines(rc["graph.draw_spines"])
         return nodes, edges, labels
 
     @staticmethod
