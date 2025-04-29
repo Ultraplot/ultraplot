@@ -4642,10 +4642,8 @@ class PlotAxes(base.Axes):
 
         a = [x, y, u, v]
         if c is not None:
-            if inputs._is_categorical(c):
-                kw["color"] = c
-            else:
-                a.append(c)
+            c = mcolors.to_rgba_array(c)
+            kw["color"] = c
         kw.pop("colorbar_kw", None)  # added by _parse_cmap
         m = self._call_native("quiver", *a, **kw)
         return m

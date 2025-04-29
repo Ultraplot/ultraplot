@@ -213,6 +213,11 @@ def test_quiver_discrete_colors():
     fig, ax = uplt.subplots()
     q = ax.quiver(X, Y, U, V, color=colors, infer_rgb=True)
     for color in colors:
-
         assert uplt.colors.mcolors.to_rgba(color) in q.get_facecolors()
+    C = ["#ff0000", "#00ff00", "#0000ff"]
+    C = uplt.colors.mcolors.to_rgba_array(C)
+    ax.quiver(X - 1, Y, U, V, C)
+
+    C = np.random.rand(3, 4)
+    ax.quiver(X - 2, Y, U, V, C)
     return fig
