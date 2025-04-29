@@ -221,5 +221,4 @@ def test_quiver_discrete_colors():
     C = np.random.rand(3, 4)
     ax.quiver(X - 2, Y, U, V, C)
     ax.quiver(X - 3, Y, U, V, color="red", infer_rgb=True)
-    uplt.show(block=1)
     return fig
