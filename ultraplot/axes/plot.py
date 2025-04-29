@@ -3719,7 +3719,7 @@ class PlotAxes(base.Axes):
     def graph(
         self,
         g: Union["nx.Graph", np.ndarray],
-        layout=None,
+        layout: Union[str, dict, Callable] = None,
         nodes: Union[None, bool, Iterable] = None,
         edges: Union[None, bool, Iterable] = None,
         labels: Union[None, bool, Iterable] = None,
