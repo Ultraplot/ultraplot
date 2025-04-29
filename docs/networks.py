@@ -56,7 +56,7 @@ layout = [[1, 2, 3], [1, 4, 5]]
 fig, ax = uplt.subplots(layout, share=0, figsize=(10, 4))
 
 # Plot network on an inset
-inax = ax[0].inset_axes([0.75, 0.75, 0.23, 0.23], zoom=False)
+inax = ax[0].inset_axes([0.25, 0.75, 0.5, 0.5], zoom=False)
 ax[0].plot(x, y)
 ax[0].plot(x, y - np.random.rand(*x.shape))
 ax[0].format(xlabel="time $(t)$", ylabel="Amplitude", title="Inset example")
@@ -64,6 +64,11 @@ inax.graph(
     g,
     layout="forceatlas2",
     node_kw=dict(node_size=0.2),
+)
+inax.format(
+    facecolor="white",
+    xspineloc="both",
+    yspineloc="both",
 )
 
 # Show off different way of parsing inputs. When None is set it defaults to a Kamada Kawai
