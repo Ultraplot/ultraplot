@@ -4637,7 +4637,7 @@ class PlotAxes(base.Axes):
         kw.update(_pop_props(kw, "line"))  # applied to arrow outline
         c, kw = self._parse_color(x, y, c, **kw)
         color = None
-        # Handle case where c a singular color
+        # Handle case where c is a singular color
         if mcolors.is_color_like(c):
             color, c = c, None
             kw["color"] = color
