@@ -526,6 +526,65 @@ def test_heatmap_labels():
     return fig
 
 
+@pytest.mark.mpl_image_compare()
+def test_networks():
+    """
+    Create a baseline network graph that tests
+    a few features. It is not the prettiest graphs but highlights what the functions can do.
+    """
+    import networkx as nx
+
+    graphs = [
+        nx.karate_club_graph(),
+        nx.florentine_families_graph(),
+        nx.davis_southern_women_graph(),
+        nx.les_miserables_graph(),
+        nx.krackhardt_kite_graph(),
+    ]
+    facecolors = ["#CC7722", "#254441", "#43AA8B", "#EF3054", "#F7F7FF"]
+    positions = [
+        (0.05, 0.75),
+        (0.75, 0.75),
+        (0.05, 0.0),
+        (0.75, 0.0),
+    ]
+
+    fig, ax = uplt.subplots()
+    ax.graph(graphs[-1], node_kw=dict(node_size=300))
+    ax.format(facecolor=facecolors[-1])
+    ax.margins(0.75)
+    ax.set_aspect("equal", "box")
+
+    spines = [
+        ["bottom", "right"],
+        ["bottom", "left"],
+        ["top", "right"],
+        ["top", "left"],
+    ]
+    edge_alphas = [1, 0.75, 0.5, 0.25]
+
+    layouts = ["arf", "spring", "circular", "random"]
+    cmaps = ["acton", "viko", "roma", "blues"]
+    for g, facecolor, pos, layout, spines, alpha, cmap in zip(
+        graphs, facecolors, positions, layouts, spines, edge_alphas, cmaps
+    ):
+        node_color = uplt.colormaps.get_cmap(cmap)(np.linspace(0, 1, len(g)))
+        inax = ax.inset_axes([*pos, 0.2, 0.2], zoom=0)
+        inax.graph(
+            g,
+            layout=layout,
+            edge_kw=dict(alpha=alpha),
+            node_kw=dict(node_color=node_color),
+        )
+        xspine, yspine = spines
+        inax[0]._toggle_spines(spines)
+        inax.format(
+            facecolor=facecolor,
+        )
+        for spine in inax.spines.values():
+            spine.set_linewidth(3)
+
+
 def test_bar_alpha():
     """
     Verify that alphas are applied over the columns

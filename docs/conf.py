@@ -233,6 +233,7 @@ intersphinx_mapping = {
     "basemap": ("https://matplotlib.org/basemap/", None),
     "pandas": ("https://pandas.pydata.org/pandas-docs/stable/", None),
     "pint": ("https://pint.readthedocs.io/en/stable/", None),
+    "networkx": ("https://networkx.org/documentation/stable/", None),
 }
 
 
