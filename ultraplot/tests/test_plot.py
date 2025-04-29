@@ -196,3 +196,32 @@ def test_boxplot_mpl_versions(
                 assert "vert" not in kwargs
             else:
                 assert "orientation" not in kwargs
+
+
+def test_quiver_discrete_colors():
+    """
+    Edge case where colors are discrete for quiver plots
+    """
+    X = np.array([0, 1, 2])
+    Y = np.array([0, 1, 2])
+
+    U = np.array([1, 1, 0])
+    V = np.array([0, 1, 1])
+
+    colors = ["r", "g", "b"]
+
+    fig, ax = uplt.subplots()
+    q = ax.quiver(X, Y, U, V, color=colors, infer_rgb=True)
+    for color in colors:
+        expected_rgba = uplt.colors.mcolors.to_rgba(color)
+        assert any(
+            np.allclose(expected_rgba, facecolor) for facecolor in q.get_facecolors()
+        )
+    C = ["#ff0000", "#00ff00", "#0000ff"]
+    ax.quiver(X - 1, Y, U, V, color=C, infer_rgb=True)
+
+    # pass rgba values
+    C = np.random.rand(3, 4)
+    ax.quiver(X - 2, Y, U, V, C)
+    ax.quiver(X - 3, Y, U, V, color="red", infer_rgb=True)
+    return fig

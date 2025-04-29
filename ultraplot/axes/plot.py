@@ -2553,6 +2553,7 @@ class PlotAxes(base.Axes):
         # NOTE: ContourSet natively stores 'extend' on the result but for other
         # classes we need to hide it on the object.
         kwargs.update({"cmap": cmap, "norm": norm})
+
         if plot_contours:
             kwargs.update({"levels": levels, "extend": extend})
         else:
@@ -4636,13 +4637,21 @@ class PlotAxes(base.Axes):
         kw.update(_pop_props(kw, "line"))  # applied to arrow outline
         c, kw = self._parse_color(x, y, c, **kw)
         color = None
+        # Handle case where c is a singular color
         if mcolors.is_color_like(c):
             color, c = c, None
+
         if color is not None:
             kw["color"] = color
+
         a = [x, y, u, v]
         if c is not None:
-            a.append(c)
+            # If U is 1D we are dealing with arrows
+            if len(u.shape) == 1:
+                kw["color"] = c
+            # Otherwise we assume we are populating a field
+            else:
+                a.append(c)
         kw.pop("colorbar_kw", None)  # added by _parse_cmap
         m = self._call_native("quiver", *a, **kw)
         return m
