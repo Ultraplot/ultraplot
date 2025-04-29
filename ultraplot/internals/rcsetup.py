@@ -1538,11 +1538,6 @@ _rc_ultraplot_table = {
     ),
     "ocean.color": (WHITE, _validate_color, "Face color for ocean patches."),
     "ocean.zorder": (ZPATCHES, _validate_float, "Z-order for ocean patches."),
-    "quiver.arrow_color": (
-        BLACK,
-        _validate_color,
-        "Color for quiver arrows.",
-    ),
     # Geographic resolution
     "reso": (
         "lo",

@@ -4640,13 +4640,10 @@ class PlotAxes(base.Axes):
         # Handle case where c is a singular color
         if mcolors.is_color_like(c):
             color, c = c, None
+
+        if color is not None:
             kw["color"] = color
 
-        if c is None and "color" not in kw:
-            # Fallback to ensure single color functionality
-            if color is None:
-                color = rc["quiver.arrow_color"]
-            kw["color"] = color
         a = [x, y, u, v]
         if c is not None:
             # If U is 1D we are dealing with arrows
