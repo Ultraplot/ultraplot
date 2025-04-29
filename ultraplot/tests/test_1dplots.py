@@ -196,7 +196,7 @@ def test_invalid_plot():
     for ax, dat in zip(axs, (data, data_masked)):
         ax.plot(dat, means=True, shade=True)
     return fig
-    
+
 
 @pytest.mark.mpl_image_compare
 def test_invalid_dist():
