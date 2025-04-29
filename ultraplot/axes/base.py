@@ -8,6 +8,8 @@ import inspect
 import re
 import types
 from numbers import Integral
+from typing import Union, Iterable
+from collections.abc import Iterable as IterableType
 
 import matplotlib.axes as maxes
 import matplotlib.axis as maxis
@@ -3399,6 +3401,31 @@ class Axes(maxes.Axes):
             }
         )
         return obj
+
+    def _toggle_spines(self, spines: Union[bool, Iterable, str]):
+        """
+        Turns spines on or off depending on input. Spines can be a list such as ['left', 'right'] etc
+        """
+        if spines:
+            match spines:
+                case str():
+                    toggle_spines = {spines: True}
+                case IterableType():
+                    toggle_spines = {spine: True for spine in spines}
+                case bool():
+                    toggler = spines
+                    toggle_spines = {spine: toggler for spine in self.spines}
+                case _:
+                    raise ValueError(
+                        f"Invalid input for spines. Received {type(spines)} expecting iterable, string or boolean"
+                    )
+            for side, spine in self.spines.items():
+                spine.set_visible(False)
+                if side in toggle_spines:
+                    spine.set_visible(True)
+        else:
+            for spine in self.spines.values():
+                spine.set_visible(False)
 
     def _iter_axes(self, hidden=False, children=False, panels=True):
         """
