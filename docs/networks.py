@@ -24,6 +24,8 @@
 # Minimal Example
 # ===============
 # To plot a graph, use :func:`~ultraplot.axes.PlotAxes.graph`. You need to merely provide a graph and UltraPlot will take care of the rest. UltraPlot will automatically style the layout to give sensible default. Every setting can be overidden if the user wants to customize the nodes, edges, or layout.
+#
+# By default, UltraPlot automatically styles the plot by removing the background and spines, and adjusting the layout to fit within a normalized [0,1] coordinate box. It also applies an equal aspect ratio to ensure square dimensions, which is ideal for the default circular markers. Additional customization—such as modifying labels, legends, axis limits, and more—can be done using :func:~ultraplot.axes.Cartesian.format to override the default styling.
 # %%
 import networkx as nx, ultraplot as uplt, numpy as np
 
