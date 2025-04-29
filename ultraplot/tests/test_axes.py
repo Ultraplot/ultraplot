@@ -24,10 +24,7 @@ def test_inset_colors_1():
     """
     fig, ax = uplt.subplots()
     ax.format(xlim=(0, 100), ylim=(0, 100))
-    ix = ax.inset_axes(
-        (0.5, 0.5, 0.3, 0.3), zoom=True, zoom_kw={"color": "r", "fc": "r", "ec": "b"}
-    )  # zoom_kw={'alpha': 1})
-    # ix = ax.inset_axes((40, 40, 20, 20), zoom=True, transform='data')
+    ix = ax.inset_axes((0.5, 0.5, 0.3, 0.3), zoom=True, zoom_kw={"fc": "r", "ec": "b"})
     ix.format(xlim=(10, 20), ylim=(10, 20), grid=False)
     return fig
 
@@ -39,7 +36,7 @@ def test_inset_colors_2():
     ix = ax.inset_axes(
         (0.3, 0.5, 0.5, 0.3),
         zoom=True,
-        zoom_kw={"lw": 3, "ec": "red9", "a": 1, "c": uplt.set_alpha("red4", 0.5)},
+        zoom_kw={"lw": 3, "ec": "red9", "a": 1, "fc": uplt.set_alpha("red4", 0.5)},
     )
     ix.format(xlim=(10, 20), ylim=(10, 20))
     return fig
@@ -109,6 +106,7 @@ def test_panels_suplabels_three_hor_panels():
     return fig
 
 
+@pytest.mark.mpl_image_compare
 def test_panels_suplabels_three_hor_panels_donotinlcude():
     """
     Test label sharing for `includepanels=True`.
@@ -216,3 +214,71 @@ def test_toggling_spines():
     assert not ax.spines["left"].get_visible()
     with pytest.raises(ValueError):
         ax[0]._toggle_spines(spines=1)
+
+
+def test_sharing_labels_top_right():
+    fig, ax = uplt.subplots(ncols=3, nrows=3, share="all")
+    # On the first format sharexy is modified
+    ax.format(
+        xticklabelloc="t",
+        yticklabelloc="r",
+    )
+    # If we format again, we expect all the limits to be changed
+    # Plot on one shared axis a non-trivial point
+    # and check whether the limits are correctly adjusted
+    # for all other plots
+    ax[0].scatter([30, 40], [30, 40])
+    xlim = ax[0].get_xlim()
+    ylim = ax[0].get_ylim()
+
+    for axi in ax:
+        for i, j in zip(axi.get_xlim(), xlim):
+            assert i == j
+        for i, j in zip(axi.get_ylim(), ylim):
+            assert i == j
+
+
+def test_sharing_labels_top_right_odd_layout():
+    layout = [
+        [1, 2, 0],
+        [1, 2, 5],
+        [3, 4, 5],
+        [3, 4, 0],
+    ]
+    fig, ax = uplt.subplots(layout)
+    ax.format(
+        xticklabelloc="t",
+        yticklabelloc="r",
+    )
+
+    def check_state(numbers: list, state: bool, which: str):
+        for number in numbers:
+            for label in getattr(ax[number], f"get_{which}ticklabels")():
+                assert label.get_visible() == state
+
+    # these correspond to the indices of the axis
+    # in the axes array (so the grid number minus 1)
+    check_state([0, 2], False, which="y")
+    check_state([1, 3, 4], True, which="y")
+    check_state([2, 3], False, which="x")
+    check_state([0, 1, 4], True, which="x")
+    uplt.close(fig)
+
+    layout = [
+        [1, 0, 2],
+        [0, 3, 0],
+        [4, 0, 5],
+    ]
+
+    fig, ax = uplt.subplots(layout)
+    ax.format(
+        xticklabelloc="t",
+        yticklabelloc="r",
+    )
+    # these correspond to the indices of the axis
+    # in the axes array (so the grid number minus 1)
+    check_state([0, 3], False, which="y")
+    check_state([1, 2, 4], True, which="y")
+    check_state([0, 1, 2], True, which="x")
+    check_state([3, 4], False, which="x")
+    uplt.close(fig)
