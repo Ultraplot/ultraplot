@@ -550,13 +550,14 @@ def test_networks():
     ]
 
     fig, ax = uplt.subplots()
-    ax.graph(graphs[-1], facecolor=facecolors[-1], node_kw=dict(node_size=300))
+    ax.graph(graphs[-1], node_kw=dict(node_size=300))
+    ax.format(facecolor=facecolors[-1])
     ax.margins(0.75)
     ax.set_aspect("equal", "box")
 
     spines = [
         ["bottom", "right"],
-        ["left", "bottom"],
+        ["bottom", "left"],
         ["top", "right"],
         ["top", "left"],
     ]
@@ -572,10 +573,13 @@ def test_networks():
         inax.graph(
             g,
             layout=layout,
-            facecolor=facecolor,
-            spines=spines,
             edge_kw=dict(alpha=alpha),
             node_kw=dict(node_color=node_color),
+        )
+        xspine, yspine = spines
+        inax[0]._toggle_spines(spines)
+        inax.format(
+            facecolor=facecolor,
         )
         for spine in inax.spines.values():
             spine.set_linewidth(3)

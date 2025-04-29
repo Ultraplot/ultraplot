@@ -63,8 +63,6 @@ ax[0].format(xlabel="time $(t)$", ylabel="Amplitude", title="Inset example")
 inax.graph(
     g,
     layout="forceatlas2",
-    spines=True,
-    facecolor="white",
     node_kw=dict(node_size=0.2),
 )
 
