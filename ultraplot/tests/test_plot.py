@@ -214,7 +214,9 @@ def test_quiver_discrete_colors():
     q = ax.quiver(X, Y, U, V, color=colors, infer_rgb=True)
     for color in colors:
         expected_rgba = uplt.colors.mcolors.to_rgba(color)
-        assert any(np.allclose(expected_rgba, facecolor) for facecolor in q.get_facecolors())
+        assert any(
+            np.allclose(expected_rgba, facecolor) for facecolor in q.get_facecolors()
+        )
     C = ["#ff0000", "#00ff00", "#0000ff"]
     ax.quiver(X - 1, Y, U, V, color=C, infer_rgb=True)
 
