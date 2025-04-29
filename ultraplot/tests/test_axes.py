@@ -187,6 +187,35 @@ def test_subset_format():
         axs.format(title=["a"])
 
 
+def test_toggling_spines():
+    """Test private function to toggle spines"""
+    fig, ax = uplt.subplots()
+    # Need to get the actual ax not the SubplotGridspec
+    # Turn all spines on
+    ax[0]._toggle_spines(True)
+    assert ax.spines["bottom"].get_visible()
+    assert ax.spines["top"].get_visible()
+    assert ax.spines["left"].get_visible()
+    assert ax.spines["right"].get_visible()
+    # Turn all spines off
+    ax[0]._toggle_spines(False)
+    assert not ax.spines["bottom"].get_visible()
+    assert not ax.spines["top"].get_visible()
+    assert not ax.spines["left"].get_visible()
+    assert not ax.spines["right"].get_visible()
+    # Test toggling specific spines
+    ax[0]._toggle_spines(spines=["left"])
+    assert ax.spines["left"].get_visible()
+
+    # If we toggle right only right is on
+    # So left should be off again
+    ax[0]._toggle_spines(spines="right")
+    assert ax.spines["right"].get_visible()
+    assert not ax.spines["left"].get_visible()
+    with pytest.raises(ValueError):
+        ax[0]._toggle_spines(spines=1)
+
+
 def test_sharing_labels_top_right():
     fig, ax = uplt.subplots(ncols=3, nrows=3, share="all")
     # On the first format sharexy is modified
