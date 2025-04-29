@@ -1079,6 +1079,15 @@ g : networkx.Graph
 layout : callable or dict, optional
     A layout function or a precomputed dict mapping nodes to 2D positions. If a function
     is given, it is called as ``layout(g, **layout_kw)`` to compute positions.
+nodes : bool or iterable, default: True
+    Which nodes to draw. If `True`, all nodes are drawn. If an iterable is provided, only
+    the specified nodes are included. This effectively acts as `nodelist` in :func:`networkx.draw_networkx_nodes`.
+edges : bool or iterable, default: True
+    Which edges to draw. If `True`, all edges are drawn. If an iterable of edge tuples is
+    provided, only those edges are included. This effectively acts as `edgelist` in :func:`networkx.draw_networkx_edges`.
+labels : bool or iterable, default: False
+    Whether to show node labels. If `True`, labels are drawn using node names. If an
+    iterable is given, only those nodes are labeled.
 layout_kw : dict, default: {}
     Keyword arguments passed to the layout function, if `layout` is callable.
 node_kw : dict, default: {}
@@ -1090,26 +1099,8 @@ edge_kw : dict, default: {}
 label_kw : dict, default: {}
     Additional keyword arguments passed to the label drawing function, such as font size,
     font color, background color, alignment, etc (see :func:`networkx.draw_networkx_labels`).
-labels : bool or iterable, default: False
-    Whether to show node labels. If `True`, labels are drawn using node names. If an
-    iterable is given, only those nodes are labeled.
-nodes : bool or iterable, default: True
-    Which nodes to draw. If `True`, all nodes are drawn. If an iterable is provided, only
-    the specified nodes are included. This effectively acts as `nodelist` in :func:`networkx.draw_networkx_nodes`.
-edges : bool or iterable, default: True
-    Which edges to draw. If `True`, all edges are drawn. If an iterable of edge tuples is
-    provided, only those edges are included. This effectively acts as `edgelist` in :func:`networkx.draw_networkx_edges`.
-grid : bool, default: False
-    Whether to show a background grid.
-aspect : {'equal', 'auto'} or float, default: 'equal'
-    The aspect ratio of the plot. `'equal'` ensures that the units are the same in every direction.
-    `'auto'` lets the axes scale independently. A float can specify a custom aspect ratio.
-facecolor : str or None, default: 'none'
-    The background color of the plot area. If ``None``, the default facecolor is used.
-spines : bool, iterable or str, default: False
-    Whether to show axis spines (borders around the plot). If `True`, all spines are shown.
-    If an iterable is given, only the specified spines (e.g., ``['left', 'bottom']``) are displayed.
-rescale : bool,  None, default: None. When set to none it checks for `rc["graph.rescale"]` which defaults to `True`. This performs a rescale such that the node position is within a [0, 1] x [0, 1] box.
+rescale : bool,  None, default: None.
+    When set to none it checks for `rc["graph.rescale"]` which defaults to `True`. This performs a rescale such that the node position is within a [0, 1] x [0, 1] box.
 Returns
 -------
 Nodes, edges, labels output from the networkx drawing functions.
@@ -3729,17 +3720,13 @@ class PlotAxes(base.Axes):
         self,
         g: Union["nx.Graph", np.ndarray],
         layout=None,
+        nodes: Union[None, bool, Iterable] = None,
+        edges: Union[None, bool, Iterable] = None,
+        labels: Union[None, bool, Iterable] = None,
         layout_kw={},
         node_kw={},
         edge_kw={},
         label_kw={},
-        labels: Union[None, bool, Iterable] = None,
-        nodes: Union[None, bool, Iterable] = None,
-        edges: Union[None, bool, Iterable] = None,
-        grid: Union[None, str] = None,
-        aspect: Union[None, str] = None,
-        facecolor: Union[None, str] = None,
-        spines: Union[None, bool, Iterable, str] = None,
         rescale: Union[None, bool] = None,
     ):
         """
