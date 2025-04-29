@@ -2339,7 +2339,8 @@ class PlotAxes(base.Axes):
             if infer_rgb and (
                 inputs._is_categorical(c) or c.ndim == 2 and c.shape[1] in (3, 4)
             ):  # noqa: E501
-                c = list(map(pcolors.to_hex, c))  # avoid iterating over columns
+                c = list(map(pcolors.to_rgba, c))  # avoid iterating over columns
+                c = np.asarray(c)
             else:
                 kwargs = self._parse_cmap(
                     x, y, c, plot_lines=True, default_discrete=False, **kwargs
@@ -4642,8 +4643,11 @@ class PlotAxes(base.Axes):
 
         a = [x, y, u, v]
         if c is not None:
-            c = mcolors.to_rgba_array(c)
-            kw["color"] = c
+            # Setting colors goes through color
+            if c.shape[0] <= x.shape[0]:
+                kw["color"] = list(c)
+            else:
+                a.append(c)
         kw.pop("colorbar_kw", None)  # added by _parse_cmap
         m = self._call_native("quiver", *a, **kw)
         return m
