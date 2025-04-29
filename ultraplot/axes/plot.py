@@ -4642,6 +4642,9 @@ class PlotAxes(base.Axes):
             color, c = c, None
             kw["color"] = color
 
+        if c is None and "color" not in kw:
+            # Fallback to ensure single color functionality
+            kw["color"] = color
         a = [x, y, u, v]
         if c is not None:
             # Setting colors goes through color
