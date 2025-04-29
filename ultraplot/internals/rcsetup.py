@@ -1255,7 +1255,7 @@ _rc_ultraplot_table = {
         "The aspect ratio of the graph.",
     ),
     "graph.facecolor": ("none", _validate_color, "The facecolor of the graph."),
-    "graph.spines": (
+    "graph.draw_spines": (
         False,
         _validate_bool_or_iterable,
         "If ``True`` draws the spines for all the edges, otherwise only the edges that are in the iterable.",
