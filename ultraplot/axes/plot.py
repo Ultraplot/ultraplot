@@ -4640,12 +4640,13 @@ class PlotAxes(base.Axes):
         color = None
         if mcolors.is_color_like(c):
             color, c = c, None
+            kw["color"] = color
 
         a = [x, y, u, v]
         if c is not None:
             # Setting colors goes through color
             if c.shape[0] <= x.shape[0]:
-                kw["color"] = list(c)
+                kw["color"] = c
             else:
                 a.append(c)
         kw.pop("colorbar_kw", None)  # added by _parse_cmap
