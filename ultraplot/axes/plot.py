@@ -2340,7 +2340,6 @@ class PlotAxes(base.Axes):
                 inputs._is_categorical(c) or c.ndim == 2 and c.shape[1] in (3, 4)
             ):  # noqa: E501
                 c = list(map(pcolors.to_rgba, c))  # avoid iterating over columns
-                c = np.asarray(c)
             else:
                 kwargs = self._parse_cmap(
                     x, y, c, plot_lines=True, default_discrete=False, **kwargs
@@ -4638,6 +4637,7 @@ class PlotAxes(base.Axes):
         kw.update(_pop_props(kw, "line"))  # applied to arrow outline
         c, kw = self._parse_color(x, y, c, **kw)
         color = None
+        # Handle case where c a singular color
         if mcolors.is_color_like(c):
             color, c = c, None
             kw["color"] = color
@@ -4648,8 +4648,11 @@ class PlotAxes(base.Axes):
         a = [x, y, u, v]
         if c is not None:
             # Setting colors goes through color
-            if c.shape[0] <= x.shape[0]:
+            c_shape = np.shape(c)
+            # If U is 1D we are dealing with arrows
+            if len(u.shape) == 1:
                 kw["color"] = c
+            # Otherwise we assume we are populating a field
             else:
                 a.append(c)
         kw.pop("colorbar_kw", None)  # added by _parse_cmap
