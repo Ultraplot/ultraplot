@@ -2339,7 +2339,7 @@ class PlotAxes(base.Axes):
             if infer_rgb and (
                 inputs._is_categorical(c) or c.ndim == 2 and c.shape[1] in (3, 4)
             ):  # noqa: E501
-                c = list(map(pcolors.to_rgba, c))  # avoid iterating over columns
+                c = list(map(pcolors.to_hex, c))  # avoid iterating over columns
             else:
                 kwargs = self._parse_cmap(
                     x, y, c, plot_lines=True, default_discrete=False, **kwargs
@@ -4644,11 +4644,11 @@ class PlotAxes(base.Axes):
 
         if c is None and "color" not in kw:
             # Fallback to ensure single color functionality
+            if color is None:
+                color = rc["quiver.arrow_color"]
             kw["color"] = color
         a = [x, y, u, v]
         if c is not None:
-            # Setting colors goes through color
-            c_shape = np.shape(c)
             # If U is 1D we are dealing with arrows
             if len(u.shape) == 1:
                 kw["color"] = c
