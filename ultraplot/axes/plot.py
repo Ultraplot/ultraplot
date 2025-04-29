@@ -2553,6 +2553,7 @@ class PlotAxes(base.Axes):
         # NOTE: ContourSet natively stores 'extend' on the result but for other
         # classes we need to hide it on the object.
         kwargs.update({"cmap": cmap, "norm": norm})
+
         if plot_contours:
             kwargs.update({"levels": levels, "extend": extend})
         else:
@@ -4638,11 +4639,13 @@ class PlotAxes(base.Axes):
         color = None
         if mcolors.is_color_like(c):
             color, c = c, None
-        if color is not None:
-            kw["color"] = color
+
         a = [x, y, u, v]
         if c is not None:
-            a.append(c)
+            if inputs._is_categorical(c):
+                kw["color"] = c
+            else:
+                a.append(c)
         kw.pop("colorbar_kw", None)  # added by _parse_cmap
         m = self._call_native("quiver", *a, **kw)
         return m
