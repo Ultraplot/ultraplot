@@ -584,6 +584,8 @@ def test_networks():
         for spine in inax.spines.values():
             spine.set_linewidth(3)
 
+    return fig
+
 
 def test_bar_alpha():
     """
