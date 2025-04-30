@@ -201,7 +201,7 @@ def test_geoticks_shared(layout, lonlabels, latlabels):
 
 
 def test_geoticks_shared_non_rectilinear():
-    with pytest.warns(uplt.warnings.UltraplotWarning):
+    with pytest.warns(uplt.warnings.UltraPlotWarning):
         fig, ax = uplt.subplots(ncols=2, proj="aeqd", share="all")
         ax.format(
             land=True,
