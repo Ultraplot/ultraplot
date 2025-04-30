@@ -1228,7 +1228,9 @@ class Figure(mfigure.Figure):
         for which in "x y z".split():
             self._toggle_axis_sharing(which=which, share=False)
         # Force setting extent
-        # This is necessary to ensure that the axes are properly aligned and we don't get weird scaling issues for geographic axes. This action is expensive for GeoAxes
+        # This is necessary to ensure that the axes are properly aligned
+        # and we don't get weird scaling issues for geographic axes.
+        # This action is expensive for GeoAxes
         for ax in self.axes:
             if isinstance(ax, paxes.GeoAxes) and hasattr(ax, "set_global"):
                 ax.set_global()
