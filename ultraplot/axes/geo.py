@@ -694,11 +694,11 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
                 if left is not None:
                     labels[0].set_visible(left)
                 if right is not None:
-                    labels[1].set_visible(right)
+                    labels[-1].set_visible(right)
                 if top is not None:
                     labels[0].set_visible(top)
                 if bottom is not None:
-                    labels[1].set_visible(bottom)
+                    labels[-1].set_visible(bottom)
 
     def _handle_axis_sharing(
         self, source_axis, target_axis, position, formatter_attribute, is_x_axis
