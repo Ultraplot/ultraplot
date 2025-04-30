@@ -164,7 +164,7 @@ def test_sharing_axes_different_projections():
     # For rectilinear plots all axes can be shared
     #
     projs = ("cyl", "merc", "merc")
-    with pytest.warns(uplt.internals.UltraplotWarning) as record:
+    with pytest.warns(uplt.internals.UltraPlotWarning) as record:
         fig, ax = uplt.subplots(ncols=1, nrows=3, share="all", proj=projs)
     assert len(record) == 1  # should only warn once
     ax.format(
