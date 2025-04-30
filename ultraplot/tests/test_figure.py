@@ -50,3 +50,17 @@ def test_unsharing_on_creation():
             siblings = list(grouper.get_siblings(axi))
             assert len(siblings) == 1
             assert axi in siblings
+
+
+def test_figure_unsharing_specific():
+    fig, ax = uplt.subplots(nrows=3, ncols=3, share=3)
+    for axi in ax:
+        for axj in ax:
+            pass
+            # if axi != axj:
+            # axi.sharex(axj)
+            # axi.sharey(axj)
+        sibs = axi._shared_axes["x"].get_siblings(axi)
+        print(len(sibs))
+
+    assert 0

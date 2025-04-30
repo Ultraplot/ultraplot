@@ -2106,7 +2106,6 @@ class _BasemapAxes(GeoAxes):
         ):
             if lonon or laton:
                 sides[side] = True
-        print(sides, latarray, lonarray)
         self._toggle_gridliner_labels(**sides)
 
     def _update_minor_gridlines(self, longrid=None, latgrid=None, nsteps=None):
