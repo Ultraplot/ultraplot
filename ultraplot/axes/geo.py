@@ -17,6 +17,7 @@ import matplotlib.axis as maxis
 import matplotlib.path as mpath
 import matplotlib.text as mtext
 import matplotlib.ticker as mticker
+import matplotlib.transforms as mtransforms
 import numpy as np
 
 from .. import constructor
@@ -30,6 +31,7 @@ from ..internals import (
     docstring,
     warnings,
 )
+from .. import ticker as pticker
 from ..utils import units
 from . import plot
 from . import shared
@@ -517,7 +519,7 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
         funcs = [
             "major_locator",
             "minor_locator",
-            "major_formatteer",
+            "major_formatter",
         ]
         for prop, func in zip(props, funcs):
             if getattr(other_ax, prop) and not getattr(this_ax, prop):
@@ -667,24 +669,36 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
         gl = {}
         # For BasemapAxes the gridlines are dicts with key as the coordinate and  keys the line and label
         # We override the dict here assuming the labels are mut excl due to the N S E W extra chars
-        if left is not None:
-            gl.update(self.gridlines_major[1])
+        if self.gridlines_major is None:
+            return
+        if any(i is None for i in self.gridlines_major):
+            return
+        # Note: the coordinate keys can be the same;
+        # So we need to assign each a unique key.
+        if left is not None or right is not None:
+            gl["left"] = self.gridlines_major[1]
         if right is not None:
-            gl.update(self.gridlines_major[1])
+            gl["right"] = self.gridlines_major[1]
         if top is not None:
-            gl.update(self.gridlines_major[0])
+            gl["top"] = self.gridlines_major[0]
         if bottom is not None:
-            gl.update(self.gridlines_major[0])
-        for dir, (line, labels) in gl.items():
-            for label in labels:
-                if left is not None and label.get_horizontalalignment() == "right":
-                    label.set_visible(left)
-                if right is not None and label.get_horizontalalignment() == "left":
-                    label.set_visible(right)
-                if top is not None and label.get_verticalalignment() == "bottom":
-                    label.set_visible(top)
-                if bottom is not None and label.get_verticalalignment() == "top":
-                    label.set_visible(bottom)
+            gl["bottom"] = self.gridlines_major[0]
+        # Toggle the labels
+        # For Basemap, the labels are encapsulated as a
+        # tuple with the first item being a line (the tick) and
+        # the second item being a list of labels. For example,
+        # a key could be '-20' that has a label attached to it
+        # N or S or E or W.
+        for dir, obj in gl.items():
+            for dir, (line, labels) in obj.items():
+                if left is not None:
+                    labels[0].set_visible(left)
+                if right is not None:
+                    labels[1].set_visible(right)
+                if top is not None:
+                    labels[0].set_visible(top)
+                if bottom is not None:
+                    labels[1].set_visible(bottom)
 
     def _handle_axis_sharing(
         self, source_axis, target_axis, position, formatter_attribute, is_x_axis
@@ -1088,7 +1102,10 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
         if isinstance(gl, tuple):
             locator = gl[0] if x_or_y == "x" else gl[1]
             tick_positions = np.asarray(list(locator.keys()))
+            # Turn off the ticks otherwise they are double for
+            # basemap (different from cartopy)
             ax.set_major_formatter(mticker.NullFormatter())
+
         else:
             locator = gl.xlocator if x_or_y == "x" else gl.ylocator
             lim = gl.crs.x_limits if x_or_y == "x" else gl.crs.y_limits
@@ -1100,9 +1117,12 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
 
         # Apply tick parameters
         # Move the labels outwards if specified
-        # Offset of 2 * size is aesthetically nice
         if hasattr(gl, f"{x_or_y}padding"):
-            setattr(gl, f"{x_or_y}padding", 2 * size)
+            setattr(gl, f"{x_or_y}padding", size)
+        elif isinstance(gl, tuple):
+            # For basemap backends, emulate the label placement
+            # like how cartopy does this
+            self._add_gridline_labels(ax, gl, padding=size)
 
         # Note: set grid_alpha to 0 as it is controlled through the gridlines_major
         # object (which is not the same ticker)
@@ -1118,6 +1138,66 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
                 **params,
             )
         self.stale = True
+
+    def _add_gridline_labels(self, ax, gl, padding=8):
+        """
+        This function is intended for the Basemap backend
+        and mirrors the label placement behavior of Cartopy.
+        See: https://scitools.org.uk/cartopy/docs/v0.16/_modules/cartopy/mpl/gridliner.html#Gridliner
+        """
+
+        for which, formatter in zip("xy", gl):
+            for loc, (line, labels) in formatter.items():
+                for i, label in enumerate(labels):
+                    upper_end = i == 1
+                    shift_scale = 1 if upper_end else -1
+                    padding_pts = padding
+
+                    x, y = label.get_position()
+
+                    data_transform = self.transData
+                    axes_transform = self.transAxes
+
+                    if which == "x":  # Longitude labels
+                        h_align = "center"
+                        v_align = "bottom" if upper_end else "top"
+
+                        y_position = 1.0 if upper_end else 0.0
+                        offset_transform = mtransforms.ScaledTranslation(
+                            0.0,
+                            shift_scale * padding_pts / 72.0,
+                            ax.figure.dpi_scale_trans,
+                        )
+
+                        label_transform = mtransforms.blended_transform_factory(
+                            data_transform,  # x in data coords
+                            axes_transform + offset_transform,  # y in axes coords
+                        )
+
+                        label.set_transform(label_transform)
+                        label.set_position((x, y_position))
+
+                    elif which == "y":  # Latitude labels
+                        h_align = "left" if upper_end else "right"
+                        v_align = "center"
+
+                        x_position = 1.0 if upper_end else 0.0
+                        offset_transform = mtransforms.ScaledTranslation(
+                            shift_scale * padding_pts / 72.0,
+                            0.0,
+                            ax.figure.dpi_scale_trans,
+                        )
+
+                        label_transform = mtransforms.blended_transform_factory(
+                            axes_transform + offset_transform,  # x in axes coords
+                            data_transform,  # y in data coords
+                        )
+
+                        label.set_transform(label_transform)
+                        label.set_position((x_position, y))
+
+                    label.set_horizontalalignment(h_align)
+                    label.set_verticalalignment(v_align)
 
     @property
     def gridlines_major(self):
@@ -1295,7 +1375,12 @@ class _CartopyAxes(GeoAxes, _GeoAxes):
         return (left_labels, right_labels, bottom_labels, top_labels)
 
     def _toggle_gridliner_labels(
-        self, left=None, right=None, bottom=None, top=None, geo=None
+        self,
+        left=None,
+        right=None,
+        bottom=None,
+        top=None,
+        geo=None,
     ):
         """
         Toggle gridliner labels across different cartopy versions.
@@ -1949,7 +2034,6 @@ class _BasemapAxes(GeoAxes):
             lines = list(getattr(self, f"_get_{name}ticklocs")(which=which))
             if name == "lon" and np.isclose(lines[0] + 360, lines[-1]):
                 lines = lines[:-1]  # prevent double labels
-
             # Figure out whether we have to redraw meridians/parallels
             # NOTE: Always update minor gridlines if major locator also changed
             attr = f"_{name}lines_{which}"
@@ -2016,6 +2100,14 @@ class _BasemapAxes(GeoAxes):
             lonarray=lonarray,
             latarray=latarray,
         )
+        sides = {}
+        for side, lonon, laton in zip(
+            "left right top bottom geo".split(), lonarray, latarray
+        ):
+            if lonon or laton:
+                sides[side] = True
+        print(sides, latarray, lonarray)
+        self._toggle_gridliner_labels(**sides)
 
     def _update_minor_gridlines(self, longrid=None, latgrid=None, nsteps=None):
         """
