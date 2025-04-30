@@ -230,7 +230,7 @@ intersphinx_mapping = {
     "scipy": ("https://docs.scipy.org/doc/scipy/", None),
     "xarray": ("https://docs.xarray.dev/en/stable/", None),
     "cartopy": ("https://scitools.org.uk/cartopy/docs/latest/", None),
-    "basemap": ("https://matplotlib.org/basemap/", None),
+    "basemap": ("https://matplotlib.org/basemap/stable/", None),
     "pandas": ("https://pandas.pydata.org/pandas-docs/stable/", None),
     "pint": ("https://pint.readthedocs.io/en/stable/", None),
     "networkx": ("https://networkx.org/documentation/stable/", None),
