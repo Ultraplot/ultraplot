@@ -225,3 +225,41 @@ def test_quiver_discrete_colors():
     ax.quiver(X - 2, Y, U, V, C)
     ax.quiver(X - 3, Y, U, V, color="red", infer_rgb=True)
     return fig
+
+
+def test_setting_log_with_rc():
+    """
+    Test setting log scale with rc context manager
+    """
+    uplt.rc["formatter.log"] = True
+    x, y = np.linspace(0, 1e6, 10), np.linspace(0, 1e6, 10)
+
+    fig, ax = uplt.subplots()
+    ax.semilogy(x, y)
+    assert ax.get_yscale() == "log"
+    ax.semilogx(x, y)
+    assert ax.get_xscale() == "log"
+    ax.loglog(x, y)
+    assert ax.get_xscale() == "log"
+    assert ax.get_yscale() == "log"
+
+    uplt.rc["formatter.log"] = False
+    fig, ax = uplt.subplots()
+    ax.semilogx(x, y)
+    assert ax.get_xscale() == "log"
+    assert ax.get_yscale() == "linear"
+
+    # Reset xscale
+    ax.set_xscale("linear")
+    ax.semilogy(x, y)
+    assert ax.get_xscale() == "linear"
+    assert ax.get_yscale() == "log"
+
+    ax.set_xscale("log")
+    ax.set_yscale("linear")
+    ax.loglog(x, y)
+
+    assert ax.get_xscale() == "log"
+    assert ax.get_yscale() == "log"
+
+    return fig

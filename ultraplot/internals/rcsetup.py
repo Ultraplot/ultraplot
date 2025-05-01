@@ -1197,6 +1197,11 @@ _rc_ultraplot_table = {
         _validate_bool,
         "Whether to trim trailing decimal zeros on tick labels.",
     ),
+    "formatter.log": (
+        False,
+        _validate_bool,
+        "Whether to use log scale for semilog or loglog plots.",
+    ),
     "formatter.limits": (
         [-5, 6],  # must be list or else validated
         _validate["axes.formatter.limits"],

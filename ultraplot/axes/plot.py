@@ -3228,8 +3228,8 @@ class PlotAxes(base.Axes):
         objs = self._call_native("loglog", *args, **kwargs)
         if rc["formatter.log"]:
             self.format(
-                xticklabels="log",
-                ytickslabels="log",
+                xformatter="log",
+                yformatter="log",
             )
         return objs
 
@@ -3242,7 +3242,7 @@ class PlotAxes(base.Axes):
         objs = self._call_native("semilogy", *args, **kwargs)
         if rc["formatter.log"]:
             self.format(
-                xformatter="log",
+                yformatter="log",
             )
         return objs
 
