@@ -231,35 +231,52 @@ def test_setting_log_with_rc():
     """
     Test setting log scale with rc context manager
     """
+    import re
+
     uplt.rc["formatter.log"] = True
     x, y = np.linspace(0, 1e6, 10), np.linspace(0, 1e6, 10)
 
+    def check_ticks(axis, target=True):
+        pattern = r"\$\\mathdefault\{10\^\{(\d+)\}\}\$"
+        for tick in axis.get_ticklabels():
+            match = re.match(pattern, tick.get_text())
+            expectation = False
+            if match:
+                expectation = True
+            assert expectation == target
+
+    def reset(ax):
+        ax.set_xscale("linear")
+        ax.set_yscale("linear")
+
+    funcs = [
+        "semilogx",
+        "semilogy",
+        "loglog",
+    ]
+    conditions = [
+        ["x"],
+        ["y"],
+        ["x", "y"],
+    ]
+
     fig, ax = uplt.subplots()
-    ax.semilogy(x, y)
-    assert ax.get_yscale() == "log"
-    ax.semilogx(x, y)
-    assert ax.get_xscale() == "log"
-    ax.loglog(x, y)
-    assert ax.get_xscale() == "log"
-    assert ax.get_yscale() == "log"
+    for func, targets in zip(funcs, conditions):
+        reset(ax)
+        # Call the function
+        getattr(ax, func)(x, y)
+        # Check if the formatter is set
+        for target in targets:
+            axi = getattr(ax, f"{target}axis")
+            check_ticks(axi, target=True)
 
     uplt.rc["formatter.log"] = False
     fig, ax = uplt.subplots()
-    ax.semilogx(x, y)
-    assert ax.get_xscale() == "log"
-    assert ax.get_yscale() == "linear"
-
-    # Reset xscale
-    ax.set_xscale("linear")
-    ax.semilogy(x, y)
-    assert ax.get_xscale() == "linear"
-    assert ax.get_yscale() == "log"
-
-    ax.set_xscale("log")
-    ax.set_yscale("linear")
-    ax.loglog(x, y)
-
-    assert ax.get_xscale() == "log"
-    assert ax.get_yscale() == "log"
+    for func, targets in zip(funcs, conditions):
+        reset(ax)
+        getattr(ax, func)(x, y)
+        for target in targets:
+            axi = getattr(ax, f"{target}axis")
+            check_ticks(axi, target=False)
 
     return fig
