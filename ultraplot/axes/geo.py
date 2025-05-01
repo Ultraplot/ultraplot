@@ -1115,15 +1115,6 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
         ax.set_ticks(tick_positions)
         ax.set_visible(True)
 
-        # Apply tick parameters
-        # Move the labels outwards if specified
-        if hasattr(gl, f"{x_or_y}padding"):
-            setattr(gl, f"{x_or_y}padding", size)
-        elif isinstance(gl, tuple):
-            # For basemap backends, emulate the label placement
-            # like how cartopy does this
-            self._add_gridline_labels(ax, gl, padding=size)
-
         # Note: set grid_alpha to 0 as it is controlled through the gridlines_major
         # object (which is not the same ticker)
         params = ax.get_tick_params()
@@ -1137,6 +1128,15 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
                 grid_alpha=0,
                 **params,
             )
+
+        # Apply tick parameters
+        # Move the labels outwards if specified
+        if hasattr(gl, f"{x_or_y}padding"):
+            setattr(gl, f"{x_or_y}padding", size)
+        elif isinstance(gl, tuple):
+            # For basemap backends, emulate the label placement
+            # like how cartopy does this
+            self._add_gridline_labels(ax, gl, padding=size)
         self.stale = True
 
     def _add_gridline_labels(self, ax, gl, padding=8):
@@ -1145,59 +1145,48 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
         and mirrors the label placement behavior of Cartopy.
         See: https://scitools.org.uk/cartopy/docs/v0.16/_modules/cartopy/mpl/gridliner.html#Gridliner
         """
-
         for which, formatter in zip("xy", gl):
-            for loc, (line, labels) in formatter.items():
+            for loc, (lines, labels) in formatter.items():
                 for i, label in enumerate(labels):
                     upper_end = i == 1
                     shift_scale = 1 if upper_end else -1
-                    padding_pts = padding
+                    line = lines[0] if shift_scale == 1 else lines[-1]
+                    path = line.get_path()
+                    vertices = path.vertices
+                    label.set_transform(line.get_transform())
 
-                    x, y = label.get_position()
+                    if len(ax.get_major_ticks()) == 0:
+                        continue
 
-                    data_transform = self.transData
-                    axes_transform = self.transAxes
+                    # Get correct line
+                    tick = ax.get_major_ticks()[0]
+                    which_line = 1 if shift_scale == 1 else 2
+                    tickline = getattr(tick, f"tick{which_line}line")
+                    position = np.array(label.get_position())
+                    # Magic number is judged by eye (not great)
+                    size = 0.5 * (tick._size + label.get_fontsize() + +padding)
 
-                    if which == "x":  # Longitude labels
-                        h_align = "center"
-                        v_align = "bottom" if upper_end else "top"
+                    offset = vertices[0]
+                    if upper_end:
+                        offset = vertices[-1]
 
-                        y_position = 1.0 if upper_end else 0.0
-                        offset_transform = mtransforms.ScaledTranslation(
-                            0.0,
-                            shift_scale * padding_pts / 72.0,
-                            ax.figure.dpi_scale_trans,
+                    if which == "x":
+                        # Move y position
+                        position[1] = (
+                            offset[1] + shift_scale * size * self.figure.dpi / 72
                         )
-
-                        label_transform = mtransforms.blended_transform_factory(
-                            data_transform,  # x in data coords
-                            axes_transform + offset_transform,  # y in axes coords
+                        ha = "center"
+                        va = "top" if shift_scale == 1 else "bottom"
+                    else:
+                        # Move x position
+                        position[0] = (
+                            offset[0] + shift_scale * size * self.figure.dpi / 72
                         )
-
-                        label.set_transform(label_transform)
-                        label.set_position((x, y_position))
-
-                    elif which == "y":  # Latitude labels
-                        h_align = "left" if upper_end else "right"
-                        v_align = "center"
-
-                        x_position = 1.0 if upper_end else 0.0
-                        offset_transform = mtransforms.ScaledTranslation(
-                            shift_scale * padding_pts / 72.0,
-                            0.0,
-                            ax.figure.dpi_scale_trans,
-                        )
-
-                        label_transform = mtransforms.blended_transform_factory(
-                            axes_transform + offset_transform,  # x in axes coords
-                            data_transform,  # y in data coords
-                        )
-
-                        label.set_transform(label_transform)
-                        label.set_position((x_position, y))
-
-                    label.set_horizontalalignment(h_align)
-                    label.set_verticalalignment(v_align)
+                        ha = "right" if shift_scale == 1 else "left"
+                        va = "center"
+                    label.set_position(position)
+                    label.set_horizontalalignment(ha)
+                    label.set_verticalalignment(va)
 
     @property
     def gridlines_major(self):
