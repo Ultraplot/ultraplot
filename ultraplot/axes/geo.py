@@ -1164,7 +1164,12 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
                     tickline = getattr(tick, f"tick{which_line}line")
                     position = np.array(label.get_position())
                     # Magic number is judged by eye (not great)
-                    size = 0.5 * (tick._size + label.get_fontsize() + +padding)
+                    size = (
+                        0.5
+                        * (tick._size + label.get_fontsize() + padding)
+                        * self.figure.dpi
+                        / 72
+                    )
 
                     offset = vertices[0]
                     if upper_end:
@@ -1172,17 +1177,13 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
 
                     if which == "x":
                         # Move y position
-                        position[1] = (
-                            offset[1] + shift_scale * size * self.figure.dpi / 72
-                        )
+                        position[1] = offset[1] + shift_scale * size * 0.65
                         ha = "center"
                         va = "top" if shift_scale == 1 else "bottom"
                     else:
                         # Move x position
-                        position[0] = (
-                            offset[0] + shift_scale * size * self.figure.dpi / 72
-                        )
-                        ha = "right" if shift_scale == 1 else "left"
+                        position[0] = offset[0] + shift_scale * size * 0.25
+                        ha = "left" if shift_scale == 1 else "right"
                         va = "center"
                     label.set_position(position)
                     label.set_horizontalalignment(ha)
