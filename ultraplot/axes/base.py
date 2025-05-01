@@ -2465,7 +2465,8 @@ class Axes(maxes.Axes):
         if which in "xy":
             setattr(self, f"_share{which}", None)  # essential
         # Note _scale is also set when calling sharex or y.
-        # I think it is fine to leave it as otherwise we would need to determine the scale, which may get messy.
+        # I think it is fine to leave it as otherwise we would
+        # need to determine the scale, which may get messy.
 
         grouper = self._shared_axes[which]
         siblings = list(grouper.get_siblings(self))
