@@ -24,6 +24,7 @@ import matplotlib.image as mimage
 import matplotlib.lines as mlines
 import matplotlib.patches as mpatches
 import matplotlib.ticker as mticker
+import matplotlib.pyplot as mplt
 import matplotlib as mpl
 from packaging import version
 import numpy as np
@@ -343,6 +344,25 @@ sequential, diverging, cyclic, qualitative : bool, default: None
 docstring._snippet_manager["plot.cycle"] = _cycle_docstring
 docstring._snippet_manager["plot.cmap_norm"] = _cmap_norm_docstring
 
+_log_doc = """
+Plot {kind}
+
+UltraPlot is optimized for visualizing logarithmic scales by default. For cases with large differences in magnitude,
+we recommend setting `rc["formatter.log"] = True` to enhance axis label formatting.
+{matplotlib_doc}
+"""
+
+docstring._snippet_manager["plot.loglog"] = _log_doc.format(
+    kind="loglog", matplotlib_doc=mplt.loglog.__doc__
+)
+
+docstring._snippet_manager["plot.semilogy"] = _log_doc.format(
+    kind="semilogy", matplotlib_doc=mplt.semilogy.__doc__
+)
+
+docstring._snippet_manager["plot.semilogx"] = _log_doc.format(
+    kind="semilogx", matplotlib_doc=mplt.semilogx.__doc__
+)
 
 # Levels docstrings
 # NOTE: In some functions we only need some components
@@ -3199,6 +3219,44 @@ class PlotAxes(base.Axes):
         %(plot.plotx)s
         """
         return self.plotx(*args, **kwargs)
+
+    @docstring._snippet_manager
+    def loglog(self, *args, **kwargs):
+        """
+        %(plot.loglog)s
+        """
+        objs = self._call_native("loglog", *args, **kwargs)
+        if rc["formatter.log"]:
+            self.format(
+                xformatter="log",
+                yformatter="log",
+            )
+        return objs
+
+    @docstring._snippet_manager
+    def semilogy(self, *args, **kwargs):
+        """
+        %(plot.semilogy)s
+        """
+
+        objs = self._call_native("semilogy", *args, **kwargs)
+        if rc["formatter.log"]:
+            self.format(
+                yformatter="log",
+            )
+        return objs
+
+    @docstring._snippet_manager
+    def semilogx(self, *args, **kwargs):
+        """
+        %(plot.semilogx)s
+        """
+        objs = self._call_native("semilogx", *args, **kwargs)
+        if rc["formatter.log"]:
+            self.format(
+                xformatter="log",
+            )
+        return objs
 
     @inputs._preprocess_or_redirect("x", "y", allow_extra=True)
     @docstring._concatenate_inherited
