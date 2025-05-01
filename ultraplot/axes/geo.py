@@ -1163,7 +1163,7 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
                     which_line = 1 if shift_scale == 1 else 2
                     tickline = getattr(tick, f"tick{which_line}line")
                     position = np.array(label.get_position())
-                    # Magic number is judged by eye (not great)
+                    # Magic numbers are judged by eye (not great)
                     size = (
                         0.5
                         * (tick._size + label.get_fontsize() + padding)
