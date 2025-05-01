@@ -1132,7 +1132,7 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
         # Apply tick parameters
         # Move the labels outwards if specified
         if hasattr(gl, f"{x_or_y}padding"):
-            setattr(gl, f"{x_or_y}padding", size)
+            setattr(gl, f"{x_or_y}padding", 2 * size)
         elif isinstance(gl, tuple):
             # For basemap backends, emulate the label placement
             # like how cartopy does this
