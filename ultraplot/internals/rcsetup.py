@@ -1200,7 +1200,8 @@ _rc_ultraplot_table = {
     "formatter.log": (
         False,
         _validate_bool,
-        "Whether to use log scale for semilog or loglog plots.",
+        "Whether to use log formatting (e.g., $10^{4}$) for "
+        "logarithmically scaled axis tick labels.",
     ),
     "formatter.limits": (
         [-5, 6],  # must be list or else validated
