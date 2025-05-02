@@ -293,6 +293,7 @@ class DegreeLocator(mticker.MaxNLocator):
 
     def _raw_ticks(self, vmin, vmax):
         self._guess_steps(vmin, vmax)
+        print(vmin, vmax)
         return super()._raw_ticks(vmin, vmax)
 
     def bin_boundaries(self, vmin, vmax):  # matplotlib < 2.2.0
@@ -860,15 +861,38 @@ class DegreeFormatter(_CartopyFormatter, _PlateCarreeFormatter):
 class LongitudeFormatter(_CartopyFormatter, LongitudeFormatter):
     """
     Format longitude gridline labels. Adapted from
-    `cartopy.mpl.ticker.LongitudeFormatter`.
+    `cartopy.mpl.ticker.LongitudeFormatter` with support for
+    proper centering based on lon0.
     """
 
     @docstring._snippet_manager
-    def __init__(self, *args, **kwargs):
+    def __init__(self, lon0=0, *args, **kwargs):
         """
+        Parameters
+        ----------
+        lon0 : float, optional
+            Central longitude value to use for centering the map.
+            Labels will be adjusted relative to this value.
         %(ticker.dms)s
         """
+        self.lon0 = lon0
         super().__init__(*args, **kwargs)
+
+    def __call__(self, x, pos=None):
+        """
+        Format the longitude, accounting for lon0 offset.
+        """
+        # Adjust longitude value based on lon0
+        adjusted_lon = x - self.lon0
+
+        # Normalize to -180 to 180 range
+        while adjusted_lon > 180:
+            adjusted_lon -= 360
+        while adjusted_lon < -180:
+            adjusted_lon += 360
+
+        # Use the original formatter with the adjusted longitude
+        return super().__call__(adjusted_lon, pos)
 
 
 class LatitudeFormatter(_CartopyFormatter, LatitudeFormatter):

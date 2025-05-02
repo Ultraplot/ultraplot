@@ -967,6 +967,7 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
                     lonlocator_kw=lonlocator_kw,
                     lonlines_kw=lonlines_kw,
                     default={},
+                    lon0=self._get_lon(),
                 )
                 locator = constructor.Locator(lonlocator, **lonlocator_kw)
                 self._lonaxis.set_major_locator(locator)
@@ -1016,6 +1017,8 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
             labelpad = _not_none(labelpad, rc.find("grid.labelpad", context=True))
             dms = _not_none(dms, rc.find("grid.dmslabels", context=True))
             nsteps = _not_none(nsteps, rc.find("grid.nsteps", context=True))
+            lon0 = self._get_lon0()
+
             if lonformatter is not None:
                 lonformatter_kw = lonformatter_kw or {}
                 formatter = constructor.Formatter(lonformatter, **lonformatter_kw)
@@ -1630,8 +1633,14 @@ class _CartopyAxes(GeoAxes, _GeoAxes):
             latgrid=latgrid,
             nsteps=nsteps,
         )
-        gl.xformatter = self._lonaxis.get_major_formatter()
-        gl.yformatter = self._lataxis.get_major_formatter()
+        lon0 = self._get_lon0()  # Get current central longitude
+
+        xformatter = self._lonaxis.get_major_formatter()
+        yformatter = self._lataxis.get_major_formatter()
+
+        # Apply lon0 to the longitude formatter
+        if hasattr(xformatter, "lon0"):
+            xformatter.lon0 = lon0
         self.xaxis.set_major_formatter(mticker.NullFormatter())
         self.yaxis.set_major_formatter(mticker.NullFormatter())
 
