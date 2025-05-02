@@ -331,7 +331,10 @@ class _LonAxis(_GeoAxis):
             locator = formatter = "dmslon"
         else:
             locator = formatter = "deglon"
-        self.set_major_formatter(constructor.Formatter(formatter), default=True)
+        self.set_major_formatter(
+            constructor.Formatter(formatter, lon0=self.axes._get_lon0()),
+            default=True,
+        )
         self.set_major_locator(constructor.Locator(locator), default=True)
         self.set_minor_locator(mticker.AutoMinorLocator(), default=True)
 
@@ -345,6 +348,8 @@ class _LonAxis(_GeoAxis):
         # to trim on the side closest to central longitude (in this case the left).
         eps = 1e-10
         lon0 = self.axes._get_lon0()
+        formatter = self.get_major_formatter()
+        formatter.lon0 = lon0  # update if necessary
         ticks = np.sort(locator())
         while ticks.size:
             if np.isclose(ticks[0] + 360, ticks[-1]):
@@ -1632,14 +1637,8 @@ class _CartopyAxes(GeoAxes, _GeoAxes):
             latgrid=latgrid,
             nsteps=nsteps,
         )
-        lon0 = self._get_lon0()  # Get current central longitude
-
         xformatter = self._lonaxis.get_major_formatter()
         yformatter = self._lataxis.get_major_formatter()
-
-        # Apply lon0 to the longitude formatter
-        if hasattr(xformatter, "lon0"):
-            xformatter.lon0 = lon0
         self.xaxis.set_major_formatter(mticker.NullFormatter())
         self.yaxis.set_major_formatter(mticker.NullFormatter())
 
