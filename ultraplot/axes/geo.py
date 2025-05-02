@@ -332,7 +332,7 @@ class _LonAxis(_GeoAxis):
         else:
             locator = formatter = "deglon"
         self.set_major_formatter(
-            constructor.Formatter(formatter, lon0=self.axes._get_lon0()),
+            constructor.Formatter(formatter),
             default=True,
         )
         self.set_major_locator(constructor.Locator(locator), default=True)
