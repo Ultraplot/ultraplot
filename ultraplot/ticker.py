@@ -306,7 +306,7 @@ class LongitudeLocator(DegreeLocator):
     """
 
     @docstring._snippet_manager
-    def __init__(self, *args, **kwargs):
+    def __init__(self, lon0=0, *args, **kwargs):
         """
         %(ticker.dms)s
         """
