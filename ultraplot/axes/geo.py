@@ -347,6 +347,10 @@ class _LonAxis(_GeoAxis):
         # locations from right then would cut off rightmost gridline. Workaround is
         # to trim on the side closest to central longitude (in this case the left).
         eps = 1e-10
+        # We set lon0 in the Formatter here
+        # as initially the formatter is parsed
+        # as a SimpleFormatter. Here, the formatter
+        # should be a LongitudinalFormatter.
         lon0 = self.axes._get_lon0()
         formatter = self.get_major_formatter()
         formatter.lon0 = lon0  # update if necessary
