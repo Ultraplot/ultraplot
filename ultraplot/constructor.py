@@ -1108,7 +1108,6 @@ def Locator(locator, *args, discrete=False, **kwargs):
     ultraplot.constructor.Formatter
     """  # noqa: E501
 
-    lon0 = kwargs.pop("lon0", None)
     if (
         np.iterable(locator)
         and not isinstance(locator, str)
