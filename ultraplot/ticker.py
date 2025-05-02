@@ -293,7 +293,6 @@ class DegreeLocator(mticker.MaxNLocator):
 
     def _raw_ticks(self, vmin, vmax):
         self._guess_steps(vmin, vmax)
-        print(vmin, vmax)
         return super()._raw_ticks(vmin, vmax)
 
     def bin_boundaries(self, vmin, vmax):  # matplotlib < 2.2.0

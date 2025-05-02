@@ -967,7 +967,7 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
                     lonlocator_kw=lonlocator_kw,
                     lonlines_kw=lonlines_kw,
                     default={},
-                    lon0=self._get_lon(),
+                    lon0=self._get_lon0(),
                 )
                 locator = constructor.Locator(lonlocator, **lonlocator_kw)
                 self._lonaxis.set_major_locator(locator)
