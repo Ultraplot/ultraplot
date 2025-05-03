@@ -211,3 +211,31 @@ def test_geoticks_shared_non_rectilinear():
         )
         fig.canvas.draw()  # draw is necessary to invoke the warning
     return fig
+
+
+def test_lon0_shifts():
+    """
+    Check if a shift with lon0 actually shifts the
+    view port labels and ticks
+    """
+    # Note for small enough shifts, e.g. +- 10 we are
+    # still showing zero due to the formatting logic
+    fig, ax = uplt.subplots(proj="cyl", proj_kw=dict(lon_0=90))
+    ax.format(land=True, labels=True)
+    locator = ax[0]._lonaxis.get_major_locator()
+    formatter = ax[0]._lonaxis.get_major_formatter()
+    locs = locator()
+    half = len(locs) // 2
+    if len(locs) % 2:
+        half += 1
+    formatted_ticks = np.array([formatter(x) for x in locs])
+    for loc, format in zip(locs, formatted_ticks):
+        # Get normalized coordinates
+        loc = (loc + 180) % 360 - 180
+        # Check if the labels are matching the location
+        # abs is taken due to north-west
+        str_loc = str(abs(int(loc)))
+        n = len(str_loc)
+        assert str_loc == format[:n]
+    assert locs[0] != 0  # we should not be a 0 anymore
+    return fig
