@@ -1641,8 +1641,8 @@ class _CartopyAxes(GeoAxes, _GeoAxes):
             latgrid=latgrid,
             nsteps=nsteps,
         )
-        xformatter = self._lonaxis.get_major_formatter()
-        yformatter = self._lataxis.get_major_formatter()
+        gl.xformatter = self._lonaxis.get_major_formatter()
+        gl.yformatter = self._lataxis.get_major_formatter()
         self.xaxis.set_major_formatter(mticker.NullFormatter())
         self.yaxis.set_major_formatter(mticker.NullFormatter())
 
