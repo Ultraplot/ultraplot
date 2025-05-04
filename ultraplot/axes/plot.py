@@ -3268,6 +3268,7 @@ class PlotAxes(base.Axes):
                 x0, y0 = patch.xy
                 if horizontal:
                     x, y = bar.datavalues[idx], y0
+                    y += 0.5 * patch.get_height()
                     all_lines.append([(0, y), (x, y)])
                 else:
                     x, y = x0, bar.datavalues[idx]
