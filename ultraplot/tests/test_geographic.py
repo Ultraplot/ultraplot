@@ -297,3 +297,4 @@ def test_sharing_cartopy():
         state = are_labels_on(axi)
         expectation = expectations[axi.number - 1]
         assert all([i == j for i, j in zip(state, expectation)])
+    return fig
