@@ -1488,6 +1488,26 @@ _rc_ultraplot_table = {
         _validate_fontsize,
         "Font size for row labels on the left-hand side." + _addendum_font,
     ),
+    "lollipop.markersize": (
+        36,
+        _validate_float,
+        "Size of lollipops in the lollipop plot.",
+    ),
+    "lollipop.stemcolor": (
+        BLACK,
+        _validate_color,
+        "Color of lollipop lines.",
+    ),
+    "lollipop.stemwidth": (
+        LINEWIDTH,
+        _validate_pt,
+        "Width of the stem",
+    ),
+    "lollipop.stemlinestyle": (
+        "-",
+        _validate_linestyle,
+        "Line style of lollipop lines.",
+    ),
     "leftlabel.weight": (
         "bold",
         _validate_fontweight,
