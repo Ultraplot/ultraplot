@@ -643,7 +643,6 @@ def test_lollipop_graph():
         edgecolor="k",
     )
     ax[1].lollipoph(data, linestyle="solid")
-
     x = [0, 1, 2]
     y = [0, 2, 3]
     ax[2].lollipop(x, y)
