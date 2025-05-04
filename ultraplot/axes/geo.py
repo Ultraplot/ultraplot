@@ -726,31 +726,33 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
         target_axis.set_view_interval(*source_axis.get_view_interval())
         target_axis.set_minor_locator(source_axis.get_minor_locator())
 
-        # Determine which gridlines to use based on axis position
-        # Set null formatter if gridlines exist and have the formatter attribute
-        if is_x_axis:
-            match position:
-                case "top":
-                    self._sharex._toggle_gridliner_labels(top=False)
-                case "bottom":
-                    self._toggle_gridliner_labels(bottom=False)
-                # Case == both
-                case "default":
-                    # Turn the labels to the top off for sharex
-                    self._sharex._toggle_gridliner_labels(top=False)
-                    self._toggle_gridliner_labels(bottom=False)
-        else:  # Y axis
-            match position:
-                case "left":
-                    self._toggle_gridliner_labels(left=False)
-                case "right":
-                    self._sharey._toggle_gridliner_labels(right=False)
-                # Case == both
-                case "default":
-                    # Turn the labels to the right off for self
-                    self._sharey._toggle_gridliner_labels(right=False)
-                    # Turn the labels to the left off for sharey
-                    self._toggle_gridliner_labels(left=False)
+        if not self.stale:
+            return
+
+        # Turn all labels off
+        # Note: this action performs it for all the axes in
+        # the figure. We use the stale here to only perform
+        # it once as it is an expensive action.
+        border_axes = self.figure._get_border_axes()
+        # Recode:
+        recoded = {}
+        for direction, axes in border_axes.items():
+            for axi in axes:
+                recoded[axi] = recoded.get(axi, []) + [direction]
+
+        default = dict(
+            left=False,
+            right=False,
+            top=False,
+            bottom=False,
+        )
+        for axi in self.figure.axes:
+            sides = recoded.get(axi, [])
+            tmp = default.copy()
+            for side in sides:
+                tmp[side] = True
+            axi._toggle_gridliner_labels(**tmp)
+        self.stale = False
 
     @override
     def draw(self, renderer=None, *args, **kwargs):
