@@ -932,7 +932,9 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
 
         # Initiate context block
         rc_kw, rc_mode = _pop_rc(kwargs)
-        ticklen = rc_kw.get("tick.len", None)# Don't pop this as it will only plot on a singular axis
+        ticklen = rc_kw.get(
+            "tick.len", None
+        )  # Don't pop this as it will only plot on a singular axis
         lonlabels = _not_none(lonlabels, labels)
         latlabels = _not_none(latlabels, labels)
         if "0.18" <= _version_cartopy < "0.20":
