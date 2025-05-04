@@ -1176,27 +1176,27 @@ g : networkx.Graph
     :class:`networkx.DiGraph` or :class:`networkx.MultiGraph`.
 layout : callable or dict, optional
     A layout function or a precomputed dict mapping nodes to 2D positions. If a function
-    is given, it is called as ``layout(g, **layout_kw)`` to compute positions. See :func:`networkx.draw` for more information.
+    is given, it is called as ``layout(g, **layout_kw)`` to compute positions. See :func:`networkx.drawing.nx_pylab.draw` for more information.
 nodes : bool or iterable, default: rc["graph.draw_nodes"]
     Which nodes to draw. If `True`, all nodes are drawn. If an iterable is provided, only
-    the specified nodes are included. This effectively acts as `nodelist` in :func:`networkx.draw_networkx_nodes`.
+    the specified nodes are included. This effectively acts as `nodelist` in :func:`networkx.drawing.nx_pylab.draw_networkx_nodes`.
 edges : bool or iterable, default: rc["graph.draw_edges"]
     Which edges to draw. If `True`, all edges are drawn. If an iterable of edge tuples is
-    provided, only those edges are included. This effectively acts as `edgelist` in :func:`networkx.draw_networkx_edges`.
+    provided, only those edges are included. This effectively acts as `edgelist` in :func:`networkx.drawing.nx_pylab.draw_networkx_edges`.
 labels : bool or iterable, default: `rc["graph.draw_labels`]
     Whether to show node labels. If `True`, labels are drawn using node names. If an
     iterable is given, only those nodes are labeled.
 layout_kw : dict, default: {}
-    Keyword arguments passed to the layout function, if `layout` is callable, see <https://networkx.org/documentation/stable/reference/drawing.html> for more information.
+    Keyword arguments passed to the layout function, if `layout` is callable, see `networkx's drawing functions <https://networkx.org/documentation/stable/reference/drawing.html>`_ for more information.
 node_kw : dict, default: {}
-    Additional keyword arguments passed to the node drawing function (see :func:`networkx.draw_networkx_nodes`). These can include
-    size, color, edgecolor, cmap, alpha, etc., depending on the backend used, see :func:`networkx.draw_networkx_nodes`.
+    Additional keyword arguments passed to the node drawing function (see :func:`networkx.drawing.nx_pylab.draw_networkx_nodes`). These can include
+    size, color, edgecolor, cmap, alpha, etc., depending on the backend used, see :func:`networkx.drawing.nx_pylab.draw_networkx_nodes`.
 edge_kw : dict, default: {}
     Additional keyword arguments passed to the edge drawing function. These can include
-    width, color, style, alpha, arrows, etc (see :func:`networkx.draw_networkx_edges`).
+    width, color, style, alpha, arrows, etc (see :func:`networkx.drawing.nx_pylab.draw_networkx_edges`).
 label_kw : dict, default: {}
     Additional keyword arguments passed to the label drawing function, such as font size,
-    font color, background color, alignment, etc (see :func:`networkx.draw_networkx_labels`).
+    font color, background color, alignment, etc (see :func:`networkx.drawing.nx_pylab.draw_networkx_labels`).
 rescale : bool,  None, default: None.
     When set to none it checks for `rc["graph.rescale"]` which defaults to `True`. This performs a rescale such that the node position is within a [0, 1] x [0, 1] box.
 Returns
