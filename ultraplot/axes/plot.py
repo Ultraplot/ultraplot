@@ -20,6 +20,7 @@ import matplotlib.cm as mcm
 import matplotlib.collections as mcollections
 import matplotlib.colors as mcolors
 import matplotlib.contour as mcontour
+import matplotlib.container as mcontainer
 import matplotlib.image as mimage
 import matplotlib.lines as mlines
 import matplotlib.patches as mpatches
@@ -3252,6 +3253,11 @@ class PlotAxes(base.Axes):
         xmax = -np.inf
         all_lines = []
         patch_collection = []
+
+        # If we have a singular (non-grouped) data
+        # we have to wrap the container in a list
+        if isinstance(bars, mcontainer.BarContainer):
+            bars = [bars]
 
         for bar in bars:
             xy = np.zeros((len(bar.patches), 2))
