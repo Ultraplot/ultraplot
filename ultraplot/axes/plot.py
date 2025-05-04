@@ -3223,7 +3223,11 @@ class PlotAxes(base.Axes):
 
     def _apply_lollipop(
         self,
-        *args,
+        xs,
+        hs,
+        ws,
+        bs,
+        *,
         horizontal=False,
         **kwargs,
     ):
@@ -3238,10 +3242,11 @@ class PlotAxes(base.Axes):
 
         # For the markers we can filter out all the props
         marker_props = _pop_props(kwargs, "collection")
+
         if horizontal:
-            bars = self.barh(*args, **kwargs)
+            bars = self.barh(xs, hs, ws, bs, **kwargs)
         else:
-            bars = self.bar(*args, **kwargs)
+            bars = self.bar(xs, hs, ws, bs, **kwargs)
 
         xmin = np.inf
         xmax = -np.inf
