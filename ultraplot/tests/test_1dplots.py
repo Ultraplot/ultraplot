@@ -574,6 +574,12 @@ def test_lollipop_graph():
         index=pd.Index(["a", "b", "c", "d", "e"], name="row idx"),
     )
     fig, ax = uplt.subplots(ncols=2, share=0)
-    ax[0].lollipop(data, linecolor="green")
+    ax[0].lollipop(
+        data,
+        stemcolor="green",
+        stemwidth=2,
+        marker="d",
+        edgecolor="k",
+    )
     ax[1].lollipoph(data, linestyle="solid")
     return fig
