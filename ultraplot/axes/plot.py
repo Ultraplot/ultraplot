@@ -3179,8 +3179,6 @@ class PlotAxes(base.Axes):
 
     def _apply_lollipop(
         self,
-        xs: Union[Iterable, np.ndarray, "DataFrame"],
-        hs: Union[Iterable, np.ndarray, "DataFrame"],
         *args,
         horizontal=False,
         **kwargs,
@@ -3189,17 +3187,17 @@ class PlotAxes(base.Axes):
         Lollipop graphs are an alternative way to visualize bar charts. We can utilize the bar internal mechanics to generate the charts and then replace the look with the lollipop graphs
         """
 
-        xs, hs, kw = self._parse_1d_args(xs, hs, **kwargs)
-        linecolor = kw.pop("linecolor", None)
-        linecolor = _not_none(linecolor, rc["lollipop.linecolor"])
-        linestyle = kw.pop("linestyle", None)
-        linestyle = _not_none(linestyle, rc["lollipop.linestyle"])
-        markersize = kw.pop("markersize", None)
-        markersize = _not_none(markersize, rc["lollipop.markersize"])
+        # Filter the props for the stem and marker out
+        stemcolor = kwargs.pop("stemcolor", rc["lollipop.stemcolor"])
+        stemwidth = units(kwargs.pop("stemwidth", rc["lollipop.stemwidth"]))
+        stemlinestyle = kwargs.pop("stemstyle", rc["lollipop.stemlinestyle"])
+
+        # For the markers we can filter out all the props
+        marker_props = _pop_props(kwargs, "collection")
         if horizontal:
-            bars = self.barh(y=xs, width=hs, **kw)
+            bars = self.barh(*args, **kwargs)
         else:
-            bars = self.bar(x=xs, height=hs, **kw)
+            bars = self.bar(*args, **kwargs)
 
         xmin = np.inf
         xmax = -np.inf
@@ -3227,13 +3225,14 @@ class PlotAxes(base.Axes):
                 if pos > xmax:
                     xmax = pos
             color = bar.patches[0].get_facecolor()
-            bar_patch = self.scatter(*xy.T, color=color, s=markersize)
+            bar_patch = self.scatter(*xy.T, color=color, **marker_props)
             patch_collection.append(bar_patch)
 
         line_collection = mcollections.LineCollection(
             all_lines,
-            colors=linecolor,
-            linestyles=linestyle,
+            colors=stemcolor,
+            linestyles=stemlinestyle,
+            lw=stemwidth,
             zorder=bar.patches[0].zorder - 1,
         )
         self.add_collection(line_collection)
@@ -3248,10 +3247,12 @@ class PlotAxes(base.Axes):
         else:
             max_width = max(patch.get_width() for bar in bars for patch in bar.patches)
             pad = 2 * max_width
+
         if horizontal:
             self.set_ylim(xmin - pad, xmax + pad)
         else:
             self.set_xlim(xmin - pad, xmax + pad)
+
         return patch_collection, line_collection
 
     @inputs._preprocess_or_redirect("x", "y", allow_extra=True)

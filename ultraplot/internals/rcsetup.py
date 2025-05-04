@@ -1442,12 +1442,17 @@ _rc_ultraplot_table = {
         _validate_float,
         "Size of lollipops in the lollipop plot.",
     ),
-    "lollipop.linecolor": (
+    "lollipop.stemcolor": (
         BLACK,
         _validate_color,
         "Color of lollipop lines.",
     ),
-    "lollipop.linestyle": (
+    "lollipop.stemwidth": (
+        LINEWIDTH,
+        _validate_pt,
+        "Width of the stem",
+    ),
+    "lollipop.stemlinestyle": (
         "-",
         _validate_linestyle,
         "Line style of lollipop lines.",
