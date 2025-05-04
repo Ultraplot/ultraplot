@@ -310,6 +310,14 @@ def _validate_color(value, alternative=None):
         raise error
 
 
+def _validate_bool_or_iterable(value):
+    if isinstance(value, bool):
+        return _validate_bool(value)
+    elif np.isiterable(value):
+        return value
+    raise ValueError(f"{value!r} is not a valid bool or iterable of node labels.")
+
+
 def _validate_fontprops(s):
     """
     Parse font property with support for ``'regular'`` placeholder.
@@ -1189,6 +1197,12 @@ _rc_ultraplot_table = {
         _validate_bool,
         "Whether to trim trailing decimal zeros on tick labels.",
     ),
+    "formatter.log": (
+        False,
+        _validate_bool,
+        "Whether to use log formatting (e.g., $10^{4}$) for "
+        "logarithmically scaled axis tick labels.",
+    ),
     "formatter.limits": (
         [-5, 6],  # must be list or else validated
         _validate["axes.formatter.limits"],
@@ -1238,6 +1252,43 @@ _rc_ultraplot_table = {
         _validate_bool,
         "If ``True`` (the default), polar `~ultraplot.axes.GeoAxes` like ``'npstere'`` "
         "and ``'spstere'`` are bounded with circles rather than squares.",
+    ),
+    # Graphs
+    "graph.draw_nodes": (
+        True,
+        _validate_bool_or_iterable,
+        "If ``True`` draws the nodes for all the nodes, otherwise only the nodes that are in the iterable.",
+    ),
+    "graph.draw_edges": (
+        True,
+        _validate_bool_or_iterable,
+        "If ``True`` draws the edges for all the edges, otherwise only the edges that are in the iterable.",
+    ),
+    "graph.draw_labels": (
+        False,
+        _validate_bool_or_iterable,
+        "If ``True`` draws the labels for all the nodes, otherwise only the nodes that are in the iterable.",
+    ),
+    "graph.draw_grid": (
+        False,
+        _validate_bool,
+        "If ``True`` draws the grid for all the edges, otherwise only the edges that are in the iterable.",
+    ),
+    "graph.aspect": (
+        "equal",
+        _validate_belongs("equal", "auto"),
+        "The aspect ratio of the graph.",
+    ),
+    "graph.facecolor": ("none", _validate_color, "The facecolor of the graph."),
+    "graph.draw_spines": (
+        False,
+        _validate_bool_or_iterable,
+        "If ``True`` draws the spines for all the edges, otherwise only the edges that are in the iterable.",
+    ),
+    "graph.rescale": (
+        True,
+        _validate_bool,
+        "If ``True`` rescales the graph to fit the data.",
     ),
     # Gridlines
     # NOTE: Here 'grid' and 'gridminor' or *not* aliases for native 'axes.grid' and
