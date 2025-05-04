@@ -652,9 +652,6 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
             self._handle_axis_sharing(
                 source_axis=self._sharex._lonaxis,
                 target_axis=self._lonaxis,
-                position=self.xaxis.get_ticks_position(),
-                formatter_attribute="xformatter",
-                is_x_axis=True,
             )
 
         # Handle Y axis sharing
@@ -662,9 +659,6 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
             self._handle_axis_sharing(
                 source_axis=self._sharey._lataxis,
                 target_axis=self._lataxis,
-                position=self.yaxis.get_ticks_position(),
-                formatter_attribute="yformatter",
-                is_x_axis=False,
             )
 
     def _toggle_gridliner_labels(
@@ -710,7 +704,9 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
                     labels[-1].set_visible(bottom)
 
     def _handle_axis_sharing(
-        self, source_axis, target_axis, position, formatter_attribute, is_x_axis
+        self,
+        source_axis: "GeoAxes",
+        target_axis: "GeoAxes",
     ):
         """
         Helper method to handle axis sharing for both X and Y axes.
@@ -718,9 +714,6 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
         Args:
             source_axis: The source axis to share from
             target_axis: The target axis to apply sharing to
-            position: Position of the axis ('top', 'bottom', 'left', 'right')
-            formatter_attribute: Attribute name for the formatter ('xformatter' or 'yformatter')
-            is_x_axis: Boolean indicating if this is an X axis
         """
         # Copy view interval and minor locator from source to target
         target_axis.set_view_interval(*source_axis.get_view_interval())
