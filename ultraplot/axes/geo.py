@@ -921,6 +921,7 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
         # drawing gridlines before basemap map boundary will call set_axes_limits()
         # which initializes a boundary hidden from external access. So we must call
         # it here. Must do this between mpl.Axes.__init__() and base.Axes.format().
+        #
         if self._name == "basemap" and self._map_boundary is None:
             if self.projection.projection in self._proj_non_rectangular:
                 patch = self.projection.drawmapboundary(ax=self)
@@ -931,6 +932,7 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
 
         # Initiate context block
         rc_kw, rc_mode = _pop_rc(kwargs)
+        ticklen = rc_kw.get("tick.len", None)
         lonlabels = _not_none(lonlabels, labels)
         latlabels = _not_none(latlabels, labels)
         if "0.18" <= _version_cartopy < "0.20":
@@ -2137,6 +2139,7 @@ class _BasemapAxes(GeoAxes):
 # Apply signature obfuscation after storing previous signature
 GeoAxes._format_signatures[GeoAxes] = inspect.signature(GeoAxes.format)
 GeoAxes.format = docstring._obfuscate_kwargs(GeoAxes.format)
+print(docstring._obfuscate_kwargs(GeoAxes.format))
 
 
 def _is_rectilinear_projection(ax):
