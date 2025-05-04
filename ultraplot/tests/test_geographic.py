@@ -239,3 +239,61 @@ def test_lon0_shifts():
         assert str_loc == format[:n]
     assert locs[0] != 0  # we should not be a 0 anymore
     return fig
+
+
+def test_sharing_cartopy():
+
+    def are_labels_on(ax, which=["top", "bottom", "right", "left"]) -> tuple[bool]:
+        gl = ax.gridlines_major
+
+        on = [False, False, False, False]
+        for idx, labeler in enumerate(which):
+            if getattr(gl, f"{labeler}_labels"):
+                on[idx] = True
+        return on
+
+    n = 3
+    settings = dict(land=True, ocean=True, labels="both")
+    fig, ax = uplt.subplots(ncols=n, nrows=n, share="all", proj="cyl")
+    ax.format(**settings)
+    fig.canvas.draw()  # need a draw to trigger ax.draw for  sharing
+
+    expectations = (
+        [True, False, False, True],
+        [True, False, False, False],
+        [True, False, True, False],
+        [False, False, False, True],
+        [False, False, False, False],
+        [False, False, True, False],
+        [False, True, False, True],
+        [False, True, False, False],
+        [False, True, True, False],
+    )
+    for axi in ax:
+        state = are_labels_on(axi)
+        expectation = expectations[axi.number - 1]
+        for i, j in zip(state, expectation):
+            assert i == j
+
+    layout = [
+        [1, 2, 0],
+        [1, 2, 5],
+        [3, 4, 5],
+        [3, 4, 0],
+    ]
+
+    fig, ax = uplt.subplots(layout, share="all", proj="cyl")
+    ax.format(**settings)
+    fig.canvas.draw()  # need a draw to trigger ax.draw for  sharing
+
+    expectations = (
+        [True, False, False, True],  # top left
+        [True, False, True, False],  # top right
+        [False, True, False, True],  # bottom left
+        [False, True, True, False],  # bottom right
+        [True, True, True, False],  # right plot (5)
+    )
+    for axi in ax:
+        state = are_labels_on(axi)
+        expectation = expectations[axi.number - 1]
+        assert all([i == j for i, j in zip(state, expectation)])
