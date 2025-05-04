@@ -3311,7 +3311,7 @@ class PlotAxes(base.Axes):
 
         return patch_collection, line_collection
 
-    @inputs._preprocess_or_redirect("x", "y", allow_extra=True)
+    @inputs._preprocess_or_redirect("x", "height", "width", "bottom")
     @docstring._snippet_manager
     def lollipop(self, *args, **kwargs):
         """
@@ -3319,7 +3319,7 @@ class PlotAxes(base.Axes):
         """
         return self._apply_lollipop(*args, horizontal=False, **kwargs)
 
-    @inputs._preprocess_or_redirect("x", "y", allow_extra=True)
+    @inputs._preprocess_or_redirect("x", "height", "width", "bottom")
     @docstring._snippet_manager
     def lollipoph(self, *args, **kwargs):
         """
