@@ -757,23 +757,66 @@ docstring._snippet_manager["plot.barh"] = _bar_docstring.format(
 _lollipop_docstring = """
 Plot individual or group lollipop graphs.
 
-A lollipop graph is a bar graph with the bars replaced by dots connected to the
-{which}-axis by lines.
+A lollipop graph is a bar graph with the bars replaced by dots connected to the {which}-axis by lines.
+
+Inputs such as arrays (`x` or `y`) or dataframes (`pandas` or `xarray`) are passed through :func:`~ultraplot.PlotAxes.bar`. Colors are inferred from the bar objects and parsed automatically. Formatting of the lollipop consists of controlling the `stem` and the `marker`. The stem properties can be set for the width, size, or color. Marker formatting follows the same inputs to :func:`~ultraplot.PlotAxes.scatter`.
 
 Parameters
 ----------
-linecolor: str, default None
+%(plot.args_1d_{which})s
+stemlinewdith: str, default `rc["lollipop.stemlinewidth"]`
+stemcolor: str, default `rc["lollipop.stemcolor"]`
     Line color of the lines connecting the dots to the {which}-axis. Defaults to `rc["lollipop.linecolor"]`.
-linestyle: str, default: None
+stemlinestyle: str, default: `rc["lollipop.stemlinestyle"]`
     The style of the lines connecting the dots to the {which}-axis. Defaults to `rc["lollipop.linestyle"]`.
-markersize: float, default: None
-    Controls the size of the lollipops. Defaults to `rc["lollipop.markersize"]`.
+s, size, ms, markersize : float or array-like or unit-spec, optional
+    The marker size area(s). If this is an array matching the shape of `x` and `y`,
+    the units are scaled by `smin` and `smax`. If this contains unit string(s), it
+    is processed by `~ultraplot.utils.units` and represents the width rather than area.
+c, color, colors, mc, markercolor, markercolors, fc, facecolor, facecolors \
+: array-like or color-spec, optional
+    The marker color(s). If this is an array matching the shape of `x` and `y`,
+    the colors are generated using `cmap`, `norm`, `vmin`, and `vmax`. Otherwise,
+    this should be a valid matplotlib color.
+smin, smax : float, optional
+    The minimum and maximum marker size area in units ``points ** 2``. Ignored
+    if `absolute_size` is ``True``. Default value for `smin` is ``1`` and for
+    `smax` is the square of :rc:`lines.markersize`.
+area_size : bool, default: True
+    Whether the marker sizes `s` are scaled by area or by radius. The default
+    ``True`` is consistent with matplotlib. When `absolute_size` is ``True``,
+    the `s` units are ``points ** 2`` if `area_size` is ``True`` and ``points``
+    if `area_size` is ``False``.
+absolute_size : bool, default: True or False
+    Whether `s` should be taken to represent "absolute" marker sizes in units
+    ``points`` or ``points ** 2`` or "relative" marker sizes scaled by `smin`
+    and `smax`. Default is ``True`` if `s` is scalar and ``False`` if `s` is
+    array-like or `smin` or `smax` were passed.
+%(plot.vmin_vmax)s
+%(plot.args_1d_shared)s
 
 Other parameters
 ----------------
-%(plot.bar)s
+%(plot.cmap_norm)s
+%(plot.levels_manual)s
+%(plot.levels_auto)s
+%(plot.cycle)s
+lw, linewidth, linewidths, mew, markeredgewidth, markeredgewidths \
+: float or sequence, optional
+    The marker edge width(s).
+edgecolors, markeredgecolor, markeredgecolors \
+: color-spec or sequence, optional
+    The marker edge color(s).
+%(plot.error_means_{which})s
+%(plot.error_bars)s
+%(plot.error_shading)s
+%(plot.inbounds)s
+%(plot.labels_1d)s
+%(plot.guide)s
+**kwargs
+    Passed to `~matplotlib.axes.Axes.scatter`.
 
-
+See for more info on the grouping behavior :func:`~ultraplot.PlotAxes.bar`, and for formatting :func:~ultraplot.PlotAxes.scatter`.
 Returns
 -------
 List of ~matplotlib.collections.PatchCollection, and a ~matplotlib.collections.LineCollection
