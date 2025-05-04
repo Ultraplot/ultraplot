@@ -3439,7 +3439,6 @@ class PlotAxes(base.Axes):
             )
         return objs
 
-
     @inputs._preprocess_or_redirect("x", "y", allow_extra=True)
     @docstring._concatenate_inherited
     @docstring._snippet_manager
