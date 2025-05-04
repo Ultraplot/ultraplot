@@ -12,6 +12,7 @@ from numbers import Integral, Number
 from typing import Any, Union, Iterable
 from collections.abc import Iterable
 
+from ..utils import units
 import matplotlib.artist as martist
 import matplotlib.axes as maxes
 import matplotlib.cbook as cbook
