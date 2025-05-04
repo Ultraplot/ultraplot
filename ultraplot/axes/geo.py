@@ -2141,7 +2141,6 @@ class _BasemapAxes(GeoAxes):
 # Apply signature obfuscation after storing previous signature
 GeoAxes._format_signatures[GeoAxes] = inspect.signature(GeoAxes.format)
 GeoAxes.format = docstring._obfuscate_kwargs(GeoAxes.format)
-print(docstring._obfuscate_kwargs(GeoAxes.format))
 
 
 def _is_rectilinear_projection(ax):
