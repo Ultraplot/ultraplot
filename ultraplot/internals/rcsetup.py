@@ -1197,6 +1197,12 @@ _rc_ultraplot_table = {
         _validate_bool,
         "Whether to trim trailing decimal zeros on tick labels.",
     ),
+    "formatter.log": (
+        False,
+        _validate_bool,
+        "Whether to use log formatting (e.g., $10^{4}$) for "
+        "logarithmically scaled axis tick labels.",
+    ),
     "formatter.limits": (
         [-5, 6],  # must be list or else validated
         _validate["axes.formatter.limits"],
@@ -1481,6 +1487,26 @@ _rc_ultraplot_table = {
         LARGESIZE,
         _validate_fontsize,
         "Font size for row labels on the left-hand side." + _addendum_font,
+    ),
+    "lollipop.markersize": (
+        36,
+        _validate_float,
+        "Size of lollipops in the lollipop plot.",
+    ),
+    "lollipop.stemcolor": (
+        BLACK,
+        _validate_color,
+        "Color of lollipop lines.",
+    ),
+    "lollipop.stemwidth": (
+        LINEWIDTH,
+        _validate_pt,
+        "Width of the stem",
+    ),
+    "lollipop.stemlinestyle": (
+        "-",
+        _validate_linestyle,
+        "Line style of lollipop lines.",
     ),
     "leftlabel.weight": (
         "bold",
