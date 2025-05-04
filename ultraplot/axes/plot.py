@@ -3272,6 +3272,7 @@ class PlotAxes(base.Axes):
                     all_lines.append([(0, y), (x, y)])
                 else:
                     x, y = x0, bar.datavalues[idx]
+                    x += 0.5 * patch.get_width()
                     all_lines.append([(x, 0), (x, y)])
                 xy[idx] = x, y
 
