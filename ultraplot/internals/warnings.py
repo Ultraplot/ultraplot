@@ -40,7 +40,7 @@ def next_release():
 
 def _warn_ultraplot(message):
     """
-    Emit a `UltraPlotWarning` and show the stack level outside of matplotlib and
+    Emit a `UltraplotWarning` and show the stack level outside of matplotlib and
     ultraplot. This is adapted from matplotlib's warning system.
     """
     frame = sys._getframe()
