@@ -298,3 +298,47 @@ def test_sharing_cartopy():
         expectation = expectations[axi.number - 1]
         assert all([i == j for i, j in zip(state, expectation)])
     return fig
+
+
+def test_togglelinerlabels():
+    """
+    Test whether we can toggle the labels on or off
+    """
+    # Cartopy backend
+    fig, ax = uplt.subplots(proj="cyl", backend="cartopy")
+    ax[0]._toggle_gridliner_labels(left=False, bottom=False)
+    gl = ax[0].gridlines_major
+
+    assert gl.left_labels == False
+    assert gl.right_labels == False
+    assert gl.top_labels == False
+    assert gl.bottom_labels == False
+    ax[0]._toggle_gridliner_labels(top=True)
+    assert gl.top_labels == True
+    uplt.close(fig)
+
+    # Basemap backend
+    fig, ax = uplt.subplots(proj="cyl", backend="basemap")
+    ax.format(land=True, labels=True)  # need this otherwise no labels are printed
+    ax[0]._toggle_gridliner_labels(left=False, bottom=False)
+    gl = ax[0].gridlines_major
+
+    # All label are off
+    for gli in gl:
+        for _, (line, labels) in gli.items():
+            for label in labels:
+                assert label.get_visible() == False
+
+    # Should be off
+    ax[0]._toggle_gridliner_labels(top=True)
+    # Gridliner labels are not added for the top (and I guess right for GeoAxes). Need to figure out how this is set is set in matplotlib
+    dir_labels = ax[0]._get_gridliner_labels(
+        left=True, right=True, top=True, bottom=True
+    )
+    for dir, labels in dir_labels.items():
+        expectation = False
+        if dir == "top":
+            expectation = True
+        for label in labels:
+            assert label.get_visible() == expectation
+    uplt.close(fig)

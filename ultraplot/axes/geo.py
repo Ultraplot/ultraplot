@@ -13,6 +13,8 @@ except:
     # From Python 3.5
     from typing_extensions import override
 
+from collections.abc import MutableMapping
+
 import matplotlib.axis as maxis
 import matplotlib.path as mpath
 import matplotlib.text as mtext
@@ -596,13 +598,9 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
         label = label.replace("left", "l")
         label = label.replace("right", "r")
         match label:
-            case _ if (
-                len(label) == 2 and "t" in label and "b" in label and which == "x"
-            ):
+            case _ if len(label) == 2 and "t" in label and "b" in label:
                 self.xaxis.set_ticks_position("both")
-            case _ if (
-                len(label) == 2 and "l" in label and "r" in label and which == "y"
-            ):
+            case _ if len(label) == 2 and "l" in label and "r" in label:
                 self.yaxis.set_ticks_position("both")
             case "t":
                 self.xaxis.set_ticks_position("top")
@@ -612,7 +610,10 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
                 self.yaxis.set_ticks_position("left")
             case "r":
                 self.yaxis.set_ticks_position("right")
-            case "all" | "both":
+            case "all":
+                self.xaxis.set_ticks_position("both")
+                self.yaxis.set_ticks_position("both")
+            case "both":
                 if which == "x":
                     self.xaxis.set_ticks_position("both")
                 else:
@@ -661,6 +662,15 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
                 target_axis=self._lataxis,
             )
 
+    def _get_gridliner_labels(
+        self,
+        bottom=None,
+        top=None,
+        left=None,
+        right=None,
+    ):
+        assert NotImplementedError("Should be implemente by Cartopy or Basemap Axes")
+
     def _toggle_gridliner_labels(
         self,
         top=None,
@@ -669,39 +679,23 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
         right=None,
         geo=None,
     ):
-        gl = {}
         # For BasemapAxes the gridlines are dicts with key as the coordinate and  keys the line and label
         # We override the dict here assuming the labels are mut excl due to the N S E W extra chars
         if self.gridlines_major is None:
             return
         if any(i is None for i in self.gridlines_major):
             return
-        # Note: the coordinate keys can be the same;
-        # So we need to assign each a unique key.
-        if left is not None or right is not None:
-            gl["left"] = self.gridlines_major[1]
-        if right is not None:
-            gl["right"] = self.gridlines_major[1]
-        if top is not None:
-            gl["top"] = self.gridlines_major[0]
-        if bottom is not None:
-            gl["bottom"] = self.gridlines_major[0]
-        # Toggle the labels
-        # For Basemap, the labels are encapsulated as a
-        # tuple with the first item being a line (the tick) and
-        # the second item being a list of labels. For example,
-        # a key could be '-20' that has a label attached to it
-        # N or S or E or W.
-        for dir, obj in gl.items():
-            for dir, (line, labels) in obj.items():
-                if left is not None:
-                    labels[0].set_visible(left)
-                if right is not None:
-                    labels[-1].set_visible(right)
-                if top is not None:
-                    labels[0].set_visible(top)
-                if bottom is not None:
-                    labels[-1].set_visible(bottom)
+        gridlabels = self._get_gridliner_labels(
+            bottom=bottom, top=top, left=left, right=right
+        )
+        for direction, toggle in zip(
+            "bottom top left right".split(),
+            [bottom, top, left, right],
+        ):
+            if toggle is not None:
+                for label in gridlabels.get(direction, []):
+                    label.set_visible(toggle)
+        self.stale = True
 
     def _handle_axis_sharing(
         self,
@@ -804,6 +798,10 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
             array = [False] * 5
             opts = ("left", "right", "bottom", "top", "geo")
             for string in strings:
+                string = string.replace("left", "l")
+                string = string.replace("right", "r")
+                string = string.replace("bottom", "b")
+                string = string.replace("top", "t")
                 if string == "all":
                     string = "lrbt"
                 elif string == "both":
@@ -1138,7 +1136,6 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
                 grid_alpha=0,
                 **params,
             )
-
         # Apply tick parameters
         # Move the labels outwards if specified
         if hasattr(gl, f"{x_or_y}padding"):
@@ -1147,6 +1144,7 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
             # For basemap backends, emulate the label placement
             # like how cartopy does this
             self._add_gridline_labels(ax, gl, padding=size)
+
         self.stale = True
 
     def _add_gridline_labels(self, ax, gl, padding=8):
@@ -1158,9 +1156,18 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
         for which, formatter in zip("xy", gl):
             for loc, (lines, labels) in formatter.items():
                 for i, label in enumerate(labels):
-                    upper_end = i == 1
+                    upper_end = True
+                    position = label.get_position()
+
+                    if which == "x":
+                        if position[1] < 0:
+                            upper_end = False
+                    elif which == "y":
+                        if position[0] < 0:
+                            upper_end = False
+                    line = lines[0] if upper_end else lines[-1]
+
                     shift_scale = 1 if upper_end else -1
-                    line = lines[0] if shift_scale == 1 else lines[-1]
                     path = line.get_path()
                     vertices = path.vertices
                     label.set_transform(line.get_transform())
@@ -1359,6 +1366,43 @@ class _CartopyAxes(GeoAxes, _GeoAxes):
         gl._draw_gridliner = _draw_gridliner.__get__(gl)
         gl.xlines = gl.ylines = False
         return gl
+
+    @override
+    def _get_gridliner_labels(
+        self,
+        bottom=None,
+        top=None,
+        left=None,
+        right=None,
+    ) -> dict[str, list[mtext.Text]]:
+        sides = {}
+        for label, side in zip(
+            "bottom top left right".split(), [bottom, top, left, right]
+        ):
+            if not side:
+                continue
+            if label in "bottom top".split():
+                labels = self.xlabel_artists
+            else:
+                labels = self.ylabel_artists
+
+            # Labels are aligned in a typical manner
+            # Horizontal alignment is adjusted for left and right.
+            # Similarly vertical alignment is adjusted for top
+            # and bottom
+            for label in labels:
+                target = None
+                if label.get_horizontalalignment() == "right":
+                    target = "left"
+                elif label.get_horizontalalignment() == "left":
+                    target = "right"
+                elif label.get_verticalalignment() == "bottom":
+                    target = top
+                elif label.get_verticalalignment() == "top":
+                    target = bottom
+                if target:
+                    sides[target] = sides.get(target, []) + [label]
+        return sides
 
     @staticmethod
     def _get_side_labels() -> tuple:
@@ -1642,8 +1686,8 @@ class _CartopyAxes(GeoAxes, _GeoAxes):
         )
         gl.xformatter = self._lonaxis.get_major_formatter()
         gl.yformatter = self._lataxis.get_major_formatter()
-        self.xaxis.set_major_formatter(mticker.NullFormatter())
-        self.yaxis.set_major_formatter(mticker.NullFormatter())
+        # self.xaxis.set_major_formatter(mticker.NullFormatter())
+        # self.yaxis.set_major_formatter(mticker.NullFormatter())
 
         # Update gridline label parameters
         # NOTE: Cartopy 0.18 and 0.19 can not draw both edge and inline labels. Instead
@@ -1881,7 +1925,7 @@ class _BasemapAxes(GeoAxes):
                 if isinstance(object, list) and len(object) > 0:
                     object = object[0]
                 if isinstance(object, mtext.Text):
-                    object.set_visible(True)
+                    object.set_visible(False)
 
     def _get_lon0(self):
         """
@@ -2129,6 +2173,67 @@ class _BasemapAxes(GeoAxes):
             axis.isDefault_majfmt = True
             axis.isDefault_majloc = True
             axis.isDefault_minloc = True
+
+    @override
+    def _get_gridliner_labels(
+        self,
+        bottom=None,
+        top=None,
+        left=None,
+        right=None,
+    ):
+        # For basemap object, the text is organized
+        # as a dictionary. The keys are the numerical
+        # location values, and the values are a list
+        # where the version item is the tick and the
+        # the rest are mtext.Text objects. The labels
+        # are clustereed on the location per axis.
+        # This means that top and bottom labels are assigned
+        # to the same numerical loc.
+        # We therefore create a mapping per direction to make
+        # it more semantically logical.
+        def group_labels(
+            labels: list[mtext.Text],
+            which: str,
+            bottom=None,
+            top=None,
+            left=None,
+            right=None,
+        ) -> dict[str, list[mtext.Text]]:
+            group = {}
+            # We take zero here as a baseline
+            for label in labels:
+                position = label.get_position()
+                target = None
+                if which == "x":
+                    if bottom is not None and position[1] < 0:
+                        target = "bottom"
+                    elif top is not None and position[1] >= 0:
+                        target = "top"
+                else:
+                    if left is not None and position[0] < 0:
+                        target = "left"
+                    elif right is not None and position[0] >= 0:
+                        target = "right"
+                if target is not None:
+                    group[target] = group.get(target, []) + [label]
+            return group
+
+        # Group the text object based on their location
+        grouped = {}
+        for which, gl in zip("xy", self.gridlines_major):
+            for loc, (line, labels) in gl.items():
+                tmp = group_labels(
+                    labels=labels,
+                    which=which,
+                    bottom=bottom,
+                    top=top,
+                    left=left,
+                    right=right,
+                )
+                for key, values in tmp.items():
+                    grouped[key] = grouped.get(key, []) + values
+        return grouped
 
 
 # Apply signature obfuscation after storing previous signature
