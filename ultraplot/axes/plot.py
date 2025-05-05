@@ -9,10 +9,14 @@ import itertools
 import re
 import sys
 from numbers import Integral, Number
+
+from typing import Any, Union, Iterable
+
 from typing import Any, Union
 from collections.abc import Callable
 from collections.abc import Iterable
 
+from ..utils import units
 import matplotlib.artist as martist
 import matplotlib.axes as maxes
 import matplotlib.cbook as cbook
@@ -20,6 +24,7 @@ import matplotlib.cm as mcm
 import matplotlib.collections as mcollections
 import matplotlib.colors as mcolors
 import matplotlib.contour as mcontour
+import matplotlib.container as mcontainer
 import matplotlib.image as mimage
 import matplotlib.lines as mlines
 import matplotlib.patches as mpatches
@@ -723,7 +728,6 @@ matplotlib.axes.Axes.scatter
 docstring._snippet_manager["plot.scatter"] = _scatter_docstring.format(y="y")
 docstring._snippet_manager["plot.scatterx"] = _scatter_docstring.format(y="x")
 
-
 # Bar function docstring
 _bar_docstring = """
 Plot individual, grouped, or stacked bars.
@@ -773,6 +777,77 @@ docstring._snippet_manager["plot.bar"] = _bar_docstring.format(
 docstring._snippet_manager["plot.barh"] = _bar_docstring.format(
     x="y", y="x", bottom="left", suffix="h"
 )
+
+
+_lollipop_docstring = """
+Plot individual or group lollipop graphs.
+
+A lollipop graph is a bar graph with the bars replaced by dots connected to the {which}-axis by lines.
+
+Inputs such as arrays (`x` or `y`) or dataframes (`pandas` or `xarray`) are passed through :func:`~ultraplot.PlotAxes.bar`. Colors are inferred from the bar objects and parsed automatically. Formatting of the lollipop consists of controlling the `stem` and the `marker`. The stem properties can be set for the width, size, or color. Marker formatting follows the same inputs to :func:`~ultraplot.PlotAxes.scatter`.
+
+Parameters
+----------
+%(plot.args_1d_{which})s
+stemlinewdith: str, default `rc["lollipop.stemlinewidth"]`
+stemcolor: str, default `rc["lollipop.stemcolor"]`
+    Line color of the lines connecting the dots to the {which}-axis. Defaults to `rc["lollipop.linecolor"]`.
+stemlinestyle: str, default: `rc["lollipop.stemlinestyle"]`
+    The style of the lines connecting the dots to the {which}-axis. Defaults to `rc["lollipop.linestyle"]`.
+s, size, ms, markersize : float or array-like or unit-spec, optional
+    The marker size area(s). If this is an array matching the shape of `x` and `y`,
+    the units are scaled by `smin` and `smax`. If this contains unit string(s), it
+    is processed by `~ultraplot.utils.units` and represents the width rather than area.
+c, color, colors, mc, markercolor, markercolors, fc, facecolor, facecolors \
+: array-like or color-spec, optional
+    The marker color(s). If this is an array matching the shape of `x` and `y`,
+    the colors are generated using `cmap`, `norm`, `vmin`, and `vmax`. Otherwise,
+    this should be a valid matplotlib color.
+smin, smax : float, optional
+    The minimum and maximum marker size area in units ``points ** 2``. Ignored
+    if `absolute_size` is ``True``. Default value for `smin` is ``1`` and for
+    `smax` is the square of :rc:`lines.markersize`.
+area_size : bool, default: True
+    Whether the marker sizes `s` are scaled by area or by radius. The default
+    ``True`` is consistent with matplotlib. When `absolute_size` is ``True``,
+    the `s` units are ``points ** 2`` if `area_size` is ``True`` and ``points``
+    if `area_size` is ``False``.
+absolute_size : bool, default: True or False
+    Whether `s` should be taken to represent "absolute" marker sizes in units
+    ``points`` or ``points ** 2`` or "relative" marker sizes scaled by `smin`
+    and `smax`. Default is ``True`` if `s` is scalar and ``False`` if `s` is
+    array-like or `smin` or `smax` were passed.
+%(plot.vmin_vmax)s
+%(plot.args_1d_shared)s
+
+Other parameters
+----------------
+%(plot.cmap_norm)s
+%(plot.levels_manual)s
+%(plot.levels_auto)s
+%(plot.cycle)s
+lw, linewidth, linewidths, mew, markeredgewidth, markeredgewidths \
+: float or sequence, optional
+    The marker edge width(s).
+edgecolors, markeredgecolor, markeredgecolors \
+: color-spec or sequence, optional
+    The marker edge color(s).
+%(plot.error_means_{which})s
+%(plot.error_bars)s
+%(plot.error_shading)s
+%(plot.inbounds)s
+%(plot.labels_1d)s
+%(plot.guide)s
+**kwargs
+    Passed to `~matplotlib.axes.Axes.scatter`.
+
+See for more info on the grouping behavior :func:`~ultraplot.PlotAxes.bar`, and for formatting :func:~ultraplot.PlotAxes.scatter`.
+Returns
+-------
+List of ~matplotlib.collections.PatchCollection, and a ~matplotlib.collections.LineCollection
+"""
+docstring._snippet_manager["plot.lollipop"] = _lollipop_docstring.format(which="x")
+docstring._snippet_manager["plot.lollipoph"] = _lollipop_docstring.format(which="y")
 
 
 # Area plot docstring
@@ -3219,6 +3294,112 @@ class PlotAxes(base.Axes):
         %(plot.plotx)s
         """
         return self.plotx(*args, **kwargs)
+
+    def _apply_lollipop(
+        self,
+        xs,
+        hs,
+        ws,
+        bs,
+        *,
+        horizontal=False,
+        **kwargs,
+    ):
+        """
+        Lollipop graphs are an alternative way to visualize bar charts. We can utilize the bar internal mechanics to generate the charts and then replace the look with the lollipop graphs
+        """
+
+        # Filter the props for the stem and marker out
+        stemcolor = kwargs.pop("stemcolor", rc["lollipop.stemcolor"])
+        stemwidth = units(kwargs.pop("stemwidth", rc["lollipop.stemwidth"]))
+        stemlinestyle = kwargs.pop("stemstyle", rc["lollipop.stemlinestyle"])
+
+        # For the markers we can filter out all the props
+        marker_props = _pop_props(kwargs, "collection")
+
+        if horizontal:
+            bars = self.barh(xs, hs, ws, bs, **kwargs)
+        else:
+            bars = self.bar(xs, hs, ws, bs, **kwargs)
+
+        xmin = np.inf
+        xmax = -np.inf
+        all_lines = []
+        patch_collection = []
+
+        # If we have a singular (non-grouped) data
+        # we have to wrap the container in a list
+        if isinstance(bars, mcontainer.BarContainer):
+            bars = [bars]
+
+        for bar in bars:
+            xy = np.zeros((len(bar.patches), 2))
+            for idx, patch in enumerate(bar.patches):
+                patch.set_visible(False)
+                color = patch.get_facecolor()
+
+                x0, y0 = patch.xy
+                if horizontal:
+                    x, y = bar.datavalues[idx], y0
+                    y += 0.5 * patch.get_height()
+                    all_lines.append([(0, y), (x, y)])
+                else:
+                    x, y = x0, bar.datavalues[idx]
+                    x += 0.5 * patch.get_width()
+                    all_lines.append([(x, 0), (x, y)])
+                xy[idx] = x, y
+
+                pos = y if horizontal else x
+                if pos < xmin:
+                    xmin = pos
+                if pos > xmax:
+                    xmax = pos
+            color = bar.patches[0].get_facecolor()
+            bar_patch = self.scatter(*xy.T, color=color, **marker_props)
+            patch_collection.append(bar_patch)
+
+        line_collection = mcollections.LineCollection(
+            all_lines,
+            colors=stemcolor,
+            linestyles=stemlinestyle,
+            lw=stemwidth,
+            zorder=bar.patches[0].zorder - 1,
+        )
+        self.add_collection(line_collection)
+
+        # Add some padding to make it look nicer
+        pad = 0
+        if horizontal:
+            max_height = max(
+                patch.get_height() for bar in bars for patch in bar.patches
+            )
+            pad = 2 * max_height
+        else:
+            max_width = max(patch.get_width() for bar in bars for patch in bar.patches)
+            pad = 2 * max_width
+
+        if horizontal:
+            self.set_ylim(xmin - pad, xmax + pad)
+        else:
+            self.set_xlim(xmin - pad, xmax + pad)
+
+        return patch_collection, line_collection
+
+    @inputs._preprocess_or_redirect("x", "height", "width", "bottom")
+    @docstring._snippet_manager
+    def lollipop(self, *args, **kwargs):
+        """
+        %(plot.lollipop)s
+        """
+        return self._apply_lollipop(*args, horizontal=False, **kwargs)
+
+    @inputs._preprocess_or_redirect("x", "height", "width", "bottom")
+    @docstring._snippet_manager
+    def lollipoph(self, *args, **kwargs):
+        """
+        %(plot.lollipop)s (horizontal lollipop)
+        """
+        return self._apply_lollipop(*args, horizontal=True, **kwargs)
 
     @docstring._snippet_manager
     def loglog(self, *args, **kwargs):

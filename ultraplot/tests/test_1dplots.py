@@ -616,3 +616,34 @@ def test_bar_alpha():
     ax.bar(x, y, alphas=[0.2])
     ax.bar(x, y, alphas=0.2)
     return fig
+
+
+@pytest.mark.mpl_image_compare
+def test_lollipop_graph():
+    """
+    Verify that lollipop graph is plotted correctly
+    """
+    # No img comp needed just internal testing
+    import pandas as pd
+
+    # When we make rows shorter than columns an issue appeared
+    # where it was taking the x size rather than the number of bars (columns)
+    data = np.random.rand(5, 5).cumsum(axis=0).cumsum(axis=1)[:, ::-1]
+    data = pd.DataFrame(
+        data,
+        columns=pd.Index(np.arange(1, 6), name="column"),
+        index=pd.Index(["a", "b", "c", "d", "e"], name="row idx"),
+    )
+    fig, ax = uplt.subplots(ncols=3, share=0)
+    ax[0].lollipop(
+        data,
+        stemcolor="green",
+        stemwidth=2,
+        marker="d",
+        edgecolor="k",
+    )
+    ax[1].lollipoph(data, linestyle="solid")
+    x = [0, 1, 2]
+    y = [0, 2, 3]
+    ax[2].lollipop(x, y)
+    return fig
