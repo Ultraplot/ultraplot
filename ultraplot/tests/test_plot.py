@@ -294,7 +294,7 @@ def test_shading_pcolor():
     x = np.linspace(0, 5, nx)
     y = np.linspace(0, 4, ny)
     X, Y = np.meshgrid(x, y)
-    Z = np.random.rand(nx, ny)
+    Z = np.random.rand(nx, ny).T
     fig, ax = uplt.subplots()
 
     results = []

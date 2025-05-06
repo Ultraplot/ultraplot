@@ -4776,6 +4776,7 @@ class PlotAxes(base.Axes):
         # rather than interpolated values. Therefore, we set to_centers and edges to False.
         if kwargs.get("shading", "").lower() in ("nearest", "gouraud"):
             to_centers = edges = False
+        print(to_centers, edges, kwargs, kwargs.get("shading"))
         x, y, z, kw = self._parse_2d_args(x, y, z, edges=edges, **kwargs)
         kw.update(_pop_props(kw, "collection"))
         kw = self._parse_cmap(x, y, z, to_centers=to_centers, **kw)
