@@ -290,7 +290,6 @@ def test_shading_pcolor():
     This creates a conflict when shading is used
     such as nearest and Gouraud.
     """
-    data = np.random.rand(4, 4)
     nx, ny = 5, 7
     x = np.linspace(0, 5, nx)
     y = np.linspace(0, 4, ny)
