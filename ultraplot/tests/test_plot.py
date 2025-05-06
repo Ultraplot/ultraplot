@@ -283,6 +283,10 @@ def test_setting_log_with_rc():
 
 
 def test_shading_pcolor():
+    """
+    Pcolormesh by default adjusts the plot by getting the edges
+    of the data for x and y. This creates a conflict when shading is used such as nearest and Gouraud.
+    """
     data = np.random.rand(4, 4)
     fig, ax = uplt.subplots()
     for shading in "flat nearest gouraud".split():
