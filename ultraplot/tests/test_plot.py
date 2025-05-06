@@ -280,3 +280,11 @@ def test_setting_log_with_rc():
             check_ticks(axi, target=False)
 
     return fig
+
+
+def test_shading_pcolor():
+    data = np.random.rand(4, 4)
+    fig, ax = uplt.subplots()
+    for shading in "flat nearest gouraud".split():
+        ax.pcolormesh(data, shading=shading)
+    return fig
