@@ -2,6 +2,7 @@ from cycler import V
 from pandas.core.arrays.arrow.accessors import pa
 import ultraplot as uplt, pytest, numpy as np
 from unittest import mock
+from unittest.mock import patch
 
 from ultraplot.internals.warnings import UltraPlotWarning
 
@@ -280,9 +281,6 @@ def test_setting_log_with_rc():
             check_ticks(axi, target=False)
 
     return fig
-
-
-from unittest.mock import patch
 
 
 def test_shading_pcolor():
