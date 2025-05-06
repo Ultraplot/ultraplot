@@ -287,7 +287,8 @@ def test_shading_pcolor():
     """
     Pcolormesh by default adjusts the plot by
     getting the edges of the data for x and y.
-    This creates a conflict when shading is used such as nearest and Gouraud.
+    This creates a conflict when shading is used
+    such as nearest and Gouraud.
     """
     data = np.random.rand(4, 4)
     nx, ny = 5, 7
@@ -325,3 +326,4 @@ def test_shading_pcolor():
         else:
             assert x.shape[0] == z.shape[0]
             assert x.shape[1] == z.shape[1]
+    return fig
