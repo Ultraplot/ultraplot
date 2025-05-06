@@ -315,8 +315,7 @@ def test_shading_pcolor():
 
     # Now check results
     for i, (shading, (x, y, z)) in enumerate(zip(shadings, results)):
-
-        print(x.shape)
+        # Debug print removed to keep test output clean
         assert x.shape[0] == y.shape[0]
         assert x.shape[1] == y.shape[1]
         if shading == "flat":
