@@ -17,15 +17,15 @@
 # ========
 
 # Visualizing Connections: Graphs!
-# ================================
+# --------------------------------
 # Networks form a core aspect of any disciplines of science from engineering to biology. UltraPlot supports plotting networks using `networkx <https://networkx.org/>`__.  It provides an intuitive interface for plotting networks using :func:`~ultraplot.axes.PlotAxes.graph` to plot networks. Plot customization can be passed to the networkx backend, see for full details their documentation.
 # Layouts can be passed using strings, dicts or functions as long as they are compatible with networkx's layout functions.
 
 # Minimal Example
-# ===============
+# ---------------
 # To plot a graph, use :func:`~ultraplot.axes.PlotAxes.graph`. You need to merely provide a graph and UltraPlot will take care of the rest. UltraPlot will automatically style the layout to give sensible default. Every setting can be overidden if the user wants to customize the nodes, edges, or layout.
 #
-# By default, UltraPlot automatically styles the plot by removing the background and spines, and adjusting the layout to fit within a normalized [0,1] coordinate box. It also applies an equal aspect ratio to ensure square dimensions, which is ideal for the default circular markers. Additional customization—such as modifying labels, legends, axis limits, and more—can be done using :func:~ultraplot.axes.Cartesian.format to override the default styling.
+# By default, UltraPlot automatically styles the plot by removing the background and spines, and adjusting the layout to fit within a normalized [0,1] coordinate box. It also applies an equal aspect ratio to ensure square dimensions, which is ideal for the default circular markers. Additional customization—such as modifying labels, legends, axis limits, and more—can be done using :func:`~ultraplot.axes.CartesianAxes.format` to override the default styling.
 # %%
 import networkx as nx, ultraplot as uplt, numpy as np
 
@@ -43,8 +43,8 @@ uplt.show()
 
 # %% [raw] raw_mimetype="text/restructuredtext"
 # More Advanced Customization
-# ===========================
-# To customize a network plot, you can pass a dictionary of parameters to the :func:`~ultraplot.axes.PlotAxes.graph` function. These parameters are passed to the networkx backend, so you can refer to their documentation for more details (:func:`~networkx.draw`, :func:`~networkx.draw_networkx`, :func:`~networkx.draw_networkx_nodes`, :func:`~networkx.draw_networkx_edges`, :func:`~networkx.draw_networkx_labels`). A more complicated example is shown below.
+# ---------------------------
+# To customize a network plot, you can pass a dictionary of parameters to the :func:`~ultraplot.axes.PlotAxes.graph` function. These parameters are passed to the networkx backend, so you can refer to their documentation for more details (:func:`~networkx.drawing.nx_pylab.draw`, :func:`~networkx.drawing.nx_pylab.draw_networkx`, :func:`~networkx.drawing.nx_pylab.draw_networkx_nodes`, :func:`~networkx.drawing.nx_pylab.draw_networkx_edges`, :func:`~networkx.drawing.nx_pylab.draw_networkx_labels`). A more complicated example is shown below.
 # %%
 import networkx as nx, ultraplot as uplt, numpy as np
 
