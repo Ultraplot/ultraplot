@@ -2,6 +2,7 @@ from cycler import V
 from pandas.core.arrays.arrow.accessors import pa
 import ultraplot as uplt, pytest, numpy as np
 from unittest import mock
+from unittest.mock import patch
 
 from ultraplot.internals.warnings import UltraPlotWarning
 
@@ -279,4 +280,47 @@ def test_setting_log_with_rc():
             axi = getattr(ax, f"{target}axis")
             check_ticks(axi, target=False)
 
+    return fig
+
+
+def test_shading_pcolor():
+    """
+    Pcolormesh by default adjusts the plot by
+    getting the edges of the data for x and y.
+    This creates a conflict when shading is used
+    such as nearest and Gouraud.
+    """
+    nx, ny = 5, 7
+    x = np.linspace(0, 5, nx)
+    y = np.linspace(0, 4, ny)
+    X, Y = np.meshgrid(x, y)
+    Z = np.random.rand(nx, ny).T
+    fig, ax = uplt.subplots()
+
+    results = []
+
+    # Custom wrapper to capture return values
+    def wrapped_parse_2d_args(x, y, z, *args, **kwargs):
+        out = original_parse_2d_args(x, y, z, *args, **kwargs)
+        results.append(out[:3])  # Capture x, y, z only
+        return out
+
+    # Save original method
+    original_parse_2d_args = ax[0]._parse_2d_args
+    shadings = ["flat", "nearest", "gouraud"]
+
+    with patch.object(ax[0], "_parse_2d_args", side_effect=wrapped_parse_2d_args):
+        for shading in shadings:
+            ax.pcolormesh(X, Y, Z, shading=shading)
+
+    # Now check results
+    for i, (shading, (x, y, z)) in enumerate(zip(shadings, results)):
+        assert x.shape[0] == y.shape[0]
+        assert x.shape[1] == y.shape[1]
+        if shading == "flat":
+            assert x.shape[0] == z.shape[0] + 1
+            assert x.shape[1] == z.shape[1] + 1
+        else:
+            assert x.shape[0] == z.shape[0]
+            assert x.shape[1] == z.shape[1]
     return fig
