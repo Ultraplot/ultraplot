@@ -156,6 +156,7 @@ def test_geoticks():
         gridminor=False,
         **settings,
     )
+    uplt.show(block=1)
     return fig
 
 
@@ -225,9 +226,6 @@ def test_lon0_shifts():
     locator = ax[0]._lonaxis.get_major_locator()
     formatter = ax[0]._lonaxis.get_major_formatter()
     locs = locator()
-    half = len(locs) // 2
-    if len(locs) % 2:
-        half += 1
     formatted_ticks = np.array([formatter(x) for x in locs])
     for loc, format in zip(locs, formatted_ticks):
         # Get normalized coordinates
