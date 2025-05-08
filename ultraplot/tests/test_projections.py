@@ -4,7 +4,7 @@ Test projection features.
 """
 import cartopy.crs as ccrs
 import matplotlib.pyplot as plt
-import numpy as np
+import numpy as np, warnings
 import ultraplot as uplt
 import pytest
 
@@ -141,7 +141,7 @@ def test_sharing_axes():
     Test sharing axes for GeoAxes
     """
 
-    with pytest.warns(uplt.internals.UltraPlotWarning) as record:
+    with warnings.catch_warnings(record=True) as record:
         # For rectilinear plots all axes can be shared
         fig, ax = uplt.subplots(ncols=3, nrows=3, share="all", proj="cyl")
         ax.format(
