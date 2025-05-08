@@ -1,5 +1,6 @@
 import ultraplot as uplt, numpy as np, warnings
 import pytest
+from unittest import mock
 
 
 @pytest.mark.mpl_image_compare
@@ -385,3 +386,31 @@ def test_sharing_geo_limits():
     assert all([not np.allclose(i, j) for i, j in zip(before_lon, after_lon)])
     assert all([np.allclose(i, j) for i, j in zip(after_lon, expectation["lonlim"])])
     uplt.close(fig)
+
+
+def test_copy_locator_props():
+    """
+    When sharing axes the locator properties need
+    to move as well.
+    """
+
+    fig, ax = uplt.subplots(ncols=2, proj="cyl", share=0)
+
+    g1 = ax[0]._lonaxis
+    g2 = ax[1]._lonaxis
+    props = [
+        "isDefault_majloc",
+        "isDefault_minloc",
+        "isDefault_majfmt",
+    ]
+    for prop in props:
+        assert hasattr(g1, prop)
+        assert hasattr(g2, prop)
+        setattr(g1, prop, False)
+        setattr(g2, prop, True)
+
+    # The copy happens when the properties between g1 and g2 differ. Note this copies from g1 to g2.
+    g1._copy_locator_properties(g2)
+    for prop in props:
+        assert getattr(g1, prop) == False
+        assert getattr(g1, prop) == getattr(g2, prop)

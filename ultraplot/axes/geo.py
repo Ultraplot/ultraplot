@@ -316,6 +316,32 @@ class _GeoAxis(object):
     def set_view_interval(self, vmin, vmax):
         self._interval = (vmin, vmax)
 
+    def _copy_locator_properties(self, other: "_GeoAxis"):
+        """
+        This function copies the locator properties. It is
+        used when the @self is sharing with @other.
+        """
+        props = [
+            "isDefault_majloc",
+            "isDefault_minloc",
+            "isDefault_majfmt",
+        ]
+        funcs = [
+            "major_locator",
+            "minor_locator",
+            "major_formatter",
+        ]
+        for prop, func in zip(props, funcs):
+            # Copy if props differ from this to other
+            this_prop = getattr(self, prop)
+            other_prop = getattr(other, prop)
+            if this_prop ^ other_prop:
+                getter = getattr(self, f"get_{func}")
+                setter = getattr(other, f"set_{func}")
+                if setter and getter:
+                    setter(getter())
+                    setattr(other, prop, this_prop)
+
 
 class _LonAxis(_GeoAxis):
     """
@@ -525,20 +551,7 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
 
         # Set the shared axis
         getattr(self, f"share{which}")(other)
-
-        props = ["isDefault_majloc", "isDefault_minloc", "isDefault_majfmt"]
-        funcs = [
-            "major_locator",
-            "minor_locator",
-            "major_formatter",
-        ]
-
-        for prop, func in zip(props, funcs):
-            if getattr(other_ax, prop) and not getattr(this_ax, prop):
-                setter = getattr(other_ax, f"set_{func}")
-                getter = getattr(this_ax, f"get_{func}")
-                if setter and getter:
-                    setter(getter())
+        this_ax._copy_locator_properties(other_ax)
 
     def _is_rectilinear(self):
         return _is_rectilinear_projection(self)
