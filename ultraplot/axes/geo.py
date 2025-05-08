@@ -1686,8 +1686,10 @@ class _CartopyAxes(GeoAxes, _GeoAxes):
         )
         gl.xformatter = self._lonaxis.get_major_formatter()
         gl.yformatter = self._lataxis.get_major_formatter()
-        # self.xaxis.set_major_formatter(mticker.NullFormatter())
-        # self.yaxis.set_major_formatter(mticker.NullFormatter())
+        # Turn the tick labels off as they are handled
+        # separately from the matplotlib defaults
+        self.xaxis.set_major_formatter(mticker.NullFormatter())
+        self.yaxis.set_major_formatter(mticker.NullFormatter())
 
         # Update gridline label parameters
         # NOTE: Cartopy 0.18 and 0.19 can not draw both edge and inline labels. Instead
