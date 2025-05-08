@@ -331,7 +331,8 @@ def test_toggle_gridliner_labels():
 
     # Should be off
     ax[0]._toggle_gridliner_labels(top=True)
-    # Gridliner labels are not added for the top (and I guess right for GeoAxes). Need to figure out how this is set is set in matplotlib
+    # Gridliner labels are not added for the top (and I guess right for GeoAxes).
+    # Need to figure out how this is set in matplotlib
     dir_labels = ax[0]._get_gridliner_labels(
         left=True, right=True, top=True, bottom=True
     )
