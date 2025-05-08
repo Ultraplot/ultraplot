@@ -2482,10 +2482,8 @@ class Axes(maxes.Axes):
                 this_ax = getattr(self, f"{which}axis")
                 sib_ax = getattr(sibling, f"{which}axis")
                 # Reset formatters
-                this_ax.set_major_locator(mticker.AutoLocator())
-                this_ax.set_major_formatter(pticker.AutoFormatter())
-                this_ax.set_minor_locator(mticker.AutoLocator())
-                this_ax.set_minor_formatter(pticker.AutoFormatter())
+                this_ax.major = copy.deepcopy(this_ax.major)
+                this_ax.minor = copy.deepcopy(this_ax.minor)
 
     def _sharex_setup(self, sharex, **kwargs):
         """
