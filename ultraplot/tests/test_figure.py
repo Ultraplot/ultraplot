@@ -52,15 +52,60 @@ def test_unsharing_on_creation():
             assert axi in siblings
 
 
-# def test_figure_unsharing_specific():
-#     fig, ax = uplt.subplots(nrows=3, ncols=3, share=3)
-#     for axi in ax:
-#         for axj in ax:
-#             pass
-#             # if axi != axj:
-#             # axi.sharex(axj)
-#             # axi.sharey(axj)
-#         sibs = axi._shared_axes["x"].get_siblings(axi)
-#         print(len(sibs))
+def test_figure_sharing_toggle():
+    """
+    Check if axis sharing and unsharing works
+    """
 
-#     assert 0
+    def compare_with_reference(layout):
+        # Create reference
+        ref_fig, ref_ax = uplt.subplots(layout.copy(), share=1)
+        ref_fig.suptitle("Reference")
+
+        # Create "toggled" figure
+        fig, ax = uplt.subplots(layout.copy(), share=1)
+        fig.suptitle("Toggler")
+        # We create a figure with sharing, then toggle it
+        # to see if we can update the axis
+        fig._toggle_axis_sharing(which="x", share=False)
+        fig._toggle_axis_sharing(which="y", share=False)
+        for axi in ax:
+            assert axi._sharex is None
+            assert axi._sharey is None
+
+        fig._toggle_axis_sharing(which="x", share=True)
+        fig._toggle_axis_sharing(which="y", share=True)
+
+        for ref, axi in zip(ref_ax, ax):
+            for which in "xy":
+                ref_index = getattr(ref, f"_share{which}")
+                axi_index = getattr(ref, f"_share{which}")
+                if ref_index is None:
+                    assert ref_index == axi_index
+                else:
+                    assert ref_index.number == axi_index.number
+                    ref_axis = getattr(ref, f"{which}axis")
+                    axis = getattr(axi, f"{which}axis")
+        for f in [fig, ref_fig]:
+            uplt.close(f)
+
+    # Create a reference
+    gs = uplt.gridspec.GridSpec(ncols=3, nrows=3)
+    compare_with_reference(gs)
+
+    layout = [
+        [1, 2, 0],
+        [1, 2, 5],
+        [3, 4, 5],
+        [3, 4, 0],
+    ]
+    compare_with_reference(layout)
+
+    layout = [
+        [1, 0, 2],
+        [0, 3, 0],
+        [5, 0, 6],
+    ]
+    compare_with_reference(layout)
+
+    return None

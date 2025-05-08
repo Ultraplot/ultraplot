@@ -300,7 +300,7 @@ def test_sharing_cartopy():
     return fig
 
 
-def test_togglelinerlabels():
+def test_toggle_gridliner_labels():
     """
     Test whether we can toggle the labels on or off
     """
