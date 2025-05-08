@@ -2122,7 +2122,8 @@ class _BasemapAxes(GeoAxes):
             # Toggle existing gridlines on and off
             if grid is not None:
                 for obj in self._iter_gridlines(objs):
-                    obj.set_visible(grid)
+                    if not isinstance(obj, mtext.Text):
+                        obj.set_visible(grid)
 
     def _update_major_gridlines(
         self,
