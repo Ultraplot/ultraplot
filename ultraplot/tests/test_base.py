@@ -74,6 +74,8 @@ def test_unsharing_resets_formatters():
     assert ax[1].get_yscale() == "log"
     assert ax[1].get_xscale() == "asinh"
 
+    assert ax[0].xaxis.get_major_locator() == ax[1].xaxis.get_major_locator()
+    assert ax[0].yaxis.get_major_locator() == ax[1].yaxis.get_major_locator()
     for which in "x y view".split():
         ax[0]._unshare(which=which)
     ax[0].set_xscale("linear")
@@ -82,4 +84,7 @@ def test_unsharing_resets_formatters():
     assert ax[1].get_xscale() == "asinh"
     assert ax[0].get_xscale() == "linear"
     assert ax[0].get_yscale() == "linear"
+
+    assert ax[0].xaxis.get_major_locator() != ax[1].xaxis.get_major_locator()
+    assert ax[0].yaxis.get_major_locator() != ax[1].yaxis.get_major_locator()
     uplt.close(fig)
