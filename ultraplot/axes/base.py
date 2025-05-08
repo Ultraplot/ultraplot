@@ -2479,9 +2479,6 @@ class Axes(maxes.Axes):
                 self._shared_axes[which].remove(sibling)
                 if which in "xy":
                     setattr(sibling, f"_share{which}", None)
-
-                sibling.tick_params(left=True, right=True, top=True)
-
                 this_ax = getattr(self, f"{which}axis")
                 sib_ax = getattr(sibling, f"{which}axis")
                 # Reset formatters
