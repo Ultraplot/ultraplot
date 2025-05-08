@@ -161,8 +161,6 @@ def test_sharing_axes_different_projections():
     Test sharing axes for GeoAxes
     """
 
-    # For rectilinear plots all axes can be shared
-    #
     projs = ("cyl", "merc", "merc")
     with pytest.warns(uplt.internals.UltraPlotWarning) as record:
         fig, ax = uplt.subplots(ncols=1, nrows=3, share="all", proj=projs)
