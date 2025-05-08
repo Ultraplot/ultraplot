@@ -80,4 +80,6 @@ def test_unsharing_resets_formatters():
     ax[0].set_yscale("linear")
     assert ax[1].get_yscale() == "log"
     assert ax[1].get_xscale() == "asinh"
+    assert ax[0].get_xscale() == "linear"
+    assert ax[0].get_yscale() == "linear"
     uplt.close(fig)
