@@ -1296,6 +1296,7 @@ class Figure(mfigure.Figure):
                 # join method does not automatically propagate the sharing state
                 # and axis properties to the other axes. This ensures that the
                 # shared axes behave consistently.
+                if which == "x":
                     other._sharex = ref
                     ref.xaxis.major = other.xaxis.major
                     ref.xaxis.minor = other.xaxis.minor
