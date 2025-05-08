@@ -1225,7 +1225,7 @@ class Figure(mfigure.Figure):
         return ax
 
     def _unshare_axes(self):
-        for which in "x y z".split():
+        for which in "xyz":
             self._toggle_axis_sharing(which=which, share=False)
         # Force setting extent
         # This is necessary to ensure that the axes are properly
