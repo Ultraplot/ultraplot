@@ -1248,7 +1248,7 @@ class Figure(mfigure.Figure):
         Share or unshare axes in the figure along a given direction.
 
         Parameters:
-        - which: 'x', 'y' or 'view'.
+        - which: 'x', 'y', 'z', or 'view'.
         - share: int indicating the levels (see above)
         - panels: Whether to include panel axes.
         - children: Whether to include child axes.
