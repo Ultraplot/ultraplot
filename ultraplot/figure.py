@@ -1254,31 +1254,61 @@ class Figure(mfigure.Figure):
         - children: Whether to include child axes.
         - hidden: Whether to include hidden axes.
         """
+        assert which in ("x", "y", "view")
+        axes = list(self._iter_axes(hidden=hidden, children=children, panels=panels))
 
         if which == "x":
             self._sharex = share
         elif which == "y":
             self._sharey = share
 
-        # Iterate through all the axes and unshare them if share is False
-        seen = set()
-        for ax in self._iter_axes(hidden=hidden, children=children, panels=panels):
-            group = ax._get_share_axes(which, panels=panels)
-            if share == 0:
+        # Unshare first if needed
+        if share == 0:
+            for ax in axes:
                 ax._unshare(which=which)
-            group = [a for a in group if a not in seen]
-            if not group:
+            return
+
+        # Grouping logic based on GridSpec
+        def get_key(ax):
+            if not hasattr(ax, "get_subplotspec"):
+                return None
+            ss = ax.get_subplotspec()
+            if which == "x":
+                return ss.rowspan.start  # same row
+            elif which == "y":
+                return ss.colspan.start  # same col
+
+        # Create groups of axes that should share
+        groups = {}
+        for ax in axes:
+            key = get_key(ax)
+            if key is None:
                 continue
-            seen.update(group)
-            ref = group[0]  # this should be the parent
-            for other in group:
-                if share > 0 and other is not ref:
-                    if other not in ref._shared_axes[which]:
-                        ref._shared_axes[which].join(ref, other)
-                    if ref not in other._shared_axes[which]:
-                        other._shared_axes[which].join(other, ref)
-                if share == 0:
-                    other._unshare(which=which)
+            groups.setdefault(key, []).append(ax)
+
+        # Re-join axes per group
+        for group in groups.values():
+            ref = group[0]
+            for other in group[1:]:
+                # ref._shared_axes[which].join(ref, other)
+                # Calling sharex/y does not set it so we
+                # manually do it. Not sure why
+                if which == "x":
+                    # This logic is from sharex
+                    other._sharex = ref
+                    ref.xaxis.major = other.xaxis.major
+                    ref.xaxis.minor = other.xaxis.minor
+                    lim = other.get_xlim()
+                    ref.set_xlim(*lim, emit=False, auto=other.get_autoscalex_on())
+                    ref.xaxis._scale = other.xaxis._scale
+                if which == "y":
+                    # This logic is from sharey
+                    other._sharey = ref
+                    ref.yaxis.major = other.yaxis.major
+                    ref.yaxis.minor = other.yaxis.minor
+                    lim = other.get_ylim()
+                    ref.set_ylim(*lim, emit=False, auto=other.get_autoscaley_on())
+                    ref.yaxis._scale = other.yaxis._scale
 
     def _add_subplots(
         self,
