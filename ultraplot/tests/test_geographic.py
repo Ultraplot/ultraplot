@@ -165,10 +165,10 @@ def test_geoticks_input_handling(recwarn):
     # Should warn that about non-rectilinear projection.
     with pytest.warns(uplt.warnings.UltraPlotWarning):
         ax.format(lonticklen=True)
-    ax.format(lonticklen=None)
-    assert len(recwarn) == 0
     # When set to None the latticks are not added.
     # No warnings should be raised.
+    ax.format(lonticklen=None)
+    assert len(recwarn) == 0
     # Can parse a string
     ax.format(lonticklen="1em")
 
