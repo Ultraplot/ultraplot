@@ -319,8 +319,8 @@ def test_toggle_gridliner_labels():
 
     # Basemap backend
     fig, ax = uplt.subplots(proj="cyl", backend="basemap")
-    ax.format(land=True, labels=True)  # need this otherwise no labels are printed
-    ax[0]._toggle_gridliner_labels(left=False, bottom=False)
+    ax.format(land=True, labels="both")  # need this otherwise no labels are printed
+    ax[0]._toggle_gridliner_labels(left=False, bottom=False, right=False, top=False)
     gl = ax[0].gridlines_major
 
     # All label are off
@@ -338,7 +338,7 @@ def test_toggle_gridliner_labels():
     )
     for dir, labels in dir_labels.items():
         expectation = False
-        if dir == "top":
+        if dir in "top":
             expectation = True
         for label in labels:
             assert label.get_visible() == expectation
