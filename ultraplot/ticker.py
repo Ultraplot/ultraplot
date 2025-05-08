@@ -309,6 +309,13 @@ class LongitudeLocator(DegreeLocator):
     def __init__(self, lon0=0, *args, **kwargs):
         """
         %(ticker.dms)s
+
+        Parameters
+        ----------
+        lon0 : float, default=0
+            The central longitude around which the longitude labels are centered.
+            This parameter adjusts the alignment of the longitude gridlines and
+            labels, ensuring they are centered relative to the specified value.
         """
         super().__init__(*args, **kwargs)
 
