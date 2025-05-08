@@ -156,7 +156,6 @@ def test_geoticks():
         gridminor=False,
         **settings,
     )
-    uplt.show(block=1)
     return fig
 
 
