@@ -891,10 +891,7 @@ class LongitudeFormatter(_CartopyFormatter, LongitudeFormatter):
         # Adjust longitude value based on lon0
         adjusted_lon = x - self.lon0
         # Normalize to -180 to 180 range
-        while adjusted_lon > 180:
-            adjusted_lon -= 360
-        while adjusted_lon < -180:
-            adjusted_lon += 360
+        adjusted_lon = ((adjusted_lon + 180) % 360) - 180
         # Use the original formatter with the adjusted longitude
         return super().__call__(adjusted_lon, pos)
 
