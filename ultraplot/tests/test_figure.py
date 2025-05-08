@@ -72,6 +72,10 @@ def test_figure_sharing_toggle():
         for axi in ax:
             assert axi._sharex is None
             assert axi._sharey is None
+            for which in "xy":
+                siblings = axi._shared_axes[which].get_siblings(axi)
+                assert len(list(siblings)) == 1
+                assert axi in siblings
 
         fig._toggle_axis_sharing(which="x", share=True)
         fig._toggle_axis_sharing(which="y", share=True)
