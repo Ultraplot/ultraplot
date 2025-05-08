@@ -188,13 +188,13 @@ class _SharedAxes(object):
 
     # Override matplotlib defaults to handle multiple axis sharing
     def sharex(self, other):
-        return self._share_axis(other, which="x")
+        return self._share_axis_with(other, which="x")
 
     def sharey(self, other):
-        self._share_axis(other, which="y")
+        self._share_axis_with(other, which="y")
 
     # Ultraplot internal function to share axes
-    def _share_axis(self, other: "Axes", *, which: str):
+    def _share_axis_with(self, other: "Axes", *, which: str):
         if not isinstance(other, Axes):
             return TypeError(
                 f"Cannot share axes with {type(other).__name__}.\n"
