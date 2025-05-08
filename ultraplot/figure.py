@@ -1290,7 +1290,7 @@ class Figure(mfigure.Figure):
         for group in groups.values():
             ref = group[0]
             for other in group[1:]:
-                # ref._shared_axes[which].join(ref, other)
+                ref._shared_axes[which].join(ref, other)
                 # Calling sharex/y does not set it so we
                 # manually do it. Not sure why
                 if which == "x":
