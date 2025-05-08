@@ -343,3 +343,48 @@ def test_toggle_gridliner_labels():
         for label in labels:
             assert label.get_visible() == expectation
     uplt.close(fig)
+
+
+def test_sharing_geo_limits():
+    """
+    Test that we can share limits on GeoAxes
+    """
+    fig, ax = uplt.subplots(
+        ncols=2,
+        proj="cyl",
+        share=False,
+    )
+    expectation = dict(
+        lonlim=(-10, 10),
+        latlim=(-13, 15),
+    )
+    ax.format(land=True)
+    ax[0].format(**expectation)
+
+    before_lon = ax[1]._lonaxis.get_view_interval()
+    before_lat = ax[1]._lataxis.get_view_interval()
+
+    # Need to set this otherwise will be skipped
+    fig._sharey = 3
+    ax[0]._sharey_setup(ax[1])  # manually call setup
+    ax[0]._sharey_limits(ax[1])  # manually call sharing limits
+    # Limits should now be shored for lat but not for lon
+    after_lat = ax[1]._lataxis.get_view_interval()
+
+    # We are sharing y which is the latitude axis
+    assert all([np.allclose(i, j) for i, j in zip(expectation["latlim"], after_lat)])
+    # We are not sharing longitude yet
+    assert all(
+        [
+            not np.allclose(i, j)
+            for i, j in zip(expectation["lonlim"], ax[1]._lonaxis.get_view_interval())
+        ]
+    )
+
+    ax[0]._sharex_setup(ax[1])
+    ax[0]._sharex_limits(ax[1])
+    after_lon = ax[1]._lonaxis.get_view_interval()
+
+    assert all([not np.allclose(i, j) for i, j in zip(before_lon, after_lon)])
+    assert all([np.allclose(i, j) for i, j in zip(after_lon, expectation["lonlim"])])
+    uplt.close(fig)

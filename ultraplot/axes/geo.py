@@ -503,13 +503,13 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
 
     @override
     def _sharey_limits(self, sharey: "GeoAxes"):
-        return self._share_limits(sharey, which="y")
+        return self._share_limits_with(sharey, which="y")
 
     @override
     def _sharex_limits(self, sharex: "GeoAxes"):
-        return self._share_limits(sharex, which="x")
+        return self._share_limits_with(sharex, which="x")
 
-    def _share_limits(self, other: "GeoAxes", which: str):
+    def _share_limits_with(self, other: "GeoAxes", which: str):
         """
         Safely share limits and tickers without resetting things.
         """
@@ -520,7 +520,7 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
         else:
             this_ax = self._lataxis
             other_ax = other._lataxis
-        for ax1, ax2 in ((this_ax, other_ax), (other_ax, this_ax)):
+        for ax1, ax2 in ((other_ax, this_ax), (this_ax, other_ax)):
             ax1.set_view_interval(*ax2.get_view_interval())
 
         # Set the shared axis
@@ -532,6 +532,7 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
             "minor_locator",
             "major_formatter",
         ]
+
         for prop, func in zip(props, funcs):
             if getattr(other_ax, prop) and not getattr(this_ax, prop):
                 setter = getattr(other_ax, f"set_{func}")
@@ -568,7 +569,7 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
         # NOTE: Only difference between levels 2 and 3 is level 3 hides tick
         # labels. But this is done after the fact -- tickers are still shared.
         if level > 1 and limits:
-            self._share_limits(other, which=which)
+            self._share_limits_with(other, which=which)
 
     @override
     def _sharey_setup(self, sharey, *, labels=True, limits=True):
