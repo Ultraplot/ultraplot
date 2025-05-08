@@ -1292,10 +1292,10 @@ class Figure(mfigure.Figure):
             ref = group[0]
             for other in group[1:]:
                 ref._shared_axes[which].join(ref, other)
-                # Calling sharex/y does not set it so we
-                # manually do it. Not sure why
-                if which == "x":
-                    # This logic is from sharex
+                # The following manual adjustments are necessary because the
+                # join method does not automatically propagate the sharing state
+                # and axis properties to the other axes. This ensures that the
+                # shared axes behave consistently.
                     other._sharex = ref
                     ref.xaxis.major = other.xaxis.major
                     ref.xaxis.minor = other.xaxis.minor
