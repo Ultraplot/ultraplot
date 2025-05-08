@@ -1254,7 +1254,8 @@ class Figure(mfigure.Figure):
         - children: Whether to include child axes.
         - hidden: Whether to include hidden axes.
         """
-        assert which in ("x", "y", "view")
+        if which not in ("x", "y", "z", "view"):
+            return
         axes = list(self._iter_axes(hidden=hidden, children=children, panels=panels))
 
         if which == "x":
