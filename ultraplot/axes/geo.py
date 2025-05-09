@@ -1393,11 +1393,9 @@ class _CartopyAxes(GeoAxes, _GeoAxes):
         for dir, side in zip(
             "bottom top left right".split(), [bottom, top, left, right]
         ):
-            print(getattr(self.gridlines_major, f"{dir}_labels"))
             if side != True:
                 continue
             sides[dir] = getattr(self.gridlines_major, f"{dir}_label_artists")
-        print(sides)
         return sides
 
     @staticmethod
@@ -1429,7 +1427,6 @@ class _CartopyAxes(GeoAxes, _GeoAxes):
             _CartopyAxes._get_side_labels()
         )
         gl = self.gridlines_major
-        print(gl._labels)
         if left is not None:
             setattr(gl, left_labels, left)
         if right is not None:
