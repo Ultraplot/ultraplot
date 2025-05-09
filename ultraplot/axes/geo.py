@@ -683,7 +683,7 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
         left=None,
         right=None,
     ):
-        assert NotImplementedError("Should be implemente by Cartopy or Basemap Axes")
+        assert NotImplementedError("Should be implemented by Cartopy or Basemap Axes")
 
     def _toggle_gridliner_labels(
         self,
