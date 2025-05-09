@@ -88,3 +88,34 @@ def test_unsharing_resets_formatters():
     assert ax[0].xaxis.get_major_locator() != ax[1].xaxis.get_major_locator()
     assert ax[0].yaxis.get_major_locator() != ax[1].yaxis.get_major_locator()
     uplt.close(fig)
+
+
+def test_unshare_setting_share_x_or_y():
+    """
+    When axes are shared they get a sharex or y attribute.
+    Unsharing should reset these
+    """
+    fig, ax = uplt.subplots(ncols=2)
+    # 1 is sharing its y, 0 is not
+    assert ax[0]._sharey is None
+    assert ax[1]._sharey == ax[0]
+
+    # x should not be shared
+    assert ax[0]._sharex is None
+    assert ax[0]._sharex is None
+    ax[0]._unshare(which="y")
+    assert ax[0]._sharey is None
+    assert ax[1]._sharey is None
+    uplt.close(fig)
+    fig, ax = uplt.subplots(nrows=2)
+    # 0 is sharing its x, 1 is not
+    assert ax[0]._sharex == ax[1]
+
+    # ys should not be shared
+    assert ax[0]._sharey is None
+    assert ax[1]._sharey is None
+
+    ax[0]._unshare(which="x")
+    assert ax[0]._sharex is None
+    assert ax[1]._sharex is None
+    uplt.close(fig)
