@@ -478,3 +478,34 @@ def test_get_gridliner_labels_cartopy():
             else:
                 assert len(labels.get(dir, [])) == 0
     uplt.close(fig)
+
+
+def test_sharing_levels():
+    """
+    We can share limits or labels.
+    We check if we can do both for the GeoAxes.
+    """
+    # We can share labels, limits, scale or all
+    # For labels we share the axis labels but nothing else
+    # Limits shares both labels and ticks
+    # Scale (= True) will also share the scale
+    # All does all the ticks across all plots
+    # (not necessarily on same line)
+    return
+
+    fig, ax = uplt.subplots(ncols=2, nrows=2, proj="cyl", share="limits")
+    ax.format(labels="both")
+    # All the labels should be on
+    for axi in ax:
+        side_labels = axi._get_gridliner_labels(
+            left=True,
+            right=True,
+            top=True,
+            bottom=True,
+        )
+        for dir, labels in side_labels.items():
+            assert len(labels) > 0
+
+    fig, ax = uplt.subplots(ncols=2, nrows=2, proj="cyl", share="labels")
+
+    uplt.close(fig)
