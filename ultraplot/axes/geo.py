@@ -336,11 +336,12 @@ class _GeoAxis(object):
             this_prop = getattr(self, prop)
             other_prop = getattr(other, prop)
             if this_prop ^ other_prop:
+                # Allow this to error if in the unlikely
+                # case that the backend changes
                 getter = getattr(self, f"get_{func}")
                 setter = getattr(other, f"set_{func}")
-                if setter and getter:
-                    setter(getter())
-                    setattr(other, prop, this_prop)
+                setter(getter())
+                setattr(other, prop, this_prop)
 
 
 class _LonAxis(_GeoAxis):
