@@ -113,3 +113,9 @@ def test_figure_sharing_toggle():
     compare_with_reference(layout)
 
     return None
+
+
+def test_toggle_input_axis_sharing():
+    fig = uplt.figure()
+    with pytest.warns(uplt.internals.warnings.UltraPlotWarning):
+        fig._toggle_axis_sharing(which="does not exist")

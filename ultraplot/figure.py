@@ -1255,6 +1255,9 @@ class Figure(mfigure.Figure):
         - hidden: Whether to include hidden axes.
         """
         if which not in ("x", "y", "z", "view"):
+            warnings._warn_ultraplot(
+                f"Attempting to (un)share {which=}. Options are ('x', 'y', 'z', 'view')"
+            )
             return
         axes = list(self._iter_axes(hidden=hidden, children=children, panels=panels))
 
@@ -1271,8 +1274,6 @@ class Figure(mfigure.Figure):
 
         # Grouping logic based on GridSpec
         def get_key(ax):
-            if not hasattr(ax, "get_subplotspec"):
-                return None
             ss = ax.get_subplotspec()
             if which == "x":
                 return ss.rowspan.start  # same row
@@ -1283,8 +1284,6 @@ class Figure(mfigure.Figure):
         groups = {}
         for ax in axes:
             key = get_key(ax)
-            if key is None:
-                continue
             groups.setdefault(key, []).append(ax)
 
         # Re-join axes per group
