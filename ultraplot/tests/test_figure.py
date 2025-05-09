@@ -52,8 +52,10 @@ def test_unsharing_on_creation():
             assert axi in siblings
 
 
-def test_unsharing_different_recitlinear():
-    """"""
+def test_unsharing_different_rectilinear():
+    """
+    Even if the projections are rectilinear, the coordinates systems may be different, as such we only allow sharing for the same kind of projections.
+    """
     with pytest.warns(uplt.internals.warnings.UltraPlotWarning):
         fig, ax = uplt.subplots(ncols=2, proj=("cyl", "merc"), share="all")
     uplt.close(fig)
