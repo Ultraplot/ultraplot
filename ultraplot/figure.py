@@ -1207,8 +1207,15 @@ class Figure(mfigure.Figure):
         # Allow sharing for GeoAxes if rectilinear
         if self._sharex or self._sharey:
             if len(self.axes) > 1 and isinstance(ax, paxes.GeoAxes):
-                ref = self.axes[0]
-                if not ax._is_rectilinear() or ax.projection != self.axes[0].projection:
+                #  Compare it with a reference
+                ref = next(self._iter_axes(hidden=False, children=False, panels=False))
+                unshare = False
+                if not ax._is_rectilinear():
+                    unshare = True
+                elif hasattr(ax, "projection") and hasattr(ref, "projection"):
+                    if ax.projection != ref.projection:
+                        unshare = True
+                if unshare:
                     self._unshare_axes()
                     # Only warn once. Note, if axes are reshared
                     # the warning is not reset. This is however,
