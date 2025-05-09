@@ -1390,32 +1390,14 @@ class _CartopyAxes(GeoAxes, _GeoAxes):
         right=None,
     ) -> dict[str, list[mtext.Text]]:
         sides = {}
-        for label, side in zip(
+        for dir, side in zip(
             "bottom top left right".split(), [bottom, top, left, right]
         ):
-            if not side:
+            print(getattr(self.gridlines_major, f"{dir}_labels"))
+            if side != True:
                 continue
-            if label in "bottom top".split():
-                labels = self.xlabel_artists
-            else:
-                labels = self.ylabel_artists
-
-            # Labels are aligned in a typical manner
-            # Horizontal alignment is adjusted for left and right.
-            # Similarly vertical alignment is adjusted for top
-            # and bottom
-            for label in labels:
-                target = None
-                if label.get_horizontalalignment() == "right":
-                    target = "left"
-                elif label.get_horizontalalignment() == "left":
-                    target = "right"
-                elif label.get_verticalalignment() == "bottom":
-                    target = top
-                elif label.get_verticalalignment() == "top":
-                    target = bottom
-                if target:
-                    sides[target] = sides.get(target, []) + [label]
+            sides[dir] = getattr(self.gridlines_major, f"{dir}_label_artists")
+        print(sides)
         return sides
 
     @staticmethod
@@ -1447,6 +1429,7 @@ class _CartopyAxes(GeoAxes, _GeoAxes):
             _CartopyAxes._get_side_labels()
         )
         gl = self.gridlines_major
+        print(gl._labels)
         if left is not None:
             setattr(gl, left_labels, left)
         if right is not None:

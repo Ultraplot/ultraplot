@@ -415,3 +415,67 @@ def test_copy_locator_props():
     for prop in props:
         assert getattr(g1, prop) == False
         assert getattr(g1, prop) == getattr(g2, prop)
+
+
+def test_turn_off_tick_labels_basemap():
+    """
+    Check if we can toggle the labels off for GeoAxes
+    with a basemap backend.
+    """
+    fig, ax = uplt.subplots(proj="cyl", backend="basemap")
+    ax.format(labels="both")
+    locators = ax[0].gridlines_major
+
+    def test_if_labels_are(is_on, locator):
+        from matplotlib import text as mtext
+
+        for loc, objects in locator.items():
+            for object in objects:
+                if isinstance(object, list) and len(objects) > 0:
+                    object = object[0]
+                if isinstance(object, mtext.Text):
+                    assert object.get_visible() == is_on
+
+    # Check if the labels are on
+    for locator in locators:
+        test_if_labels_are(is_on=True, locator=locator)
+
+    # Turn off both the labels
+    for locator in locators:
+        ax[0]._turnoff_tick_labels(locator)
+
+    # Check if  are off
+    for locator in locators:
+        test_if_labels_are(is_on=False, locator=locator)
+    uplt.close(fig)
+
+
+def test_get_gridliner_labels_cartopy():
+    from itertools import product
+
+    fig, ax = uplt.subplots(proj="cyl", backend="cartopy")
+    ax.format(labels="both")
+    bools = [True, False]
+
+    for bottom, top, left, right in product(bools, bools, bools, bools):
+        ax[0]._toggle_gridliner_labels(
+            left=left,
+            right=right,
+            top=top,
+            bottom=bottom,
+        )
+        fig.canvas.draw()  # need draw to retrieve the labels
+        labels = ax[0]._get_gridliner_labels(
+            bottom=bottom,
+            top=top,
+            left=left,
+            right=right,
+        )
+        for dir, is_on in zip(
+            "bottom top left right".split(), [bottom, top, left, right]
+        ):
+            if is_on:
+                assert len(labels.get(dir, [])) > 0
+            else:
+                assert len(labels.get(dir, [])) == 0
+    uplt.close(fig)
