@@ -52,6 +52,13 @@ def test_unsharing_on_creation():
             assert axi in siblings
 
 
+def test_unsharing_different_recitlinear():
+    """"""
+    with pytest.warns(uplt.internals.warnings.UltraPlotWarning):
+        fig, ax = uplt.subplots(ncols=2, proj=("cyl", "merc"), share="all")
+    uplt.close(fig)
+
+
 def test_figure_sharing_toggle():
     """
     Check if axis sharing and unsharing works

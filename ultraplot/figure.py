@@ -1206,19 +1206,17 @@ class Figure(mfigure.Figure):
         ax = super().add_subplot(ss, _subplot_spec=ss, **kwargs)
         # Allow sharing for GeoAxes if rectilinear
         if self._sharex or self._sharey:
-            if (
-                len(self.axes) > 1
-                and isinstance(ax, paxes.GeoAxes)
-                and not ax._is_rectilinear()
-            ):
-                self._unshare_axes()
-                # Only warn once. Note, if axes are reshared
-                # the warning is not reset. This is however,
-                # very unlikely to happen as GeoAxes are not
-                # typically shared and unshared.
-                warnings._warn_ultraplot(
-                    f"GeoAxes can only be shared for rectilinear projections, {ax.projection=} is not a rectilinear projection."
-                )
+            if len(self.axes) > 1 and isinstance(ax, paxes.GeoAxes):
+                ref = self.axes[0]
+                if not ax._is_rectilinear() or ax.projection != self.axes[0].projection:
+                    self._unshare_axes()
+                    # Only warn once. Note, if axes are reshared
+                    # the warning is not reset. This is however,
+                    # very unlikely to happen as GeoAxes are not
+                    # typically shared and unshared.
+                    warnings._warn_ultraplot(
+                        f"GeoAxes can only be shared for rectilinear projections, {ax.projection=} is not a rectilinear projection."
+                    )
 
         if ax.number:
             self._subplot_dict[ax.number] = ax
