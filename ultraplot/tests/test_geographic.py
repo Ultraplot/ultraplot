@@ -568,4 +568,4 @@ def test_sharing_levels():
                 assert s == 4
             else:
                 assert s == 2
-    uplt.close(fig)
+        uplt.close(fig)
