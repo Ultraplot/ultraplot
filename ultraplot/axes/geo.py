@@ -1236,10 +1236,18 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
                     label.set_position(position)
                     label.set_horizontalalignment(ha)
                     label.set_verticalalignment(va)
-        for key, values in sides.items():
-            if len(values) > 3:
-                values[0].set_visible(False)
-                values[-1].set_visible(False)
+
+        # Some labels are double in the list not sure why
+        # Remove them for now
+        for key, labels in sides.items():
+            seen = set()
+            for label in labels:
+                pos = label.get_position()
+                txt = label.get_text()
+                if (pos, txt) not in seen:
+                    seen.add((pos, txt))
+                else:
+                    label.set_visible(False)
 
     @property
     def gridlines_major(self):
