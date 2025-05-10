@@ -1127,9 +1127,16 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
             ax.set_major_formatter(mticker.NullFormatter())
 
         else:
-            locator = gl.xlocator if x_or_y == "x" else gl.ylocator
-            lim = gl.crs.x_limits if x_or_y == "x" else gl.crs.y_limits
-            tick_positions = locator.tick_values(*lim)
+            if x_or_y == "x":
+                lim = self._lonaxis.get_view_interval()
+                locator = gl.xlocator
+                tick_positions = self._lonaxis._get_ticklocs(locator)
+            else:
+                lim = self._lataxis.get_view_interval()
+                locator = gl.ylocator
+                tick_positions = self._lataxis._get_ticklocs(locator)[
+                    1:-1
+                ]  # cutoff edges
 
         # Always show the ticks
         ax.set_ticks(tick_positions)
