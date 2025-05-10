@@ -491,21 +491,81 @@ def test_sharing_levels():
     # Scale (= True) will also share the scale
     # All does all the ticks across all plots
     # (not necessarily on same line)
-    return
 
-    fig, ax = uplt.subplots(ncols=2, nrows=2, proj="cyl", share="limits")
-    ax.format(labels="both")
-    # All the labels should be on
-    for axi in ax:
-        side_labels = axi._get_gridliner_labels(
-            left=True,
-            right=True,
-            top=True,
-            bottom=True,
-        )
-        for dir, labels in side_labels.items():
-            assert len(labels) > 0
+    x = np.array([0, 10])
+    y = np.array([0, 10])
+    sharing_levels = [0, 1, 2, 3, 4]
+    lonlim = latlim = np.array((-10, 10))
 
-    fig, ax = uplt.subplots(ncols=2, nrows=2, proj="cyl", share="labels")
+    def assert_views_are_sharing(ax):
+        # We are testing a 2x2 grid here
+        match ax.number - 1:
+            # Note ax.number is idx + 1
+            case 0:
+                targets = [1, 2]
+                sharing_x = [False, True]
+                sharing_y = [True, False]
+            case 1:
+                targets = [0, 3]
+                sharing_x = [False, True]
+                sharing_y = [True, False]
+            case 2:
+                targets = [0, 3]
+                sharing_x = [True, False]
+                sharing_y = [False, True]
+            case 3:
+                targets = [1, 2]
+                sharing_x = [True, False]
+                sharing_y = [False, True]
+        lonview = ax._lonaxis.get_view_interval()
+        latview = ax._lataxis.get_view_interval()
+        for target, share_x, share_y in zip(targets, sharing_x, sharing_y):
+            other = ax.figure.axes[target]
+            target_lon = other._lonaxis.get_view_interval()
+            target_lat = other._lataxis.get_view_interval()
 
+            l1 = np.linalg.norm(
+                np.asarray(lonview) - np.asarray(target_lon),
+            )
+            l2 = np.linalg.norm(
+                np.asarray(latview) - np.asarray(target_lat),
+            )
+            level = ax.figure._get_sharing_level()
+            if level <= 1:
+                share_x = share_y = False
+            assert np.allclose(l1, 0) == share_x
+            assert np.allclose(l2, 0) == share_y
+
+    for level in sharing_levels:
+        fig, ax = uplt.subplots(ncols=2, nrows=2, proj="cyl", share=level)
+        ax.format(labels="both")
+        for axi in ax:
+            axi.format(
+                lonlim=lonlim * axi.number,
+                latlim=latlim * axi.number,
+            )
+        fig.canvas.draw()
+        for idx, axi in enumerate(ax):
+            axi.plot(x * (idx + 1), y * (idx + 1))
+
+        fig.canvas.draw()  # need this to update the labels
+        # All the labels should be on
+        for axi in ax:
+            side_labels = axi._get_gridliner_labels(
+                left=True,
+                right=True,
+                top=True,
+                bottom=True,
+            )
+            s = 0
+            for dir, labels in side_labels.items():
+                s += any([label.get_visible() for label in labels])
+
+            assert_views_are_sharing(axi)
+            # When we share the labels but not the limits,
+            # we expect all ticks to be on
+            if level < 3:
+                assert s == 4
+            else:
+                assert s == 2
     uplt.close(fig)

@@ -580,7 +580,7 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
         if level > 0 and labels:
             setattr(self, f"_share{which}", other)
         # Share future axis tickers, limits, and scales
-        # NOTE: Only difference between levels 2 and 3 is level 3 hides tick
+        # NOTE: Only difference between levels 2 and 3 is level 3 hides ticklabels
         # labels. But this is done after the fact -- tickers are still shared.
         if level > 1 and limits:
             self._share_limits_with(other, which=which)
@@ -652,17 +652,6 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
                 or to the *right* of the leftmost panel. But the sharing level used for
                 the leftmost and bottommost is the *figure* sharing level.
         """
-        # Check if all projections are rectilinear
-        if any(not _is_rectilinear_projection(ax) for ax in self.figure.axes):
-            # warnings._warn_ultraplot(
-            # "Sharing of axes only allowed for figures that have a rectilinear projection"
-            # )
-            return
-        # Do not allow type mixing
-        # TODO: add allowing mixing
-        elif any([type(ax) is not type(self) for ax in self.figure.axes]):
-            return
-
         # Handle X axis sharing
         if self._sharex:
             self._handle_axis_sharing(
@@ -725,8 +714,10 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
             target_axis: The target axis to apply sharing to
         """
         # Copy view interval and minor locator from source to target
-        target_axis.set_view_interval(*source_axis.get_view_interval())
-        target_axis.set_minor_locator(source_axis.get_minor_locator())
+
+        if self.figure._get_sharing_level() >= 2:
+            target_axis.set_view_interval(*source_axis.get_view_interval())
+            target_axis.set_minor_locator(source_axis.get_minor_locator())
 
         if not self.stale:
             return
@@ -742,11 +733,17 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
             for axi in axes:
                 recoded[axi] = recoded.get(axi, []) + [direction]
 
+        # We turn off the tick labels when the scale and
+        # ticks are shared (level >= 3)
+        are_ticks_on = True
+        if self.figure._get_sharing_level() >= 3:
+            are_ticks_on = False
+
         default = dict(
-            left=False,
-            right=False,
-            top=False,
-            bottom=False,
+            left=are_ticks_on,
+            right=are_ticks_on,
+            top=are_ticks_on,
+            bottom=are_ticks_on,
         )
         for axi in self.figure.axes:
             sides = recoded.get(axi, [])
