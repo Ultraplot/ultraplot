@@ -1130,7 +1130,7 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
             if x_or_y == "x":
                 lim = self._lonaxis.get_view_interval()
                 locator = gl.xlocator
-                tick_positions = self._lonaxis._get_ticklocs(locator)
+                tick_positions = self._lonaxis._get_ticklocs(locator)[1:-1]
             else:
                 lim = self._lataxis.get_view_interval()
                 locator = gl.ylocator
