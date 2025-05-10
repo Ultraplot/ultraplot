@@ -1107,6 +1107,7 @@ def Locator(locator, *args, discrete=False, **kwargs):
     ultraplot.axes.Axes.colorbar
     ultraplot.constructor.Formatter
     """  # noqa: E501
+
     if (
         np.iterable(locator)
         and not isinstance(locator, str)

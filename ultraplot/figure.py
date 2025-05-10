@@ -1041,6 +1041,12 @@ class Figure(mfigure.Figure):
                 renderer = canvas.get_renderer()
         return renderer
 
+    def _get_sharing_level(self):
+        """
+        We take the average here as the sharex and sharey should be the same value. In case this changes in the future we can track down the error easily
+        """
+        return 0.5 * (self.figure._sharex + self.figure._sharey)
+
     def _add_axes_panel(self, ax, side=None, **kwargs):
         """
         Add an axes panel.
@@ -1125,6 +1131,7 @@ class Figure(mfigure.Figure):
         """
         # Parse arguments
         kwargs = self._parse_proj(**kwargs)
+
         args = args or (1, 1, 1)
         gs = self.gridspec
 
@@ -1201,10 +1208,119 @@ class Figure(mfigure.Figure):
         kwargs.setdefault("label", f"subplot_{self._subplot_counter}")
         kwargs.setdefault("number", 1 + max(self._subplot_dict, default=0))
         kwargs.pop("refwidth", None)  # TODO: remove this
+
         ax = super().add_subplot(ss, _subplot_spec=ss, **kwargs)
+        # Allow sharing for GeoAxes if rectilinear
+        if self._sharex or self._sharey:
+            if len(self.axes) > 1 and isinstance(ax, paxes.GeoAxes):
+                #  Compare it with a reference
+                ref = next(self._iter_axes(hidden=False, children=False, panels=False))
+                unshare = False
+                if not ax._is_rectilinear():
+                    unshare = True
+                elif hasattr(ax, "projection") and hasattr(ref, "projection"):
+                    if ax.projection != ref.projection:
+                        unshare = True
+                if unshare:
+                    self._unshare_axes()
+                    # Only warn once. Note, if axes are reshared
+                    # the warning is not reset. This is however,
+                    # very unlikely to happen as GeoAxes are not
+                    # typically shared and unshared.
+                    warnings._warn_ultraplot(
+                        f"GeoAxes can only be shared for rectilinear projections, {ax.projection=} is not a rectilinear projection."
+                    )
+
         if ax.number:
             self._subplot_dict[ax.number] = ax
         return ax
+
+    def _unshare_axes(self):
+        for which in "xyz":
+            self._toggle_axis_sharing(which=which, share=False)
+        # Force setting extent
+        # This is necessary to ensure that the axes are properly
+        # aligned and we don't get weird scaling issues for
+        #  geographic axes. This action is expensive for GeoAxes
+        for ax in self.axes:
+            if isinstance(ax, paxes.GeoAxes) and hasattr(ax, "set_global"):
+                ax.set_global()
+
+    def _toggle_axis_sharing(
+        self,
+        *,
+        which="y",
+        share=True,
+        panels=False,
+        children=False,
+        hidden=False,
+    ):
+        """
+        Share or unshare axes in the figure along a given direction.
+
+        Parameters:
+        - which: 'x', 'y', 'z', or 'view'.
+        - share: int indicating the levels (see above)
+        - panels: Whether to include panel axes.
+        - children: Whether to include child axes.
+        - hidden: Whether to include hidden axes.
+        """
+        if which not in ("x", "y", "z", "view"):
+            warnings._warn_ultraplot(
+                f"Attempting to (un)share {which=}. Options are ('x', 'y', 'z', 'view')"
+            )
+            return
+        axes = list(self._iter_axes(hidden=hidden, children=children, panels=panels))
+
+        if which == "x":
+            self._sharex = share
+        elif which == "y":
+            self._sharey = share
+
+        # Unshare first if needed
+        if share == 0:
+            for ax in axes:
+                ax._unshare(which=which)
+            return
+
+        # Grouping logic based on GridSpec
+        def get_key(ax):
+            ss = ax.get_subplotspec()
+            if which == "x":
+                return ss.rowspan.start  # same row
+            elif which == "y":
+                return ss.colspan.start  # same col
+
+        # Create groups of axes that should share
+        groups = {}
+        for ax in axes:
+            key = get_key(ax)
+            groups.setdefault(key, []).append(ax)
+
+        # Re-join axes per group
+        for group in groups.values():
+            ref = group[0]
+            for other in group[1:]:
+                ref._shared_axes[which].join(ref, other)
+                # The following manual adjustments are necessary because the
+                # join method does not automatically propagate the sharing state
+                # and axis properties to the other axes. This ensures that the
+                # shared axes behave consistently.
+                if which == "x":
+                    other._sharex = ref
+                    ref.xaxis.major = other.xaxis.major
+                    ref.xaxis.minor = other.xaxis.minor
+                    lim = other.get_xlim()
+                    ref.set_xlim(*lim, emit=False, auto=other.get_autoscalex_on())
+                    ref.xaxis._scale = other.xaxis._scale
+                if which == "y":
+                    # This logic is from sharey
+                    other._sharey = ref
+                    ref.yaxis.major = other.yaxis.major
+                    ref.yaxis.minor = other.yaxis.minor
+                    lim = other.get_ylim()
+                    ref.set_ylim(*lim, emit=False, auto=other.get_autoscaley_on())
+                    ref.yaxis._scale = other.yaxis._scale
 
     def _add_subplots(
         self,
@@ -1321,7 +1437,6 @@ class Figure(mfigure.Figure):
             ss = gs[y0 : y1 + 1, x0 : x1 + 1]
             kw = {**kwargs, **axes_kw[num], "number": num}
             axs[idx] = self.add_subplot(ss, **kw)
-
         self.format(skip_axes=True, **figure_kw)
         return pgridspec.SubplotGrid(axs)
 
@@ -1749,6 +1864,8 @@ class Figure(mfigure.Figure):
         # Update the main axes
         if skip_axes:  # avoid recursion
             return
+
+        # Remove all keywords that are not in the allowed signature parameters
         kws = {
             cls: _pop_params(kwargs, sig)
             for cls, sig in paxes.Axes._format_signatures.items()
