@@ -1121,7 +1121,7 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
         # and for cartopy we are simple using their functions by showing the axis.
         if isinstance(gl, tuple):
             locator = gl[0] if x_or_y == "x" else gl[1]
-            tick_positions = np.asarray(list(locator.keys()))[1:-1]
+            tick_positions = np.asarray(list(locator.keys()))
             # Turn off the ticks otherwise they are double for
             # basemap (different from cartopy)
             ax.set_major_formatter(mticker.NullFormatter())
