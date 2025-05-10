@@ -1175,7 +1175,6 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
         """
         sides = dict()
         for which, formatter in zip("xy", gl):
-            # Turn off the outer two labels
             for loc, (lines, labels) in formatter.items():
                 for i, label in enumerate(labels):
                     upper_end = True
