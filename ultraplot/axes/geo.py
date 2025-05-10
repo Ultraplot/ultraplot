@@ -1172,7 +1172,9 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
         and mirrors the label placement behavior of Cartopy.
         See: https://scitools.org.uk/cartopy/docs/v0.16/_modules/cartopy/mpl/gridliner.html#Gridliner
         """
+        sides = dict()
         for which, formatter in zip("xy", gl):
+            # Turn off the outer two labels
             for loc, (lines, labels) in formatter.items():
                 for i, label in enumerate(labels):
                     upper_end = True
@@ -1216,14 +1218,28 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
                         position[1] = offset[1] + shift_scale * size * 0.65
                         ha = "center"
                         va = "top" if shift_scale == 1 else "bottom"
+                        if shift_scale == 1:
+                            sides.setdefault("top", []).append(label)
+                        else:
+                            sides.setdefault("bottom", []).append(label)
+
                     else:
                         # Move x position
                         position[0] = offset[0] + shift_scale * size * 0.25
                         ha = "left" if shift_scale == 1 else "right"
                         va = "center"
+                        if shift_scale == 1:
+                            sides.setdefault("right", []).append(label)
+                        else:
+                            sides.setdefault("left", []).append(label)
+
                     label.set_position(position)
                     label.set_horizontalalignment(ha)
                     label.set_verticalalignment(va)
+        for key, values in sides.items():
+            if len(values) > 3:
+                values[0].set_visible(False)
+                values[-1].set_visible(False)
 
     @property
     def gridlines_major(self):
