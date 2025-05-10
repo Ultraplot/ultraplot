@@ -491,6 +491,16 @@ def test_sharing_levels():
     # Scale (= True) will also share the scale
     # All does all the ticks across all plots
     # (not necessarily on same line)
+    #
+    # Succinctly this means that for
+    # - share = 0: no sharing takes place, each
+    # axis have their tick labels and data limits are their
+    # own
+    # - share = 1: x and y labels are shared but nothing else
+    # - share = 2: ticks are shared  but still are shown
+    # - share = 3: ticks are shared and turned of for the ticks
+    # facing towards the "inside"
+    # - share = 4: ticks are shared, and the data limits are the same
 
     x = np.array([0, 10])
     y = np.array([0, 10])
