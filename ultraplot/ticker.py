@@ -306,9 +306,16 @@ class LongitudeLocator(DegreeLocator):
     """
 
     @docstring._snippet_manager
-    def __init__(self, *args, **kwargs):
+    def __init__(self, lon0=0, *args, **kwargs):
         """
         %(ticker.dms)s
+
+        Parameters
+        ----------
+        lon0 : float, default=0
+            The central longitude around which the longitude labels are centered.
+            This parameter adjusts the alignment of the longitude gridlines and
+            labels, ensuring they are centered relative to the specified value.
         """
         super().__init__(*args, **kwargs)
 
@@ -860,15 +867,33 @@ class DegreeFormatter(_CartopyFormatter, _PlateCarreeFormatter):
 class LongitudeFormatter(_CartopyFormatter, LongitudeFormatter):
     """
     Format longitude gridline labels. Adapted from
-    `cartopy.mpl.ticker.LongitudeFormatter`.
+    `cartopy.mpl.ticker.LongitudeFormatter` with support for
+    proper centering based on lon0.
     """
 
     @docstring._snippet_manager
-    def __init__(self, *args, **kwargs):
+    def __init__(self, lon0=0, *args, **kwargs):
         """
+        Parameters
+        ----------
+        lon0 : float, optional
+            Central longitude value to use for centering the map.
+            Labels will be adjusted relative to this value.
         %(ticker.dms)s
         """
+        self.lon0 = lon0
         super().__init__(*args, **kwargs)
+
+    def __call__(self, x, pos=None):
+        """
+        Format the longitude, accounting for lon0 offset.
+        """
+        # Adjust longitude value based on lon0
+        adjusted_lon = x - self.lon0
+        # Normalize to -180 to 180 range
+        adjusted_lon = ((adjusted_lon + 180) % 360) - 180
+        # Use the original formatter with the adjusted longitude
+        return super().__call__(adjusted_lon, pos)
 
 
 class LatitudeFormatter(_CartopyFormatter, LatitudeFormatter):

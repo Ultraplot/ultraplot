@@ -2454,6 +2454,37 @@ class Axes(maxes.Axes):
         else:
             return bbox.ymin, bbox.ymax
 
+    def _unshare(self, *, which: str):
+        """
+        Remove this Axes from the shared Grouper for the given axis ('x', 'y', 'z', or 'view').
+        Note this isolates the axis and does not preserve the transitivity of sharing.
+        """
+        if which not in self._shared_axes:
+            warnings._warn_ultraplot(f"Axis {which} is not shared")
+            return
+        if which in "xy":
+            setattr(self, f"_share{which}", None)  # essential
+        # Note _scale is also set when calling sharex or y.
+        # I think it is fine to leave it as otherwise we would
+        # need to determine the scale, which may get messy.
+
+        grouper = self._shared_axes[which]
+        siblings = list(grouper.get_siblings(self))
+        for sibling in siblings:
+            if sibling is not self:
+                # Unshare by removing them from the grouper
+                grouper.remove(sibling)
+                sibling._shared_axes[which].remove(self)
+                # To be safe let's remove this
+                self._shared_axes[which].remove(sibling)
+                if which in "xy":
+                    setattr(sibling, f"_share{which}", None)
+                this_ax = getattr(self, f"{which}axis")
+                sib_ax = getattr(sibling, f"{which}axis")
+                # Reset formatters
+                this_ax.major = copy.deepcopy(this_ax.major)
+                this_ax.minor = copy.deepcopy(this_ax.minor)
+
     def _sharex_setup(self, sharex, **kwargs):
         """
         Configure x-axis sharing for panels. See also `~CartesianAxes._sharex_setup`.

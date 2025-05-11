@@ -4,7 +4,7 @@ Test projection features.
 """
 import cartopy.crs as ccrs
 import matplotlib.pyplot as plt
-import numpy as np
+import numpy as np, warnings
 import ultraplot as uplt
 import pytest
 
@@ -134,3 +134,50 @@ def test_polar_projections():
         rlines=0.25,
     )
     return fig
+
+
+def test_sharing_axes():
+    """
+    Test sharing axes for GeoAxes
+    """
+
+    with warnings.catch_warnings(record=True) as record:
+        # For rectilinear plots all axes can be shared
+        fig, ax = uplt.subplots(ncols=3, nrows=3, share="all", proj="cyl")
+        ax.format(
+            land=True,
+            lonlim=(-10, 10),  # make small to plot quicker
+            latlim=(-10, 10),
+        )
+        lims = [ax[0].get_xlim(), ax[0].get_ylim()]
+        for axi in ax[1:]:
+            test_lims = [axi.get_xlim(), axi.get_ylim()]
+            for this, other in zip(lims, test_lims):
+                L = np.linalg.norm(np.array(this) - np.array(other))
+                assert np.allclose(L, 0)
+    # Should not emit any warnings
+    assert len(record) == 0
+
+
+def test_sharing_axes_different_projections():
+    """
+    Test sharing axes for GeoAxes
+    """
+
+    projs = ("cyl", "merc", "merc")
+    with pytest.warns(uplt.internals.UltraPlotWarning) as record:
+        fig, ax = uplt.subplots(ncols=1, nrows=3, share="all", proj=projs)
+    assert len(record) == 1  # should only warn once
+    ax.format(
+        land=True,
+        lonlim=(-10, 10),  # make small to plot quicker
+        latlim=(-10, 10),
+    )
+    lims = [ax[0].get_xlim(), ax[0].get_ylim()]
+    for axi in ax[1:]:
+        assert axi._sharex is None
+        assert axi._sharey is None
+        test_lims = [axi.get_xlim(), axi.get_ylim()]
+        for this, other in zip(lims, test_lims):
+            L = np.linalg.norm(np.array(this) - np.array(other))
+            assert not np.allclose(L, 0)
