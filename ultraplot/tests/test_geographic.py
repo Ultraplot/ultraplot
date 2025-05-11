@@ -211,7 +211,7 @@ def test_geoticks_shared_non_rectilinear():
             latlabels="all",
         )
         fig.canvas.draw()  # draw is necessary to invoke the warning
-    return fig
+    uplt.close(fig)
 
 
 def test_lon0_shifts():
