@@ -68,7 +68,9 @@ def test_figure_sharing_toggle():
 
     def compare_with_reference(layout):
         # Create reference
+        ref_data = np.array([[0, 100], [0, 200]])
         ref_fig, ref_ax = uplt.subplots(layout.copy(), share=1)
+        ref_ax.plot(*ref_data)
         ref_fig.suptitle("Reference")
 
         # Create "toggled" figure
@@ -88,15 +90,21 @@ def test_figure_sharing_toggle():
 
         fig._toggle_axis_sharing(which="x", share=True)
         fig._toggle_axis_sharing(which="y", share=True)
+        ax.plot(*ref_data)
 
         for ref, axi in zip(ref_ax, ax):
             for which in "xy":
-                ref_index = getattr(ref, f"_share{which}")
-                axi_index = getattr(ref, f"_share{which}")
-                if ref_index is None:
-                    assert ref_index == axi_index
+                ref_axi = getattr(ref, f"_share{which}")
+                axi = getattr(ref, f"_share{which}")
+                if ref_axi is None:
+                    assert ref_axi == axi
                 else:
-                    assert ref_index.number == axi_index.number
+                    assert ref_axi.number == axi.number
+                    ref_lim = getattr(ref_axi, f"{which}axis").get_view_interval()
+                    lim = getattr(axi, f"{which}axis").get_view_interval()
+                    l1 = np.linalg.norm(np.asarray(ref_lim) - np.asarray(lim))
+                    assert np.allclose(l1, 0)
+
         for f in [fig, ref_fig]:
             uplt.close(f)
 
