@@ -97,8 +97,6 @@ def test_figure_sharing_toggle():
                     assert ref_index == axi_index
                 else:
                     assert ref_index.number == axi_index.number
-                    ref_axis = getattr(ref, f"{which}axis")
-                    axis = getattr(axi, f"{which}axis")
         for f in [fig, ref_fig]:
             uplt.close(f)
 
