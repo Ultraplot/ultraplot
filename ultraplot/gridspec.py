@@ -1420,11 +1420,6 @@ class SubplotGrid(MutableSequence, list):
         # dedicated relevant commands that can be called from the grid (see below).
         import functools
 
-        warnings._warn_ultraplot(
-            "Calling arbitrary axes methods from SubplotGrid was deprecated in v0.8 "
-            "and will be removed in a future release. Please index the grid or loop "
-            "over the grid instead."
-        )
         if not self:
             return None
         objs = tuple(getattr(ax, attr) for ax in self)  # may raise error
