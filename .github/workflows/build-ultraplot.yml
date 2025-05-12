@@ -95,7 +95,6 @@ jobs:
           mkdir -p results
           python -c "import ultraplot as plt; plt.config.Configurator()._save_yaml('ultraplot.yml')"
           pytest \
-            -n auto \
             -W ignore \
             --mpl \
             --mpl-baseline-path=baseline \
