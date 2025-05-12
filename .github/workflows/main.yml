@@ -5,10 +5,6 @@ on:
   pull_request:
     branches: [main, devel]
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   run-if-changes:
     runs-on: ubuntu-latest
@@ -132,6 +128,9 @@ jobs:
         matplotlib-version: ${{ fromJson(needs.get-versions.outputs.matplotlib-versions) }}
       fail-fast: false
     uses: ./.github/workflows/build-ultraplot.yml
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.python-version }}-${{ matrix.matplotlib-version }}
+      cancel-in-progress: true
     with:
       python-version: ${{ matrix.python-version }}
       matplotlib-version: ${{ matrix.matplotlib-version }}

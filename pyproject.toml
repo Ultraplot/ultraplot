@@ -33,7 +33,8 @@ classifiers = [
 ]
 dependencies= [
     "numpy>=1.26.0",
-    "matplotlib>=3.9,<3.10"  # bump to 3.11 when basemap is updated
+    "matplotlib>=3.9,<3.10",  # bump to 3.11 when basemap is updated
+    "typing-extensions; python_version < '3.12'",
 ]
 dynamic = ["version"]
 
