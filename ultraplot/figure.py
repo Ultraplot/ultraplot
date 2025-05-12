@@ -9,7 +9,7 @@ from numbers import Integral
 
 try:
     from typing import List
-except:
+except ImportError:
     from typing_extensions import List
 
 import matplotlib.axes as maxes
