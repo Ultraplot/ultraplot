@@ -10,7 +10,7 @@ on:
         type: string
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ inputs.python-version }}-${{ inputs.matplotlib-version }}
   cancel-in-progress: true
 
 env:
