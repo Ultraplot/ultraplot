@@ -9,10 +9,6 @@ on:
         required: true
         type: string
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}-${{ inputs.python-version }}-${{ inputs.matplotlib-version }}
-  cancel-in-progress: true
-
 env:
   LC_ALL: en_US.UTF-8
   LANG: en_US.UTF-8
