@@ -30,7 +30,7 @@
 # command (or its shorthand, :func:`~ultraplot.axes.Axes.panel`). The panel location
 # is specified with a string, e.g. ``ax.panel('r')`` or ``ax.panel('right')``
 # for a right-hand side panel, and the resulting panels are instances of
-# `~ultraplot.axes.CartesianAxes`. By default, the panel shares its axis limits,
+# :class:`~ultraplot.axes.CartesianAxes`. By default, the panel shares its axis limits,
 # axis labels, tick positions, and tick labels with the main subplot, but
 # this can be disabled by passing ``share=False``. To generate "stacked" panels,
 # call :func:`~ultraplot.axes.Axes.panel_axes` more than once. To generate several
@@ -159,9 +159,9 @@ for cbarloc, ploc in ("rb", "br"):
 # returned by :func:`~ultraplot.figure.Figure.subplots`. By default, inset axes have the
 # same projection as the parent axes, but you can also request a :ref:`different
 # projection <ug_proj>` (e.g., ``ax.inset_axes(bounds, proj='polar')``). When
-# the axes are both `~ultraplot.axes.CartesianAxes`, you can pass ``zoom=True``
+# the axes are both :class:`~ultraplot.axes.CartesianAxes`, you can pass ``zoom=True``
 # to :func:`~ultraplot.axes.Axes.inset_axes` to quickly add a "zoom indication" box and
-# lines (this uses `~matplotlib.axes.Axes.indicate_inset_zoom` internally). The box
+# lines (this uses :func:`~matplotlib.axes.Axes.indicate_inset_zoom` internally). The box
 # and line positions automatically follow the axis limits of the inset axes and parent
 # axes. To modify the zoom line properties, you can pass a dictionary to `zoom_kw`.
 

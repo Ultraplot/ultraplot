@@ -9,10 +9,14 @@ import itertools
 import re
 import sys
 from numbers import Integral, Number
+
+from typing import Any, Union, Iterable
+
 from typing import Any, Union
 from collections.abc import Callable
 from collections.abc import Iterable
 
+from ..utils import units
 import matplotlib.artist as martist
 import matplotlib.axes as maxes
 import matplotlib.cbook as cbook
@@ -20,10 +24,12 @@ import matplotlib.cm as mcm
 import matplotlib.collections as mcollections
 import matplotlib.colors as mcolors
 import matplotlib.contour as mcontour
+import matplotlib.container as mcontainer
 import matplotlib.image as mimage
 import matplotlib.lines as mlines
 import matplotlib.patches as mpatches
 import matplotlib.ticker as mticker
+import matplotlib.pyplot as mplt
 import matplotlib as mpl
 from packaging import version
 import numpy as np
@@ -343,6 +349,25 @@ sequential, diverging, cyclic, qualitative : bool, default: None
 docstring._snippet_manager["plot.cycle"] = _cycle_docstring
 docstring._snippet_manager["plot.cmap_norm"] = _cmap_norm_docstring
 
+_log_doc = """
+Plot {kind}
+
+UltraPlot is optimized for visualizing logarithmic scales by default. For cases with large differences in magnitude,
+we recommend setting `rc["formatter.log"] = True` to enhance axis label formatting.
+{matplotlib_doc}
+"""
+
+docstring._snippet_manager["plot.loglog"] = _log_doc.format(
+    kind="loglog", matplotlib_doc=mplt.loglog.__doc__
+)
+
+docstring._snippet_manager["plot.semilogy"] = _log_doc.format(
+    kind="semilogy", matplotlib_doc=mplt.semilogy.__doc__
+)
+
+docstring._snippet_manager["plot.semilogx"] = _log_doc.format(
+    kind="semilogx", matplotlib_doc=mplt.semilogx.__doc__
+)
 
 # Levels docstrings
 # NOTE: In some functions we only need some components
@@ -703,7 +728,6 @@ matplotlib.axes.Axes.scatter
 docstring._snippet_manager["plot.scatter"] = _scatter_docstring.format(y="y")
 docstring._snippet_manager["plot.scatterx"] = _scatter_docstring.format(y="x")
 
-
 # Bar function docstring
 _bar_docstring = """
 Plot individual, grouped, or stacked bars.
@@ -753,6 +777,77 @@ docstring._snippet_manager["plot.bar"] = _bar_docstring.format(
 docstring._snippet_manager["plot.barh"] = _bar_docstring.format(
     x="y", y="x", bottom="left", suffix="h"
 )
+
+
+_lollipop_docstring = """
+Plot individual or group lollipop graphs.
+
+A lollipop graph is a bar graph with the bars replaced by dots connected to the {which}-axis by lines.
+
+Inputs such as arrays (`x` or `y`) or dataframes (`pandas` or `xarray`) are passed through :func:`~ultraplot.PlotAxes.bar`. Colors are inferred from the bar objects and parsed automatically. Formatting of the lollipop consists of controlling the `stem` and the `marker`. The stem properties can be set for the width, size, or color. Marker formatting follows the same inputs to :func:`~ultraplot.PlotAxes.scatter`.
+
+Parameters
+----------
+%(plot.args_1d_{which})s
+stemlinewdith: str, default `rc["lollipop.stemlinewidth"]`
+stemcolor: str, default `rc["lollipop.stemcolor"]`
+    Line color of the lines connecting the dots to the {which}-axis. Defaults to `rc["lollipop.linecolor"]`.
+stemlinestyle: str, default: `rc["lollipop.stemlinestyle"]`
+    The style of the lines connecting the dots to the {which}-axis. Defaults to `rc["lollipop.linestyle"]`.
+s, size, ms, markersize : float or array-like or unit-spec, optional
+    The marker size area(s). If this is an array matching the shape of `x` and `y`,
+    the units are scaled by `smin` and `smax`. If this contains unit string(s), it
+    is processed by `~ultraplot.utils.units` and represents the width rather than area.
+c, color, colors, mc, markercolor, markercolors, fc, facecolor, facecolors \
+: array-like or color-spec, optional
+    The marker color(s). If this is an array matching the shape of `x` and `y`,
+    the colors are generated using `cmap`, `norm`, `vmin`, and `vmax`. Otherwise,
+    this should be a valid matplotlib color.
+smin, smax : float, optional
+    The minimum and maximum marker size area in units ``points ** 2``. Ignored
+    if `absolute_size` is ``True``. Default value for `smin` is ``1`` and for
+    `smax` is the square of :rc:`lines.markersize`.
+area_size : bool, default: True
+    Whether the marker sizes `s` are scaled by area or by radius. The default
+    ``True`` is consistent with matplotlib. When `absolute_size` is ``True``,
+    the `s` units are ``points ** 2`` if `area_size` is ``True`` and ``points``
+    if `area_size` is ``False``.
+absolute_size : bool, default: True or False
+    Whether `s` should be taken to represent "absolute" marker sizes in units
+    ``points`` or ``points ** 2`` or "relative" marker sizes scaled by `smin`
+    and `smax`. Default is ``True`` if `s` is scalar and ``False`` if `s` is
+    array-like or `smin` or `smax` were passed.
+%(plot.vmin_vmax)s
+%(plot.args_1d_shared)s
+
+Other parameters
+----------------
+%(plot.cmap_norm)s
+%(plot.levels_manual)s
+%(plot.levels_auto)s
+%(plot.cycle)s
+lw, linewidth, linewidths, mew, markeredgewidth, markeredgewidths \
+: float or sequence, optional
+    The marker edge width(s).
+edgecolors, markeredgecolor, markeredgecolors \
+: color-spec or sequence, optional
+    The marker edge color(s).
+%(plot.error_means_{which})s
+%(plot.error_bars)s
+%(plot.error_shading)s
+%(plot.inbounds)s
+%(plot.labels_1d)s
+%(plot.guide)s
+**kwargs
+    Passed to `~matplotlib.axes.Axes.scatter`.
+
+See for more info on the grouping behavior :func:`~ultraplot.PlotAxes.bar`, and for formatting :func:~ultraplot.PlotAxes.scatter`.
+Returns
+-------
+List of ~matplotlib.collections.PatchCollection, and a ~matplotlib.collections.LineCollection
+"""
+docstring._snippet_manager["plot.lollipop"] = _lollipop_docstring.format(which="x")
+docstring._snippet_manager["plot.lollipoph"] = _lollipop_docstring.format(which="y")
 
 
 # Area plot docstring
@@ -1081,27 +1176,27 @@ g : networkx.Graph
     :class:`networkx.DiGraph` or :class:`networkx.MultiGraph`.
 layout : callable or dict, optional
     A layout function or a precomputed dict mapping nodes to 2D positions. If a function
-    is given, it is called as ``layout(g, **layout_kw)`` to compute positions. See :func:`networkx.draw` for more information.
+    is given, it is called as ``layout(g, **layout_kw)`` to compute positions. See :func:`networkx.drawing.nx_pylab.draw` for more information.
 nodes : bool or iterable, default: rc["graph.draw_nodes"]
     Which nodes to draw. If `True`, all nodes are drawn. If an iterable is provided, only
-    the specified nodes are included. This effectively acts as `nodelist` in :func:`networkx.draw_networkx_nodes`.
+    the specified nodes are included. This effectively acts as `nodelist` in :func:`networkx.drawing.nx_pylab.draw_networkx_nodes`.
 edges : bool or iterable, default: rc["graph.draw_edges"]
     Which edges to draw. If `True`, all edges are drawn. If an iterable of edge tuples is
-    provided, only those edges are included. This effectively acts as `edgelist` in :func:`networkx.draw_networkx_edges`.
+    provided, only those edges are included. This effectively acts as `edgelist` in :func:`networkx.drawing.nx_pylab.draw_networkx_edges`.
 labels : bool or iterable, default: `rc["graph.draw_labels`]
     Whether to show node labels. If `True`, labels are drawn using node names. If an
     iterable is given, only those nodes are labeled.
 layout_kw : dict, default: {}
-    Keyword arguments passed to the layout function, if `layout` is callable, see <https://networkx.org/documentation/stable/reference/drawing.html> for more information.
+    Keyword arguments passed to the layout function, if `layout` is callable, see `networkx's drawing functions <https://networkx.org/documentation/stable/reference/drawing.html>`_ for more information.
 node_kw : dict, default: {}
-    Additional keyword arguments passed to the node drawing function (see :func:`networkx.draw_networkx_nodes`). These can include
-    size, color, edgecolor, cmap, alpha, etc., depending on the backend used, see :func:`networkx.draw_networkx_nodes`.
+    Additional keyword arguments passed to the node drawing function (see :func:`networkx.drawing.nx_pylab.draw_networkx_nodes`). These can include
+    size, color, edgecolor, cmap, alpha, etc., depending on the backend used, see :func:`networkx.drawing.nx_pylab.draw_networkx_nodes`.
 edge_kw : dict, default: {}
     Additional keyword arguments passed to the edge drawing function. These can include
-    width, color, style, alpha, arrows, etc (see :func:`networkx.draw_networkx_edges`).
+    width, color, style, alpha, arrows, etc (see :func:`networkx.drawing.nx_pylab.draw_networkx_edges`).
 label_kw : dict, default: {}
     Additional keyword arguments passed to the label drawing function, such as font size,
-    font color, background color, alignment, etc (see :func:`networkx.draw_networkx_labels`).
+    font color, background color, alignment, etc (see :func:`networkx.drawing.nx_pylab.draw_networkx_labels`).
 rescale : bool,  None, default: None.
     When set to none it checks for `rc["graph.rescale"]` which defaults to `True`. This performs a rescale such that the node position is within a [0, 1] x [0, 1] box.
 Returns
@@ -2553,6 +2648,7 @@ class PlotAxes(base.Axes):
         # NOTE: ContourSet natively stores 'extend' on the result but for other
         # classes we need to hide it on the object.
         kwargs.update({"cmap": cmap, "norm": norm})
+
         if plot_contours:
             kwargs.update({"levels": levels, "extend": extend})
         else:
@@ -3198,6 +3294,150 @@ class PlotAxes(base.Axes):
         %(plot.plotx)s
         """
         return self.plotx(*args, **kwargs)
+
+    def _apply_lollipop(
+        self,
+        xs,
+        hs,
+        ws,
+        bs,
+        *,
+        horizontal=False,
+        **kwargs,
+    ):
+        """
+        Lollipop graphs are an alternative way to visualize bar charts. We can utilize the bar internal mechanics to generate the charts and then replace the look with the lollipop graphs
+        """
+
+        # Filter the props for the stem and marker out
+        stemcolor = kwargs.pop("stemcolor", rc["lollipop.stemcolor"])
+        stemwidth = units(kwargs.pop("stemwidth", rc["lollipop.stemwidth"]))
+        stemlinestyle = kwargs.pop("stemstyle", rc["lollipop.stemlinestyle"])
+
+        # For the markers we can filter out all the props
+        marker_props = _pop_props(kwargs, "collection")
+
+        if horizontal:
+            bars = self.barh(xs, hs, ws, bs, **kwargs)
+        else:
+            bars = self.bar(xs, hs, ws, bs, **kwargs)
+
+        xmin = np.inf
+        xmax = -np.inf
+        all_lines = []
+        patch_collection = []
+
+        # If we have a singular (non-grouped) data
+        # we have to wrap the container in a list
+        if isinstance(bars, mcontainer.BarContainer):
+            bars = [bars]
+
+        for bar in bars:
+            xy = np.zeros((len(bar.patches), 2))
+            for idx, patch in enumerate(bar.patches):
+                patch.set_visible(False)
+                color = patch.get_facecolor()
+
+                x0, y0 = patch.xy
+                if horizontal:
+                    x, y = bar.datavalues[idx], y0
+                    y += 0.5 * patch.get_height()
+                    all_lines.append([(0, y), (x, y)])
+                else:
+                    x, y = x0, bar.datavalues[idx]
+                    x += 0.5 * patch.get_width()
+                    all_lines.append([(x, 0), (x, y)])
+                xy[idx] = x, y
+
+                pos = y if horizontal else x
+                if pos < xmin:
+                    xmin = pos
+                if pos > xmax:
+                    xmax = pos
+            color = bar.patches[0].get_facecolor()
+            bar_patch = self.scatter(*xy.T, color=color, **marker_props)
+            patch_collection.append(bar_patch)
+
+        line_collection = mcollections.LineCollection(
+            all_lines,
+            colors=stemcolor,
+            linestyles=stemlinestyle,
+            lw=stemwidth,
+            zorder=bar.patches[0].zorder - 1,
+        )
+        self.add_collection(line_collection)
+
+        # Add some padding to make it look nicer
+        pad = 0
+        if horizontal:
+            max_height = max(
+                patch.get_height() for bar in bars for patch in bar.patches
+            )
+            pad = 2 * max_height
+        else:
+            max_width = max(patch.get_width() for bar in bars for patch in bar.patches)
+            pad = 2 * max_width
+
+        if horizontal:
+            self.set_ylim(xmin - pad, xmax + pad)
+        else:
+            self.set_xlim(xmin - pad, xmax + pad)
+
+        return patch_collection, line_collection
+
+    @inputs._preprocess_or_redirect("x", "height", "width", "bottom")
+    @docstring._snippet_manager
+    def lollipop(self, *args, **kwargs):
+        """
+        %(plot.lollipop)s
+        """
+        return self._apply_lollipop(*args, horizontal=False, **kwargs)
+
+    @inputs._preprocess_or_redirect("x", "height", "width", "bottom")
+    @docstring._snippet_manager
+    def lollipoph(self, *args, **kwargs):
+        """
+        %(plot.lollipop)s (horizontal lollipop)
+        """
+        return self._apply_lollipop(*args, horizontal=True, **kwargs)
+
+    @docstring._snippet_manager
+    def loglog(self, *args, **kwargs):
+        """
+        %(plot.loglog)s
+        """
+        objs = self._call_native("loglog", *args, **kwargs)
+        if rc["formatter.log"]:
+            self.format(
+                xformatter="log",
+                yformatter="log",
+            )
+        return objs
+
+    @docstring._snippet_manager
+    def semilogy(self, *args, **kwargs):
+        """
+        %(plot.semilogy)s
+        """
+
+        objs = self._call_native("semilogy", *args, **kwargs)
+        if rc["formatter.log"]:
+            self.format(
+                yformatter="log",
+            )
+        return objs
+
+    @docstring._snippet_manager
+    def semilogx(self, *args, **kwargs):
+        """
+        %(plot.semilogx)s
+        """
+        objs = self._call_native("semilogx", *args, **kwargs)
+        if rc["formatter.log"]:
+            self.format(
+                xformatter="log",
+            )
+        return objs
 
     @inputs._preprocess_or_redirect("x", "y", allow_extra=True)
     @docstring._concatenate_inherited
@@ -4531,9 +4771,14 @@ class PlotAxes(base.Axes):
         """
         %(plot.pcolormesh)s
         """
-        x, y, z, kw = self._parse_2d_args(x, y, z, edges=True, **kwargs)
+        to_centers = edges = True
+        # For 'nearest' and 'gouraud' shading, Matplotlib's pcolormesh uses the original grid points
+        # rather than interpolated values. Therefore, we set to_centers and edges to False.
+        if kwargs.get("shading", "").lower() in ("nearest", "gouraud"):
+            to_centers = edges = False
+        x, y, z, kw = self._parse_2d_args(x, y, z, edges=edges, **kwargs)
         kw.update(_pop_props(kw, "collection"))
-        kw = self._parse_cmap(x, y, z, to_centers=True, **kw)
+        kw = self._parse_cmap(x, y, z, to_centers=to_centers, **kw)
         edgefix_kw = _pop_params(kw, self._fix_patch_edges)
         labels_kw = _pop_params(kw, self._add_auto_labels)
         guide_kw = _pop_params(kw, self._update_guide)
@@ -4636,13 +4881,21 @@ class PlotAxes(base.Axes):
         kw.update(_pop_props(kw, "line"))  # applied to arrow outline
         c, kw = self._parse_color(x, y, c, **kw)
         color = None
+        # Handle case where c is a singular color
         if mcolors.is_color_like(c):
             color, c = c, None
+
         if color is not None:
             kw["color"] = color
+
         a = [x, y, u, v]
         if c is not None:
-            a.append(c)
+            # If U is 1D we are dealing with arrows
+            if len(u.shape) == 1:
+                kw["color"] = c
+            # Otherwise we assume we are populating a field
+            else:
+                a.append(c)
         kw.pop("colorbar_kw", None)  # added by _parse_cmap
         m = self._call_native("quiver", *a, **kw)
         return m

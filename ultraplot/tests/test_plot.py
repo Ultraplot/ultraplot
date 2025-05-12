@@ -2,6 +2,7 @@ from cycler import V
 from pandas.core.arrays.arrow.accessors import pa
 import ultraplot as uplt, pytest, numpy as np
 from unittest import mock
+from unittest.mock import patch
 
 from ultraplot.internals.warnings import UltraPlotWarning
 
@@ -196,3 +197,130 @@ def test_boxplot_mpl_versions(
                 assert "vert" not in kwargs
             else:
                 assert "orientation" not in kwargs
+
+
+def test_quiver_discrete_colors():
+    """
+    Edge case where colors are discrete for quiver plots
+    """
+    X = np.array([0, 1, 2])
+    Y = np.array([0, 1, 2])
+
+    U = np.array([1, 1, 0])
+    V = np.array([0, 1, 1])
+
+    colors = ["r", "g", "b"]
+
+    fig, ax = uplt.subplots()
+    q = ax.quiver(X, Y, U, V, color=colors, infer_rgb=True)
+    for color in colors:
+        expected_rgba = uplt.colors.mcolors.to_rgba(color)
+        assert any(
+            np.allclose(expected_rgba, facecolor) for facecolor in q.get_facecolors()
+        )
+    C = ["#ff0000", "#00ff00", "#0000ff"]
+    ax.quiver(X - 1, Y, U, V, color=C, infer_rgb=True)
+
+    # pass rgba values
+    C = np.random.rand(3, 4)
+    ax.quiver(X - 2, Y, U, V, C)
+    ax.quiver(X - 3, Y, U, V, color="red", infer_rgb=True)
+    return fig
+
+
+def test_setting_log_with_rc():
+    """
+    Test setting log scale with rc context manager
+    """
+    import re
+
+    uplt.rc["formatter.log"] = True
+    x, y = np.linspace(0, 1e6, 10), np.linspace(0, 1e6, 10)
+
+    def check_ticks(axis, target=True):
+        pattern = r"\$\\mathdefault\{10\^\{(\d+)\}\}\$"
+        for tick in axis.get_ticklabels():
+            match = re.match(pattern, tick.get_text())
+            expectation = False
+            if match:
+                expectation = True
+            assert expectation == target
+
+    def reset(ax):
+        ax.set_xscale("linear")
+        ax.set_yscale("linear")
+
+    funcs = [
+        "semilogx",
+        "semilogy",
+        "loglog",
+    ]
+    conditions = [
+        ["x"],
+        ["y"],
+        ["x", "y"],
+    ]
+
+    fig, ax = uplt.subplots()
+    for func, targets in zip(funcs, conditions):
+        reset(ax)
+        # Call the function
+        getattr(ax, func)(x, y)
+        # Check if the formatter is set
+        for target in targets:
+            axi = getattr(ax, f"{target}axis")
+            check_ticks(axi, target=True)
+
+    uplt.rc["formatter.log"] = False
+    fig, ax = uplt.subplots()
+    for func, targets in zip(funcs, conditions):
+        reset(ax)
+        getattr(ax, func)(x, y)
+        for target in targets:
+            axi = getattr(ax, f"{target}axis")
+            check_ticks(axi, target=False)
+
+    return fig
+
+
+def test_shading_pcolor():
+    """
+    Pcolormesh by default adjusts the plot by
+    getting the edges of the data for x and y.
+    This creates a conflict when shading is used
+    such as nearest and Gouraud.
+    """
+    nx, ny = 5, 7
+    x = np.linspace(0, 5, nx)
+    y = np.linspace(0, 4, ny)
+    X, Y = np.meshgrid(x, y)
+    Z = np.random.rand(nx, ny).T
+    fig, ax = uplt.subplots()
+
+    results = []
+
+    # Custom wrapper to capture return values
+    def wrapped_parse_2d_args(x, y, z, *args, **kwargs):
+        out = original_parse_2d_args(x, y, z, *args, **kwargs)
+        results.append(out[:3])  # Capture x, y, z only
+        return out
+
+    # Save original method
+    original_parse_2d_args = ax[0]._parse_2d_args
+    shadings = ["flat", "nearest", "gouraud"]
+
+    with patch.object(ax[0], "_parse_2d_args", side_effect=wrapped_parse_2d_args):
+        for shading in shadings:
+            ax.pcolormesh(X, Y, Z, shading=shading)
+
+    # Now check results
+    for i, (shading, (x, y, z)) in enumerate(zip(shadings, results)):
+        assert x.shape[0] == y.shape[0]
+        assert x.shape[1] == y.shape[1]
+        if shading == "flat":
+            assert x.shape[0] == z.shape[0] + 1
+            assert x.shape[1] == z.shape[1] + 1
+        else:
+            assert x.shape[0] == z.shape[0]
+            assert x.shape[1] == z.shape[1]
+    return fig
