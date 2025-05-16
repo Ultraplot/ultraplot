@@ -607,3 +607,37 @@ def test_cartesian_and_geo():
         ax[0]._apply_axis_sharing()
         assert mocked.call_count == 1
     return fig
+
+
+def test_check_tricontourf():
+    """
+    Ensure that tricontour functions are getting
+    the transform for GeoAxes.
+    """
+    import cartopy.crs as ccrs
+
+    lon0 = 90
+    lon = np.linspace(-180, 180, 10)
+    lat = np.linspace(-90, 90, 10)
+    lon2d, lat2d = np.meshgrid(lon, lat)
+
+    data = np.sin(3 * np.radians(lat2d)) * np.cos(2 * np.radians(lon2d))
+    # Place a box with constant values in order to have a visual reference
+    mask_box = (lon2d >= 0) & (lon2d <= 20) & (lat2d >= 0) & (lat2d <= 20)
+    data[mask_box] = 1.5
+
+    lon, lat, data = map(np.ravel, (lon2d, lat2d, data))
+
+    fig, ax = uplt.subplots(proj="cyl", proj_kw={"lon0": lon0})
+    original_func = ax[0]._call_native
+    with mock.patch.object(
+        ax[0],
+        "_call_native",
+        autospec=True,
+        side_effect=original_func,
+    ) as mocked:
+        for func in "tricontour tricontourf".split():
+            getattr(ax[0], func)(lon, lat, data)
+        assert "transform" in mocked.call_args.kwargs
+        assert isinstance(mocked.call_args.kwargs["transform"], ccrs.PlateCarree)
+    uplt.close(fig)
