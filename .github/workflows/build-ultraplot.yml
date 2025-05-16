@@ -52,7 +52,6 @@ jobs:
           slug: Ultraplot/ultraplot
 
   compare-baseline:
-    needs: build-ultraplot
     runs-on: ubuntu-latest
     defaults:
       run:

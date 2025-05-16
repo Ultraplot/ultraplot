@@ -22,6 +22,7 @@ dependencies:
   - sphinx-autoapi
   - sphinx-automodapi
   - sphinx-rtd-theme
+  - typing-extensions
   - basemap >=1.4.1
   - pre-commit
   - sphinx-design
