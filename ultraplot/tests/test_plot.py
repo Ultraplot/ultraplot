@@ -340,11 +340,13 @@ def test_cycle_with_singular_column():
 
     fig, ax = uplt.subplots()
     active_cycle = ax[0]._active_cycle
+    original_init = uplt.constructor.Cycle.__init__
     with mock.patch.object(
         uplt.constructor.Cycle,
         "__init__",
-        autospec=True,
         wraps=uplt.constructor.Cycle.__init__,
+        autospec=True,
+        side_effect=original_init,
     ) as mocked:
         ax[0]._active_cycle = active_cycle  # reset the cycler
         ax.plot(data, cycle=cycle)
