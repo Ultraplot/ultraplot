@@ -324,3 +324,36 @@ def test_shading_pcolor():
             assert x.shape[0] == z.shape[0]
             assert x.shape[1] == z.shape[1]
     return fig
+
+
+def test_cycle_with_singular_column():
+    """
+    While parsing singular columns the ncycle attribute should
+    be ignored.
+    """
+
+    cycle = "qual1"
+    # Create mock data that triggers the cycle
+    # when plot directly but is is ignored when plot in
+    # a loop
+    data = np.random.rand(3, 6)
+
+    fig, ax = uplt.subplots()
+    active_cycle = ax[0]._active_cycle
+    original_init = uplt.constructor.Cycle.__init__
+    with mock.patch.object(
+        uplt.constructor.Cycle,
+        "__init__",
+        wraps=uplt.constructor.Cycle.__init__,
+        autospec=True,
+        side_effect=original_init,
+    ) as mocked:
+        ax[0]._active_cycle = active_cycle  # reset the cycler
+        ax.plot(data, cycle=cycle)
+        assert mocked.call_args.kwargs["N"] == 6
+
+        ax[0]._active_cycle = active_cycle  # reset the cycler
+        for col in data.T:
+            ax.plot(col, cycle=cycle)
+            assert "N" not in mocked.call_args.kwargs
+    uplt.close(fig)
