@@ -637,7 +637,7 @@ def test_check_tricontourf():
         side_effect=original_func,
     ) as mocked:
         for func in "tricontour tricontourf".split():
-            getattr(ax[0], func)(lon, lat, data, levels=20)
+            getattr(ax[0], func)(lon, lat, data)
         assert "transform" in mocked.call_args.kwargs
         assert isinstance(mocked.call_args.kwargs["transform"], ccrs.PlateCarree)
     uplt.close(fig)
