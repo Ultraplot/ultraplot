@@ -1584,7 +1584,7 @@ _rc_ultraplot_table = {
     ),
     "ocean.color": (WHITE, _validate_color, "Face color for ocean patches."),
     "ocean.zorder": (ZPATCHES, _validate_float, "Z-order for ocean patches."),
-    "oceans.rasterized": (
+    "ocean.rasterized": (
         False,
         _validate_bool,
         "Turns rasterization on or off for the oceans feature for GeoAxes.",

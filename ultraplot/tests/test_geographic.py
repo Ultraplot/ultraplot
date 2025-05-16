@@ -607,3 +607,21 @@ def test_cartesian_and_geo():
         ax[0]._apply_axis_sharing()
         assert mocked.call_count == 1
     return fig
+
+
+def test_rasterize_feature():
+    fig, ax = uplt.subplots(proj="cyl")
+    ax.format(
+        land=True,
+        landrasterized=True,
+        ocean=True,
+        oceanrasterized=True,
+        rivers=True,
+        riversrasterized=True,
+        borders=True,
+        bordersrasterized=True,
+    )
+    for feature in "land ocean rivers borders".split():
+        feat = getattr(ax[0], f"_{feature}_feature")
+        assert feat._kwargs["rasterized"]
+    uplt.close(fig)
