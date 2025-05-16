@@ -579,3 +579,21 @@ def test_sharing_levels():
             else:
                 assert s == 2
         uplt.close(fig)
+
+
+@pytest.mark.mpl_image_compare
+def test_cartesian_and_geo():
+    """
+    Test that axis sharing does not prevent
+    running Cartesian based plot functions
+    """
+    fig, ax = uplt.subplots(
+        ncols=2,
+        proj="cyl",
+        share=True,
+    )
+    # Make small range to speed up plotting
+    ax.format(land=True, lonlim=(-10, 10), latlim=(-10, 10))
+    ax[0].pcolormesh(np.random.rand(10, 10))
+    ax[1].scatter(*np.random.rand(2, 100))
+    return fig
