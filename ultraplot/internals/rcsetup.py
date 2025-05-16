@@ -2001,7 +2001,7 @@ _rc_renamed = {  # {old_key: (new_key, version)} dictionary
 
 # Validate the default settings dictionaries using a custom ultraplot _RcParams
 # and the original matplotlib RcParams. Also surreptitiously add ultraplot
-# font settings to the font keys list (beoolean below always evalutes to True)
+# font settings to the font keys list (boolean below always evaluates to True)
 # font keys list whlie initializing.
 _rc_ultraplot_default = {
     key: value for key, (value, _, _) in _rc_ultraplot_table.items()
