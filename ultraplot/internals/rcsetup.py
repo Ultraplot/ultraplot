@@ -1474,8 +1474,8 @@ _rc_ultraplot_table = {
     "land.rasterized": (
         False,
         _validate_bool,
-        "Toggles the rasterization of the land feature."
-    )
+        "Toggles the rasterization of the land feature.",
+    ),
     # Left subplot labels
     "leftlabel.color": (
         BLACK,
