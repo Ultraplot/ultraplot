@@ -997,6 +997,11 @@ _rc_ultraplot_table = {
     "coast.color": (BLACK, _validate_color, "Line color for coast lines."),
     "coast.linewidth": (LINEWIDTH, _validate_pt, "Line width for coast lines."),
     "coast.zorder": (ZLINES, _validate_float, "Z-order for coast lines."),
+    "coast.rasterized": (
+        False,
+        _validate_bool,
+        "Toggles the rasterization of the coast lines.",
+    ),
     # Colorbars
     "colorbar.edgecolor": (
         BLACK,
@@ -1466,6 +1471,11 @@ _rc_ultraplot_table = {
     ),
     "land.color": (BLACK, _validate_color, "Face color for land patches."),
     "land.zorder": (ZPATCHES, _validate_float, "Z-order for land patches."),
+    "land.rasterized": (
+        False,
+        _validate_bool,
+        "Toggles the rasterization of the land feature."
+    )
     # Left subplot labels
     "leftlabel.color": (
         BLACK,
