@@ -960,7 +960,7 @@ _rc_ultraplot_table = {
         "Line width for country border lines.",
     ),
     "borders.zorder": (ZLINES, _validate_float, "Z-order for country border lines."),
-    "border.rasterized": (
+    "borders.rasterized": (
         False,
         _validate_bool,
         "Toggles rasterization on or off for border feature in GeoAxes.",
