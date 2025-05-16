@@ -9,7 +9,7 @@ from functools import partial
 try:
     # From python 3.12
     from typing import override
-except:
+except ImportError:
     # From Python 3.5
     from typing_extensions import override
 
@@ -746,6 +746,10 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
             bottom=are_ticks_on,
         )
         for axi in self.figure.axes:
+            # If users have colormeshes on top
+            # we need to not run the logic below
+            if not isinstance(axi, GeoAxes):
+                continue
             sides = recoded.get(axi, [])
             tmp = default.copy()
             for side in sides:
