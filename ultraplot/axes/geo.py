@@ -748,8 +748,8 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
         for axi in self.figure.axes:
             # If users use PlotAxes methods, we need not
             # toggle the gridliner labels; we can just skip.
-            if not isinstance(axi, GeoAxes):
-                continue
+            print(type(axi))
+
             sides = recoded.get(axi, [])
             tmp = default.copy()
             for side in sides:
