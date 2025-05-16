@@ -746,8 +746,9 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
             bottom=are_ticks_on,
         )
         for axi in self.figure.axes:
-            # If users use PlotAxes methods, we need not
-            # toggle the gridliner labels; we can just skip.
+            # If users call colorbar on the figure
+            # an axis is added which needs to skip the
+            # sharing that is specific for the GeoAxes.
             if not isinstance(axi, GeoAxes):
                 continue
 
