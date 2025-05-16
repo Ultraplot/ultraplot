@@ -2684,8 +2684,10 @@ class PlotAxes(base.Axes):
             only applied (and therefore reset) if it differs from the current one.
         """
         cycle_kw = cycle_kw or {}
+        # Ignore singular column plotting
+        if ncycle != 1:
+            cycle_kw.setdefault("N", ncycle)
         cycle_manually = cycle_manually or {}
-        cycle_kw.setdefault("N", ncycle)
 
         # Match-case for cycle resolution
         match cycle:
@@ -2698,7 +2700,7 @@ class PlotAxes(base.Axes):
             case str() if cycle.lower() == "none":
                 resolved_cycle = None
             case str() | int() | Iterable():
-                resolved_cycle = constructor.Cycle(cycle)
+                resolved_cycle = constructor.Cycle(cycle, **cycle_kw)
             case _:
                 resolved_cycle = None
 
