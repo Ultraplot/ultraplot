@@ -746,8 +746,8 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
             bottom=are_ticks_on,
         )
         for axi in self.figure.axes:
-            # If users have colormeshes on top
-            # we need to not run the logic below
+            # If users use PlotAxes methods, we need not
+            # toggle the gridliner labels; we can just skip.
             if not isinstance(axi, GeoAxes):
                 continue
             sides = recoded.get(axi, [])
