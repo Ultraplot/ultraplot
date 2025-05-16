@@ -579,3 +579,31 @@ def test_sharing_levels():
             else:
                 assert s == 2
         uplt.close(fig)
+
+
+@pytest.mark.mpl_image_compare
+def test_cartesian_and_geo():
+    """
+    Test that axis sharing does not prevent
+    running Cartesian based plot functions
+    """
+
+    fig, ax = uplt.subplots(
+        ncols=2,
+        proj="cyl",
+        share=True,
+    )
+    original_toggler = ax[0]._toggle_gridliner_labels
+    with mock.patch.object(
+        ax[0],
+        "_toggle_gridliner_labels",
+        autospec=True,
+        side_effect=original_toggler,
+    ) as mocked:
+        # Make small range to speed up plotting
+        ax.format(land=True, lonlim=(-10, 10), latlim=(-10, 10))
+        ax[0].pcolormesh(np.random.rand(10, 10))
+        ax[1].scatter(*np.random.rand(2, 100))
+        ax[0]._apply_axis_sharing()
+        assert mocked.call_count == 1
+    return fig
