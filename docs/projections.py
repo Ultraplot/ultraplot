@@ -62,7 +62,7 @@ N = 200
 state = np.random.RandomState(51423)
 x = np.linspace(0, 2 * np.pi, N)[:, None] + np.arange(5) * 2 * np.pi / 5
 y = 100 * (state.rand(N, 5) - 0.3).cumsum(axis=0) / N
-fig, axs = uplt.subplots([[1, 1, 2, 2], [0, 3, 3, 0]], proj="polar")
+fig, axs = uplt.subplots([[1, 1, 2, 2], [0, 3, 3, 0]], proj="polar", share=0)
 axs.format(
     suptitle="Polar axes demo",
     linewidth=1,
@@ -134,10 +134,12 @@ axs[2].format(
 # Use an on-the-fly projection
 import ultraplot as uplt
 
-fig = uplt.figure(refwidth=3)
-axs = fig.subplots(nrows=2, proj="robin", proj_kw={"lon0": 150})
-# proj = uplt.Proj('robin', lon0=180)
-# axs = uplt.subplots(nrows=2, proj=proj)  # equivalent to above
+fig = uplt.figure(refwidth=3, share=0)
+axs = fig.subplots(
+    nrows=2,
+    proj="robin",
+    proj_kw={"lon0": 150},
+)
 axs.format(
     suptitle="Figure with single projection",
     land=True,
@@ -151,7 +153,7 @@ axs.format(
 # Geographic backends
 # -------------------
 #
-# The :class:`ultraplot.axes.GeoAxes` class uses either `cartopy`_ or `basemap`_ as "backends"
+# The :class:`~ultraplot.axes.GeoAxes` class uses either `cartopy`_ or `basemap`_ as "backends"
 # to :ref:`format the axes <ug_geoformat>` and :ref:`plot stuff <ug_geoplot>` in
 # the axes. A few details:
 #
@@ -224,7 +226,7 @@ axs.format(
 # %%
 import ultraplot as uplt
 
-fig = uplt.figure()
+fig = uplt.figure(share=0)
 
 # Add projections
 gs = uplt.GridSpec(ncols=2, nrows=3, hratios=(1, 1, 1.4))
@@ -254,7 +256,7 @@ uplt.rc.reset()
 # Plotting in projections
 # -----------------------
 #
-# In UltraPlot, plotting with `~ultraplot.axes.GeoAxes` is just like plotting
+# In UltraPlot, plotting with :class:`~ultraplot.axes.GeoAxes` is just like plotting
 # with :class:`~ultraplot.axes.CartesianAxes`. UltraPlot makes longitude-latitude
 # (i.e., Plate Carrée) coordinates the *default* coordinate system for all plotting
 # commands by internally passing ``transform=ccrs.PlateCarree()`` to cartopy commands
@@ -291,7 +293,7 @@ data = state.rand(len(lat), len(lon))
 for globe in (False, True):
     string = "with" if globe else "without"
     gs = uplt.GridSpec(nrows=2, ncols=2)
-    fig = uplt.figure(refwidth=2.5)
+    fig = uplt.figure(refwidth=2.5, share=0)
     for i, ss in enumerate(gs):
         cmap = ("sunset", "sunrise")[i % 2]
         backend = ("cartopy", "basemap")[i % 2]
@@ -321,7 +323,7 @@ for globe in (False, True):
 # Formatting projections
 # ----------------------
 #
-# The :meth:`ultraplot.axes.GeoAxes.format` command facilitates geographic-specific axes
+# The :meth:`~ultraplot.axes.GeoAxes.format` command facilitates geographic-specific axes
 # modifications. It can toggle and configure the "major" and "minor" longitude and
 # latitude gridline locations using the `grid`, `lonlocator`, `latlocator`, `gridminor`,
 # `lonminorlocator`, and `latminorlocator` keys, and configure gridline label formatting
@@ -334,7 +336,7 @@ for globe in (False, True):
 # to ``True``. The padding between the map edge and the labels can be changed
 # using `labelpad` or by changing :rcraw:`grid.labelpad`.
 #
-# `ultraplot.axes.GeoAxes.format` can also set the cartopy projection bounding longitudes
+# :meth:`~ultraplot.axes.GeoAxes.format` can also set the cartopy projection bounding longitudes
 # and latitudes with `lonlim` and `latlim` (analogous to `xlim` and `ylim`), set the
 # latitude bound for circular polar projections using `boundinglat`, and toggle and
 # configure geographic features like land masses, coastlines, and administrative
@@ -349,7 +351,7 @@ for globe in (False, True):
 import ultraplot as uplt
 
 gs = uplt.GridSpec(ncols=3, nrows=2, wratios=(1, 1, 1.2), hratios=(1, 1.2))
-fig = uplt.figure(refwidth=4)
+fig = uplt.figure(refwidth=4, share=0)
 
 # Styling projections in different ways
 ax = fig.subplot(gs[0, :2], proj="eqearth")
@@ -444,7 +446,7 @@ import ultraplot as uplt
 # Plate Carrée map projection
 uplt.rc.reso = "med"  # use higher res for zoomed in geographic features
 basemap = uplt.Proj("cyl", lonlim=(-20, 180), latlim=(-10, 50), backend="basemap")
-fig, axs = uplt.subplots(nrows=2, refwidth=5, proj=("cyl", basemap))
+fig, axs = uplt.subplots(nrows=2, refwidth=5, proj=("cyl", basemap), share=0)
 axs.format(
     land=True,
     labels=True,
@@ -462,7 +464,7 @@ import ultraplot as uplt
 
 # Pole-centered map projections
 basemap = uplt.Proj("npaeqd", boundinglat=60, backend="basemap")
-fig, axs = uplt.subplots(ncols=2, refwidth=2.7, proj=("splaea", basemap))
+fig, axs = uplt.subplots(ncols=2, refwidth=2.7, proj=("splaea", basemap), share=0)
 fig.format(suptitle="Zooming into polar projections")
 axs.format(land=True, latmax=80)  # no gridlines poleward of 80 degrees
 axs[0].format(boundinglat=-60, title="Cartopy example")
@@ -472,7 +474,7 @@ axs[1].format(title="Basemap example")
 import ultraplot as uplt
 
 # Zooming in on continents
-fig = uplt.figure(refwidth=3)
+fig = uplt.figure(refwidth=3, share=0)
 ax = fig.subplot(121, proj="lcc", proj_kw={"lon0": 0})
 ax.format(lonlim=(-20, 50), latlim=(30, 70), title="Cartopy example")
 proj = uplt.Proj("lcc", lon0=-100, lat0=45, width=8e6, height=8e6, backend="basemap")
@@ -557,7 +559,7 @@ projs = [
     "eck5",
     "eck6",
 ]
-fig, axs = uplt.subplots(ncols=3, nrows=10, figwidth=7, proj=projs)
+fig, axs = uplt.subplots(ncols=3, nrows=10, figwidth=7, proj=projs, share=0)
 axs.format(land=True, reso="lo", labels=False, suptitle="Table of cartopy projections")
 for proj, ax in zip(projs, axs):
     ax.format(title=proj, titleweight="bold", labels=False)
@@ -592,7 +594,9 @@ projs = [
     "npaeqd",
     "nplaea",
 ]
-fig, axs = uplt.subplots(ncols=3, nrows=8, figwidth=7, proj=projs, backend="basemap")
+fig, axs = uplt.subplots(
+    ncols=3, nrows=8, figwidth=7, proj=projs, backend="basemap", share=0
+)
 axs.format(land=True, labels=False, suptitle="Table of basemap projections")
 for proj, ax in zip(projs, axs):
     ax.format(title=proj, titleweight="bold", labels=False)
