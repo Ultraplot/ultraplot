@@ -624,7 +624,7 @@ def test_rasterize_feature():
     for feature in "land ocean rivers borders".split():
         feat = getattr(ax[0], f"_{feature}_feature")
         assert feat._kwargs["rasterized"]
-    uplt.close(fig)        
+    uplt.close(fig)
 
 
 def test_check_tricontourf():
