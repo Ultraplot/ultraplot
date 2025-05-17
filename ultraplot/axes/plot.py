@@ -4933,6 +4933,7 @@ class PlotAxes(base.Axes):
         return m
 
     @inputs._parse_triangulation_with_preprocess("x", "y", "z", keywords=["triangles"])
+    @inputs._preprocess_or_redirect("x", "y", "z")
     @docstring._concatenate_inherited
     @docstring._snippet_manager
     def tricontour(self, *args, **kwargs):
@@ -4972,6 +4973,7 @@ class PlotAxes(base.Axes):
         return m
 
     @inputs._parse_triangulation_with_preprocess("x", "y", "z", keywords=["triangles"])
+    @inputs._preprocess_or_redirect("x", "y", "z")
     @docstring._concatenate_inherited
     @docstring._snippet_manager
     def tricontourf(self, *args, **kwargs):
