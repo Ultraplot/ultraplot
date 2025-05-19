@@ -53,7 +53,7 @@
 #
 # On import, UltraPlot registers a few sample
 # :ref:`perceptually uniform colormaps <ug_perceptual>`, plus several
-# colormaps from other online data viz projects. Use `~ultraplot.demos.show_cmaps`
+# colormaps from other online data viz projects. Use :func:`~ultraplot.demos.show_cmaps`
 # to generate a table of registered colormaps. The figure is broken down into
 # the following sections:
 #
