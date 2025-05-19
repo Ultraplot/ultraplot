@@ -609,6 +609,24 @@ def test_cartesian_and_geo():
     return fig
 
 
+def test_rasterize_feature():
+    fig, ax = uplt.subplots(proj="cyl")
+    ax.format(
+        land=True,
+        landrasterized=True,
+        ocean=True,
+        oceanrasterized=True,
+        rivers=True,
+        riversrasterized=True,
+        borders=True,
+        bordersrasterized=True,
+    )
+    for feature in "land ocean rivers borders".split():
+        feat = getattr(ax[0], f"_{feature}_feature")
+        assert feat._kwargs["rasterized"]
+    uplt.close(fig)
+
+
 def test_check_tricontourf():
     """
     Ensure that tricontour functions are getting

@@ -960,6 +960,11 @@ _rc_ultraplot_table = {
         "Line width for country border lines.",
     ),
     "borders.zorder": (ZLINES, _validate_float, "Z-order for country border lines."),
+    "borders.rasterized": (
+        False,
+        _validate_bool,
+        "Toggles rasterization on or off for border feature in GeoAxes.",
+    ),
     # Bottom subplot labels
     "bottomlabel.color": (
         BLACK,
@@ -997,6 +1002,11 @@ _rc_ultraplot_table = {
     "coast.color": (BLACK, _validate_color, "Line color for coast lines."),
     "coast.linewidth": (LINEWIDTH, _validate_pt, "Line width for coast lines."),
     "coast.zorder": (ZLINES, _validate_float, "Z-order for coast lines."),
+    "coast.rasterized": (
+        False,
+        _validate_bool,
+        "Toggles the rasterization of the coastlines feature for GeoAxes.",
+    ),
     # Colorbars
     "colorbar.edgecolor": (
         BLACK,
@@ -1457,6 +1467,11 @@ _rc_ultraplot_table = {
     ),
     "lakes.color": (WHITE, _validate_color, "Face color for lake patches."),
     "lakes.zorder": (ZPATCHES, _validate_float, "Z-order for lake patches."),
+    "lakes.rasterized": (
+        False,
+        _validate_bool,
+        "Toggles rasterization on or off for lake feature",
+    ),
     # Land patches
     "land": (False, _validate_bool, "Toggles land patches on and off."),
     "land.alpha": (
@@ -1466,6 +1481,11 @@ _rc_ultraplot_table = {
     ),
     "land.color": (BLACK, _validate_color, "Face color for land patches."),
     "land.zorder": (ZPATCHES, _validate_float, "Z-order for land patches."),
+    "land.rasterized": (
+        False,
+        _validate_bool,
+        "Toggles the rasterization of the land feature.",
+    ),
     # Left subplot labels
     "leftlabel.color": (
         BLACK,
@@ -1564,6 +1584,11 @@ _rc_ultraplot_table = {
     ),
     "ocean.color": (WHITE, _validate_color, "Face color for ocean patches."),
     "ocean.zorder": (ZPATCHES, _validate_float, "Z-order for ocean patches."),
+    "ocean.rasterized": (
+        False,
+        _validate_bool,
+        "Turns rasterization on or off for the oceans feature for GeoAxes.",
+    ),
     # Geographic resolution
     "reso": (
         "lo",
@@ -1608,6 +1633,11 @@ _rc_ultraplot_table = {
     "rivers.color": (BLACK, _validate_color, "Line color for river lines."),
     "rivers.linewidth": (LINEWIDTH, _validate_pt, "Line width for river lines."),
     "rivers.zorder": (ZLINES, _validate_float, "Z-order for river lines."),
+    "rivers.rasterized": (
+        False,
+        _validate_bool,
+        "Toggles rasterization on or off for rivers feature for GeoAxes.",
+    ),
     # Subplots settings
     "subplots.align": (
         False,
