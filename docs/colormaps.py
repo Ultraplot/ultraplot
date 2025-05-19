@@ -37,7 +37,7 @@
 # in UltraPlot with the :class:`~ultraplot.colors.ContinuousColormap` and
 # :class:`~ultraplot.colors.PerceptualColormap` classes, which are
 # :ref:`subclassed from <ug_cmaps_new>`
-# :class:`matplotlib.colors.LinearSegmentedColormap`.
+# :class:`~matplotlib.colors.LinearSegmentedColormap`.
 #
 # UltraPlot :ref:`adds several features <why_colormaps_cycles>` to help you use
 # colormaps effectively in your figures. This section documents the new registered
