@@ -72,7 +72,7 @@
 # Matplotlib colormaps with erratic color transitions like ``'jet'`` are still
 # registered, but they are hidden from this table by default, and their usage is
 # discouraged. If you need a list of colors associated with a registered or
-# on-the-fly colormap, simply use `~ultraplot.utils.get_colors`.
+# on-the-fly colormap, simply use :func:`~ultraplot.utils.get_colors`.
 #
 # .. note::
 #
@@ -81,9 +81,9 @@
 #    and ``'ViRiDiS'`` are equivalent), diverging colormap names can be specified in
 #    their "reversed" form (e.g., ``'BuRd'`` is equivalent to ``'RdBu_r'``), and
 #    appending ``'_r'`` or ``'_s'`` to *any* colormap name will return a
-#    `~ultraplot.colors.ContinuousColormap.reversed` or
-#    :property:`~ultraplot.colors.ContinuousColormap.shifted` version of the colormap
-#    or color cycle. See `~ultraplot.colors.ColormapDatabase` for more info.
+#    :attr:`~ultraplot.colors.ContinuousColormap.reversed` or
+#    :attr:`~ultraplot.colors.ContinuousColormap.shifted` version of the colormap
+#    or color cycle. See :class:`~ultraplot.colors.ColormapDatabase` for more info.
 
 # %%
 import ultraplot as uplt
@@ -119,9 +119,9 @@ fig, axs = uplt.show_cmaps(rasterized=True)
 #
 # The colorspace used by a :class:`~ultraplot.colors.PerceptualColormap`
 # is set with the `space` keyword arg. To plot arbitrary cross-sections of
-# these colorspaces, use `~ultraplot.demos.show_colorspaces` (the black
+# these colorspaces, use :func:`~ultraplot.demos.show_colorspaces` (the black
 # regions represent impossible colors). To see how colormaps vary with
-# respect to each channel, use `~ultraplot.demos.show_channels`. Some examples
+# respect to each channel, use :func:`~ultraplot.demos.show_channels`. Some examples
 # are shown below.
 #
 # In theory, "uniform" colormaps should have *straight* lines in hue, chroma,
@@ -168,14 +168,14 @@ for cmaps in (("magma", "rocket"), ("fire", "dusk")):
 #
 # * Pass a color name, HEX string, or RGB tuple to :class:`~ultraplot.constructor.Colormap`.
 #   This builds a monochromatic (single hue) colormap by calling
-#   `~ultraplot.colors.PerceptualColormap.from_color`. The colormap colors will
+#   :func:`~ultraplot.colors.PerceptualColormap.from_color`. The colormap colors will
 #   progress from the specified color to a color with the same hue but changed
 #   saturation or luminance. These can be set with the `saturation` and `luminance`
 #   keywords (or their shorthands `s` and `l`). By default, the colormap will
 #   progress to pure white.
 # * Pass a list of color names, HEX strings, or RGB
 #   tuples to :class:`~ultraplot.constructor.Colormap`. This calls
-#   `~ultraplot.colors.PerceptualColormap.from_list`, which linearly interpolates
+#   :func:`~ultraplot.colors.PerceptualColormap.from_list`, which linearly interpolates
 #   between the hues, saturations, and luminances of the input colors. To facillitate
 #   the construction of diverging colormaps, the hue channel values for nuetral
 #   colors (i.e., white, black, and gray) are adjusted to the hues of the preceding
@@ -184,7 +184,7 @@ for cmaps in (("magma", "rocket"), ("fire", "dusk")):
 # * Pass the keywords `hue`, `saturation`, or `luminance` (or their shorthands `h`,
 #   `s`, and `l`) to :class:`~ultraplot.constructor.Colormap` without any positional arguments
 #   (or pass a dictionary containing these keys as a positional argument).
-#   This calls `~ultraplot.colors.PerceptualColormap.from_hsl`, which
+#   This calls :func:`~ultraplot.colors.PerceptualColormap.from_hsl`, which
 #   linearly interpolates between the specified channel values. Channel values can be
 #   specified with numbers between ``0`` and ``100``, color strings, or lists thereof.
 #   For color strings, the value is *inferred* from the specified color. You can
@@ -256,7 +256,7 @@ fig, axs = uplt.show_channels(cmap3, cmap4, refwidth=1.5, rgb=False)
 #
 # To *merge* colormaps, you can pass multiple positional arguments to the
 # :class:`~ultraplot.constructor.Colormap` constructor function. This calls the
-# `~ultraplot.colors.ContinuousColormap.append` method. Each positional
+# :func:`~ultraplot.colors.ContinuousColormap.append` method. Each positional
 # argument can be a colormap name, a colormap instance, or a
 # :ref:`special argument <ug_cmaps_new>` that generates a new colormap
 # on-the-fly. This lets you create new diverging colormaps and segmented
@@ -322,27 +322,27 @@ for ax, cmap, title in zip(axs, (cmap1, cmap2, cmap3), (title1, title2, title3))
 #
 # * To remove colors from the left or right ends of a colormap, pass `left`
 #   or `right` to :class:`~ultraplot.constructor.Colormap`. This calls the
-#   :method:`~ultraplot.colors.ContinuousColormap.truncate` method, and can be
+#   :func:`~ultraplot.colors.ContinuousColormap.truncate` method, and can be
 #   useful when you want to use colormaps as :ref:`color cycles <ug_cycles>`
 #   and need to remove the light part so that your lines stand out
 #   against the background.
 # * To modify the central colors of a diverging colormap, pass `cut` to
 #   :class:`~ultraplot.constructor.Colormap`. This calls the
-#   `~ultraplot.colors.ContinuousColormap.cut` method, and can be used
+#   :func:`~ultraplot.colors.ContinuousColormap.cut` method, and can be used
 #   to create a sharper cutoff between negative and positive values or (when
 #   `cut` is negative) to expand the "neutral" region of the colormap.
 # * To rotate a cyclic colormap,  pass `shift` to
 #   :class:`~ultraplot.constructor.Colormap`. This calls the
-#   :property:`~ultraplot.colors.ContinuousColormap.shifted` method. UltraPlot ensures
+#   :func:`~ultraplot.colors.ContinuousColormap.shifted` method. UltraPlot ensures
 #   the colors at the ends of "shifted" colormaps are *distinct* so that
 #   levels never blur together.
 # * To change the opacity of a colormap or add an opacity *gradation*, pass
 #   `alpha` to :class:`~ultraplot.constructor.Colormap`. This calls the
-#   `~ultraplot.colors.ContinuousColormap.set_alpha` method, and can be
+#   :func:`~ultraplot.colors.ContinuousColormap.set_alpha` method, and can be
 #   useful when *layering* filled contour or mesh elements.
 # * To change the "gamma" of a :class:`~ultraplot.colors.PerceptualColormap`,
 #   pass `gamma` to :class:`~ultraplot.constructor.Colormap`. This calls the
-#   `~ultraplot.colors.PerceptualColormap.set_gamma` method, and
+#   :func:`~ultraplot.colors.PerceptualColormap.set_gamma` method, and
 #   controls how the luminance and saturation channels vary between colormap
 #   segments. ``gamma > 1`` emphasizes high luminance, low saturation colors,
 #   while ``gamma < 1`` emphasizes low luminance, high saturation colors. This
@@ -493,9 +493,9 @@ for ax, gamma in zip(axs, (0.7, 1.0, 1.4)):
 # To add colormaps downloaded from any of these sources, save the color data file
 # to the ``cmaps`` subfolder inside :func:`~ultraplot.config.Configurator.user_folder`,
 # or to a folder named ``ultraplot_cmaps`` in the same directory as your python session
-# or an arbitrary parent directory (see `~ultraplot.config.Configurator.local_folders`).
+# or an arbitrary parent directory (see :func:`~ultraplot.config.Configurator.local_folders`).
 # After adding the file, call :func:`~ultraplot.config.register_cmaps` or restart your python
-# session. You can also use `~ultraplot.colors.ContinuousColormap.from_file` or manually
+# session. You can also use :func:`~ultraplot.colors.ContinuousColormap.from_file` or manually
 # pass :class:`~ultraplot.colors.ContinuousColormap` instances or file paths to
 # :func:`~ultraplot.config.register_cmaps`. See :func:`~ultraplot.config.register_cmaps`
 # for a table of recognized file extensions.
