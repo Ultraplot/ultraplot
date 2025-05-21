@@ -43,13 +43,13 @@
 # (e.g., ``xlocator='log'``), to draw ticks every ``N`` data values with
 # :class:`~matplotlib.ticker.MultipleLocator` (e.g., ``xlocator=2``), or to tick the
 # specific locations in a list using :class:`~matplotlib.ticker.FixedLocator` (just
-# like :func:`~matplotlib.axes.Axes.set_xticks` and :func:`~matplotlib.axes.Axes.set_yticks`).
+# like :meth:`~matplotlib.axes.Axes.set_xticks` and :meth:`~matplotlib.axes.Axes.set_yticks`).
 # If you want to work with the locator classes directly, they are available in the
 # top-level namespace (e.g., ``xlocator=uplt.MultipleLocator(...)`` is allowed).
 #
 # To generate lists of tick locations, we recommend using UltraPlot's
 # :func:`~ultraplot.utils.arange` function -- it’s basically an endpoint-inclusive
-# version of `numpy.arange`, which is usually what you'll want in this context.
+# version of :func:`~numpy.arange`, which is usually what you'll want in this context.
 
 # %%
 import ultraplot as uplt
@@ -116,9 +116,9 @@ uplt.rc.reset()
 # You can use these keyword arguments to apply built-in matplotlib
 # :class:`~matplotlib.ticker.Formatter`\ s by their "registered" names
 # (e.g., ``xformatter='log'``), to apply a ``%``-style format directive with
-# `~matplotlib.ticker.FormatStrFormatter` (e.g., ``xformatter='%.0f'``), or
-# to apply custom tick labels with `~matplotlib.ticker.FixedFormatter` (just
-# like :func:`~matplotlib.axes.Axes.set_xticklabels`). You can also apply one of UltraPlot's
+# :class:`~matplotlib.ticker.FormatStrFormatter` (e.g., ``xformatter='%.0f'``), or
+# to apply custom tick labels with :class:`~matplotlib.ticker.FixedFormatter` (just
+# like :meth:`~matplotlib.axes.Axes.set_xticklabels`). You can also apply one of UltraPlot's
 # new tick formatters -- for example, ``xformatter='deglat'`` to label ticks
 # as geographic latitude coordinates, ``xformatter='pi'`` to label ticks as
 # fractions of :math:`\pi`, or ``xformatter='sci'`` to label ticks with
@@ -253,7 +253,7 @@ uplt.rc.reset()
 # unit, use a unit string (e.g., ``xlocator='month'``). To draw ticks every ``N`` time
 # units, use a (unit, N) tuple (e.g., ``xlocator=('day', 5)``). For `% style formatting
 # <https://docs.python.org/3/library/datetime.html#strftime-strptime-behavior>`__
-# of datetime tick labels with :func:`~datetime.datetime.strftime`, you can use a string
+# of datetime tick labels with :meth:`~datetime.datetime.strftime`, you can use a string
 # containing ``'%'`` (e.g. ``xformatter='%Y-%m-%d'``). By default, *x* axis datetime
 # axis labels are rotated 90 degrees, like in `pandas`_. This can be disabled by
 # passing ``xrotation=0`` to :func:`~ultraplot.axes.CartesianAxes.format` or by setting
@@ -337,13 +337,13 @@ uplt.rc.reset()
 # (shorthand `xloc`), `xtickloc`, `xticklabelloc`, and `xlabelloc`. Valid
 # locations include ``'left'``, ``'right'``, ``'top'``, ``'bottom'``, ``'neither'``,
 # ``'none'``, or ``'both'``. Spine locations can also be set to a valid
-# :func:`~matplotlib.spines.Spine.set_position` value, e.g. ``'zero'`` or
+# :meth:`~matplotlib.spines.Spine.set_position` value, e.g. ``'zero'`` or
 # ``('axes', 1.5)``. The top or right spine is used when the coordinate is
 # more than halfway across the axes. This is often convenient when passing
 # e.g. `loc` to :ref:`"alternate" axes commands <ug_alt>`. These keywords
-# provide the functionality of matplotlib's :func:`~matplotlib.axis.YAxis.tick_left`,
-# :func:`~matplotlib.axis.YAxis.tick_right`, :func:`~matplotlib.axis.XAxis.tick_top`, and
-# :func:`~matplotlib.axis.XAxis.tick_bottom`, and :func:`~matplotlib.spines.Spine.set_position`,
+# provide the functionality of matplotlib's :meth:`~matplotlib.axis.YAxis.tick_left`,
+# :meth:`~matplotlib.axis.YAxis.tick_right`, :meth:`~matplotlib.axis.XAxis.tick_top`, and
+# :meth:`~matplotlib.axis.XAxis.tick_bottom`, and :meth:`~matplotlib.spines.Spine.set_position`,
 # but with additional flexibility.
 
 # %%
@@ -392,9 +392,9 @@ uplt.rc.reset()
 #   :func:`~ultraplot.axes.CartesianAxes.format`.
 # * To make its behavior consistent with :class:`~ultraplot.constructor.Locator` and
 #   :class:`~ultraplot.constructor.Formatter`, the :class:`~ultraplot.constructor.Scale`
-#   constructor function returns instances of `~matplotlib.scale.ScaleBase`,
-#   and :func:`~matplotlib.axes.Axes.set_xscale` and
-#   :func:`~matplotlib.axes.Axes.set_yscale` now accept these class instances in
+#   constructor function returns instances of :class:`~matplotlib.scale.ScaleBase`,
+#   and :meth:`~matplotlib.axes.Axes.set_xscale` and
+#   :meth:`~matplotlib.axes.Axes.set_yscale` now accept these class instances in
 #   addition to "registered" names like ``'log'``.
 # * While matplotlib axis scales must be instantiated with an
 #   :class:`~matplotlib.axis.Axis` instance (for backwards compatibility reasons),
@@ -406,12 +406,12 @@ uplt.rc.reset()
 #   `subs` rather than keywords with trailing ``x`` or ``y``.
 #
 # UltraPlot also includes a few new axis scales. The ``'cutoff'`` scale
-# `~ultraplot.scale.CutoffScale` is useful when the statistical distribution
-# of your data is very unusual. The ``'sine'`` scale `~ultraplot.scale.SineLatitudeScale`
+# :class:`~ultraplot.scale.CutoffScale` is useful when the statistical distribution
+# of your data is very unusual. The ``'sine'`` scale :class:`~ultraplot.scale.SineLatitudeScale`
 # scales the axis with a sine function (resulting in an area-weighted spherical latitude
-# coordinate) and the ``'mercator'`` scale `~ultraplot.scale.MercatorLatitudeScale`
+# coordinate) and the ``'mercator'`` scale :class:`~ultraplot.scale.MercatorLatitudeScale`
 # scales the axis with the Mercator projection latitude coordinate. The
-# ``'inverse'`` scale `~ultraplot.scale.InverseScale` can be useful when
+# ``'inverse'`` scale :class:`~ultraplot.scale.InverseScale` can be useful when
 # working with spectral data, especially with :ref:`"dual" unit axes <ug_dual>`.
 # If you want to work with the axis scale classes directly, they are available
 # in the top-level namespace (e.g., ``xscale=uplt.CutoffScale(...)`` is allowed).
@@ -545,8 +545,8 @@ ax.format(ymin=0.05, yscale=("power", 0.5), title=title)
 # Alternate axes
 # --------------
 #
-# The `matplotlib.axes.Axes` class includes :func:`~matplotlib.axes.Axes.twinx`
-# and :func:`~matplotlib.axes.Axes.twiny` commands for drawing "twin" *x* and
+# The :class:`~matplotlib.axes.Axes` class includes :meth:`~matplotlib.axes.Axes.twinx`
+# and :meth:`~matplotlib.axes.Axes.twiny` commands for drawing "twin" *x* and
 # *y* axes in the same subplot. UltraPlot expands on these commands and adds
 # the arguably more intuitive :func:`~ultraplot.axes.CartesianAxes.altx` and
 # :func:`~ultraplot.axes.CartesianAxes.alty` options. Here :func:`~ultraplot.axes.CartesianAxes.altx`
