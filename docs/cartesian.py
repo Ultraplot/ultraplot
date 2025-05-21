@@ -393,8 +393,8 @@ uplt.rc.reset()
 # * To make its behavior consistent with :class:`~ultraplot.constructor.Locator` and
 #   :class:`~ultraplot.constructor.Formatter`, the :class:`~ultraplot.constructor.Scale`
 #   constructor function returns instances of :class:`~matplotlib.scale.ScaleBase`,
-#   and :func:`~matplotlib.axes.Axes.set_xscale` and
-#   :func:`~matplotlib.axes.Axes.set_yscale` now accept these class instances in
+#   and :meth:`~matplotlib.axes.Axes.set_xscale` and
+#   :meth:`~matplotlib.axes.Axes.set_yscale` now accept these class instances in
 #   addition to "registered" names like ``'log'``.
 # * While matplotlib axis scales must be instantiated with an
 #   :class:`~matplotlib.axis.Axis` instance (for backwards compatibility reasons),
