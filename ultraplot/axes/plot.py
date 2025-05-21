@@ -4791,7 +4791,7 @@ class PlotAxes(base.Axes):
             to_centers = edges = False
         x, y, z, kw = self._parse_2d_args(x, y, z, edges=edges, **kwargs)
         kw.update(_pop_props(kw, "collection"))
-        center_values = kwargs.pop("center_values", None)
+        center_values = kw.pop("center_values", None)
         kw = self._parse_cmap(
             x, y, z, to_centers=to_centers, center_values=center_values, **kw
         )
