@@ -37,7 +37,7 @@
 # in UltraPlot with the :class:`~ultraplot.colors.ContinuousColormap` and
 # :class:`~ultraplot.colors.PerceptualColormap` classes, which are
 # :ref:`subclassed from <ug_cmaps_new>`
-# `matplotlib.colors.LinearSegmentedColormap`.
+# :class:`~matplotlib.colors.LinearSegmentedColormap`.
 #
 # UltraPlot :ref:`adds several features <why_colormaps_cycles>` to help you use
 # colormaps effectively in your figures. This section documents the new registered
@@ -53,7 +53,7 @@
 #
 # On import, UltraPlot registers a few sample
 # :ref:`perceptually uniform colormaps <ug_perceptual>`, plus several
-# colormaps from other online data viz projects. Use `~ultraplot.demos.show_cmaps`
+# colormaps from other online data viz projects. Use :func:`~ultraplot.demos.show_cmaps`
 # to generate a table of registered colormaps. The figure is broken down into
 # the following sections:
 #
