@@ -1265,7 +1265,9 @@ class Axes(maxes.Axes):
         # Update other colorbar settings
         # WARNING: Must use the colorbar set_label to set text. Calling set_label
         # on the actual axis will do nothing!
-        axis.set_ticks(obj.norm.boundaries)  # enforce tick boundaries
+        if hasattr(obj.norm, "boundaries"):
+            # For Mappables we enforce the tick boundaries
+            axis.set_ticks(obj.norm.boundaries)
         if center_levels:
             # Center the ticks to the center of the colorbar
             # rather than showing them on  the edges
