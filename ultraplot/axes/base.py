@@ -1349,8 +1349,14 @@ class Axes(maxes.Axes):
 
             kw_label.update({"rotation": labelrotation})
         axis.label.update(kw_label)
-        # Assume ticks are set on the long axis(!)
-        for label in obj._long_axis().get_ticklabels():
+        # Assume ticks are set on the long axis(!))
+        if hasattr(obj, "_long_axis"):
+            # mpl <=3.9
+            longaxis = obj._long_axis()
+        else:
+            # mpl >=3.10
+            longaxis = obj.long_axis
+        for label in longaxis.get_ticklabels():
             label.update(kw_ticklabels)
         kw_outline = {"edgecolor": color, "linewidth": linewidth}
         if obj.outline is not None:
