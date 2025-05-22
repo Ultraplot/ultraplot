@@ -396,7 +396,7 @@ values : int or sequence of float, default: None
     If the latter, levels are inferred using `~ultraplot.utils.edges`.
     This will override any `levels` input.
 center_levels : bool, default False
-    If set to true, the discrete color bar bins will be centered on the level values 
+    If set to true, the discrete color bar bins will be centered on the level values
     instead of using the level values as the edges of the discrete bins. This option can be used for diverging, discrete color bars with both positive and negative data to ensure data near zero is properly represented.
 """
 _auto_levels_docstring = """
@@ -4830,6 +4830,7 @@ class PlotAxes(base.Axes):
         %(plot.pcolormesh)s
         """
         to_centers = edges = True
+        gridOn = _not_none(kwargs.pop("grid", None), rc["pcolormesh.grid"])
         # For 'nearest' and 'gouraud' shading, Matplotlib's pcolormesh uses the original grid points
         # rather than interpolated values. Therefore, we set to_centers and edges to False.
         if kwargs.get("shading", "").lower() in ("nearest", "gouraud"):
@@ -4850,6 +4851,7 @@ class PlotAxes(base.Axes):
         # Add center levels to keywords
         guide_kw.setdefault("colorbar_kw", {})["center_levels"] = center_levels
         self._update_guide(m, queue_colorbar=False, **guide_kw)
+        self.format(grid = gridOn)
         return m
 
     @inputs._preprocess_or_redirect("x", "y", "z")
