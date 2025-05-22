@@ -357,3 +357,31 @@ def test_cycle_with_singular_column():
             ax.plot(col, cycle=cycle)
             assert "N" not in mocked.call_args.kwargs
     uplt.close(fig)
+
+
+def test_colorbar_center_levels():
+    """
+    Allow centering of the colorbar ticks to the center
+    """
+    data = np.random.rand(10, 10) * 2 - 1
+    expectation = np.linspace(-1, 1, uplt.rc["cmap.levels"])
+    fig, ax = uplt.subplots(ncols=2)
+    for axi, center_levels in zip(ax, [False, True]):
+        h = axi.pcolormesh(data, colorbar="r", center_levels=center_levels)
+        cbar = axi._colorbar_dict[("right", "center")]
+        deltas = cbar.get_ticks() - expectation
+        assert np.all(np.allclose(deltas, 0))
+        if center_levels:
+            # For centered levels we are off by 1;
+            # We have 1 more boundary bin than the expectation
+            assert len(cbar.norm.boundaries) == expectation.size + 1
+            w = np.diff(expectation)[0]
+            # We check if the expectation is a center for the
+            # the boundary
+            assert expectation[0] - w * 0.5 == cbar.norm.boundaries[0]
+        else:
+            deltas = cbar.norm.boundaries - expectation
+            assert np.all(np.allclose(deltas, 0))
+
+        axi.set_title(f"{center_levels=}")
+    uplt.close(fig)
