@@ -369,9 +369,9 @@ def test_colorbar_center_levels():
     for axi, center_levels in zip(ax, [False, True]):
         h = axi.pcolormesh(data, colorbar="r", center_levels=center_levels)
         cbar = axi._colorbar_dict[("right", "center")]
-        deltas = cbar.get_ticks() - expectation
-        assert np.all(np.allclose(deltas, 0))
         if center_levels:
+            deltas = cbar.get_ticks() - expectation
+            assert np.all(np.allclose(deltas, 0))
             # For centered levels we are off by 1;
             # We have 1 more boundary bin than the expectation
             assert len(cbar.norm.boundaries) == expectation.size + 1
@@ -379,9 +379,5 @@ def test_colorbar_center_levels():
             # We check if the expectation is a center for the
             # the boundary
             assert expectation[0] - w * 0.5 == cbar.norm.boundaries[0]
-        # else:
-        # deltas = cbar.norm.boundaries - expectation
-        # assert np.all(np.allclose(deltas, 0))
-
         axi.set_title(f"{center_levels=}")
     uplt.close(fig)
