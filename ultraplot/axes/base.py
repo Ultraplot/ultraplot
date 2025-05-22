@@ -1271,6 +1271,8 @@ class Axes(maxes.Axes):
             bounds = obj.norm.boundaries
             centers = 0.5 * (bounds[:-1] + bounds[1:])
             axis.set_ticks(centers)
+            ticklenratio = 0
+            tickwidthratio = 0
         axis.set_tick_params(which="both", color=color, direction=tickdir)
         axis.set_tick_params(which="major", length=ticklen, width=tickwidth)
         axis.set_tick_params(
