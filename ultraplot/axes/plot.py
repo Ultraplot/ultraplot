@@ -396,7 +396,7 @@ values : int or sequence of float, default: None
     If the latter, levels are inferred using `~ultraplot.utils.edges`.
     This will override any `levels` input.
 center_levels : bool, default False
-    If set to true, the bin edges will be centered. This option can be used for divergin colormaps to ensure will be allocated a separate bin.
+    If set to true, the bin edges will be centered. This option can be used for diverging colormaps to ensure values are allocated to separate bins.
 """
 _auto_levels_docstring = """
 robust : bool, float, or 2-tuple, default: :rc:`cmap.robust`
