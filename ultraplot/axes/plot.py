@@ -2686,8 +2686,10 @@ class PlotAxes(base.Axes):
             only applied (and therefore reset) if it differs from the current one.
         """
         cycle_kw = cycle_kw or {}
+        # Ignore singular column plotting
+        if ncycle != 1:
+            cycle_kw.setdefault("N", ncycle)
         cycle_manually = cycle_manually or {}
-        cycle_kw.setdefault("N", ncycle)
 
         # Match-case for cycle resolution
         match cycle:
@@ -2696,7 +2698,7 @@ class PlotAxes(base.Axes):
             case True:
                 resolved_cycle = constructor.Cycle(rc["axes.prop_cycle"])
             case constructor.Cycle():
-                resolved_cycle = constructor.Cycle(cycle)
+                resolved_cycle = constructor.Cycle(cycle, **cycle_kw)
             case str() if cycle.lower() == "none":
                 resolved_cycle = None
             case str() | int() | Iterable():
@@ -4947,6 +4949,7 @@ class PlotAxes(base.Axes):
         return m
 
     @inputs._parse_triangulation_with_preprocess("x", "y", "z", keywords=["triangles"])
+    @inputs._preprocess_or_redirect("x", "y", "z")
     @docstring._concatenate_inherited
     @docstring._snippet_manager
     def tricontour(self, *args, **kwargs):
@@ -4986,6 +4989,7 @@ class PlotAxes(base.Axes):
         return m
 
     @inputs._parse_triangulation_with_preprocess("x", "y", "z", keywords=["triangles"])
+    @inputs._preprocess_or_redirect("x", "y", "z")
     @docstring._concatenate_inherited
     @docstring._snippet_manager
     def tricontourf(self, *args, **kwargs):
