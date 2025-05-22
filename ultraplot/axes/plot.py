@@ -2904,7 +2904,7 @@ class PlotAxes(base.Axes):
         locator_kw = locator_kw or {}
         extend = _not_none(extend, "neither")
         levels = _not_none(levels, rc["cmap.levels"])
-        center_levels = _not_none(center_levels, False)
+        center_levels = _not_none(center_levels, rc["colorbar.center_levels"])
         vmin = _not_none(vmin=vmin, norm_kw_vmin=norm_kw.pop("vmin", None))
         vmax = _not_none(vmax=vmax, norm_kw_vmax=norm_kw.pop("vmax", None))
         norm = constructor.Norm(norm or "linear", **norm_kw)
@@ -3261,7 +3261,7 @@ class PlotAxes(base.Axes):
 
         # Generate DiscreteNorm and update "child" norm with vmin and vmax from
         # levels. This lets the colorbar set tick locations properly!
-        center_levels = _not_none(center_levels, False)
+        center_levels = _not_none(center_levels, rc["colorbar.center_levels"])
         if not isinstance(norm, mcolors.BoundaryNorm) and len(levels) > 1:
             norm = pcolors.DiscreteNorm(
                 levels,
