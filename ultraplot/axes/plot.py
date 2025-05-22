@@ -397,7 +397,9 @@ values : int or sequence of float, default: None
     This will override any `levels` input.
 center_levels : bool, default False
     If set to true, the discrete color bar bins will be centered on the level values
-    instead of using the level values as the edges of the discrete bins. This option can be used for diverging, discrete color bars with both positive and negative data to ensure data near zero is properly represented.
+    instead of using the level values as the edges of the discrete bins. This option
+    can be used for diverging, discrete color bars with both positive and negative
+    data to ensure data near zero is properly represented.
 """
 _auto_levels_docstring = """
 robust : bool, float, or 2-tuple, default: :rc:`cmap.robust`
