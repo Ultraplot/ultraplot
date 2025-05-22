@@ -4853,7 +4853,7 @@ class PlotAxes(base.Axes):
         # Add center levels to keywords
         guide_kw.setdefault("colorbar_kw", {})["center_levels"] = center_levels
         self._update_guide(m, queue_colorbar=False, **guide_kw)
-        self.format(grid = gridOn)
+        self.format(grid=gridOn)
         return m
 
     @inputs._preprocess_or_redirect("x", "y", "z")

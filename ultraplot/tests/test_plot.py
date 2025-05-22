@@ -381,3 +381,21 @@ def test_colorbar_center_levels():
             assert expectation[0] - w * 0.5 == cbar.norm.boundaries[0]
         axi.set_title(f"{center_levels=}")
     uplt.close(fig)
+
+
+def test_center_labels_colormesh_data_type():
+    """
+    Test if how center_levels respond for discrete of continuous data
+    """
+    data = np.random.rand(10, 10) * 2 - 1
+    fig, ax = uplt.subplots(ncols=2)
+    for axi, discrete in zip(ax, [True, False]):
+        axi.pcolormesh(
+            data,
+            discrete=discrete,
+            center_levels=True,
+            colorbar="r",
+        )
+
+    uplt.show(block=1)
+    uplt.close(fig)

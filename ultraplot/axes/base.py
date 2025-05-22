@@ -1268,11 +1268,13 @@ class Axes(maxes.Axes):
         if center_levels:
             # Center the ticks to the center of the colorbar
             # rather than showing them on  the edges
-            bounds = obj.norm.boundaries
-            centers = 0.5 * (bounds[:-1] + bounds[1:])
-            axis.set_ticks(centers)
-            ticklenratio = 0
-            tickwidthratio = 0
+            if hasattr(obj.norm, "boundaries"):
+                # Only apply to discrete norms
+                bounds = obj.norm.boundaries
+                centers = 0.5 * (bounds[:-1] + bounds[1:])
+                axis.set_ticks(centers)
+                ticklenratio = 0
+                tickwidthratio = 0
         axis.set_tick_params(which="both", color=color, direction=tickdir)
         axis.set_tick_params(which="major", length=ticklen, width=tickwidth)
         axis.set_tick_params(
