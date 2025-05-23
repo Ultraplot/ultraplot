@@ -1008,6 +1008,11 @@ _rc_ultraplot_table = {
         "Toggles the rasterization of the coastlines feature for GeoAxes.",
     ),
     # Colorbars
+    "colorbar.center_levels": (
+        False,
+        _validate_bool,
+        "Center the ticks in the center of each segment.",
+    ),
     "colorbar.edgecolor": (
         BLACK,
         _validate_color,

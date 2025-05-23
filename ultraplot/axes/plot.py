@@ -395,6 +395,11 @@ values : int or sequence of float, default: None
     `locator` is used to generate this many level centers at "nice" intervals.
     If the latter, levels are inferred using `~ultraplot.utils.edges`.
     This will override any `levels` input.
+center_levels : bool, default False
+    If set to true, the discrete color bar bins will be centered on the level values
+    instead of using the level values as the edges of the discrete bins. This option
+    can be used for diverging, discrete color bars with both positive and negative
+    data to ensure data near zero is properly represented.
 """
 _auto_levels_docstring = """
 robust : bool, float, or 2-tuple, default: :rc:`cmap.robust`
@@ -2436,8 +2441,15 @@ class PlotAxes(base.Axes):
             ):  # noqa: E501
                 c = list(map(pcolors.to_hex, c))  # avoid iterating over columns
             else:
+                center_levels = kwargs.pop("center_levels", None)
                 kwargs = self._parse_cmap(
-                    x, y, c, plot_lines=True, default_discrete=False, **kwargs
+                    x,
+                    y,
+                    c,
+                    plot_lines=True,
+                    default_discrete=False,
+                    center_levels=center_levels,
+                    **kwargs,
                 )  # noqa: E501
                 parsers = (self._parse_cycle,)
         pop = _pop_params(kwargs, *parsers, ignore_internal=True)
@@ -2466,6 +2478,7 @@ class PlotAxes(base.Axes):
         min_levels=None,
         plot_lines=False,
         plot_contours=False,
+        center_levels=None,
         **kwargs,
     ):
         """
@@ -2602,6 +2615,7 @@ class PlotAxes(base.Axes):
                 norm_kw=norm_kw,
                 extend=extend,
                 min_levels=min_levels,
+                center_levels=center_levels,
                 skip_autolev=skip_autolev,
                 **kwargs,
             )
@@ -2636,7 +2650,13 @@ class PlotAxes(base.Axes):
         # Then finally warn and remove unused args
         if levels is not None:
             norm, cmap, kwargs = self._parse_level_norm(
-                levels, norm, cmap, extend=extend, min_levels=min_levels, **kwargs
+                levels,
+                norm,
+                cmap,
+                center_levels=center_levels,
+                extend=extend,
+                min_levels=min_levels,
+                **kwargs,
             )
         params = _pop_params(kwargs, *self._level_parsers, ignore_internal=True)
         if "N" in params:  # use this for lookup table N instead of levels N
@@ -2855,6 +2875,7 @@ class PlotAxes(base.Axes):
         norm_kw=None,
         extend=None,
         symmetric=None,
+        center_levels=None,
         **kwargs,
     ):
         """
@@ -2893,6 +2914,7 @@ class PlotAxes(base.Axes):
         locator_kw = locator_kw or {}
         extend = _not_none(extend, "neither")
         levels = _not_none(levels, rc["cmap.levels"])
+        center_levels = _not_none(center_levels, rc["colorbar.center_levels"])
         vmin = _not_none(vmin=vmin, norm_kw_vmin=norm_kw.pop("vmin", None))
         vmax = _not_none(vmax=vmax, norm_kw_vmax=norm_kw.pop("vmax", None))
         norm = constructor.Norm(norm or "linear", **norm_kw)
@@ -2965,6 +2987,15 @@ class PlotAxes(base.Axes):
             nlevels.append(olevels[-1])
             levels = norm.inverse(nlevels)
 
+        # Center the bin edges around the center of the bin
+        # rather than its edges
+        if center_levels:
+            # Shift the entire range but correct the range
+            # later
+            width = np.diff(levels)[0]
+            levels -= width * 0.5
+            # Add another bin edge at the width
+            levels = np.append(levels, levels[-1] + width * np.sign(levels[-1]))
         return levels, kwargs
 
     def _parse_level_vals(
@@ -2981,6 +3012,7 @@ class PlotAxes(base.Axes):
         norm_kw=None,
         skip_autolev=False,
         min_levels=None,
+        center_levels=None,
         **kwargs,
     ):
         """
@@ -3112,6 +3144,7 @@ class PlotAxes(base.Axes):
                 extend=extend,
                 negative=negative,
                 positive=positive,
+                center_levels=center_levels,
                 **kwargs,
             )
         else:
@@ -3147,6 +3180,7 @@ class PlotAxes(base.Axes):
         min_levels=None,
         discrete_ticks=None,
         discrete_labels=None,
+        center_levels=None,
         **kwargs,
     ):
         """
@@ -3237,6 +3271,7 @@ class PlotAxes(base.Axes):
 
         # Generate DiscreteNorm and update "child" norm with vmin and vmax from
         # levels. This lets the colorbar set tick locations properly!
+        center_levels = _not_none(center_levels, rc["colorbar.center_levels"])
         if not isinstance(norm, mcolors.BoundaryNorm) and len(levels) > 1:
             norm = pcolors.DiscreteNorm(
                 levels,
@@ -3246,7 +3281,6 @@ class PlotAxes(base.Axes):
                 ticks=discrete_ticks,
                 labels=discrete_labels,
             )
-
         return norm, cmap, kwargs
 
     def _apply_plot(self, *pairs, vert=True, **kwargs):
@@ -3654,7 +3688,8 @@ class PlotAxes(base.Axes):
             a = (x, y, c)  # pick levels from vmin and vmax, possibly limiting range
         else:
             a, kw["values"] = (), c
-        kw = self._parse_cmap(*a, plot_lines=True, **kw)
+        center_levels = kw.pop("center_levels", None)
+        kw = self._parse_cmap(*a, center_levels=center_levels, plot_lines=True, **kw)
         cmap, norm = kw.pop("cmap"), kw.pop("norm")
 
         # Add collection with some custom attributes
@@ -4690,7 +4725,16 @@ class PlotAxes(base.Axes):
         kw = kwargs.copy()
         x, y, kw = self._parse_1d_args(x, y, autoreverse=False, autovalues=True, **kw)
         kw.update(_pop_props(kw, "collection"))  # takes LineCollection props
-        kw = self._parse_cmap(x, y, y, skip_autolev=True, default_discrete=False, **kw)
+        center_levels = kw.pop("center_levels", None)
+        kw = self._parse_cmap(
+            x,
+            y,
+            y,
+            skip_autolev=True,
+            default_discrete=False,
+            center_levels=center_levels,
+            **kw,
+        )
         norm = kw.get("norm", None)
         if norm is not None and not isinstance(norm, pcolors.DiscreteNorm):
             norm.vmin = norm.vmax = None  # remove nonsense values
@@ -4710,8 +4754,16 @@ class PlotAxes(base.Axes):
         """
         x, y, z, kw = self._parse_2d_args(x, y, z, **kwargs)
         kw.update(_pop_props(kw, "collection"))
+        center_levels = kw.pop("center_levels", None)
         kw = self._parse_cmap(
-            x, y, z, min_levels=1, plot_lines=True, plot_contours=True, **kw
+            x,
+            y,
+            z,
+            center_levels=center_levels,
+            min_levels=1,
+            plot_lines=True,
+            plot_contours=True,
+            **kw,
         )
         labels_kw = _pop_params(kw, self._add_auto_labels)
         guide_kw = _pop_params(kw, self._update_guide)
@@ -4731,7 +4783,10 @@ class PlotAxes(base.Axes):
         """
         x, y, z, kw = self._parse_2d_args(x, y, z, **kwargs)
         kw.update(_pop_props(kw, "collection"))
-        kw = self._parse_cmap(x, y, z, plot_contours=True, **kw)
+        center_levels = kw.pop("center_levels", None)
+        kw = self._parse_cmap(
+            x, y, z, center_levels=center_levels, plot_contours=True, **kw
+        )
         contour_kw = _pop_kwargs(kw, "edgecolors", "linewidths", "linestyles")
         edgefix_kw = _pop_params(kw, self._fix_patch_edges)
         labels_kw = _pop_params(kw, self._add_auto_labels)
@@ -4755,7 +4810,10 @@ class PlotAxes(base.Axes):
         """
         x, y, z, kw = self._parse_2d_args(x, y, z, edges=True, **kwargs)
         kw.update(_pop_props(kw, "collection"))
-        kw = self._parse_cmap(x, y, z, to_centers=True, **kw)
+        center_levels = kw.pop("center_levels", None)
+        kw = self._parse_cmap(
+            x, y, z, to_centers=True, center_levels=center_levels, **kw
+        )
         edgefix_kw = _pop_params(kw, self._fix_patch_edges)
         labels_kw = _pop_params(kw, self._add_auto_labels)
         guide_kw = _pop_params(kw, self._update_guide)
@@ -4780,7 +4838,10 @@ class PlotAxes(base.Axes):
             to_centers = edges = False
         x, y, z, kw = self._parse_2d_args(x, y, z, edges=edges, **kwargs)
         kw.update(_pop_props(kw, "collection"))
-        kw = self._parse_cmap(x, y, z, to_centers=to_centers, **kw)
+        center_levels = kw.pop("center_levels", None)
+        kw = self._parse_cmap(
+            x, y, z, to_centers=to_centers, center_levels=center_levels, **kw
+        )
         edgefix_kw = _pop_params(kw, self._fix_patch_edges)
         labels_kw = _pop_params(kw, self._add_auto_labels)
         guide_kw = _pop_params(kw, self._update_guide)
@@ -4788,6 +4849,8 @@ class PlotAxes(base.Axes):
             m = self._call_native("pcolormesh", x, y, z, **kw)
         self._fix_patch_edges(m, **edgefix_kw, **kw)
         self._add_auto_labels(m, **labels_kw)
+        # Add center levels to keywords
+        guide_kw.setdefault("colorbar_kw", {})["center_levels"] = center_levels
         self._update_guide(m, queue_colorbar=False, **guide_kw)
         return m
 
@@ -4800,7 +4863,10 @@ class PlotAxes(base.Axes):
         """
         x, y, z, kw = self._parse_2d_args(x, y, z, edges=True, **kwargs)
         kw.update(_pop_props(kw, "collection"))
-        kw = self._parse_cmap(x, y, z, to_centers=True, **kw)
+        center_levels = kw.pop("center_levels", None)
+        kw = self._parse_cmap(
+            x, y, z, center_levels=center_levels, to_centers=True, **kw
+        )
         edgefix_kw = _pop_params(kw, self._fix_patch_edges)
         labels_kw = _pop_params(kw, self._add_auto_labels)
         guide_kw = _pop_params(kw, self._update_guide)
@@ -4947,6 +5013,7 @@ class PlotAxes(base.Axes):
 
         # Update kwargs and handle cmap
         kw.update(_pop_props(kw, "collection"))
+        center_levels = kw.pop("center_levels", None)
         kw = self._parse_cmap(
             triangulation.x,
             triangulation.y,
@@ -4954,6 +5021,7 @@ class PlotAxes(base.Axes):
             min_levels=1,
             plot_lines=True,
             plot_contours=True,
+            center_levels=center_levels,
             **kw,
         )
 
@@ -4986,8 +5054,14 @@ class PlotAxes(base.Axes):
         # Update kwargs and handle contour parameters
         kw.update(_pop_props(kw, "collection"))
         contour_kw = _pop_kwargs(kw, "edgecolors", "linewidths", "linestyles")
+        center_levels = kw.pop("center_levels", None)
         kw = self._parse_cmap(
-            triangulation.x, triangulation.y, z, plot_contours=True, **kw
+            triangulation.x,
+            triangulation.y,
+            z,
+            center_levels=center_levels,
+            plot_contours=True,
+            **kw,
         )
 
         # Handle patch edges, labels, and guide parameters
@@ -5026,7 +5100,10 @@ class PlotAxes(base.Axes):
 
         # Update kwargs and handle cmap
         kw.update(_pop_props(kw, "collection"))
-        kw = self._parse_cmap(triangulation.x, triangulation.y, z, **kw)
+        center_levels = kw.pop("center_levels", None)
+        kw = self._parse_cmap(
+            triangulation.x, triangulation.y, z, center_levels=center_levels, **kw
+        )
 
         # Handle patch edges, labels, and guide parameters
         edgefix_kw = _pop_params(kw, self._fix_patch_edges)
@@ -5053,7 +5130,10 @@ class PlotAxes(base.Axes):
         %(plot.imshow)s
         """
         kw = kwargs.copy()
-        kw = self._parse_cmap(z, default_discrete=False, **kw)
+        center_levels = kw.pop("center_levels", None)
+        kw = self._parse_cmap(
+            z, center_levels=center_levels, default_discrete=False, **kw
+        )
         guide_kw = _pop_params(kw, self._update_guide)
         m = self._call_native("imshow", z, **kw)
         self._update_guide(m, queue_colorbar=False, **guide_kw)
@@ -5081,7 +5161,10 @@ class PlotAxes(base.Axes):
         kw = kwargs.copy()
         kw.update(_pop_props(kw, "line"))  # takes valid Line2D properties
         default_cmap = pcolors.DiscreteColormap(["w", "k"], "_no_name")
-        kw = self._parse_cmap(z, default_cmap=default_cmap, **kw)
+        center_levels = kw.pop("center_levels", None)
+        kw = self._parse_cmap(
+            z, center_levels=center_levels, default_cmap=default_cmap, **kw
+        )
         guide_kw = _pop_params(kw, self._update_guide)
         m = self._call_native("spy", z, **kw)
         self._update_guide(m, queue_colorbar=False, **guide_kw)

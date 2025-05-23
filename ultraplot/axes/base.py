@@ -1048,6 +1048,7 @@ class Axes(maxes.Axes):
         rasterized=None,
         outline: Union[bool, None] = None,
         labelrotation: Union[str, float] = None,
+        center_levels=None,
         **kwargs,
     ):
         """
@@ -1074,6 +1075,7 @@ class Axes(maxes.Axes):
         ticklenratio = _not_none(ticklenratio, rc["tick.lenratio"])
         tickwidthratio = _not_none(tickwidthratio, rc["tick.widthratio"])
         rasterized = _not_none(rasterized, rc["colorbar.rasterized"])
+        center_levels = _not_none(center_levels, rc["colorbar.center_levels"])
 
         # Build label and locator keyword argument dicts
         # NOTE: This carefully handles the 'maxn' and 'maxn_minor' deprecations
@@ -1263,6 +1265,16 @@ class Axes(maxes.Axes):
         # Update other colorbar settings
         # WARNING: Must use the colorbar set_label to set text. Calling set_label
         # on the actual axis will do nothing!
+        if center_levels:
+            # Center the ticks to the center of the colorbar
+            # rather than showing them on  the edges
+            if hasattr(obj.norm, "boundaries"):
+                # Only apply to discrete norms
+                bounds = obj.norm.boundaries
+                centers = 0.5 * (bounds[:-1] + bounds[1:])
+                axis.set_ticks(centers)
+                ticklenratio = 0
+                tickwidthratio = 0
         axis.set_tick_params(which="both", color=color, direction=tickdir)
         axis.set_tick_params(which="major", length=ticklen, width=tickwidth)
         axis.set_tick_params(
