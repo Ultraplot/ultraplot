@@ -32,7 +32,6 @@ REGEX_NAMED_COLOR = re.compile(r"\A[a-zA-Z0-9:_ -]*\Z")
 # NOTE: These are set to True inside __init__.py
 # NOTE: We really cannot delay creation of 'rc' until after registration because
 # colormap creation depends on rc['cmap.lut'] and rc['cmap.listedthresh'].
-# center_levels = _not_none(center_levels, rc["c
 # And anyway to revoke that dependence would require other uglier kludges.
 VALIDATE_REGISTERED_CMAPS = False
 VALIDATE_REGISTERED_COLORS = False

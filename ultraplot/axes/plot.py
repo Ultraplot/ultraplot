@@ -4832,7 +4832,6 @@ class PlotAxes(base.Axes):
         %(plot.pcolormesh)s
         """
         to_centers = edges = True
-        gridOn = _not_none(kwargs.pop("grid", None), rc["grid"])
         # For 'nearest' and 'gouraud' shading, Matplotlib's pcolormesh uses the original grid points
         # rather than interpolated values. Therefore, we set to_centers and edges to False.
         if kwargs.get("shading", "").lower() in ("nearest", "gouraud"):
