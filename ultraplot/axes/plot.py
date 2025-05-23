@@ -4832,7 +4832,7 @@ class PlotAxes(base.Axes):
         %(plot.pcolormesh)s
         """
         to_centers = edges = True
-        gridOn = _not_none(kwargs.pop("grid", None), rc["pcolormesh.grid"])
+        gridOn = _not_none(kwargs.pop("grid", None), rc["grid"])
         # For 'nearest' and 'gouraud' shading, Matplotlib's pcolormesh uses the original grid points
         # rather than interpolated values. Therefore, we set to_centers and edges to False.
         if kwargs.get("shading", "").lower() in ("nearest", "gouraud"):
@@ -4853,7 +4853,6 @@ class PlotAxes(base.Axes):
         # Add center levels to keywords
         guide_kw.setdefault("colorbar_kw", {})["center_levels"] = center_levels
         self._update_guide(m, queue_colorbar=False, **guide_kw)
-        self.format(grid=gridOn)
         return m
 
     @inputs._preprocess_or_redirect("x", "y", "z")

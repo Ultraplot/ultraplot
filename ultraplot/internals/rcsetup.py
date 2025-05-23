@@ -1575,11 +1575,6 @@ _rc_ultraplot_table = {
         "Color for negative bars and shaded areas when using ``negpos=True``. "
         "See also :rcraw:`poscolor`.",
     ),
-    "pcolormesh.grid": (
-        False,
-        _validate_bool,
-        "Toggles the grid for pcolormesh plots.",
-    ),
     "poscolor": (
         "red7",
         _validate_color,
