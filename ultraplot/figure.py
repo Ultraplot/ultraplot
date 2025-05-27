@@ -928,35 +928,56 @@ class Figure(mfigure.Figure):
         # spanning axes will fit into one of the boxes. Check
         # this with unittest to see how empty axes are handles
         for axi in all_axes:
-            # Infer coordinate from gridspec
+            # Infer coordinate from grdispec
             x, y = np.unravel_index(axi.number - 1, (nrows, ncols))
-            grid[x, y] = True
-        for axi in all_axes:
-            x, y = np.unravel_index(axi.number - 1, (nrows, ncols))
-            # Top row
-            if x == 0:
-                border_axes["top"].append(axi)
-            # Bottom row
-            elif x == nrows - 1:
-                border_axes["bottom"].append(axi)
-            # There could be an internal axis that is facing
-            # an empty plot -- assume it needs ticks
-            else:
-                if grid[x + 1, y] == 0:
-                    border_axes["right"].append(axi)
-                elif grid[x - 1, y] == 0:
-                    border_axes["left"].append(axi)
-            # Same logic but for y
-            if y == 0:
-                border_axes["left"].append(axi)
-            elif y == ncols - 1:
-                border_axes["right"].append(axi)
-            else:
-                if grid[x, y - 1] == 0:
-                    border_axes["left"].append(axi)
-                elif grid[x, y + 1] == 0:
-                    border_axes["right"].append(axi)
+            spec = axi.get_subplotspec()
+            grid[
+                spec.rowspan.start : spec.rowspan.stop,
+                spec.colspan.start : spec.colspan.stop,
+            ] = axi.number
 
+        directions = {
+            "left": (0, -1),
+            "right": (0, 1),
+            "top": (-1, 0),
+            "bottom": (1, 0),
+        }
+
+        def is_border(pos, grid, target, direction):
+            x, y = pos
+            # Check if we are at an edge
+            if x < 0:
+                return True
+            elif x > grid.shape[0] - 1:
+                return True
+            if y < 0:
+                return True
+            elif y > grid.shape[1] - 1:
+                return True
+            # Check if we reached a plot or an internal edge
+            print(grid.shape, x, y)
+            if grid[x, y] != target and grid[x, y] > 0:
+                return False
+            elif grid[x, y] != target and grid[x, y] == 0:
+                return True
+            dx, dy = direction
+            new_pos = (x + dx, y + dy)
+            return is_border(new_pos, grid, target, direction)
+
+        from itertools import product
+
+        for axi in all_axes:
+            spec = axi.get_subplotspec()
+
+            for direction, d in directions.items():
+                found_border = False
+                xs = range(spec.rowspan.start, spec.rowspan.stop)
+                ys = range(spec.colspan.start, spec.colspan.stop)
+                for x, y in product(xs, ys):
+                    pos = (x, y)
+                    if is_border(pos=pos, grid=grid, target=axi.number, direction=d):
+                        border_axes[direction].append(axi)
+                        break
         return border_axes
 
     def _get_align_coord(self, side, axs, includepanels=False):
