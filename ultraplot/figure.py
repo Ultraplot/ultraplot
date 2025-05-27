@@ -936,7 +936,7 @@ class Figure(mfigure.Figure):
             # Top row
             if x == 0:
                 border_axes["top"].append(axi)
-            # Rottom row
+            # Bottom row
             elif x == nrows - 1:
                 border_axes["bottom"].append(axi)
             # There could be an internal axis that is facing
