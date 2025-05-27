@@ -910,66 +910,54 @@ class Figure(mfigure.Figure):
         """
 
         gs = self.gridspec
-        all_axes = self.axes
+
+        # Skip colorbars or panels etc
+        all_axes = [axi for axi in self.axes if axi.number is not None]
 
         # Handle empty cases
         nrows, ncols = gs.nrows, gs.ncols
+        border_axes = dict(top=[], bottom=[], left=[], right=[])
         if nrows == 0 or ncols == 0 or not all_axes:
-            return dict(top=[], bottom=[], left=[], right=[])
-
-        # Find occupied grid cells and valid axes
-        occupied_cells = set()
-        axes_with_spec = []
-
+            return border_axes
+        # We cannot use the gridspec on the axes as it
+        # is modified when a colorbar is added. Use self.gridspec
+        # as a reference.
+        nrows, ncols = gs.nrows, gs.ncols
+        grid = np.zeros((nrows, ncols))
+        # Reconstruct the grid based on axis locations. Note that
+        # spanning axes will fit into one of the boxes. Check
+        # this with unittest to see how empty axes are handles
         for axi in all_axes:
-            spec = axi.get_subplotspec()
-            if spec is not None:
-                axes_with_spec.append((axi, spec))
-                r0, r1 = spec.rowspan.start, spec.rowspan.stop
-                c0, c1 = spec.colspan.start, spec.colspan.stop
-                for r in range(r0, r1):
-                    for c in range(c0, c1):
-                        occupied_cells.add((r, c))
+            # Infer coordinate from grdispec
+            x, y = np.unravel_index(axi.number - 1, (nrows, ncols))
+            grid[x, y] = True
+        for axi in all_axes:
+            x, y = np.unravel_index(axi.number - 1, (nrows, ncols))
+            # Top row
+            if x == 0:
+                border_axes["top"].append(axi)
+            # Rottom row
+            elif x == nrows - 1:
+                border_axes["bottom"].append(axi)
+            # There could be an internal axis that is facing
+            # an empty plot -- assume it needs ticks
+            else:
+                if grid[x + 1, y] == 0:
+                    border_axes["right"].append(axi)
+                elif grid[x - 1, y] == 0:
+                    border_axes["left"].append(axi)
+            # Same logic but for y
+            if y == 0:
+                border_axes["left"].append(axi)
+            elif y == ncols - 1:
+                border_axes["right"].append(axi)
+            else:
+                if grid[x, y - 1] == 0:
+                    border_axes["left"].append(axi)
+                elif grid[x, y + 1] == 0:
+                    border_axes["right"].append(axi)
 
-        if not axes_with_spec:
-            return dict(top=[], bottom=[], left=[], right=[])
-
-        # Initialize border axes sets
-        border_axes_sets = dict(top=set(), bottom=set(), left=set(), right=set())
-
-        # Check each axis against border criteria
-        for axi, spec in axes_with_spec:
-            r0, r1 = spec.rowspan.start, spec.rowspan.stop
-            c0, c1 = spec.colspan.start, spec.colspan.stop
-
-            # Check top border
-            if r0 == 0 or (
-                r0 == 1 and any((0, c) not in occupied_cells for c in range(c0, c1))
-            ):
-                border_axes_sets["top"].add(axi)
-
-            # Check bottom border
-            if r1 == nrows or (
-                r1 == nrows - 1
-                and any((nrows - 1, c) not in occupied_cells for c in range(c0, c1))
-            ):
-                border_axes_sets["bottom"].add(axi)
-
-            # Check left border
-            if c0 == 0 or (
-                c0 == 1 and any((r, 0) not in occupied_cells for r in range(r0, r1))
-            ):
-                border_axes_sets["left"].add(axi)
-
-            # Check right border
-            if c1 == ncols or (
-                c1 == ncols - 1
-                and any((r, ncols - 1) not in occupied_cells for r in range(r0, r1))
-            ):
-                border_axes_sets["right"].add(axi)
-
-        # Convert sets to lists
-        return {key: list(val) for key, val in border_axes_sets.items()}
+        return border_axes
 
     def _get_align_coord(self, side, axs, includepanels=False):
         """

@@ -745,6 +745,7 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
             top=are_ticks_on,
             bottom=are_ticks_on,
         )
+        # print("-" * 64)
         for axi in self.figure.axes:
             # If users call colorbar on the figure
             # an axis is added which needs to skip the
@@ -756,6 +757,7 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
             tmp = default.copy()
             for side in sides:
                 tmp[side] = True
+            # print(axi.number, tmp)
             axi._toggle_gridliner_labels(**tmp)
         self.stale = False
 
