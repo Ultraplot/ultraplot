@@ -967,7 +967,12 @@ class Figure(mfigure.Figure):
 
         for axi in all_axes:
             spec = axi.get_subplotspec()
-
+            # Check all cardinal directions. When we find a
+            #  border for any starting conditions we break and
+            # consider it a border. This could mean that for some
+            # partial overlaps we consider borders that should
+            # not be borders -- we are conservative in this
+            # regard
             for direction, d in directions.items():
                 found_border = False
                 xs = range(spec.rowspan.start, spec.rowspan.stop)
