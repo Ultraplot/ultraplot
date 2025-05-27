@@ -928,7 +928,7 @@ class Figure(mfigure.Figure):
         # spanning axes will fit into one of the boxes. Check
         # this with unittest to see how empty axes are handles
         for axi in all_axes:
-            # Infer coordinate from grdispec
+            # Infer coordinate from gridspec
             x, y = np.unravel_index(axi.number - 1, (nrows, ncols))
             grid[x, y] = True
         for axi in all_axes:
