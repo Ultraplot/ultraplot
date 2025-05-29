@@ -4275,7 +4275,7 @@ class PlotAxes(base.Axes):
 
         # Only adjust limits if text extends beyond current range
         if max_extent > current_lim[1]:
-            padding = (max_extent - current_lim[1]) * 0.5  # Add 10% padding
+            padding = (max_extent - current_lim[1]) * 0.5  # Add a bit of padding
             new_lim = (current_lim[0], max_extent + padding)
             getattr(self, f"set_{which}lim")(new_lim)
 
