@@ -666,6 +666,9 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
                 target_axis=self._lataxis,
             )
 
+        # If we are not stale just return
+        if not self.stale:
+            return
         # Turn all labels off
         # Note: this action performs it for all the axes in
         # the figure. We use the stale here to only perform
@@ -701,6 +704,7 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
             for side in sides:
                 tmp[side] = True
             axi._toggle_gridliner_labels(**tmp)
+        self.stale = True
 
     def _get_gridliner_labels(
         self,
