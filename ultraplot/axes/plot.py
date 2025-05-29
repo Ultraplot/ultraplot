@@ -4217,7 +4217,8 @@ class PlotAxes(base.Axes):
             else:
                 obj = self._call_native(name, x, h, w, b, **kw)
             if bar_labels:
-                self._add_bar_labels(obj, orientation=orientation, **bar_labels_kw)
+                if isinstance(obj, mcontainer.BarContainer):
+                    self._add_bar_labels(obj, orientation=orientation, **bar_labels_kw)
 
             self._fix_patch_edges(obj, **edgefix_kw, **kw)
             for y in (b, b + h):
@@ -4275,7 +4276,7 @@ class PlotAxes(base.Axes):
 
         # Only adjust limits if text extends beyond current range
         if max_extent > current_lim[1]:
-            padding = (max_extent - current_lim[1]) * 0.5  # Add a bit of padding
+            padding = (max_extent - current_lim[1]) * 1.25  # Add a bit of padding
             new_lim = (current_lim[0], max_extent + padding)
             getattr(self, f"set_{which}lim")(new_lim)
 
