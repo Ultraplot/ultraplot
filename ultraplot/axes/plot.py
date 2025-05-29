@@ -4235,34 +4235,53 @@ class PlotAxes(base.Axes):
         self,
         container,
         *,
-        orientation="x",
+        orientation="horizontal",
         **kwargs,
     ):
         """
         Automatically add bar labels and rescale the
         limits to produce a striking visual image.
         """
-        # Drawing the labels does not for rescale of the
-        # limits to account for the labels. We therefore
-        # first draw them and then adjust the range for x or y
-        # depending on the orientation of the bar
+        # Drawing the labels does not rescale the limits to account
+        # for the labels. We therefore first draw them and then
+        # adjust the range for x or y depending on the orientation of the bar
         bar_labels = self._call_native("bar_label", container, **kwargs)
+
         which = "x" if orientation == "horizontal" else "y"
-        max_text_width = 0
-        for label in bar_labels:
+        other_which = "y" if orientation == "horizontal" else "x"
+
+        # Get current limits
+        current_lim = getattr(self, f"get_{which}lim")()
+        other_lim = getattr(self, f"get_{other_which}lim")()
+
+        # Find the maximum extent of text + bar position
+        max_extent = current_lim[1]  # Start with current upper limit
+
+        for label, bar in zip(bar_labels, container):
+            # Get text bounding box
             bbox = label.get_window_extent(renderer=self.figure.canvas.get_renderer())
             bbox_data = bbox.transformed(self.transData.inverted())
-            text_width = bbox_data.width
-            max_text_width = max(max_text_width, text_width)
-        # Compute the new limits
-        lim = getattr(self, f"get_{which}lim")()
-        lim = (lim[0], lim[1] + max_text_width)
-        olim = self.get_xlim()
-        if which == "x":
-            olim = self.get_ylim()
-        # Reset the limits
-        self.set_xlim(*lim)
-        self.set_ylim(*olim)
+
+            if orientation == "horizontal":
+                # For horizontal bars, check if text extends beyond right edge
+                bar_end = bar.get_width() + bar.get_x()
+                text_end = bar_end + bbox_data.width
+                max_extent = max(max_extent, text_end)
+            else:
+                # For vertical bars, check if text extends beyond top edge
+                bar_end = bar.get_height() + bar.get_y()
+                text_end = bar_end + bbox_data.height
+                max_extent = max(max_extent, text_end)
+
+        # Only adjust limits if text extends beyond current range
+        if max_extent > current_lim[1]:
+            padding = (max_extent - current_lim[1]) * 0.1  # Add 10% padding
+            new_lim = (current_lim[0], max_extent + padding)
+            getattr(self, f"set_{which}lim")(new_lim)
+
+        # Keep the other axis unchanged
+        getattr(self, f"set_{other_which}lim")(other_lim)
+
         return bar_labels
 
     @inputs._preprocess_or_redirect("x", "height", "width", "bottom")
