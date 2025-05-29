@@ -4165,6 +4165,8 @@ class PlotAxes(base.Axes):
         # Parse args
         kw = kwargs.copy()
         kw, extents = self._inbounds_extent(**kw)
+        bar_labels = kw.pop("bar_labels", rc["bar.bar_labels"])
+        bar_labels_kw = kw.pop("bar_labels_kw", {})
         name = "barh" if orientation == "horizontal" else "bar"
         stack = _not_none(stack=stack, stacked=stacked)
         xs, hs, kw = self._parse_1d_args(xs, hs, orientation=orientation, **kw)
@@ -4212,6 +4214,9 @@ class PlotAxes(base.Axes):
                 obj = self._call_negpos(name, x, h, w, b, use_zero=True, **kw)
             else:
                 obj = self._call_native(name, x, h, w, b, **kw)
+            if bar_labels:
+                self._add_bar_labels(obj, orientation=orientation, **bar_labels_kw)
+
             self._fix_patch_edges(obj, **edgefix_kw, **kw)
             for y in (b, b + h):
                 self._inbounds_xylim(extents, x, y, orientation=orientation)
@@ -4223,6 +4228,40 @@ class PlotAxes(base.Axes):
 
         self._update_guide(objs, **guide_kw)
         return objs[0] if len(objs) == 1 else cbook.silent_list("BarContainer", objs)
+
+    def _add_bar_labels(
+        self,
+        container,
+        *,
+        orientation="x",
+        **kwargs,
+    ):
+        """
+        Automatically add bar labels and rescale the
+        limits to produce a striking visual image.
+        """
+        # Drawing the labels does not for rescale of the
+        # limits to account for the labels. We therefore
+        # first draw them and then adjust the range for x or y
+        # depending on the orientation of the bar
+        bar_labels = self._call_native("bar_label", container, **kwargs)
+        which = "x" if orientation == "horizontal" else "y"
+        max_text_width = 0
+        for label in bar_labels:
+            bbox = label.get_window_extent(renderer=self.figure.canvas.get_renderer())
+            bbox_data = bbox.transformed(self.transData.inverted())
+            text_width = bbox_data.width
+            max_text_width = max(max_text_width, text_width)
+        # Compute the new limits
+        lim = getattr(self, f"get_{which}lim")()
+        lim = (lim[0], lim[1] + max_text_width)
+        olim = self.get_xlim()
+        if which == "x":
+            olim = self.get_ylim()
+        # Reset the limits
+        self.set_xlim(*lim)
+        self.set_ylim(*olim)
+        return bar_labels
 
     @inputs._preprocess_or_redirect("x", "height", "width", "bottom")
     @docstring._concatenate_inherited
