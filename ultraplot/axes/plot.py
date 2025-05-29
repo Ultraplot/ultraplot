@@ -755,6 +755,8 @@ stack, stacked : bool, default: False
     data or plot bars side-by-side in groups.
 bar_labels : bool, default rc["bar.bar_labels"]
     Whether to show the height values for vertical bars or width values for horizontal bars.
+bar_labels_kw : dict, default None
+    Keywords to format the bar_labels, see :func:`~matplotlib.pyplot.bar_label`.
 %(plot.args_1d_shared)s
 
 Other parameters
