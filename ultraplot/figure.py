@@ -922,20 +922,21 @@ class Figure(mfigure.Figure):
         # We cannot use the gridspec on the axes as it
         # is modified when a colorbar is added. Use self.gridspec
         # as a reference.
-        nrows, ncols = gs.nrows, gs.ncols
-        grid = np.zeros((nrows, ncols))
         # Reconstruct the grid based on axis locations. Note that
         # spanning axes will fit into one of the boxes. Check
         # this with unittest to see how empty axes are handles
+        grid = np.zeros((gs.nrows, gs.ncols))
         for axi in all_axes:
             # Infer coordinate from grdispec
-            x, y = np.unravel_index(axi.number - 1, (nrows, ncols))
             spec = axi.get_subplotspec()
-            grid[
-                spec.rowspan.start : spec.rowspan.stop,
-                spec.colspan.start : spec.colspan.stop,
-            ] = axi.number
+            spans = spec._get_rows_columns()
+            rowspans = spans[:2]
+            colspans = spans[-2:]
 
+            grid[
+                rowspans[0] : rowspans[1] + 1,
+                colspans[0] : colspans[1] + 1,
+            ] = axi.number
         directions = {
             "left": (0, -1),
             "right": (0, 1),
@@ -967,6 +968,9 @@ class Figure(mfigure.Figure):
 
         for axi in all_axes:
             spec = axi.get_subplotspec()
+            spans = spec._get_rows_columns()
+            rowspan = spans[:2]
+            colspan = spans[-2:]
             # Check all cardinal directions. When we find a
             #  border for any starting conditions we break and
             # consider it a border. This could mean that for some
@@ -975,8 +979,8 @@ class Figure(mfigure.Figure):
             # regard
             for direction, d in directions.items():
                 found_border = False
-                xs = range(spec.rowspan.start, spec.rowspan.stop)
-                ys = range(spec.colspan.start, spec.colspan.stop)
+                xs = range(rowspan[0], rowspan[1] + 1)
+                ys = range(colspan[0], colspan[1] + 1)
                 for x, y in product(xs, ys):
                     pos = (x, y)
                     if is_border(pos=pos, grid=grid, target=axi.number, direction=d):

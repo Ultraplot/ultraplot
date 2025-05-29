@@ -666,6 +666,42 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
                 target_axis=self._lataxis,
             )
 
+        # Turn all labels off
+        # Note: this action performs it for all the axes in
+        # the figure. We use the stale here to only perform
+        # it once as it is an expensive action.
+        border_axes = self.figure._get_border_axes()
+        # Recode:
+        recoded = {}
+        for direction, axes in border_axes.items():
+            for axi in axes:
+                recoded[axi] = recoded.get(axi, []) + [direction]
+
+        # We turn off the tick labels when the scale and
+        # ticks are shared (level >= 3)
+        are_ticks_on = True
+        if self.figure._get_sharing_level() >= 3:
+            are_ticks_on = False
+
+        default = dict(
+            left=are_ticks_on,
+            right=are_ticks_on,
+            top=are_ticks_on,
+            bottom=are_ticks_on,
+        )
+        for axi in self.figure.axes:
+            # If users call colorbar on the figure
+            # an axis is added which needs to skip the
+            # sharing that is specific for the GeoAxes.
+            if not isinstance(axi, GeoAxes):
+                continue
+
+            sides = recoded.get(axi, [])
+            tmp = default.copy()
+            for side in sides:
+                tmp[side] = True
+            axi._toggle_gridliner_labels(**tmp)
+
     def _get_gridliner_labels(
         self,
         bottom=None,
@@ -722,41 +758,6 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
         if not self.stale:
             return
 
-        # Turn all labels off
-        # Note: this action performs it for all the axes in
-        # the figure. We use the stale here to only perform
-        # it once as it is an expensive action.
-        border_axes = self.figure._get_border_axes()
-        # Recode:
-        recoded = {}
-        for direction, axes in border_axes.items():
-            for axi in axes:
-                recoded[axi] = recoded.get(axi, []) + [direction]
-
-        # We turn off the tick labels when the scale and
-        # ticks are shared (level >= 3)
-        are_ticks_on = True
-        if self.figure._get_sharing_level() >= 3:
-            are_ticks_on = False
-
-        default = dict(
-            left=are_ticks_on,
-            right=are_ticks_on,
-            top=are_ticks_on,
-            bottom=are_ticks_on,
-        )
-        for axi in self.figure.axes:
-            # If users call colorbar on the figure
-            # an axis is added which needs to skip the
-            # sharing that is specific for the GeoAxes.
-            if not isinstance(axi, GeoAxes):
-                continue
-
-            sides = recoded.get(axi, [])
-            tmp = default.copy()
-            for side in sides:
-                tmp[side] = True
-            axi._toggle_gridliner_labels(**tmp)
         self.stale = False
 
     @override
