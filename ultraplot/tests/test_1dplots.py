@@ -659,8 +659,7 @@ def test_bar_labels():
     percentages = [25.3, 42.1, 18.7, 65.2]
     fig, ax = uplt.subplots(ncols=2, nrows=1, share=0)
     ax.format(abc=True, abcloc="ul")
-    df = pd.DataFrame([categories, percentages], index=["Categories", "Percentages"]).T
-    df = df.set_index("Categories")
+    df = pd.DataFrame({"Percentages": percentages}, index=categories)
     ax[0].barh(y="Percentages", data=df, bar_labels=True)
     ax[1].bar(x="Percentages", data=df, bar_labels=True)
     return fig
