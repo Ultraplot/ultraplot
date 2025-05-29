@@ -951,14 +951,16 @@ class Figure(mfigure.Figure):
                 return True
             elif x > grid.shape[0] - 1:
                 return True
+
             if y < 0:
                 return True
             elif y > grid.shape[1] - 1:
                 return True
+
             # Check if we reached a plot or an internal edge
             if grid[x, y] != target and grid[x, y] > 0:
                 return False
-            elif grid[x, y] != target and grid[x, y] == 0:
+            if grid[x, y] == 0:
                 return True
             dx, dy = direction
             new_pos = (x + dx, y + dy)
@@ -978,7 +980,6 @@ class Figure(mfigure.Figure):
             # not be borders -- we are conservative in this
             # regard
             for direction, d in directions.items():
-                found_border = False
                 xs = range(rowspan[0], rowspan[1] + 1)
                 ys = range(colspan[0], colspan[1] + 1)
                 for x, y in product(xs, ys):
