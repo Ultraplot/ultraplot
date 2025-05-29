@@ -753,6 +753,8 @@ absolute_width : bool, default: False
 stack, stacked : bool, default: False
     Whether to "stack" bars from successive columns of {y}
     data or plot bars side-by-side in groups.
+bar_labels : bool, default rc["bar.bar_labels"]
+    Whether to show the height values for vertical bars or width values for horizontal bars.
 %(plot.args_1d_shared)s
 
 Other parameters
