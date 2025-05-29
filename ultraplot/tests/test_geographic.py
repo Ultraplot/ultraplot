@@ -659,3 +659,23 @@ def test_check_tricontourf():
         assert "transform" in mocked.call_args.kwargs
         assert isinstance(mocked.call_args.kwargs["transform"], ccrs.PlateCarree)
     uplt.close(fig)
+
+
+def test_panels_geo():
+    fig, ax = uplt.subplots(proj="cyl")
+    ax.format(labels=True)
+    for dir in "top bottom right left".split():
+        pax = ax.panel_axes(dir)
+        match dir:
+            case "top":
+                assert len(pax.get_xticklabels()) > 0
+                assert len(pax.get_yticklabels()) > 0
+            case "bottom":
+                assert len(pax.get_xticklabels()) > 0
+                assert len(pax.get_yticklabels()) > 0
+            case "left":
+                assert len(pax.get_xticklabels()) > 0
+                assert len(pax.get_yticklabels()) > 0
+            case "right":
+                assert len(pax.get_xticklabels()) > 0
+                assert len(pax.get_yticklabels()) > 0
