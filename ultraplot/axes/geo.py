@@ -681,13 +681,10 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
         # If we are not stale just return
         if not self.stale:
             return
-<<<<<<< HEAD
-=======
 
         # If we are not  sharing labels, we return early
         if self.figure._get_sharing_level() < 1:
             return
->>>>>>> hotfix-get_border_axes
         # Turn all labels off
         # Note: this action performs it for all the axes in
         # the figure. We use the stale here to only perform
@@ -701,13 +698,7 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
 
         # We turn off the tick labels when the scale and
         # ticks are shared (level >= 3)
-<<<<<<< HEAD
-        are_ticks_on = True
-        if self.figure._get_sharing_level() >= 3:
-            are_ticks_on = False
-=======
         are_ticks_on = False
->>>>>>> hotfix-get_border_axes
 
         default = dict(
             left=are_ticks_on,
@@ -724,10 +715,6 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
 
             sides = recoded.get(axi, [])
             tmp = default.copy()
-<<<<<<< HEAD
-            for side in sides:
-                tmp[side] = True
-=======
 
             gridlabels = self._get_gridliner_labels(
                 bottom=True, top=True, left=True, right=True
@@ -736,7 +723,6 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
                 if side in gridlabels and gridlabels[side]:
                     tmp[side] = True
 
->>>>>>> hotfix-get_border_axes
             axi._toggle_gridliner_labels(**tmp)
         self.stale = True
 
