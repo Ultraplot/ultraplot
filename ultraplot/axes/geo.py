@@ -682,9 +682,7 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
 
         # We turn off the tick labels when the scale and
         # ticks are shared (level >= 3)
-        are_ticks_on = True
-        if self.figure._get_sharing_level() >= 3:
-            are_ticks_on = False
+        are_ticks_on = False
 
         default = dict(
             left=are_ticks_on,
@@ -701,8 +699,14 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
 
             sides = recoded.get(axi, [])
             tmp = default.copy()
+
+            gridlabels = self._get_gridliner_labels(
+                bottom=True, top=True, left=True, right=True
+            )
             for side in sides:
-                tmp[side] = True
+                if side in gridlabels and gridlabels[side]:
+                    tmp[side] = True
+
             axi._toggle_gridliner_labels(**tmp)
         self.stale = True
 
