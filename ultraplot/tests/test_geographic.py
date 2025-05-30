@@ -254,7 +254,7 @@ def test_sharing_cartopy():
     settings = dict(land=True, ocean=True, labels="both")
     fig, ax = uplt.subplots(ncols=n, nrows=n, share="all", proj="cyl")
     # Add data and ensure the tests still hold
-    # Adding a colorbar will change the underlying gridpsec, the
+    # Adding a colorbar will change the underlying gridspec, the
     # labels should still be correctly treated.
     data = np.random.rand(10, 10)
     h = ax.imshow(data)[0]
