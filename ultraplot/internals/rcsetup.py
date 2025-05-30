@@ -946,6 +946,11 @@ _rc_ultraplot_table = {
         _validate_float,
         "The fractional *x* and *y* axis margins when limits are unset.",
     ),
+    "bar.bar_labels": (
+        False,
+        _validate_bool,
+        "Add value of the bars to the bar labels",
+    ),
     # Country borders
     "borders": (False, _validate_bool, "Toggles country border lines on and off."),
     "borders.alpha": (

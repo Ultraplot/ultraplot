@@ -753,6 +753,10 @@ absolute_width : bool, default: False
 stack, stacked : bool, default: False
     Whether to "stack" bars from successive columns of {y}
     data or plot bars side-by-side in groups.
+bar_labels : bool, default rc["bar.bar_labels"]
+    Whether to show the height values for vertical bars or width values for horizontal bars.
+bar_labels_kw : dict, default None
+    Keywords to format the bar_labels, see :func:`~matplotlib.pyplot.bar_label`.
 %(plot.args_1d_shared)s
 
 Other parameters
@@ -4165,6 +4169,8 @@ class PlotAxes(base.Axes):
         # Parse args
         kw = kwargs.copy()
         kw, extents = self._inbounds_extent(**kw)
+        bar_labels = kw.pop("bar_labels", rc["bar.bar_labels"])
+        bar_labels_kw = kw.pop("bar_labels_kw", {})
         name = "barh" if orientation == "horizontal" else "bar"
         stack = _not_none(stack=stack, stacked=stacked)
         xs, hs, kw = self._parse_1d_args(xs, hs, orientation=orientation, **kw)
@@ -4212,6 +4218,10 @@ class PlotAxes(base.Axes):
                 obj = self._call_negpos(name, x, h, w, b, use_zero=True, **kw)
             else:
                 obj = self._call_native(name, x, h, w, b, **kw)
+            if bar_labels:
+                if isinstance(obj, mcontainer.BarContainer):
+                    self._add_bar_labels(obj, orientation=orientation, **bar_labels_kw)
+
             self._fix_patch_edges(obj, **edgefix_kw, **kw)
             for y in (b, b + h):
                 self._inbounds_xylim(extents, x, y, orientation=orientation)
@@ -4223,6 +4233,59 @@ class PlotAxes(base.Axes):
 
         self._update_guide(objs, **guide_kw)
         return objs[0] if len(objs) == 1 else cbook.silent_list("BarContainer", objs)
+
+    def _add_bar_labels(
+        self,
+        container,
+        *,
+        orientation="horizontal",
+        **kwargs,
+    ):
+        """
+        Automatically add bar labels and rescale the
+        limits to produce a striking visual image.
+        """
+        # Drawing the labels does not rescale the limits to account
+        # for the labels. We therefore first draw them and then
+        # adjust the range for x or y depending on the orientation of the bar
+        bar_labels = self._call_native("bar_label", container, **kwargs)
+
+        which = "x" if orientation == "horizontal" else "y"
+        other_which = "y" if orientation == "horizontal" else "x"
+
+        # Get current limits
+        current_lim = getattr(self, f"get_{which}lim")()
+        other_lim = getattr(self, f"get_{other_which}lim")()
+
+        # Find the maximum extent of text + bar position
+        max_extent = current_lim[1]  # Start with current upper limit
+
+        for label, bar in zip(bar_labels, container):
+            # Get text bounding box
+            bbox = label.get_window_extent(renderer=self.figure.canvas.get_renderer())
+            bbox_data = bbox.transformed(self.transData.inverted())
+
+            if orientation == "horizontal":
+                # For horizontal bars, check if text extends beyond right edge
+                bar_end = bar.get_width() + bar.get_x()
+                text_end = bar_end + bbox_data.width
+                max_extent = max(max_extent, text_end)
+            else:
+                # For vertical bars, check if text extends beyond top edge
+                bar_end = bar.get_height() + bar.get_y()
+                text_end = bar_end + bbox_data.height
+                max_extent = max(max_extent, text_end)
+
+        # Only adjust limits if text extends beyond current range
+        if max_extent > current_lim[1]:
+            padding = (max_extent - current_lim[1]) * 1.25  # Add a bit of padding
+            new_lim = (current_lim[0], max_extent + padding)
+            getattr(self, f"set_{which}lim")(new_lim)
+
+        # Keep the other axis unchanged
+        getattr(self, f"set_{other_which}lim")(other_lim)
+
+        return bar_labels
 
     @inputs._preprocess_or_redirect("x", "height", "width", "bottom")
     @docstring._concatenate_inherited
