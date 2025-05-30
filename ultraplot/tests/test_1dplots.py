@@ -647,3 +647,19 @@ def test_lollipop_graph():
     y = [0, 2, 3]
     ax[2].lollipop(x, y)
     return fig
+
+
+@pytest.mark.mpl_image_compare
+def test_bar_labels():
+    """
+    Simple bar test that rescales the limits if
+    bar labels are added
+    """
+    categories = ["Apple", "Banana", "Orange", "Grape"]
+    percentages = [25.3, 42.1, 18.7, 65.2]
+    fig, ax = uplt.subplots(ncols=2, nrows=1, share=0)
+    ax.format(abc=True, abcloc="ul")
+    df = pd.DataFrame({"Percentages": percentages}, index=categories)
+    ax[0].barh(y="Percentages", data=df, bar_labels=True)
+    ax[1].bar(x="Percentages", data=df, bar_labels=True)
+    return fig
