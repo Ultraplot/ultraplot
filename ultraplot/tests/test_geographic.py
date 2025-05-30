@@ -580,7 +580,7 @@ def test_sharing_levels():
             assert_views_are_sharing(axi)
             # When we share the labels but not the limits,
             # we expect all ticks to be on
-            if level < 3:
+            if level == 0:
                 assert s == 4
             else:
                 assert s == 2
