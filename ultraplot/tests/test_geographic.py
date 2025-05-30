@@ -698,22 +698,6 @@ def test_geo_with_panels():
     time = np.arange(2000, 2005)
     lon_grid, lat_grid = np.meshgrid(lon, lat)
 
-    # Generate mock "Mean (%)" and "Variability (%)" data
-    def generate_mean_pattern():
-        base = 30 * np.exp(-(lat_grid**2) / 1600)
-        sub_n = 25 * np.exp(-((lat_grid - 25) ** 2) / 225)
-        sub_s = 25 * np.exp(-((lat_grid + 25) ** 2) / 225)
-        land_effect = (
-            15 * np.sin(4 * np.pi * lon_grid / 180) * np.cos(2 * np.pi * lat_grid / 180)
-        )
-        return base + sub_n + sub_s + land_effect
-
-    def generate_variability_pattern():
-        base = 15 * np.exp(-((np.abs(lat_grid) - 45) ** 2) / 400)
-        ocean = 10 * np.sin(2 * np.pi * lon_grid / 180) * np.cos(np.pi * lat_grid / 180)
-        seasonal = 8 * np.exp(-((np.abs(lat_grid) - 60) ** 2) / 625)
-        return base + np.abs(ocean) + seasonal
-
     # Zoomed region elevation (Asia region)
     lat_zoom = np.linspace(0, 60, 60)
     lon_zoom = np.linspace(60, 180, 120)
