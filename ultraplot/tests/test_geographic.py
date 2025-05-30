@@ -743,7 +743,7 @@ def test_geo_with_panels():
         ),
     )
     ax[1].pcolormesh(
-        lon_zoom - 180,
+        lon_zoom,
         lat_zoom - 30,
         elevation,
         cmap="glacial",
