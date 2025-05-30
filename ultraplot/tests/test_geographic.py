@@ -727,21 +727,31 @@ def test_geo_with_panels():
     elevation = np.clip(elevation, 0, 4000)
 
     fig, ax = uplt.subplots(nrows=2, proj="cyl")
+    pax = ax[0].panel("r")
+    pax.barh(lat_zoom, elevation.sum(axis=1))
+    pax = ax[1].panel("r")
+    pax.barh(lat_zoom - 30, elevation.sum(axis=1))
     ax[0].pcolormesh(
         lon_zoom,
         lat_zoom,
         elevation,
         cmap="bilbao",
+        colorbar="t",
+        colorbar_kw=dict(
+            align="l",
+            length=0.5,
+        ),
     )
     ax[1].pcolormesh(
         lon_zoom - 180,
         lat_zoom - 30,
         elevation,
         cmap="glacial",
+        colorbar="t",
+        colorbar_kw=dict(
+            align="r",
+            length=0.5,
+        ),
     )
     ax.format(oceancolor="blue", coast=True)
-    pax = ax[0].panel("r")
-    pax.barh(lat_zoom, elevation.sum(axis=1))
-    pax = ax[1].panel("r")
-    pax.barh(lat_zoom - 30, elevation.sum(axis=1))
     return fig
