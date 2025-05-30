@@ -709,7 +709,6 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
             )
             for side in sides:
                 if side in gridlabels and gridlabels[side]:
-                    print(gridlabels[side])
                     tmp[side] = True
 
             axi._toggle_gridliner_labels(**tmp)
