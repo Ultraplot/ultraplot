@@ -397,5 +397,4 @@ def test_center_labels_colormesh_data_type():
             colorbar="r",
         )
 
-    uplt.show(block=1)
     uplt.close(fig)
