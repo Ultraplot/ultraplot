@@ -735,13 +735,13 @@ def test_geo_with_panels():
     )
     ax[1].pcolormesh(
         lon_zoom - 180,
-        lat_zoom,
+        lat_zoom - 30,
         elevation,
         cmap="glacial",
     )
     ax.format(oceancolor="blue", coast=True)
     pax = ax[0].panel("r")
     pax.barh(lat_zoom, elevation.sum(axis=1))
-    pax = ax[1].panel("l")
-    pax.barh(lat_zoom - 180, elevation.sum(axis=1))
+    pax = ax[1].panel("r")
+    pax.barh(lat_zoom - 30, elevation.sum(axis=1))
     return fig
