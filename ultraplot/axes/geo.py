@@ -712,6 +712,8 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
                     tmp[side] = True
 
             axi._toggle_gridliner_labels(**tmp)
+        # Mark the axes as stale to ensure that shared labels are updated.
+        # This is critical for enforcing shared axis labels and tick labels.
         self.stale = True
 
     def _get_gridliner_labels(
