@@ -669,6 +669,10 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
         # If we are not stale just return
         if not self.stale:
             return
+
+        # If we are not  sharing labels, we return early
+        if self.figure._get_sharing_level() < 1:
+            return
         # Turn all labels off
         # Note: this action performs it for all the axes in
         # the figure. We use the stale here to only perform
@@ -705,6 +709,7 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
             )
             for side in sides:
                 if side in gridlabels and gridlabels[side]:
+                    print(gridlabels[side])
                     tmp[side] = True
 
             axi._toggle_gridliner_labels(**tmp)
