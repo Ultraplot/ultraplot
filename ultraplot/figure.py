@@ -946,7 +946,7 @@ class Figure(mfigure.Figure):
 
         def is_border(pos, grid, target, direction):
             x, y = pos
-            # Check if we are at an edge
+            # Check if we are at an edge of the grid (out-of-bounds).
             if x < 0:
                 return True
             elif x > grid.shape[0] - 1:
