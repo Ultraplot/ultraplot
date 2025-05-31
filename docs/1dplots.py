@@ -55,7 +55,7 @@
 #
 #    By default, when choosing the *x* or *y* axis limits,
 #    UltraPlot ignores out-of-bounds data along the other axis if it was explicitly
-#    fixed by :method:`~matplotlib.axes.Axes.set_xlim` or :method:`~matplotlib.axes.Axes.set_ylim` (or,
+#    fixed by :func:`~matplotlib.axes.Axes.set_xlim` or :func:`~matplotlib.axes.Axes.set_ylim` (or,
 #    equivalently, by passing `xlim` or `ylim` to :func:`ultraplot.axes.CartesianAxes.format`).
 #    This can be useful if you wish to restrict the view along a "dependent" variable
 #    axis within a large dataset. To disable this feature, pass ``inbounds=False`` to
@@ -158,7 +158,7 @@ fig.format(
 #    This is the preferred input style for most `seaborn`_ plotting commands.
 #    Also, if you pass a :class:`pint.Quantity` or :class:`~xarray.DataArray`
 #    containing a :class:`pint.Quantity`, UltraPlot will automatically call
-#    :method:`~pint.UnitRegistry.setup_matplotlib` so that the axes become unit-aware.
+#    :func:`~pint.UnitRegistry.setup_matplotlib` so that the axes become unit-aware.
 
 # %%
 import xarray as xr
@@ -354,9 +354,9 @@ fig.format(suptitle="Line plots demo", xlabel="xlabel", ylabel="ylabel")
 #    has the area :rcraw:`lines.markersize` squared. These minimum and maximum marker
 #    sizes can also be specified manually with the `smin` and `smax` keywords,
 #    analogous to `vmin` and `vmax` used to scale the color array `c`. This feature
-#    can be disabled by passing ``absolute_size=True`` to :method:`~ultraplot.axes.PlotAxes.scatter`
-#    or :method:`~ultraplot.axes.PlotAxes.scatterx`. This is done automatically when `seaborn`_
-#    calls :method:`~ultraplot.axes.PlotAxes.scatter` internally.
+#    can be disabled by passing ``absolute_size=True`` to :func:`~ultraplot.axes.PlotAxes.scatter`
+#    or :func:`~ultraplot.axes.PlotAxes.scatterx`. This is done automatically when `seaborn`_
+#    calls :func:`~ultraplot.axes.PlotAxes.scatter` internally.
 
 # %%
 import ultraplot as uplt
@@ -505,7 +505,7 @@ ax.colorbar(m, loc="b", locator=2, label="parametric coordinate")
 
 # .. important::
 #
-#    In matplotlib, bar widths for horizontal :method:`~matplotlib.axes.Axes.barh` plots
+#    In matplotlib, bar widths for horizontal :func:`~matplotlib.axes.Axes.barh` plots
 #    are expressed with the `height` keyword. In UltraPlot, bar widths are always
 #    expressed with the `width` keyword. Note that bar widths can also be passed
 #    as a third positional argument.
@@ -513,9 +513,9 @@ ax.colorbar(m, loc="b", locator=2, label="parametric coordinate")
 #    while UltraPlot bar widths are expressed in step size-relative units by
 #    default. For example, ``width=1`` with a dependent coordinate step
 #    size of ``2`` fills 100% of the space between each bar rather than 50%. This
-#    can be disabled by passing ``absolute_width=True`` to :method:`~ultraplot.axes.PlotAxes.bar`
-#    or :method:`~ultraplot.axes.PlotAxes.barh`. This is done automatically when `seaborn`_ calls
-#    :method:`~ultraplot.axes.PlotAxes.bar` or :func:`~ultraplot.axes.PlotAxes.barh` internally.
+#    can be disabled by passing ``absolute_width=True`` to :func:`~ultraplot.axes.PlotAxes.bar`
+#    or :func:`~ultraplot.axes.PlotAxes.barh`. This is done automatically when `seaborn`_ calls
+#    :func:`~ultraplot.axes.PlotAxes.bar` or :func:`~ultraplot.axes.PlotAxes.barh` internally.
 
 # %%
 import ultraplot as uplt
@@ -607,7 +607,7 @@ uplt.rc.reset()
 # :method:`~ultraplot.axes.PlotAxes.fill_between`, :method:`~ultraplot.axes.PlotAxes.fill_betweenx`
 # (shorthands :func:`~ultraplot.axes.PlotAxes.area`, :func:`~ultraplot.axes.PlotAxes.areax`),
 # :method:`~ultraplot.axes.PlotAxes.vlines`, :method:`~ultraplot.axes.PlotAxes.hlines`,
-# :method:`~ultraplot.axes.PlotAxes.bar`, or :method:`~ultraplot.axes.PlotAxes.barh` commands.
+# :method:`~ultraplot.axes.PlotAxes.bar`, or :func:`~ultraplot.axes.PlotAxes.barh` commands.
 # The default negative and positive colors are controlled with :rcraw:`negcolor` and
 # :rcraw:`poscolor` but the colors can be modified for particular plots by passing
 # ``negcolor=color`` and ``poscolor=color`` to the :class:`~ultraplot.axes.PlotAxes` commands.
