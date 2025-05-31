@@ -53,7 +53,6 @@ Axes classes
 .. automodsumm:: ultraplot.axes
    :toctree: api
 
-
 Top-level functions
 ===================
 
