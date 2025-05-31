@@ -442,11 +442,6 @@ class CartesianAxes(shared._SharedAxes, plot.PlotAxes):
         self.set_adjustable("datalim")
         self._twinned_axes.join(self, ax)
 
-        # if self._sharey:
-        #     ax.yaxis.get_label().set_visible(False)
-        # if self._sharex:
-        #     ax.xaxis.get_label().set_visible(False)
-
         # Format parent and child axes
         self.format(**{f"{sx}loc": OPPOSITE_SIDE.get(kwargs[f"{sx}loc"], None)})
         setattr(ax, f"_alt{sx}_parent", self)
