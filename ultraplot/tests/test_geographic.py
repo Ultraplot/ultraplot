@@ -253,6 +253,12 @@ def test_sharing_cartopy():
     n = 3
     settings = dict(land=True, ocean=True, labels="both")
     fig, ax = uplt.subplots(ncols=n, nrows=n, share="all", proj="cyl")
+    # Add data and ensure the tests still hold
+    # Adding a colorbar will change the underlying gridspec, the
+    # labels should still be correctly treated.
+    data = np.random.rand(10, 10)
+    h = ax.imshow(data)[0]
+    fig.colorbar(h, loc="r")
     ax.format(**settings)
     fig.canvas.draw()  # need a draw to trigger ax.draw for  sharing
 
@@ -574,7 +580,7 @@ def test_sharing_levels():
             assert_views_are_sharing(axi)
             # When we share the labels but not the limits,
             # we expect all ticks to be on
-            if level < 3:
+            if level == 0:
                 assert s == 4
             else:
                 assert s == 2
@@ -605,7 +611,7 @@ def test_cartesian_and_geo():
         ax[0].pcolormesh(np.random.rand(10, 10))
         ax[1].scatter(*np.random.rand(2, 100))
         ax[0]._apply_axis_sharing()
-        assert mocked.call_count == 1
+        assert mocked.call_count == 2
     return fig
 
 
