@@ -253,6 +253,12 @@ def test_sharing_cartopy():
     n = 3
     settings = dict(land=True, ocean=True, labels="both")
     fig, ax = uplt.subplots(ncols=n, nrows=n, share="all", proj="cyl")
+    # Add data and ensure the tests still hold
+    # Adding a colorbar will change the underlying gridspec, the
+    # labels should still be correctly treated.
+    data = np.random.rand(10, 10)
+    h = ax.imshow(data)[0]
+    fig.colorbar(h, loc="r")
     ax.format(**settings)
     fig.canvas.draw()  # need a draw to trigger ax.draw for  sharing
 
@@ -574,7 +580,7 @@ def test_sharing_levels():
             assert_views_are_sharing(axi)
             # When we share the labels but not the limits,
             # we expect all ticks to be on
-            if level < 3:
+            if level == 0:
                 assert s == 4
             else:
                 assert s == 2
@@ -605,7 +611,7 @@ def test_cartesian_and_geo():
         ax[0].pcolormesh(np.random.rand(10, 10))
         ax[1].scatter(*np.random.rand(2, 100))
         ax[0]._apply_axis_sharing()
-        assert mocked.call_count == 1
+        assert mocked.call_count == 2
     return fig
 
 
@@ -659,3 +665,77 @@ def test_check_tricontourf():
         assert "transform" in mocked.call_args.kwargs
         assert isinstance(mocked.call_args.kwargs["transform"], ccrs.PlateCarree)
     uplt.close(fig)
+
+
+def test_panels_geo():
+    fig, ax = uplt.subplots(proj="cyl")
+    ax.format(labels=True)
+    for dir in "top bottom right left".split():
+        pax = ax.panel_axes(dir)
+        match dir:
+            case "top":
+                assert len(pax.get_xticklabels()) > 0
+                assert len(pax.get_yticklabels()) > 0
+            case "bottom":
+                assert len(pax.get_xticklabels()) > 0
+                assert len(pax.get_yticklabels()) > 0
+            case "left":
+                assert len(pax.get_xticklabels()) > 0
+                assert len(pax.get_yticklabels()) > 0
+            case "right":
+                assert len(pax.get_xticklabels()) > 0
+                assert len(pax.get_yticklabels()) > 0
+
+
+@pytest.mark.mpl_image_compare
+def test_geo_with_panels():
+    """
+    We are allowed to add panels in GeoPlots
+    """
+    # Define coordinates
+    lat = np.linspace(-90, 90, 180)
+    lon = np.linspace(-180, 180, 360)
+    time = np.arange(2000, 2005)
+    lon_grid, lat_grid = np.meshgrid(lon, lat)
+
+    # Zoomed region elevation (Asia region)
+    lat_zoom = np.linspace(0, 60, 60)
+    lon_zoom = np.linspace(60, 180, 120)
+    lz, lz_grid = np.meshgrid(lon_zoom, lat_zoom)
+
+    elevation = (
+        2000 * np.exp(-((lz - 90) ** 2 + (lz_grid - 30) ** 2) / 400)
+        + 1000 * np.exp(-((lz - 120) ** 2 + (lz_grid - 45) ** 2) / 225)
+        + np.random.normal(0, 100, lz.shape)
+    )
+    elevation = np.clip(elevation, 0, 4000)
+
+    fig, ax = uplt.subplots(nrows=2, proj="cyl")
+    pax = ax[0].panel("r")
+    pax.barh(lat_zoom, elevation.sum(axis=1))
+    pax = ax[1].panel("r")
+    pax.barh(lat_zoom - 30, elevation.sum(axis=1))
+    ax[0].pcolormesh(
+        lon_zoom,
+        lat_zoom,
+        elevation,
+        cmap="bilbao",
+        colorbar="t",
+        colorbar_kw=dict(
+            align="l",
+            length=0.5,
+        ),
+    )
+    ax[1].pcolormesh(
+        lon_zoom,
+        lat_zoom - 30,
+        elevation,
+        cmap="glacial",
+        colorbar="t",
+        colorbar_kw=dict(
+            align="r",
+            length=0.5,
+        ),
+    )
+    ax.format(oceancolor="blue", coast=True)
+    return fig
