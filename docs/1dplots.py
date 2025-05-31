@@ -604,10 +604,10 @@ uplt.rc.reset()
 #
 # You can use different colors for "negative" and
 # "positive" data by passing ``negpos=True`` to any of the
-# :method:`~ultraplot.axes.PlotAxes.fill_between`, :method:`~ultraplot.axes.PlotAxes.fill_betweenx`
+# :func:`~ultraplot.axes.PlotAxes.fill_between`, :func:`~ultraplot.axes.PlotAxes.fill_betweenx`
 # (shorthands :func:`~ultraplot.axes.PlotAxes.area`, :func:`~ultraplot.axes.PlotAxes.areax`),
-# :method:`~ultraplot.axes.PlotAxes.vlines`, :method:`~ultraplot.axes.PlotAxes.hlines`,
-# :method:`~ultraplot.axes.PlotAxes.bar`, or :func:`~ultraplot.axes.PlotAxes.barh` commands.
+# :func:`~ultraplot.axes.PlotAxes.vlines`, :func:`~ultraplot.axes.PlotAxes.hlines`,
+# :func:`~ultraplot.axes.PlotAxes.bar`, or :func:`~ultraplot.axes.PlotAxes.barh` commands.
 # The default negative and positive colors are controlled with :rcraw:`negcolor` and
 # :rcraw:`poscolor` but the colors can be modified for particular plots by passing
 # ``negcolor=color`` and ``poscolor=color`` to the :class:`~ultraplot.axes.PlotAxes` commands.
