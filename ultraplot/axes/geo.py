@@ -764,11 +764,14 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
             # sharing that is specific for the GeoAxes.
             if not isinstance(axi, GeoAxes):
                 continue
-
+            gridlabels = self._get_gridliner_labels(
+                bottom=True, top=True, left=True, right=True
+            )
             sides = recoded.get(axi, [])
             tmp = default.copy()
             for side in sides:
-                tmp[side] = True
+                if side in gridlabels and gridlabels[side]:
+                    tmp[side] = True
             axi._toggle_gridliner_labels(**tmp)
         self.stale = False
 
@@ -1442,6 +1445,8 @@ class _CartopyAxes(GeoAxes, _GeoAxes):
             "bottom top left right".split(), [bottom, top, left, right]
         ):
             if side != True:
+                continue
+            if self.gridlines_major is None:
                 continue
             sides[dir] = getattr(self.gridlines_major, f"{dir}_label_artists")
         return sides
