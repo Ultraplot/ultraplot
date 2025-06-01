@@ -826,7 +826,7 @@ class Figure(mfigure.Figure):
         # Basemap is currently being developed again so are removing the deprecation warning
         if backend == "basemap":
             warnings._warn_ultraplot(
-                f"{backend=} will be deprecated in next major release (v1.6)"
+                f"{backend=} will be deprecated in next major release (v2.0). See https://github.com/Ultraplot/ultraplot/pull/243"
             )
         return backend
 
