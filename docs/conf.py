@@ -371,6 +371,7 @@ latex_documents = [
     (master_doc, "UltraPlot.tex", "UltraPlot Documentation", "UltraPlot", "manual"),
 ]
 
+primary_domain = "py"
 
 # -- Options for manual page output ------------------------------------------
 
