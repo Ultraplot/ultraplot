@@ -824,6 +824,10 @@ class Figure(mfigure.Figure):
         Handle deprecation of basemap and cartopy package.
         """
         # Basemap is currently being developed again so are removing the deprecation warning
+        if backend == "basemap":
+            warnings._warn_ultraplot(
+                f"{backend=} will be deprecated in next major release (v2.0). See https://github.com/Ultraplot/ultraplot/pull/243"
+            )
         return backend
 
     def _parse_proj(
