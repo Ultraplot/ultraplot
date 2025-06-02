@@ -11,7 +11,13 @@ from ..internals import ic  # noqa: F401
 from ..internals import _pop_kwargs
 from ..utils import _fontsize_to_pt, _not_none, units
 from ..axes import Axes
-from typing import override
+
+try:
+    # From python 3.12
+    from typing import override
+except ImportError:
+    # From Python 3.5
+    from typing_extensions import override
 
 
 class _SharedAxes(object):
