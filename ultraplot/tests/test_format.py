@@ -58,7 +58,7 @@ def test_patch_format():
     """
     Test application of patch args on initialization.
     """
-    fig = uplt.figure(suptitle="Super title")
+    fig = uplt.figure(suptitle="Super title", share=0)
     fig.subplot(
         121, proj="cyl", labels=True, land=True, latlines=20, abcloc="l", abc="[A]"
     )
@@ -82,7 +82,7 @@ def test_multi_formatting():
     Support formatting in multiple projections.
     """
     # Mix Cartesian with a projection
-    fig, axs = uplt.subplots(ncols=2, proj=("cart", "cyl"))
+    fig, axs = uplt.subplots(ncols=2, proj=("cart", "cyl"), share=0)
     axs[0].pcolormesh(np.random.rand(5, 5))
 
     # Warning is raised based on projection. Cart does not have lonlim, latllim or labels
