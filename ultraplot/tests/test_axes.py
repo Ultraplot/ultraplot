@@ -260,6 +260,14 @@ def test_sharing_labels_top_right():
 
 
 def test_sharing_labels_top_right_odd_layout():
+
+    # Helper function to check if the labels
+    # on an axis direction is visible
+    def check_state(numbers: list, state: bool, which: str):
+        for number in numbers:
+            for label in getattr(ax[number], f"get_{which}ticklabels")():
+                assert label.get_visible() == state
+
     layout = [
         [1, 2, 0],
         [1, 2, 5],
@@ -271,11 +279,6 @@ def test_sharing_labels_top_right_odd_layout():
         xticklabelloc="t",
         yticklabelloc="r",
     )
-
-    def check_state(numbers: list, state: bool, which: str):
-        for number in numbers:
-            for label in getattr(ax[number], f"get_{which}ticklabels")():
-                assert label.get_visible() == state
 
     # these correspond to the indices of the axis
     # in the axes array (so the grid number minus 1)
@@ -291,15 +294,15 @@ def test_sharing_labels_top_right_odd_layout():
         [4, 0, 5],
     ]
 
-    fig, ax = uplt.subplots(layout)
+    fig, ax = uplt.subplots(layout, hspace=0.2, wspace=0.2, share=1)
     ax.format(
         xticklabelloc="t",
         yticklabelloc="r",
     )
     # these correspond to the indices of the axis
     # in the axes array (so the grid number minus 1)
-    check_state([0, 3], False, which="y")
+    check_state([0, 3], True, which="y")
     check_state([1, 2, 4], True, which="y")
     check_state([0, 1, 2], True, which="x")
-    check_state([3, 4], False, which="x")
+    check_state([3, 4], True, which="x")
     uplt.close(fig)

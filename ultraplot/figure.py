@@ -914,66 +914,84 @@ class Figure(mfigure.Figure):
         """
 
         gs = self.gridspec
-        all_axes = self.axes
+
+        # Skip colorbars or panels etc
+        all_axes = [axi for axi in self.axes if axi.number is not None]
 
         # Handle empty cases
         nrows, ncols = gs.nrows, gs.ncols
+        border_axes = dict(top=[], bottom=[], left=[], right=[])
         if nrows == 0 or ncols == 0 or not all_axes:
-            return dict(top=[], bottom=[], left=[], right=[])
+            return border_axes
+        # We cannot use the gridspec on the axes as it
+        # is modified when a colorbar is added. Use self.gridspec
+        # as a reference.
+        # Reconstruct the grid based on axis locations. Note that
+        # spanning axes will fit into one of the boxes. Check
+        # this with unittest to see how empty axes are handles
+        grid = np.zeros((gs.nrows, gs.ncols))
+        for axi in all_axes:
+            # Infer coordinate from grdispec
+            spec = axi.get_subplotspec()
+            spans = spec._get_rows_columns()
+            rowspans = spans[:2]
+            colspans = spans[-2:]
 
-        # Find occupied grid cells and valid axes
-        occupied_cells = set()
-        axes_with_spec = []
+            grid[
+                rowspans[0] : rowspans[1] + 1,
+                colspans[0] : colspans[1] + 1,
+            ] = axi.number
+        directions = {
+            "left": (0, -1),
+            "right": (0, 1),
+            "top": (-1, 0),
+            "bottom": (1, 0),
+        }
+
+        def is_border(pos, grid, target, direction):
+            x, y = pos
+            # Check if we are at an edge of the grid (out-of-bounds).
+            if x < 0:
+                return True
+            elif x > grid.shape[0] - 1:
+                return True
+
+            if y < 0:
+                return True
+            elif y > grid.shape[1] - 1:
+                return True
+
+            # Check if we reached a plot or an internal edge
+            if grid[x, y] != target and grid[x, y] > 0:
+                return False
+            if grid[x, y] == 0:
+                return True
+            dx, dy = direction
+            new_pos = (x + dx, y + dy)
+            return is_border(new_pos, grid, target, direction)
+
+        from itertools import product
 
         for axi in all_axes:
             spec = axi.get_subplotspec()
-            if spec is not None:
-                axes_with_spec.append((axi, spec))
-                r0, r1 = spec.rowspan.start, spec.rowspan.stop
-                c0, c1 = spec.colspan.start, spec.colspan.stop
-                for r in range(r0, r1):
-                    for c in range(c0, c1):
-                        occupied_cells.add((r, c))
-
-        if not axes_with_spec:
-            return dict(top=[], bottom=[], left=[], right=[])
-
-        # Initialize border axes sets
-        border_axes_sets = dict(top=set(), bottom=set(), left=set(), right=set())
-
-        # Check each axis against border criteria
-        for axi, spec in axes_with_spec:
-            r0, r1 = spec.rowspan.start, spec.rowspan.stop
-            c0, c1 = spec.colspan.start, spec.colspan.stop
-
-            # Check top border
-            if r0 == 0 or (
-                r0 == 1 and any((0, c) not in occupied_cells for c in range(c0, c1))
-            ):
-                border_axes_sets["top"].add(axi)
-
-            # Check bottom border
-            if r1 == nrows or (
-                r1 == nrows - 1
-                and any((nrows - 1, c) not in occupied_cells for c in range(c0, c1))
-            ):
-                border_axes_sets["bottom"].add(axi)
-
-            # Check left border
-            if c0 == 0 or (
-                c0 == 1 and any((r, 0) not in occupied_cells for r in range(r0, r1))
-            ):
-                border_axes_sets["left"].add(axi)
-
-            # Check right border
-            if c1 == ncols or (
-                c1 == ncols - 1
-                and any((r, ncols - 1) not in occupied_cells for r in range(r0, r1))
-            ):
-                border_axes_sets["right"].add(axi)
-
-        # Convert sets to lists
-        return {key: list(val) for key, val in border_axes_sets.items()}
+            spans = spec._get_rows_columns()
+            rowspan = spans[:2]
+            colspan = spans[-2:]
+            # Check all cardinal directions. When we find a
+            #  border for any starting conditions we break and
+            # consider it a border. This could mean that for some
+            # partial overlaps we consider borders that should
+            # not be borders -- we are conservative in this
+            # regard
+            for direction, d in directions.items():
+                xs = range(rowspan[0], rowspan[1] + 1)
+                ys = range(colspan[0], colspan[1] + 1)
+                for x, y in product(xs, ys):
+                    pos = (x, y)
+                    if is_border(pos=pos, grid=grid, target=axi.number, direction=d):
+                        border_axes[direction].append(axi)
+                        break
+        return border_axes
 
     def _get_align_coord(self, side, axs, includepanels=False):
         """
