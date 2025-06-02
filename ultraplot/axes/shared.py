@@ -11,6 +11,7 @@ from ..internals import ic  # noqa: F401
 from ..internals import _pop_kwargs
 from ..utils import _fontsize_to_pt, _not_none, units
 from ..axes import Axes
+from typing import override
 
 
 class _SharedAxes(object):
@@ -186,10 +187,11 @@ class _SharedAxes(object):
             for lab in obj.get_ticklabels():
                 lab.update(kwtext_extra)
 
-    # Override matplotlib defaults to handle multiple axis sharing
+    @override
     def sharex(self, other):
         return self._share_axis_with(other, which="x")
 
+    @override
     def sharey(self, other):
         self._share_axis_with(other, which="y")
 
