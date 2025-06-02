@@ -324,8 +324,6 @@ def test_sharing_labels_with_layout(
     # Format axes with the specified tick label locations
     ax.format(**tick_loc)
 
-    uplt.show(block=1)
-
     # Calculate the indices where labels should be hidden
     all_indices = list(range(len(ax)))
     y_hidden_indices = [i for i in all_indices if i not in y_visible_indices]

@@ -1907,6 +1907,16 @@ class Figure(mfigure.Figure):
             ax.format(rc_kw=rc_kw, rc_mode=rc_mode, skip_figure=True, **kw, **kwargs)
             ax.number = store_old_number
 
+            # If we are updating all axes; we recompute
+            # which labels should be showing and which should be
+            # off
+            if len(axs) == len(self.axes):
+                for which in "xy":
+                    labelloc = f"{which}ticklabelloc"
+                    if labelloc not in kw:
+                        continue
+                    ax._configure_border_axes_tick_visibility(which=which)
+
         # Warn unused keyword argument(s)
         kw = {
             key: value
