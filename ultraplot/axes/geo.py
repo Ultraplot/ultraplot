@@ -597,6 +597,9 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
         if level > 1 and limits:
             self._share_limits_with(other, which=which)
 
+        if level >= 1 and labels:
+            self._share_labels_with_others()
+
     @override
     def _sharey_setup(self, sharey, *, labels=True, limits=True):
         """
@@ -678,53 +681,16 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
                 target_axis=self._lataxis,
             )
 
-        # If we are not stale just return
+        # This block is apart of the draw sequence as the
+        # gridliner object is created late in the
+        # build chain.
         if not self.stale:
             return
-
-        # If we are not  sharing labels, we return early
-        if self.figure._get_sharing_level() < 1:
+        if self.figure._get_sharing_level() == 0:
             return
-        # Turn all labels off
-        # Note: this action performs it for all the axes in
-        # the figure. We use the stale here to only perform
-        # it once as it is an expensive action.
-        border_axes = self.figure._get_border_axes()
-        # Recode:
-        recoded = {}
-        for direction, axes in border_axes.items():
-            for axi in axes:
-                recoded[axi] = recoded.get(axi, []) + [direction]
-
-        # We turn off the tick labels when the scale and
-        # ticks are shared (level >= 3)
-        are_ticks_on = False
-
-        default = dict(
-            left=are_ticks_on,
-            right=are_ticks_on,
-            top=are_ticks_on,
-            bottom=are_ticks_on,
-        )
-        for axi in self.figure.axes:
-            # If users call colorbar on the figure
-            # an axis is added which needs to skip the
-            # sharing that is specific for the GeoAxes.
-            if not isinstance(axi, GeoAxes):
-                continue
-
-            sides = recoded.get(axi, [])
-            tmp = default.copy()
-
-            gridlabels = self._get_gridliner_labels(
-                bottom=True, top=True, left=True, right=True
-            )
-            for side in sides:
-                if side in gridlabels and gridlabels[side]:
-                    tmp[side] = True
-
-            axi._toggle_gridliner_labels(**tmp)
-        self.stale = True
+        # Share labels with all levels higher or equal
+        # to 1.
+        self._share_labels_with_others()
 
     def _get_gridliner_labels(
         self,
@@ -779,9 +745,46 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
             target_axis.set_view_interval(*source_axis.get_view_interval())
             target_axis.set_minor_locator(source_axis.get_minor_locator())
 
-        if not self.stale:
-            return
+    def _share_labels_with_others(self):
+        """
+        Helpers function to ensure the labels
+        are shared for rectilinear GeoAxes.
+        """
+        # Turn all labels off
+        # Note: this action performs it for all the axes in
+        # the figure. We use the stale here to only perform
+        # it once as it is an expensive action.
+        border_axes = self.figure._get_border_axes()
+        # Recode:
+        recoded = {}
+        for direction, axes in border_axes.items():
+            for axi in axes:
+                recoded[axi] = recoded.get(axi, []) + [direction]
 
+        # We turn off the tick labels when the scale and
+        # ticks are shared (level >= 3)
+        are_ticks_on = False
+        default = dict(
+            left=are_ticks_on,
+            right=are_ticks_on,
+            top=are_ticks_on,
+            bottom=are_ticks_on,
+        )
+        for axi in self.figure.axes:
+            # If users call colorbar on the figure
+            # an axis is added which needs to skip the
+            # sharing that is specific for the GeoAxes.
+            if not isinstance(axi, GeoAxes):
+                continue
+            gridlabels = self._get_gridliner_labels(
+                bottom=True, top=True, left=True, right=True
+            )
+            sides = recoded.get(axi, [])
+            tmp = default.copy()
+            for side in sides:
+                if side in gridlabels and gridlabels[side]:
+                    tmp[side] = True
+            axi._toggle_gridliner_labels(**tmp)
         self.stale = False
 
     @override
@@ -1454,6 +1457,8 @@ class _CartopyAxes(GeoAxes, _GeoAxes):
             "bottom top left right".split(), [bottom, top, left, right]
         ):
             if side != True:
+                continue
+            if self.gridlines_major is None:
                 continue
             sides[dir] = getattr(self.gridlines_major, f"{dir}_label_artists")
         return sides
