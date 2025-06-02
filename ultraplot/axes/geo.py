@@ -557,43 +557,6 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
     def _is_rectilinear(self):
         return _is_rectilinear_projection(self)
 
-    def _is_panel_group_member(self, other: "GeoAxes") -> bool:
-        """
-        Determine if the current axes and another axes belong to the same panel group.
-
-        Two axes belong to the same panel group if any of the following is true:
-        1. One axis is the parent of the other
-        2. Both axes are panels sharing the same parent
-
-        Parameters
-        ----------
-        other : Axes
-            The other axes to compare with
-
-        Returns
-        -------
-        bool
-            True if both axes belong to the same panel group, False otherwise
-        """
-        # Case 1: self is a panel of other (other is the parent)
-        if self._panel_parent is other:
-            return True
-
-        # Case 2: other is a panel of self (self is the parent)
-        if other._panel_parent is self:
-            return True
-
-        # Case 3: both are panels of the same parent
-        if (
-            self._panel_parent
-            and other._panel_parent
-            and self._panel_parent is other._panel_parent
-        ):
-            return True
-
-        # Not in the same panel group
-        return False
-
     def __share_axis_setup(
         self,
         other: "GeoAxes",

@@ -551,18 +551,6 @@ class CartesianAxes(shared._SharedAxes, plot.PlotAxes):
             )
         return side
 
-    def _is_panel_group_member(self, other):
-        """
-        Return whether the axes belong in a panel sharing stack..
-        """
-        return (
-            self._panel_parent is other  # other is child panel
-            or other._panel_parent is self  # other is main subplot
-            or other._panel_parent
-            and self._panel_parent  # ...
-            and other._panel_parent is self._panel_parent  # other is sibling panel
-        )
-
     def _sharex_limits(self, sharex):
         """
         Safely share limits and tickers without resetting things.
