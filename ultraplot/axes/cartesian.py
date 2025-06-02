@@ -387,10 +387,6 @@ class CartesianAxes(shared._SharedAxes, plot.PlotAxes):
             if level > 0:
                 labels._transfer_label(axis.label, self._sharex.xaxis.label)
                 axis.label.set_visible(False)
-            if level > 2:
-                # WARNING: Cannot set NullFormatter because shared axes share the
-                # same Ticker(). Instead use approach copied from mpl subplots().
-                axis.set_tick_params(which="both", labelbottom=False, labeltop=False)
         # Y axis
         axis = self.yaxis
         if self._sharey is not None and axis.get_visible():
@@ -398,8 +394,6 @@ class CartesianAxes(shared._SharedAxes, plot.PlotAxes):
             if level > 0:
                 labels._transfer_label(axis.label, self._sharey.yaxis.label)
                 axis.label.set_visible(False)
-            if level > 2:
-                axis.set_tick_params(which="both", labelleft=False, labelright=False)
         axis.set_minor_formatter(mticker.NullFormatter())
 
     def _add_alt(self, sx, **kwargs):
@@ -448,40 +442,6 @@ class CartesianAxes(shared._SharedAxes, plot.PlotAxes):
         getattr(ax, f"{sy}axis").set_visible(False)
         getattr(ax, "patch").set_visible(False)
         return ax
-
-    def _adjust_border_labels(
-        self,
-        border_axes,
-        labeltop=False,
-        labelright=False,
-    ):
-        """
-        Cleanly adjust border axes to show or hide top/right tick labels
-        without breaking axis sharing.
-        """
-        for side, axs in border_axes.items():
-            for ax in axs:
-                # Skip twin axes that are already handled by main axes
-                if ax in self._twinned_axes:
-                    continue
-
-                if side == "right" and labelright:
-                    # Show labels on the right, hide on the left
-                    ax.tick_params(labelright=True, labelleft=False)
-
-                elif side == "left" and labelright:
-                    # Ensure we don’t also show labels on the right if not mirrored
-                    if ax not in border_axes.get("right", []):
-                        ax.tick_params(labelright=False, labelleft=True)
-
-                elif side == "top" and labeltop:
-                    # Show labels on top, hide on bottom
-                    ax.tick_params(labeltop=True, labelbottom=False)
-
-                elif side == "bottom" and labeltop:
-                    # Ensure we don’t also show labels on top if not mirrored
-                    if ax not in border_axes.get("top", []):
-                        ax.tick_params(labeltop=False, labelbottom=True)
 
     def _dual_scale(self, s, funcscale=None):
         """
@@ -671,6 +631,19 @@ class CartesianAxes(shared._SharedAxes, plot.PlotAxes):
         # labels. But this is done after the fact -- tickers are still shared.
         if level > 1 and limits:
             self._sharex_limits(sharex)
+        # Add the tick label visibility control here for higher sharing levels
+        if level > 2:
+            # Check if this is a border axis
+            border_axes = self.figure._get_border_axes()
+            is_top_border = self in border_axes.get("top", [])
+
+            # Only hide labels based on border status
+            if is_top_border:
+                # For top border axes, only hide bottom labels
+                self.xaxis.set_tick_params(which="both", labelbottom=False)
+            else:
+                # For non-border axes, hide both top and bottom labels
+                self.xaxis.set_tick_params(which="both", labelbottom=False)
 
     def _sharey_setup(self, sharey, *, labels=True, limits=True):
         """
@@ -692,6 +665,21 @@ class CartesianAxes(shared._SharedAxes, plot.PlotAxes):
             self._sharey = sharey
         if level > 1 and limits:
             self._sharey_limits(sharey)
+        # Add the tick label visibility control here for higher sharing levels
+        if level > 2:
+            # Check if this is a border axis
+            border_axes = self.figure._get_border_axes()
+            is_right_border = self in border_axes.get("right", [])
+
+            # Only hide labels based on border status
+            if is_right_border:
+                # For right border axes, only hide left labels
+                self.yaxis.set_tick_params(which="both", labelleft=False)
+            else:
+                # For non-border axes, hide both left and right labels
+                self.yaxis.set_tick_params(
+                    which="both", labelleft=False, labelright=False
+                )
 
     def _update_formatter(
         self,
@@ -946,25 +934,6 @@ class CartesianAxes(shared._SharedAxes, plot.PlotAxes):
             kw.update({side: side in tickloc for side in sides})
             kw.update({"label" + side: False for side in sides if side not in tickloc})
         self.tick_params(axis=s, which="both", **kw)
-
-        # When axes are shared, the reference
-        # is the top left and bottom left plot
-        # for labels that are top or right
-        # this will plot them on those first two plots
-        # we can fool mpl to share them by turning
-        # sharex/y  off for those plots. We still
-        # update the ticks with the prior step, and
-        # keep the references in _shared_axes for all plots
-        labelright = kw.pop("labelright", None)
-        labeltop = kw.pop("labeltop", None)
-
-        nrows, ncols = self.figure.gridspec.nrows, self.figure.gridspec.ncols
-        border_axes = {}
-        if labelright and self.figure._sharey or labeltop and self.figure._sharex:
-            border_axes = self.figure._get_border_axes()
-            self._adjust_border_labels(
-                border_axes, labeltop=labeltop, labelright=labelright
-            )
 
         # Apply the axis label and offset label locations
         # Uses ugly mpl 3.3+ tick_top() tick_bottom() kludge for offset location
