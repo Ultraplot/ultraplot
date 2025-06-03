@@ -620,8 +620,6 @@ class CartesianAxes(shared._SharedAxes, plot.PlotAxes):
         if level > 1 and limits:
             self._sharex_limits(sharex)
         # Add the tick label visibility control here for higher sharing levels
-        if level > 2:
-            self._configure_border_axes_tick_visibility(which="x")
 
     def _sharey_setup(self, sharey, *, labels=True, limits=True):
         """
@@ -643,41 +641,6 @@ class CartesianAxes(shared._SharedAxes, plot.PlotAxes):
             self._sharey = sharey
         if level > 1 and limits:
             self._sharey_limits(sharey)
-        # Add the tick label visibility control here for higher sharing levels
-        if level > 2:
-            self._configure_border_axes_tick_visibility(which="y")
-
-    def _configure_border_axes_tick_visibility(self, *, which: str):
-        """
-        Configure the tick visibility for border axes.
-
-        Parameters:
-            which (str): The axis to configure ('x' or 'y').
-        """
-        # Check if this is a border axis
-        border_axes = self.figure._get_border_axes()
-        is_right_border = self in border_axes.get("right", [])
-        is_top_border = self in border_axes.get("top", [])
-
-        # Only hide labels based on border status
-        if "x" in which:
-            if is_top_border:
-                # For top border axes, only hide bottom labels
-                self.xaxis.set_tick_params(which="both", labelbottom=False)
-            else:
-                # For non-border axes, hide both top and bottom labels
-                self.xaxis.set_tick_params(
-                    which="both", labelbottom=False, labeltop=False
-                )
-        if "y" in which:
-            if is_right_border:
-                # For right border axes, only hide left labels
-                self.yaxis.set_tick_params(which="both", labelleft=False)
-            else:
-                # For non-border axes, hide both left and right labels
-                self.yaxis.set_tick_params(
-                    which="both", labelleft=False, labelright=False
-                )
 
     def _update_formatter(
         self,

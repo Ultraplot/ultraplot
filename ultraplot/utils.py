@@ -7,9 +7,12 @@ Various tools that may be useful while making plots.
 import functools
 import re
 from numbers import Integral, Real
+from dataclasses import dataclass
+from typing import Generator
 
 import matplotlib.colors as mcolors
 import matplotlib.font_manager as mfonts
+from matplotlib.gridspec import GridSpec
 import numpy as np
 from matplotlib import rcParams as rc_matplotlib
 
@@ -902,6 +905,137 @@ def units(
         else:
             raise ValueError(f"Invalid input units {units!r}. " + options)
     return result[0] if singleton else result
+
+
+def _get_subplot_layout(
+    gs: "GridSpec",
+    all_axes: list["paxes.Axes"],
+    same_type=True,
+) -> tuple[np.ndarray[int, int], np.ndarray[int, int], dict[type, int]]:
+    """
+    Helper function to determine the grid layout of axes in a GridSpec. It returns a grid of axis numbers and a grid of axis types. This function is used internally to determine the layout of axes in a GridSpec.
+    """
+    grid = np.zeros((gs.nrows, gs.ncols))
+    grid_axis_type = np.zeros((gs.nrows, gs.ncols))
+    # Collect grouper based on kinds of axes. This
+    # would allow us to share labels across types
+    seen_axis_types = {type(axi) for axi in all_axes}
+    seen_axis_types = {type: idx for idx, type in enumerate(seen_axis_types)}
+
+    for axi in all_axes:
+        # Infer coordinate from grdispec
+        spec = axi.get_subplotspec()
+        spans = spec._get_rows_columns()
+        rowspans = spans[:2]
+        colspans = spans[-2:]
+
+        grid[
+            rowspans[0] : rowspans[1] + 1,
+            colspans[0] : colspans[1] + 1,
+        ] = axi.number
+
+        # Allow grouping of mixed types
+        axis_type = 1
+        if not same_type:
+            axis_type = seen_axis_types.get(type(axi), 1)
+
+        grid_axis_type[rowspans[0] : rowspans[1] + 1, colspans[0] : colspans[1] + 1] = (
+            axis_type
+        )
+    return grid, grid_axis_type, seen_axis_types
+
+
+@dataclass
+class Crawler:
+    """
+    A crawler is used to find edges of axes in a grid layout.
+    This is useful for determining whether to turn shared labels on or depending on the position of an axis in the grispec.
+    It crawls over the grid in all four cardinal directions and checks whether it reaches a border of the grid or an axis of a different type. It was created as adding colorbars will
+    change the underlying gridspec and therefore we cannot rely
+    on the original gridspec to determine whether an axis is a border or not.
+    """
+
+    ax: object
+    grid: np.ndarray[int, int]
+    grid_axis_type: np.ndarray[int, int]
+    # The axis number
+    target: int
+    # The kind of axis, e.g. 1 for CartesianAxes, 2 for
+    # PolarAxes, etc.
+    axis_type: int
+    directions = {
+        "left": (0, -1),
+        "right": (0, 1),
+        "top": (-1, 0),
+        "bottom": (1, 0),
+    }
+
+    def find_edges(self) -> Generator[tuple[str, bool], None, None]:
+        """
+        Check all cardinal directions. When we find a
+        border for any starting conditions we break and
+        consider it a border. This could mean that for some
+        partial overlaps we consider borders that should
+        not be borders -- we are conservative in this
+        regard.
+        """
+        for direction, d in self.directions.items():
+            yield self.find_edge_for(direction, d)
+
+    def find_edge_for(
+        self,
+        direction: str,
+        d: tuple[int, int],
+    ) -> tuple[str, bool]:
+        from itertools import product
+
+        """
+        Setup search for a specific direction.
+        """
+
+        # Retrieve where the axis is in the grid
+        spec = self.ax.get_subplotspec()
+        spans = spec._get_rows_columns()
+        rowspan = spans[:2]
+        colspan = spans[-2:]
+        xs = range(rowspan[0], rowspan[1] + 1)
+        ys = range(colspan[0], colspan[1] + 1)
+        is_border = False
+        for x, y in product(xs, ys):
+            pos = (x, y)
+            if self.is_border(pos, d):
+                is_border = True
+                break
+        return direction, is_border
+
+    def is_border(
+        self,
+        pos: tuple[int, int],
+        direction: tuple[int, int],
+    ) -> bool:
+        """
+        Recursively move over the grid by following the direction.
+        """
+        x, y = pos
+        # Check if we are at an edge of the grid (out-of-bounds).
+        if x < 0:
+            return True
+        elif x > self.grid.shape[0] - 1:
+            return True
+
+        if y < 0:
+            return True
+        elif y > self.grid.shape[1] - 1:
+            return True
+
+        # Check if we reached a plot or an internal edge
+        if self.grid[x, y] != self.target and self.grid[x, y] > 0:
+            return False
+        if self.grid[x, y] == 0 or self.grid_axis_type[x, y] != self.axis_type:
+            return True
+        dx, dy = direction
+        pos = (x + dx, y + dy)
+        return self.is_border(pos, direction)
 
 
 # Deprecations
