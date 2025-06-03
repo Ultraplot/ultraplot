@@ -1215,6 +1215,8 @@ class Figure(mfigure.Figure):
 
         if ax.number:
             self._subplot_dict[ax.number] = ax
+        if self._get_sharing_level() > 2:
+            self._share_labels_with_others()
         return ax
 
     def _unshare_axes(self):
