@@ -2278,7 +2278,7 @@ class _BasemapAxes(GeoAxes):
                 which=which,
                 **{side: True},
             )
-            for label in labels[side]:
+            for label in labels.get(side, []):
                 if label.get_visible():
                     return True
         return False

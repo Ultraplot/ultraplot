@@ -387,6 +387,18 @@ class CartesianAxes(shared._SharedAxes, plot.PlotAxes):
             if level > 0:
                 labels._transfer_label(axis.label, self._sharex.xaxis.label)
                 axis.label.set_visible(False)
+            if level > 2:
+                # WARNING: Cannot set NullFormatter because shared axes share the
+                # same Ticker(). Instead use approach copied from mpl subplots().
+                ticks = axis.get_tick_params()
+                labeltop = labelbottom = False
+
+                border_axes = self.figure._get_border_axes()
+                if ticks["top"] and self in border_axes["top"]:
+                    labeltop = True
+                axis.set_tick_params(
+                    which="both", labeltop=labeltop, labelbottom=labelbottom
+                )
         # Y axis
         axis = self.yaxis
         if self._sharey is not None and axis.get_visible():
@@ -394,6 +406,16 @@ class CartesianAxes(shared._SharedAxes, plot.PlotAxes):
             if level > 0:
                 labels._transfer_label(axis.label, self._sharey.yaxis.label)
                 axis.label.set_visible(False)
+            if level > 2:
+                ticks = axis.get_tick_params()
+                labelright = labelleft = False
+                border_axes = self.figure._get_border_axes()
+                if ticks["right"] and self in border_axes["right"]:
+                    labelright = True
+
+                axis.set_tick_params(
+                    which="both", labelleft=labelleft, labelright=labelright
+                )
         axis.set_minor_formatter(mticker.NullFormatter())
 
     def _add_alt(self, sx, **kwargs):
@@ -619,7 +641,6 @@ class CartesianAxes(shared._SharedAxes, plot.PlotAxes):
         # labels. But this is done after the fact -- tickers are still shared.
         if level > 1 and limits:
             self._sharex_limits(sharex)
-        # Add the tick label visibility control here for higher sharing levels
 
     def _sharey_setup(self, sharey, *, labels=True, limits=True):
         """

@@ -905,7 +905,9 @@ class Figure(mfigure.Figure):
         axs = [ax for ax in axs if ax.get_visible()]
         return axs
 
-    def _get_border_axes(self, *, same_type=False) -> dict[str, list[paxes.Axes]]:
+    def _get_border_axes(
+        self, *, same_type=False, force_recalculate=False
+    ) -> dict[str, list[paxes.Axes]]:
         """
         Identifies axes located on the outer boundaries of the GridSpec layout.
 
@@ -913,6 +915,8 @@ class Figure(mfigure.Figure):
         containing a list of axes on that border.
         """
 
+        if hasattr(self, "_cached_border_axes") and not force_recalculate:
+            return self._cached_border_axes
         gs = self.gridspec
 
         # Skip colorbars or panels etc
@@ -951,6 +955,7 @@ class Figure(mfigure.Figure):
             for direction, is_border in crawler.find_edges():
                 if is_border:
                     border_axes[direction].append(axi)
+        self._cached_border_axes = border_axes
         return border_axes
 
     def _get_align_coord(self, side, axs, includepanels=False):
@@ -1215,8 +1220,9 @@ class Figure(mfigure.Figure):
 
         if ax.number:
             self._subplot_dict[ax.number] = ax
-        if self._get_sharing_level() > 2:
-            self._share_labels_with_others()
+        # Invalidate border axes cache
+        if hasattr(self, "_cached_border_axes"):
+            delattr(self, "_cached_border_axes")
         return ax
 
     def _unshare_axes(self):
