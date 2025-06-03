@@ -566,7 +566,7 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
         limits: bool,
     ):
         level = getattr(self.figure, f"_share{which}")
-        if getattr(self, f"_panel_share{which}_group") and self.is_panel_group_member(
+        if getattr(self, f"_panel_share{which}_group") and self._is_panel_group_member(
             other
         ):
             level = 3
