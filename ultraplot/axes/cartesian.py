@@ -396,6 +396,8 @@ class CartesianAxes(shared._SharedAxes, plot.PlotAxes):
                 border_axes = self.figure._get_border_axes()
                 if ticks["top"] and self in border_axes["top"]:
                     labeltop = True
+                if ticks["bottom"] and self in border_axes["bottom"]:
+                    labelbottom = True
                 axis.set_tick_params(
                     which="both", labeltop=labeltop, labelbottom=labelbottom
                 )
@@ -412,7 +414,8 @@ class CartesianAxes(shared._SharedAxes, plot.PlotAxes):
                 border_axes = self.figure._get_border_axes()
                 if ticks["right"] and self in border_axes["right"]:
                     labelright = True
-
+                if ticks["left"] and self in border_axes["left"]:
+                    labelleft = True
                 axis.set_tick_params(
                     which="both", labelleft=labelleft, labelright=labelright
                 )
