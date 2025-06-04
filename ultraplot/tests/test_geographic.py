@@ -253,14 +253,7 @@ def test_sharing_cartopy():
     n = 3
     settings = dict(land=True, ocean=True, labels="both")
     fig, ax = uplt.subplots(ncols=n, nrows=n, share="all", proj="cyl")
-    # Add data and ensure the tests still hold
-    # Adding a colorbar will change the underlying gridspec, the
-    # labels should still be correctly treated.
-    data = np.random.rand(10, 10)
-    h = ax.imshow(data)[0]
-    fig.colorbar(h, loc="r")
     ax.format(**settings)
-    fig.canvas.draw()  # need a draw to trigger ax.draw for  sharing
 
     expectations = (
         [True, False, False, True],
@@ -304,27 +297,76 @@ def test_sharing_cartopy():
     return fig
 
 
+@pytest.mark.mpl_image_compare
+def test_sharing_cartopy_with_colorbar():
+
+    def are_labels_on(ax, which=["top", "bottom", "right", "left"]) -> tuple[bool]:
+        gl = ax.gridlines_major
+
+        on = [False, False, False, False]
+        for idx, labeler in enumerate(which):
+            if getattr(gl, f"{labeler}_labels"):
+                on[idx] = True
+        return on
+
+    n = 3
+    settings = dict(land=True, ocean=True, labels="both")
+    fig, ax = uplt.subplots(ncols=n, nrows=n, share="all", proj="cyl")
+    ax.format(**settings)
+    fig, ax = uplt.subplots(
+        ncols=3,
+        nrows=3,
+        proj="cyl",
+        share="all",
+    )
+
+    data = np.random.rand(10, 10)
+    h = ax.imshow(data)[0]
+    ax.format(land=True, labels="both")  # need this otherwise no labels are printed
+    fig.colorbar(h, loc="r")
+
+    expectations = (
+        [True, False, False, True],
+        [True, False, False, False],
+        [True, False, True, False],
+        [False, False, False, True],
+        [False, False, False, False],
+        [False, False, True, False],
+        [False, True, False, True],
+        [False, True, False, False],
+        [False, True, True, False],
+    )
+    for axi in ax:
+        state = are_labels_on(axi)
+        expectation = expectations[axi.number - 1]
+        for i, j in zip(state, expectation):
+            assert i == j
+    return fig
+
+
 def test_toggle_gridliner_labels():
     """
     Test whether we can toggle the labels on or off
     """
     # Cartopy backend
     fig, ax = uplt.subplots(proj="cyl", backend="cartopy")
-    ax[0]._toggle_gridliner_labels(left=False, bottom=False)
+    ax[0]._toggle_gridliner_labels(labelleft=False, labelbottom=False)
     gl = ax[0].gridlines_major
 
     assert gl.left_labels == False
     assert gl.right_labels == False
     assert gl.top_labels == False
     assert gl.bottom_labels == False
-    ax[0]._toggle_gridliner_labels(top=True)
+    ax[0]._toggle_gridliner_labels(labeltop=True)
     assert gl.top_labels == True
     uplt.close(fig)
 
     # Basemap backend
     fig, ax = uplt.subplots(proj="cyl", backend="basemap")
     ax.format(land=True, labels="both")  # need this otherwise no labels are printed
-    ax[0]._toggle_gridliner_labels(left=False, bottom=False, right=False, top=False)
+    ax[0]._toggle_gridliner_labels(
+        labelleft=False, labelbottom=False, labelright=False, labeltop=False
+    )
     gl = ax[0].gridlines_major
 
     # All label are off
@@ -334,7 +376,7 @@ def test_toggle_gridliner_labels():
                 assert label.get_visible() == False
 
     # Should be off
-    ax[0]._toggle_gridliner_labels(top=True)
+    ax[0]._toggle_gridliner_labels(labeltop=True)
     # Gridliner labels are not added for the top (and I guess right for GeoAxes).
     # Need to figure out how this is set in matplotlib
     dir_labels = ax[0]._get_gridliner_labels(
@@ -464,10 +506,10 @@ def test_get_gridliner_labels_cartopy():
 
     for bottom, top, left, right in product(bools, bools, bools, bools):
         ax[0]._toggle_gridliner_labels(
-            left=left,
-            right=right,
-            top=top,
-            bottom=bottom,
+            labelleft=left,
+            labelright=right,
+            labeltop=top,
+            labelbottom=bottom,
         )
         fig.canvas.draw()  # need draw to retrieve the labels
         labels = ax[0]._get_gridliner_labels(

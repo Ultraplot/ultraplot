@@ -3185,6 +3185,23 @@ class Axes(maxes.Axes):
             return True
 
         # Not in the same panel group
+
+    def _is_ticklabel_on(self, side: str) -> bool:
+        """
+        Check if tick labels are on for the specified sides.
+        """
+        # NOTE: This is a helper function to check if tick labels are on
+        # for the specified sides. It returns True if any of the specified
+        # sides have tick labels turned on.
+        axis = self.xaxis
+        if side in ["labelleft", "labelright"]:
+            axis = self.yaxis
+        label = "label1"
+        if side in ["labelright", "labeltop"]:
+            label = "label2"
+        for tick in axis.get_major_ticks():
+            if getattr(tick, label).get_visible():
+                return True
         return False
 
     @docstring._snippet_manager
