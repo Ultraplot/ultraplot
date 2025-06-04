@@ -1030,7 +1030,27 @@ class Crawler:
 
         # Check if we reached a plot or an internal edge
         if self.grid[x, y] != self.target and self.grid[x, y] > 0:
+            # check if we reached a border that has the same x and y span
+            ispan = self.ax.get_subplotspec()._get_rows_columns()
+            onumber = int(self.grid[x, y])
+            if onumber == 0:
+                return True
+            other = self.ax.figure.axes[onumber - 1].get_subplotspec()
+            ospan = other._get_rows_columns()
+
+            rowspan = ispan[1] + 1 - ispan[0]
+            colspan = ispan[3] + 1 - ispan[2]
+            orowspan = ospan[1] + 1 - ospan[0]
+            ocolspan = ospan[3] + 1 - ospan[2]
+            dx, dy = direction
+            if dx == 0:
+                if rowspan != orowspan:
+                    return True
+            elif dy == 0:
+                if colspan != ocolspan:
+                    return True
             return False
+
         if self.grid[x, y] == 0 or self.grid_axis_type[x, y] != self.axis_type:
             return True
         dx, dy = direction

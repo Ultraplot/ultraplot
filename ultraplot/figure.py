@@ -938,7 +938,6 @@ class Figure(mfigure.Figure):
             all_axes,
             same_type=same_type,
         )
-
         # We check for all axes is they are a border or not
         # Note we could also write the crawler in a way where
         # it find the borders by moving around in the grid, without spawning on each axis point. We may change
