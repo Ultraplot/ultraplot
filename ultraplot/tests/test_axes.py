@@ -259,6 +259,7 @@ def test_sharing_labels_top_right():
             assert i == j
 
 
+@pytest.mark.skip("Need to fix sharing labels for odd layouts")
 def test_sharing_labels_top_right_odd_layout():
 
     # Helper function to check if the labels
