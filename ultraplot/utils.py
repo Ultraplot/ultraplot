@@ -1038,10 +1038,11 @@ class Crawler:
             other = self.ax.figure.axes[onumber - 1].get_subplotspec()
             ospan = other._get_rows_columns()
 
-            rowspan = ispan[1] + 1 - ispan[0]
-            colspan = ispan[3] + 1 - ispan[2]
-            orowspan = ospan[1] + 1 - ospan[0]
-            ocolspan = ospan[3] + 1 - ospan[2]
+            # Check if our spans are the same
+            rowspan = ispan[1] - ispan[0]
+            colspan = ispan[3] - ispan[2]
+            orowspan = ospan[1] - ospan[0]
+            ocolspan = ospan[3] - ospan[2]
             dx, dy = direction
             if dx == 0:
                 if rowspan != orowspan:
