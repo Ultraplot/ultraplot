@@ -1696,8 +1696,9 @@ class Axes(maxes.Axes):
             indicator.rectangle.update(kwargs)
             indicator.rectangle.set_bounds(bounds)  # otherwise the patch is not updated
             indicator.rectangle.set_zorder(self.get_zorder() + 1)  # Ensure rectangle appears above axes
+            z = self.get_zorder() + 1
             for connector in indicator.connectors:
-                connector.set_zorder(self.get_zorder() + 1)
+                connector.set_zorder(z)
                 connector.update(kwargs)
         else:
             indicator = parent.indicate_inset(bounds, self, **kwargs)
