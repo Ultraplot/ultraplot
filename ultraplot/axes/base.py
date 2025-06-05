@@ -1695,6 +1695,7 @@ class Axes(maxes.Axes):
             indicator = self._inset_zoom_artists
             indicator.rectangle.update(kwargs)
             indicator.rectangle.set_bounds(bounds)  # otherwise the patch is not updated
+            indicator.rectangle.set_zorder(self.get_zorder() + 1)  # Ensure rectangle appears above axes
             for connector in indicator.connectors:
                 connector.set_zorder(self.get_zorder() + 1)
                 connector.update(kwargs)
