@@ -739,3 +739,22 @@ def test_geo_with_panels():
     )
     ax.format(oceancolor="blue", coast=True)
     return fig
+
+
+@pytest.mark.mpl_image_compare
+def test_inset_axes_geographic():
+    fig, ax = uplt.subplots(proj="cyl")
+    ax.format(labels=True)
+
+    e = [126, 30, 8.8, 10]
+    ix = ax.inset_axes(
+        e,
+        zoom=True,
+        zoom_kw={"fc": "r", "ec": "b"},
+        transform="data",
+    )
+    ix.format(
+        lonlim=(100, 110),
+        latlim=(20, 30),
+    )
+    return fig
