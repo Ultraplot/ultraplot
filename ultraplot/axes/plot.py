@@ -733,6 +733,16 @@ matplotlib.axes.Axes.scatter
 docstring._snippet_manager["plot.scatter"] = _scatter_docstring.format(y="y")
 docstring._snippet_manager["plot.scatterx"] = _scatter_docstring.format(y="x")
 
+_beewarm_docstring = """
+Beeswarm plot with SHAP-style feature value coloring.
+
+%(plot.scatter)s
+color_values : array-like, optional
+    Values to use for coloring points. Should match the shape of the data.
+    Enables SHAP-style feature value coloring.
+color_by_feature : array-like, optional
+    Alias for color_values. Values to color points by (e.g., feature values).
+"""
 docstring._snippet_manager["plot.beeswarm"] = _scatter_docstring.format(y="y")
 
 # Bar function docstring
