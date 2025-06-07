@@ -685,16 +685,17 @@ def test_beeswarm():
         all_y.extend(y_vals)
         all_colors.extend(color_vals)
 
-    fig, (ax1, ax2) = uplt.subplots(ncols=2, share=0)
+    fig, (ax1, ax2, ax3) = uplt.subplots(ncols=3, share=0)
 
     # Traditional series coloring
     ax1.beeswarm(all_x, all_y, orientation="vertical", size=30, alpha=0.7)
-    ax1.set_title("Traditional Beeswarm")
-    ax1.set_xlabel("Category")
-    ax1.set_ylabel("Value")
-    ax1.set_xticks(categories)
-    ax1.set_xticklabels(["Group A", "Group B", "Group C", "Group D"])
-
+    ax1.format(
+        title="Beeswarm Plot",
+        xlabel="Category",
+        ylabel="Value",
+        xticks=categories,
+        xticklabels=["Group A", "Group B", "Group C", "Group D"],
+    )
     # # Feature value coloring
     ax2.beeswarm(
         all_x,
@@ -704,9 +705,17 @@ def test_beeswarm():
         size=30,
         colorbar="r",
     )
-    ax2.set_title("Feature Value Coloring")
-    ax2.set_ylabel("Category")
-    ax2.set_xlabel("Value")
-    ax2.set_yticks(categories)
-    ax2.set_yticklabels(["Group A", "Group B", "Group C", "Group D"])
+    ax2.format(
+        xlabel="Category",
+        ylabel="Value",
+        title="Feature Value Beeswarm",
+        yticks=categories,
+        yticklabels=["Group A", "Group B", "Group C", "Group D"],
+    )
+
+    # A test to ensure that code using a singular x is also working
+    ax3.beeswarm(all_x[0], all_y)
+    ax3.format(
+        title="Singular X Beeswarm",
+    )
     return fig
