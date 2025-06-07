@@ -742,6 +742,8 @@ color_values : array-like, optional
     Enables SHAP-style feature value coloring.
 color_by_feature : array-like, optional
     Alias for color_values. Values to color points by (e.g., feature values).
+n_iter: int, default: 50
+    Number of iterations for the beeswarm algorithm. More iterations can lead long time to plot but better point separation.
 """
 docstring._snippet_manager["plot.beeswarm"] = _scatter_docstring.format(y="y")
 
