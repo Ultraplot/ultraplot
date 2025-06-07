@@ -1699,7 +1699,6 @@ class Axes(maxes.Axes):
                 self.get_zorder() + 1
             )  # Ensure rectangle appears above axes
             z = self.get_zorder() + 1
-            indicator.rectangle.set_zorder(z)
             for connector in indicator.connectors:
                 connector.set_zorder(z)
                 connector.update(kwargs)
