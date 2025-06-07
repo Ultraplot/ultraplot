@@ -3491,14 +3491,17 @@ class PlotAxes(base.Axes):
         # Handle 2D y array (multiple series)
         if y.ndim == 2:
             # x should be 1D with length matching y.shape[1]
-            if x.ndim != 1 or len(x) != y.shape[1]:
+            if x.shape[-1] != y.shape[1]:
                 raise ValueError(
                     "For 2D y array, x must be 1D with length matching y.shape[1]"
                 )
 
             # Flatten y and repeat x for each series
             n_series, n_points = y.shape
-            x_flat = np.tile(x, n_series)
+            x_flat = x.flatten()
+            if x.ndim == 1:
+                x_flat = np.tile(x, n_series)
+
             y_flat = y.flatten()
 
             # Handle color values for 2D case

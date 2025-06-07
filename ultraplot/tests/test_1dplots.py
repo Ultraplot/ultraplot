@@ -673,22 +673,26 @@ def test_beeswarm():
 
     # Create some sample data for beeswarm
     categories = [0, 1, 2, 3]
-    all_x, all_y, all_colors = [], [], []
-
+    n_points = 40
+    all_x = np.empty((len(categories), n_points))
+    all_y = np.empty((len(categories), n_points))
+    all_colors = np.zeros((len(categories), n_points))
     for i, cat in enumerate(categories):
-        n_points = 40
-        x_vals = [cat] * n_points
-        y_vals = np.random.normal(cat * 1.5, 0.6, n_points)
-        # Feature values for coloring (e.g., temperature, intensity, etc.)
+        all_x[i] = np.ones(n_points) * cat
+        all_y[i] = np.random.normal(cat * 1.5, 0.6, n_points)
         color_vals = np.random.uniform(0, 1, n_points)
-        all_x.extend(x_vals)
-        all_y.extend(y_vals)
-        all_colors.extend(color_vals)
+        all_colors[i] = color_vals
 
     fig, (ax1, ax2, ax3) = uplt.subplots(ncols=3, share=0)
 
     # Traditional series coloring
-    ax1.beeswarm(all_x, all_y, orientation="vertical", size=30, alpha=0.7)
+    ax1.beeswarm(
+        all_x,
+        all_y,
+        orientation="vertical",
+        size=30,
+        alpha=0.7,
+    )
     ax1.format(
         title="Beeswarm Plot",
         xlabel="Category",
@@ -718,4 +722,5 @@ def test_beeswarm():
     ax3.format(
         title="Singular X Beeswarm",
     )
+    uplt.show(block=1)
     return fig
