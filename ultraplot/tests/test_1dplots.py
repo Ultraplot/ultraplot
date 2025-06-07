@@ -722,5 +722,4 @@ def test_beeswarm():
     ax3.format(
         title="Singular X Beeswarm",
     )
-    uplt.show(block=1)
     return fig
