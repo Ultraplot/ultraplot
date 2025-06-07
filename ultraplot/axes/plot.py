@@ -3452,9 +3452,16 @@ class PlotAxes(base.Axes):
         )
 
     @inputs._preprocess_or_redirect("x", "y", allow_extra=True)
-    def _add_beeswarm(self, *args, orientation: str = "horizontal", **kwargs):
+    def _apply_beeswarm(
+        self,
+        x: np.ndarray,
+        y: np.ndarray,
+        orientation: str = "horizontal",
+        n_iter: int = 50,
+        *args,
+        **kwargs,
+    ) -> "Collection":
 
-        x, y = args[1], args[2]
         cmap = kwargs.pop("cmap", rc["cmap.diverging"])
         size = kwargs.pop("s", kwargs.pop("size", 20))  # Default marker size
         colorbar = kwargs.pop("colorbar", False)
@@ -3548,7 +3555,7 @@ class PlotAxes(base.Axes):
 
                 # Check for collisions with existing points
                 for attempt in range(
-                    50
+                    n_iter
                 ):  # Max attempts to find non-overlapping position
                     collision = False
 
