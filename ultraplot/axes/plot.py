@@ -733,7 +733,7 @@ matplotlib.axes.Axes.scatter
 docstring._snippet_manager["plot.scatter"] = _scatter_docstring.format(y="y")
 docstring._snippet_manager["plot.scatterx"] = _scatter_docstring.format(y="x")
 
-_beewarm_docstring = """
+_beeswarm_docstring = """
 Beeswarm plot with SHAP-style feature value coloring.
 
 %(plot.scatter)s
