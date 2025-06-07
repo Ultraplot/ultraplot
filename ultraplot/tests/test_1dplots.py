@@ -672,7 +672,6 @@ def test_beeswarm():
     """
 
     # Create some sample data for beeswarm
-    np.random.seed(42)
     categories = [0, 1, 2, 3]
     all_x, all_y, all_colors = [], [], []
 
