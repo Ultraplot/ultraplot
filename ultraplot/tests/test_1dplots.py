@@ -663,3 +663,51 @@ def test_bar_labels():
     ax[0].barh(y="Percentages", data=df, bar_labels=True)
     ax[1].bar(x="Percentages", data=df, bar_labels=True)
     return fig
+
+
+@pytest.mark.mpl_image_compare
+def test_beeswarm():
+    """
+    Test beeswarm plots with both traditional and feature value coloring.
+    """
+
+    # Create some sample data for beeswarm
+    np.random.seed(42)
+    categories = [0, 1, 2, 3]
+    all_x, all_y, all_colors = [], [], []
+
+    for i, cat in enumerate(categories):
+        n_points = 40
+        x_vals = [cat] * n_points
+        y_vals = np.random.normal(cat * 1.5, 0.6, n_points)
+        # Feature values for coloring (e.g., temperature, intensity, etc.)
+        color_vals = np.random.uniform(0, 1, n_points)
+        all_x.extend(x_vals)
+        all_y.extend(y_vals)
+        all_colors.extend(color_vals)
+
+    fig, (ax1, ax2) = uplt.subplots(ncols=2, share=0)
+
+    # Traditional series coloring
+    ax1.beeswarm(all_x, all_y, orientation="vertical", size=30, alpha=0.7)
+    ax1.set_title("Traditional Beeswarm")
+    ax1.set_xlabel("Category")
+    ax1.set_ylabel("Value")
+    ax1.set_xticks(categories)
+    ax1.set_xticklabels(["Group A", "Group B", "Group C", "Group D"])
+
+    # # Feature value coloring
+    ax2.beeswarm(
+        all_x,
+        all_y,
+        color_values=all_colors,
+        orientation="horizontal",
+        size=30,
+        colorbar="r",
+    )
+    ax2.set_title("Feature Value Coloring")
+    ax2.set_ylabel("Category")
+    ax2.set_xlabel("Value")
+    ax2.set_yticks(categories)
+    ax2.set_yticklabels(["Group A", "Group B", "Group C", "Group D"])
+    return fig
