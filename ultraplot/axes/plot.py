@@ -3443,7 +3443,6 @@ class PlotAxes(base.Axes):
         # Allow orientation to be overridden in kwargs
         orientation = kwargs.pop("orientation", "horizontal")
         return self._apply_beeswarm(
-            "beeswarm",
             *args,
             orientation=orientation,
             color_values=color_values,
