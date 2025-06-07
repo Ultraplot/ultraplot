@@ -683,7 +683,12 @@ def test_beeswarm():
         color_vals = np.random.uniform(0, 1, n_points)
         all_colors[i] = color_vals
 
-    fig, (ax1, ax2, ax3) = uplt.subplots(ncols=3, share=0)
+    fig, (ax1, ax2, ax3, ax4) = uplt.subplots(
+        nrows=2,
+        ncols=2,
+        share=0,
+        refaspect=1,
+    )
 
     # Traditional series coloring
     ax1.beeswarm(
@@ -707,7 +712,10 @@ def test_beeswarm():
         color_values=all_colors,
         orientation="horizontal",
         size=30,
-        colorbar="r",
+        colorbar="ul",
+        colorbar_kw=dict(
+            title="Feature Score",
+        ),
     )
     ax2.format(
         xlabel="Category",
@@ -718,8 +726,20 @@ def test_beeswarm():
     )
 
     # A test to ensure that code using a singular x is also working
-    ax3.beeswarm(all_x[0], all_y)
+    ax3.beeswarm(
+        all_x[0],
+        all_y,
+        color_values=all_colors,
+        colorbar="ur",
+        colorbar_kw=dict(
+            title="Feature Score",
+        ),
+    )
     ax3.format(
-        title="Singular X Beeswarm",
+        title="Singular X with groups",
+    )
+    ax4.beeswarm(all_x[0], all_y[0])
+    ax4.format(
+        title="Singular Beeswarm",
     )
     return fig
