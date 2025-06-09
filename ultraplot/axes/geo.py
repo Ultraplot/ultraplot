@@ -775,10 +775,10 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
         which = "lon" if lon else "lat"
         array = np.atleast_1d(array).tolist()
         if len(array) == 1 and array[0] is None:
-            array = [None] * 5
+            array = [False] * 5
         elif all(isinstance(_, str) for _ in array):
             strings = array  # iterate over list of strings
-            array = [None] * 5
+            array = [False] * 5
             opts = ("left", "right", "bottom", "top", "geo")
             for string in strings:
                 string = string.replace("left", "l")
@@ -1756,7 +1756,7 @@ class _CartopyAxes(GeoAxes, _GeoAxes):
             elif lat:
                 sides[side] = "y"
             elif lon is not None or lat is not None:
-                sides[side] = None
+                sides[side] = False
         self._toggle_gridliner_labels(**sides)
 
     def _update_minor_gridlines(self, longrid=None, latgrid=None, nsteps=None):

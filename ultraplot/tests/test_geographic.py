@@ -775,4 +775,4 @@ def test_tick_toggler():
         assert ax[0]._is_ticklabel_on(f"label{pos}") != False
         ax[0]._toggle_gridliner_labels(pos, False)
         assert ax[0]._is_ticklabel_on(f"label{pos}") != True
-        uplt.pyplot.pause(3)
+        uplt.pyplot.pause(1)
