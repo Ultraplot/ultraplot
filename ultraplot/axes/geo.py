@@ -778,7 +778,7 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
             array = [None] * 5
         elif all(isinstance(_, str) for _ in array):
             strings = array  # iterate over list of strings
-            array = [None] * 5
+            array = [False] * 5
             opts = ("left", "right", "bottom", "top", "geo")
             for string in strings:
                 string = string.replace("left", "l")
