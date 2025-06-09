@@ -1312,6 +1312,7 @@ class Figure(mfigure.Figure):
                     turn_on_or_off[sidelabel] = True
 
             if isinstance(axi, paxes.GeoAxes):
+                print(axi.number)
                 axi._toggle_gridliner_labels(**turn_on_or_off)
             else:
                 axi.tick_params(which=which, **turn_on_or_off)

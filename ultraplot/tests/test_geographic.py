@@ -18,7 +18,7 @@ def test_geographic_single_projection():
 
 @pytest.mark.mpl_image_compare
 def test_geographic_multiple_projections():
-    fig = uplt.figure()
+    fig = uplt.figure(share=0)
     # Add projections
     gs = uplt.GridSpec(ncols=2, nrows=3, hratios=(1, 1, 1.4))
     for i, proj in enumerate(("cyl", "hammer", "npstere")):
@@ -37,9 +37,10 @@ def test_geographic_multiple_projections():
         latlabels="r",  # or lonlabels=True, labels=True, etc.
     )
     fig.subplotgrid[-2:].format(
-        latlines=20, lonlines=30
+        latlines=20,
+        lonlines=30,
+        labels=True,
     )  # dense gridlines for polar plots
-    uplt.rc.reset()
     return fig
 
 
