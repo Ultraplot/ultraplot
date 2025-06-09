@@ -913,14 +913,16 @@ class Figure(mfigure.Figure):
         containing a list of axes on that border.
         """
 
+        border_axes = dict(top=[], bottom=[], left=[], right=[])
         gs = self.gridspec
+        if gs is None:
+            return border_axes
 
         # Skip colorbars or panels etc
         all_axes = [axi for axi in self.axes if axi.number is not None]
 
         # Handle empty cases
         nrows, ncols = gs.nrows, gs.ncols
-        border_axes = dict(top=[], bottom=[], left=[], right=[])
         if nrows == 0 or ncols == 0 or not all_axes:
             return border_axes
         # We cannot use the gridspec on the axes as it
