@@ -1455,7 +1455,7 @@ class _CartopyAxes(GeoAxes, _GeoAxes):
             if toggle is None:
                 continue
             if getattr(gl, side) != toggle:
-                sftattr(gl, side, toggle)
+                setattr(gl, side, toggle)
         if geo is not None:  # only cartopy 0.20 supported but harmless
             setattr(gl, "geo_labels", geo)
 
