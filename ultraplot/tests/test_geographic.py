@@ -41,6 +41,7 @@ def test_geographic_multiple_projections():
         lonlines=30,
         labels=True,
     )  # dense gridlines for polar plots
+    uplt.rc.reset()
     return fig
 
 
