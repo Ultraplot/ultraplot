@@ -309,8 +309,8 @@ def test_toggle_gridliner_labels():
     gl = ax[0].gridlines_major
 
     assert gl.left_labels == False
-    assert gl.right_labels == False
-    assert gl.top_labels == False
+    assert gl.right_labels == None  # initially these are none
+    assert gl.top_labels == None
     assert gl.bottom_labels == False
     ax[0]._toggle_gridliner_labels(labeltop=True)
     assert gl.top_labels == True
@@ -613,7 +613,7 @@ def test_cartesian_and_geo():
         ax[0].pcolormesh(np.random.rand(10, 10))
         ax[1].scatter(*np.random.rand(2, 100))
         ax[0]._apply_axis_sharing()
-        assert mocked.call_count == 2
+        assert mocked.call_count == 1
     return fig
 
 

@@ -1315,7 +1315,8 @@ class Figure(mfigure.Figure):
                 print(axi.number)
                 axi._toggle_gridliner_labels(**turn_on_or_off)
             else:
-                axi.tick_params(which=which, **turn_on_or_off)
+                continue
+                # axi.tick_params(which=which, **turn_on_or_off)
 
     def _toggle_axis_sharing(
         self,
