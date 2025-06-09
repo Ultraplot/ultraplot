@@ -763,7 +763,6 @@ def test_inset_axes_geographic():
 def test_tick_toggler():
     fig, ax = uplt.subplots(proj="cyl")
     for pos in "left right top bottom".split():
-        ax.format(lonlabels=False, latlabels=False)
         if pos in "left right".split():
             ax.format(latlabels=pos)
         else:
@@ -772,7 +771,8 @@ def test_tick_toggler():
         # Check if the labels are on
         # For cartopy backend labelleft can contain
         # False or x or y
-        assert ax[0]._is_ticklabel_on(f"label{pos}") != False
-        ax[0]._toggle_gridliner_labels(pos, False)
-        assert ax[0]._is_ticklabel_on(f"label{pos}") != True
-        uplt.pyplot.pause(1)
+        label = f"label{pos}"
+        assert ax[0]._is_ticklabel_on(label) != False
+        ax[0]._toggle_gridliner_labels(**{label: False})
+        assert ax[0]._is_ticklabel_on(label) != True
+    uplt.close(fig)
