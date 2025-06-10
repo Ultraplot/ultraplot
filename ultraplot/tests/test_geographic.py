@@ -783,7 +783,7 @@ def test_tick_toggler():
 @pytest.mark.mpl_image_compare
 def test_sharing_cartopy_with_colorbar():
 
-    def are_labels_on(ax, which=["top", "bottom", "right", "left"]) -> tuple[bool]:
+    def are_labels_on(ax, which=("top", "bottom", "right", "left")) -> tuple[bool]:
         gl = ax.gridlines_major
 
         on = [False, False, False, False]
