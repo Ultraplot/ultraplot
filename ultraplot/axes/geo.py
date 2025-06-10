@@ -585,9 +585,6 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
         if level > 1 and limits:
             self._share_limits_with(other, which=which)
 
-        if level >= 1 and labels:
-            self._share_labels_with_others()
-
     @override
     def _sharey_setup(self, sharey, *, labels=True, limits=True):
         """
@@ -676,9 +673,6 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
             return
         if self.figure._get_sharing_level() == 0:
             return
-        # Share labels with all levels higher or equal
-        # to 1.
-        self._share_labels_with_others()
 
     def _get_gridliner_labels(
         self,
@@ -687,33 +681,30 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
         left=None,
         right=None,
     ):
-        assert NotImplementedError("Should be implemented by Cartopy or Basemap Axes")
+        raise NotImplementedError("Should be implemented by Cartopy or Basemap Axes")
 
     def _toggle_gridliner_labels(
         self,
-        top=None,
-        bottom=None,
-        left=None,
-        right=None,
+        labeltop=None,
+        labelbottom=None,
+        labelleft=None,
+        labelright=None,
         geo=None,
     ):
         # For BasemapAxes the gridlines are dicts with key as the coordinate and  keys the line and label
         # We override the dict here assuming the labels are mut excl due to the N S E W extra chars
-        if self.gridlines_major is None:
-            return
         if any(i is None for i in self.gridlines_major):
             return
         gridlabels = self._get_gridliner_labels(
-            bottom=bottom, top=top, left=left, right=right
+            bottom=labelbottom, top=labeltop, left=labelleft, right=labelright
         )
-        for direction, toggle in zip(
-            "bottom top left right".split(),
-            [bottom, top, left, right],
-        ):
-            if toggle is not None:
-                for label in gridlabels.get(direction, []):
-                    label.set_visible(toggle)
-        self.stale = True
+        bools = [labelbottom, labeltop, labelleft, labelright]
+        directions = "bottom top left right".split()
+        for direction, toggle in zip(directions, bools):
+            if toggle is None:
+                continue
+            for label in gridlabels.get(direction, []):
+                label.set_visible(toggle)
 
     def _handle_axis_sharing(
         self,
@@ -732,48 +723,6 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
         if self.figure._get_sharing_level() >= 2:
             target_axis.set_view_interval(*source_axis.get_view_interval())
             target_axis.set_minor_locator(source_axis.get_minor_locator())
-
-    def _share_labels_with_others(self):
-        """
-        Helpers function to ensure the labels
-        are shared for rectilinear GeoAxes.
-        """
-        # Turn all labels off
-        # Note: this action performs it for all the axes in
-        # the figure. We use the stale here to only perform
-        # it once as it is an expensive action.
-        border_axes = self.figure._get_border_axes()
-        # Recode:
-        recoded = {}
-        for direction, axes in border_axes.items():
-            for axi in axes:
-                recoded[axi] = recoded.get(axi, []) + [direction]
-
-        # We turn off the tick labels when the scale and
-        # ticks are shared (level >= 3)
-        are_ticks_on = False
-        default = dict(
-            left=are_ticks_on,
-            right=are_ticks_on,
-            top=are_ticks_on,
-            bottom=are_ticks_on,
-        )
-        for axi in self.figure.axes:
-            # If users call colorbar on the figure
-            # an axis is added which needs to skip the
-            # sharing that is specific for the GeoAxes.
-            if not isinstance(axi, GeoAxes):
-                continue
-            gridlabels = self._get_gridliner_labels(
-                bottom=True, top=True, left=True, right=True
-            )
-            sides = recoded.get(axi, [])
-            tmp = default.copy()
-            for side in sides:
-                if side in gridlabels and gridlabels[side]:
-                    tmp[side] = True
-            axi._toggle_gridliner_labels(**tmp)
-        self.stale = False
 
     @override
     def draw(self, renderer=None, *args, **kwargs):
@@ -1465,29 +1414,46 @@ class _CartopyAxes(GeoAxes, _GeoAxes):
             top_labels = "xlabels_top"
         return (left_labels, right_labels, bottom_labels, top_labels)
 
+    @override
+    def _is_ticklabel_on(self, side: str) -> bool:
+        """
+        Helper function to check if tick labels are on for a given side.
+        """
+        # Deal with different cartopy versions
+        left_labels, right_labels, bottom_labels, top_labels = self._get_side_labels()
+        if self.gridlines_major is None:
+            return False
+        elif side == "labelleft":
+            return getattr(self.gridlines_major, left_labels)
+        elif side == "labelright":
+            return getattr(self.gridlines_major, right_labels)
+        elif side == "labelbottom":
+            return getattr(self.gridlines_major, bottom_labels)
+        elif side == "labeltop":
+            return getattr(self.gridlines_major, top_labels)
+        else:
+            raise ValueError(f"Invalid side: {side}")
+
+    @override
     def _toggle_gridliner_labels(
         self,
-        left=None,
-        right=None,
-        bottom=None,
-        top=None,
+        labelleft=None,
+        labelright=None,
+        labelbottom=None,
+        labeltop=None,
         geo=None,
     ):
         """
         Toggle gridliner labels across different cartopy versions.
         """
-        left_labels, right_labels, bottom_labels, top_labels = (
-            _CartopyAxes._get_side_labels()
-        )
+        # Retrieve the property name depending
+        # on cartopy version.
+        side_labels = _CartopyAxes._get_side_labels()
+        togglers = (labelleft, labelright, labelbottom, labeltop)
         gl = self.gridlines_major
-        if left is not None:
-            setattr(gl, left_labels, left)
-        if right is not None:
-            setattr(gl, right_labels, right)
-        if bottom is not None:
-            setattr(gl, bottom_labels, bottom)
-        if top is not None:
-            setattr(gl, top_labels, top)
+        for toggle, side in zip(togglers, side_labels):
+            if getattr(gl, side) != toggle:
+                setattr(gl, side, toggle)
         if geo is not None:  # only cartopy 0.20 supported but harmless
             setattr(gl, "geo_labels", geo)
 
@@ -1779,7 +1745,7 @@ class _CartopyAxes(GeoAxes, _GeoAxes):
         sides = dict()
         # The ordering of these sides are important. The arrays are ordered lrbtg
         for side, lon, lat in zip(
-            "left right bottom top geo".split(), lonarray, latarray
+            "labelleft labelright labelbottom labeltop geo".split(), lonarray, latarray
         ):
             if lon and lat:
                 sides[side] = True
@@ -1789,7 +1755,8 @@ class _CartopyAxes(GeoAxes, _GeoAxes):
                 sides[side] = "y"
             elif lon is not None or lat is not None:
                 sides[side] = False
-        self._toggle_gridliner_labels(**sides)
+        if sides:
+            self._toggle_gridliner_labels(**sides)
 
     def _update_minor_gridlines(self, longrid=None, latgrid=None, nsteps=None):
         """
@@ -1975,6 +1942,40 @@ class _BasemapAxes(GeoAxes):
                     object = object[0]
                 if isinstance(object, mtext.Text):
                     object.set_visible(False)
+
+    def _get_gridliner_labels(
+        self,
+        bottom=None,
+        top=None,
+        left=None,
+        right=None,
+    ):
+        directions = "left right top bottom".split()
+        bools = [left, right, top, bottom]
+        sides = {}
+        for direction, is_on in zip(directions, bools):
+            if is_on is None:
+                continue
+            gl = self.gridlines_major[0]
+            if direction in ["left", "right"]:
+                gl = self.gridlines_major[1]
+            for loc, (lines, labels) in gl.items():
+                for label in labels:
+                    position = label.get_position()
+                    match direction:
+                        case "top" if position[1] > 0:
+                            add = True
+                        case "bottom" if position[1] < 0:
+                            add = True
+                        case "left" if position[0] < 0:
+                            add = True
+                        case "right" if position[0] > 0:
+                            add = True
+                        case _:
+                            add = False
+                    if add:
+                        sides.setdefault(direction, []).append(label)
+        return sides
 
     def _get_lon0(self):
         """
@@ -2196,7 +2197,7 @@ class _BasemapAxes(GeoAxes):
         )
         sides = {}
         for side, lonon, laton in zip(
-            "left right top bottom geo".split(), lonarray, latarray
+            "labelleft labelright labeltop labelbottom geo".split(), lonarray, latarray
         ):
             if lonon or laton:
                 sides[side] = True
@@ -2225,13 +2226,7 @@ class _BasemapAxes(GeoAxes):
             axis.isDefault_minloc = True
 
     @override
-    def _get_gridliner_labels(
-        self,
-        bottom=None,
-        top=None,
-        left=None,
-        right=None,
-    ):
+    def _is_ticklabel_on(self, side: str) -> bool:
         # For basemap object, the text is organized
         # as a dictionary. The keys are the numerical
         # location values, and the values are a list
@@ -2245,10 +2240,10 @@ class _BasemapAxes(GeoAxes):
         def group_labels(
             labels: list[mtext.Text],
             which: str,
-            bottom=None,
-            top=None,
-            left=None,
-            right=None,
+            labelbottom=None,
+            labeltop=None,
+            labelleft=None,
+            labelright=None,
         ) -> dict[str, list[mtext.Text]]:
             group = {}
             # We take zero here as a baseline
@@ -2256,34 +2251,36 @@ class _BasemapAxes(GeoAxes):
                 position = label.get_position()
                 target = None
                 if which == "x":
-                    if bottom is not None and position[1] < 0:
-                        target = "bottom"
-                    elif top is not None and position[1] >= 0:
-                        target = "top"
+                    if labelbottom is not None and position[1] < 0:
+                        target = "labelbottom"
+                    elif labeltop is not None and position[1] >= 0:
+                        target = "labeltop"
                 else:
-                    if left is not None and position[0] < 0:
-                        target = "left"
-                    elif right is not None and position[0] >= 0:
-                        target = "right"
+                    if labelleft is not None and position[0] < 0:
+                        target = "labelleft"
+                    elif labelright is not None and position[0] >= 0:
+                        target = "labelright"
                 if target is not None:
                     group[target] = group.get(target, []) + [label]
             return group
 
+        gl = self.gridlines_major[0]
+        which = "x"
+        if side in ["labelleft", "labelright"]:
+            gl = self.gridlines_major[1]
+            which = "y"
         # Group the text object based on their location
         grouped = {}
-        for which, gl in zip("xy", self.gridlines_major):
-            for loc, (line, labels) in gl.items():
-                tmp = group_labels(
-                    labels=labels,
-                    which=which,
-                    bottom=bottom,
-                    top=top,
-                    left=left,
-                    right=right,
-                )
-                for key, values in tmp.items():
-                    grouped[key] = grouped.get(key, []) + values
-        return grouped
+        for loc, (line, labels) in gl.items():
+            labels = group_labels(
+                labels=labels,
+                which=which,
+                **{side: True},
+            )
+            for label in labels.get(side, []):
+                if label.get_visible():
+                    return True
+        return False
 
 
 # Apply signature obfuscation after storing previous signature

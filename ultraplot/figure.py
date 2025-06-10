@@ -913,14 +913,16 @@ class Figure(mfigure.Figure):
         containing a list of axes on that border.
         """
 
+        border_axes = dict(top=[], bottom=[], left=[], right=[])
         gs = self.gridspec
+        if gs is None:
+            return border_axes
 
         # Skip colorbars or panels etc
         all_axes = [axi for axi in self.axes if axi.number is not None]
 
         # Handle empty cases
         nrows, ncols = gs.nrows, gs.ncols
-        border_axes = dict(top=[], bottom=[], left=[], right=[])
         if nrows == 0 or ncols == 0 or not all_axes:
             return border_axes
         # We cannot use the gridspec on the axes as it
@@ -1258,6 +1260,7 @@ class Figure(mfigure.Figure):
         return ax
 
     def _unshare_axes(self):
+
         for which in "xyz":
             self._toggle_axis_sharing(which=which, share=False)
         # Force setting extent
@@ -1267,6 +1270,66 @@ class Figure(mfigure.Figure):
         for ax in self.axes:
             if isinstance(ax, paxes.GeoAxes) and hasattr(ax, "set_global"):
                 ax.set_global()
+
+    def _share_labels_with_others(self, *, which="both"):
+        """
+        Helpers function to ensure the labels
+        are shared for rectilinear GeoAxes.
+        """
+        # Only apply sharing of labels when we are
+        # actually sharing labels.
+        if self._get_sharing_level() == 0:
+            return
+        # Turn all labels off
+        # Note: this action performs it for all the axes in
+        # the figure. We use the stale here to only perform
+        # it once as it is an expensive action.
+        border_axes = self._get_border_axes()
+        # Recode:
+        recoded = {}
+        for direction, axes in border_axes.items():
+            for axi in axes:
+                recoded[axi] = recoded.get(axi, []) + [direction]
+
+        are_ticks_on = False
+        default = dict(
+            labelleft=are_ticks_on,
+            labelright=are_ticks_on,
+            labeltop=are_ticks_on,
+            labelbottom=are_ticks_on,
+        )
+        for axi in self._iter_axes(hidden=False, panels=False, children=False):
+            # Turn the ticks on or off depending on the position
+            sides = recoded.get(axi, [])
+            turn_on_or_off = default.copy()
+            # The axis will be a border if it is either
+            # (a) on the edge
+            # (b) not next to a subplot
+            # (c) not next to a subplot of the same kind
+            for side in sides:
+                sidelabel = f"label{side}"
+                is_label_on = axi._is_ticklabel_on(sidelabel)
+                if is_label_on:
+                    # When we are a border an the labels are on
+                    # we keep them on
+                    assert sidelabel in turn_on_or_off
+                    turn_on_or_off[sidelabel] = True
+
+            if isinstance(axi, paxes.GeoAxes):
+                axi._toggle_gridliner_labels(**turn_on_or_off)
+            else:
+                # TODO: we need to replace the
+                #  _apply_axis_sharing with something that is
+                # more profound. Currently, it removes the
+                # ticklabels in all directions independent
+                # of the position of the subplot. This means
+                # that for top right subplots, the labels
+                # will always be off.  Furthermore,
+                # this is handled in the draw sequence
+                # which is not necessary, and we should
+                # add it to _add_subplot of the figure class
+                continue
+                # axi.tick_params(which=which, **turn_on_or_off)
 
     def _toggle_axis_sharing(
         self,
@@ -1906,6 +1969,10 @@ class Figure(mfigure.Figure):
             }
             ax.format(rc_kw=rc_kw, rc_mode=rc_mode, skip_figure=True, **kw, **kwargs)
             ax.number = store_old_number
+        # When we apply formatting to all axes, we need
+        # to potentially adjust the labels.
+        if len(axs) == len(self.axes):
+            self._share_labels_with_others()
 
         # Warn unused keyword argument(s)
         kw = {
