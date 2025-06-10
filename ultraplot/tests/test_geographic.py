@@ -554,13 +554,12 @@ def test_sharing_levels():
 
     for level in sharing_levels:
         fig, ax = uplt.subplots(ncols=2, nrows=2, proj="cyl", share=level)
-
+        ax.format(labels="both")
         for axi in ax:
             axi.format(
                 lonlim=lonlim * axi.number,
                 latlim=latlim * axi.number,
             )
-        ax.format(labels="both")
 
         fig.canvas.draw()
         for idx, axi in enumerate(ax):
@@ -792,10 +791,6 @@ def test_sharing_cartopy_with_colorbar():
                 on[idx] = True
         return on
 
-    n = 3
-    settings = dict(land=True, ocean=True, labels="both")
-    fig, ax = uplt.subplots(ncols=n, nrows=n, share="all", proj="cyl")
-    ax.format(**settings)
     fig, ax = uplt.subplots(
         ncols=3,
         nrows=3,
