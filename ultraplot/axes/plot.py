@@ -734,7 +734,7 @@ docstring._snippet_manager["plot.scatter"] = _scatter_docstring.format(y="y")
 docstring._snippet_manager["plot.scatterx"] = _scatter_docstring.format(y="x")
 
 _beeswarm_docstring = """
-Beeswarm plot with SHAP-style feature value coloring.
+Beeswarm plot with `SHAP-style <https://shap.readthedocs.io/en/latest/generated/shap.plots.beeswarm.html#shap.plots.beeswarm>`_ feature value coloring.
 
 %(plot.scatter)s
 color_values : array-like, optional
