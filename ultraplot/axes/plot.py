@@ -733,6 +733,20 @@ matplotlib.axes.Axes.scatter
 docstring._snippet_manager["plot.scatter"] = _scatter_docstring.format(y="y")
 docstring._snippet_manager["plot.scatterx"] = _scatter_docstring.format(y="x")
 
+_beeswarm_docstring = """
+Beeswarm plot with `SHAP-style <https://shap.readthedocs.io/en/latest/generated/shap.plots.beeswarm.html#shap.plots.beeswarm>`_ feature value coloring.
+
+%(plot.scatter)s
+color_values : array-like, optional
+    Values to use for coloring points. Should match the shape of the data.
+    Enables SHAP-style feature value coloring.
+color_by_feature : array-like, optional
+    Alias for color_values. Values to color points by (e.g., feature values).
+n_iter: int, default: 50
+    Number of iterations for the beeswarm algorithm. More iterations can lead long time to plot but better point separation.
+"""
+docstring._snippet_manager["plot.beeswarm"] = _scatter_docstring.format(y="y")
+
 # Bar function docstring
 _bar_docstring = """
 Plot individual, grouped, or stacked bars.
@@ -3424,6 +3438,191 @@ class PlotAxes(base.Axes):
             self.set_xlim(xmin - pad, xmax + pad)
 
         return patch_collection, line_collection
+
+    @docstring._snippet_manager
+    def beeswarm(self, *args, color_values=None, color_by_feature=None, **kwargs):
+        """
+        %(plot.beeswarm)s
+
+        Parameters
+        ----------
+        color_values : array-like, optional
+            Values to use for coloring points. Should match the shape of the data.
+            Enables SHAP-style feature value coloring.
+        color_by_feature : array-like, optional
+            Alias for color_values. Values to color points by (e.g., feature values).
+        """
+        # Allow orientation to be overridden in kwargs
+        orientation = kwargs.pop("orientation", "horizontal")
+        return self._apply_beeswarm(
+            *args,
+            orientation=orientation,
+            color_values=color_values,
+            color_by_feature=color_by_feature,
+            **kwargs,
+        )
+
+    @inputs._preprocess_or_redirect("x", "y", allow_extra=True)
+    def _apply_beeswarm(
+        self,
+        x: np.ndarray,
+        y: np.ndarray,
+        orientation: str = "horizontal",
+        n_iter: int = 50,
+        *args,
+        **kwargs,
+    ) -> "Collection":
+
+        cmap = kwargs.pop("cmap", rc["cmap.diverging"])
+        size = kwargs.pop("s", kwargs.pop("size", 20))  # Default marker size
+        colorbar = kwargs.pop("colorbar", False)
+        colorbar_kw = kwargs.pop("colorbar_kw", {})
+
+        # Feature value coloring support (SHAP-style)
+        color_values = kwargs.pop("color_values", None)
+        color_by_feature = kwargs.pop("color_by_feature", None)
+        if color_by_feature is not None:
+            color_values = color_by_feature  # Alias for SHAP-style naming
+
+        # Convert to numpy arrays
+        x = np.asarray(x)
+        y = np.asarray(y)
+
+        # Handle 2D y array (multiple series)
+        if y.ndim == 2:
+            # x should be 1D with length matching y.shape[1]
+            if x.shape[-1] != y.shape[1]:
+                raise ValueError(
+                    "For 2D y array, x must be 1D with length matching y.shape[1]"
+                )
+
+            # Flatten y and repeat x for each series
+            n_series, n_points = y.shape
+            x_flat = x.flatten()
+            if x.ndim == 1:
+                x_flat = np.tile(x, n_series)
+
+            y_flat = y.flatten()
+
+            # Handle color values for 2D case
+            if color_values is not None:
+                color_values = np.asarray(color_values)
+                if color_values.shape == y.shape:
+                    # Color values match y shape - flatten them
+                    color_flat = color_values.flatten()
+                elif len(color_values) == len(y_flat):
+                    # Already flattened
+                    color_flat = color_values
+                else:
+                    raise ValueError(
+                        "color_values must match the shape of y or be flattened to match flattened y"
+                    )
+            else:
+                # Create series labels for coloring when no color_values provided
+                color_flat = np.repeat(np.arange(n_series), n_points)
+        else:
+            # Standard 1D case
+            x_flat = x.flatten()
+            y_flat = y.flatten()
+
+            # Handle color values for 1D case
+            if color_values is not None:
+                color_values = np.asarray(color_values).flatten()
+                if len(color_values) != len(y_flat):
+                    raise ValueError("color_values must have the same length as y")
+                color_flat = color_values
+            else:
+                color_flat = np.zeros(len(x_flat))
+
+        if len(x_flat) != len(y_flat):
+            raise ValueError("x and y must have compatible dimensions")
+
+        # Group data by unique x values (categories)
+        unique_x = np.unique(x_flat)
+        swarm_x = np.zeros_like(x_flat, dtype=float)
+        swarm_y = np.zeros_like(y_flat, dtype=float)
+
+        # Calculate point radius from marker size (approximate)
+        # Marker size is in points^2, so radius is sqrt(size/pi)
+        point_radius = np.sqrt(size / np.pi) * 0.01  # Scale factor for data units
+
+        for i, cat_x in enumerate(unique_x):
+            # Get indices for this category
+            mask = x_flat == cat_x
+            cat_y = y_flat[mask]
+            n_points = len(cat_y)
+
+            if n_points == 0:
+                continue
+
+            # Sort by y-value to process from bottom to top
+            sorted_indices = np.argsort(cat_y)
+            sorted_y = cat_y[sorted_indices]
+
+            # Initialize positions
+            positions = []
+
+            for j, y_val in enumerate(sorted_y):
+                # Try to place point at category center first
+                best_x = cat_x
+                best_collision = True
+
+                # Check for collisions with existing points
+                for attempt in range(
+                    n_iter
+                ):  # Max attempts to find non-overlapping position
+                    collision = False
+
+                    for pos_x, pos_y in positions:
+                        # Calculate distance between points
+                        dx = best_x - pos_x
+                        dy = y_val - pos_y
+                        distance = np.sqrt(dx**2 + dy**2)
+
+                        # Check if points would overlap
+                        if distance < 2 * point_radius:
+                            collision = True
+                            break
+
+                    if not collision:
+                        best_collision = False
+                        break
+
+                    # If collision, try moving horizontally
+                    # Alternate between left and right, increasing distance
+                    side = 1 if attempt % 2 == 0 else -1
+                    offset = (attempt // 2 + 1) * point_radius * 0.5
+                    best_x = cat_x + side * offset
+
+                # Store the final position
+                positions.append((best_x, y_val))
+
+                # Map back to original indices
+                original_idx = np.where(mask)[0][sorted_indices[j]]
+                swarm_x[original_idx] = best_x
+                swarm_y[original_idx] = y_val
+
+        # Handle orientation
+        if orientation == "horizontal":
+            plot_x, plot_y = swarm_y, swarm_x
+        else:  # vertical
+            plot_x, plot_y = swarm_x, swarm_y
+
+        # Create the scatter plot with appropriate coloring
+        guide_kw = _pop_params(kwargs, self._update_guide)
+        if "c" not in kwargs and "color" not in kwargs:
+            # Use our computed color values (either feature values or series labels)
+            objs = self.scatter(
+                plot_x, plot_y, s=size, c=color_flat, cmap=cmap, **kwargs
+            )
+        else:
+            # User provided explicit colors
+            objs = self.scatter(plot_x, plot_y, s=size, **kwargs)
+
+        self._update_guide(objs, queue_colorbar=False, **guide_kw)
+        if colorbar:
+            self.colorbar(objs, loc=colorbar, **colorbar_kw)
+        return objs
 
     @inputs._preprocess_or_redirect("x", "height", "width", "bottom")
     @docstring._snippet_manager
