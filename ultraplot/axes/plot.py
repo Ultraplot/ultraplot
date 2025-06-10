@@ -736,16 +736,69 @@ docstring._snippet_manager["plot.scatterx"] = _scatter_docstring.format(y="x")
 _beeswarm_docstring = """
 Beeswarm plot with `SHAP-style <https://shap.readthedocs.io/en/latest/generated/shap.plots.beeswarm.html#shap.plots.beeswarm>`_ feature value coloring.
 
-%(plot.scatter)s
-color_values : array-like, optional
-    Values to use for coloring points. Should match the shape of the data.
-    Enables SHAP-style feature value coloring.
-color_by_feature : array-like, optional
-    Alias for color_values. Values to color points by (e.g., feature values).
-n_iter: int, default: 50
-    Number of iterations for the beeswarm algorithm. More iterations can lead long time to plot but better point separation.
+Parameters
+----------
+data: array-like
+    The data to be plotted.  It is assumed the shape of `data` is (N, M) where N is the number of points and M is the number of features.
+levels: array-like, optional
+    The levels to use for the beeswarm plot. If not provided, the levels are automatically determined based on the data.
+n_bins: int or array-like, default: 50
+    Number of bins to use to reduce the overlap between points.
+    Bins are used to determine how crowded the points are for each level of the `y` coordinate.
+ s, size, ms, markersize : float or array-like or unit-spec, optional
+     The marker size area(s). If this is an array matching the shape of `x` and `y`,
+     the units are scaled by `smin` and `smax`. If this contains unit string(s), it
+     is processed by `~ultraplot.utils.units` and represents the width rather than area.
+ c, color, colors, mc, markercolor, markercolors, fc, facecolor, facecolors \
+ : array-like or color-spec, optional
+     The marker color(s). If this is an array matching the shape of `x` and `y`,
+     the colors are generated using `cmap`, `norm`, `vmin`, and `vmax`. Otherwise,
+     this should be a valid matplotlib color.
+ smin, smax : float, optional
+     The minimum and maximum marker size area in units ``points ** 2``. Ignored
+     if `absolute_size` is ``True``. Default value for `smin` is ``1`` and for
+     `smax` is the square of :rc:`lines.markersize`.
+ area_size : bool, default: True
+     Whether the marker sizes `s` are scaled by area or by radius. The default
+     ``True`` is consistent with matplotlib. When `absolute_size` is ``True``,
+     the `s` units are ``points ** 2`` if `area_size` is ``True`` and ``points``
+     if `area_size` is ``False``.
+ absolute_size : bool, default: True or False
+     Whether `s` should be taken to represent "absolute" marker sizes in units
+     ``points`` or ``points ** 2`` or "relative" marker sizes scaled by `smin`
+     and `smax`. Default is ``True`` if `s` is scalar and ``False`` if `s` is
+     array-like or `smin` or `smax` were passed.
+ %(plot.vmin_vmax)s
+ %(plot.args_1d_shared)s
+
+ Other parameters
+ ----------------
+ %(plot.cmap_norm)s
+ %(plot.levels_manual)s
+ %(plot.levels_auto)s
+ %(plot.cycle)s
+ lw, linewidth, linewidths, mew, markeredgewidth, markeredgewidths \
+ : float or sequence, optional
+     The marker edge width(s).
+ edgecolors, markeredgecolor, markeredgecolors \
+ : color-spec or sequence, optional
+     The marker edge color(s).
+ %(plot.error_means_{y})s
+ %(plot.error_bars)s
+ %(plot.error_shading)s
+ %(plot.inbounds)s
+ %(plot.labels_1d)s
+ %(plot.guide)s
+ **kwargs
+     Passed to `~matplotlib.axes.Axes.scatter`.
+
+ See also
+ --------
+ PlotAxes.scatter
+ PlotAxes.scatterx
+ matplotlib.axes.Axes.scatter
 """
-docstring._snippet_manager["plot.beeswarm"] = _scatter_docstring.format(y="y")
+docstring._snippet_manager["plot.beeswarm"] = _beeswarm_docstring.format(y="y")
 
 # Bar function docstring
 _bar_docstring = """
