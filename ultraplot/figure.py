@@ -1276,6 +1276,10 @@ class Figure(mfigure.Figure):
         Helpers function to ensure the labels
         are shared for rectilinear GeoAxes.
         """
+        # Only apply sharing of labels when we are
+        # actually sharing labels.
+        if self._get_sharing_level() == 0:
+            return
         # Turn all labels off
         # Note: this action performs it for all the axes in
         # the figure. We use the stale here to only perform
@@ -1287,8 +1291,6 @@ class Figure(mfigure.Figure):
             for axi in axes:
                 recoded[axi] = recoded.get(axi, []) + [direction]
 
-        # We turn off the tick labels when the scale and
-        # ticks are shared (level >= 3)
         are_ticks_on = False
         default = dict(
             labelleft=are_ticks_on,
@@ -1969,7 +1971,7 @@ class Figure(mfigure.Figure):
             ax.number = store_old_number
         # When we apply formatting to all axes, we need
         # to potentially adjust the labels.
-        if len(axs) == len(self.axes) and self._get_sharing_level() > 0:
+        if len(axs) == len(self.axes):
             self._share_labels_with_others()
 
         # Warn unused keyword argument(s)
