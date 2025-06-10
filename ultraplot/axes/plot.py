@@ -3493,7 +3493,7 @@ class PlotAxes(base.Axes):
         return patch_collection, line_collection
 
     @docstring._snippet_manager
-    def beeswarm(self, *args, color_values=None, color_by_feature=None, **kwargs):
+    def beeswarm(self, *args, **kwargs):
         """
         %(plot.beeswarm)s
 
@@ -3515,28 +3515,31 @@ class PlotAxes(base.Axes):
             **kwargs,
         )
 
-    @inputs._preprocess_or_redirect("x", "y", allow_extra=True)
+    @inputs._preprocess_or_redirect(
+        "x",
+        "y",
+        _get_aliases("collection", "sizes"),
+        _get_aliases("collection", "colors", "facecolors"),
+        allow_extra=True,
+    )
     def _apply_beeswarm(
         self,
-        x: np.ndarray,
-        y: np.ndarray,
+        data: np.ndarray,
+        levels: np.ndarray = None,
+        ss: float | np.ndarray = None,
+        feature_values: np.ndarray = None,
         orientation: str = "horizontal",
-        n_iter: int = 50,
-        *args,
+        n_bins: int = 50,
         **kwargs,
     ) -> "Collection":
 
-        cmap = kwargs.pop("cmap", rc["cmap.diverging"])
-        size = kwargs.pop("s", kwargs.pop("size", 20))  # Default marker size
+        # Parse input parameters
+        ss, kw = self._parse_markersize(ss, **kwargs)
         colorbar = kwargs.pop("colorbar", False)
         colorbar_kw = kwargs.pop("colorbar_kw", {})
 
-        # Feature value coloring support (SHAP-style)
-        color_values = kwargs.pop("color_values", None)
-        color_by_feature = kwargs.pop("color_by_feature", None)
-        if color_by_feature is not None:
-            color_values = color_by_feature  # Alias for SHAP-style naming
-
+        data = np.atleast_2d(data)
+        n_points, n_features = data.shape[:2]
         # Convert to numpy arrays
         x = np.asarray(x)
         y = np.asarray(y)
@@ -3672,6 +3675,32 @@ class PlotAxes(base.Axes):
             # User provided explicit colors
             objs = self.scatter(plot_x, plot_y, s=size, **kwargs)
 
+            z = counts.sum()
+            for bin, count in enumerate(counts):
+                # Skip bins without multiple points
+                if count == 0:
+                    continue
+                # Collect the group data and extract the
+                # lower and upper bounds
+                idx = np.where(binned == bin)[0].astype(int)
+                lower = min(lower_limit[idx])
+                upper = max(upper_limit[idx])
+                # Distribute the points evenly but reduce
+                # the range based on the number of points
+                # in this bin compared to the total number of
+                #  points
+                limit = (count / z) * (upper - lower) * 2  # correct for bin width
+                offset = np.linspace(-limit, limit, num=count, endpoint=True)
+                levels[idx, level] += offset
+
+        # Pop before plotting to avoid issues with guide_kw
+        guide_kw = _pop_params(kwargs, self._update_guide)
+        if feature_values is not None:
+            kwargs = self._parse_cmap(feature_values, **kwargs)
+            kwargs["c"] = feature_values
+        if orientation == "vertical":
+            data, levels = levels, data
+        objs = self.scatter(data, levels, s=ss, **kwargs)
         self._update_guide(objs, queue_colorbar=False, **guide_kw)
         if colorbar:
             self.colorbar(objs, loc=colorbar, **colorbar_kw)
