@@ -672,7 +672,6 @@ def test_beeswarm():
     """
 
     # Create some sample data for beeswarm
-    categories = [0, 1, 2, 3]
     n_points = 40
     n_cats = 4
     categories = np.arange(n_cats)

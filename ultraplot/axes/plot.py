@@ -3586,9 +3586,13 @@ class PlotAxes(base.Axes):
             kwargs["s"] = ss
 
         if flatten:
-            objs = self.scatter(data.flat, levels.flat, **kwargs)
-        else:
-            objs = self.scatter(data, levels, **kwargs)
+            data, levels = data.flatten(), levels.flatten()
+
+        objs = self.scatter(
+            data,
+            levels,
+            **kwargs,
+        )
         self._update_guide(objs, queue_colorbar=False, **guide_kw)
         if colorbar:
             self.colorbar(objs, loc=colorbar, **colorbar_kw)
