@@ -3496,32 +3496,12 @@ class PlotAxes(base.Axes):
     def beeswarm(self, *args, **kwargs):
         """
         %(plot.beeswarm)s
-
-        Parameters
-        ----------
-        color_values : array-like, optional
-            Values to use for coloring points. Should match the shape of the data.
-            Enables SHAP-style feature value coloring.
-        color_by_feature : array-like, optional
-            Alias for color_values. Values to color points by (e.g., feature values).
         """
-        # Allow orientation to be overridden in kwargs
-        orientation = kwargs.pop("orientation", "horizontal")
         return self._apply_beeswarm(
             *args,
-            orientation=orientation,
-            color_values=color_values,
-            color_by_feature=color_by_feature,
             **kwargs,
         )
 
-    @inputs._preprocess_or_redirect(
-        "x",
-        "y",
-        _get_aliases("collection", "sizes"),
-        _get_aliases("collection", "colors", "facecolors"),
-        allow_extra=True,
-    )
     def _apply_beeswarm(
         self,
         data: np.ndarray,
