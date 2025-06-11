@@ -3514,10 +3514,13 @@ class PlotAxes(base.Axes):
     ) -> "Collection":
 
         # Parse input parameters
-        ss, kw = self._parse_markersize(ss, **kwargs)
+        ss, _ = self._parse_markersize(ss, **kwargs)
         colorbar = kwargs.pop("colorbar", False)
         colorbar_kw = kwargs.pop("colorbar_kw", {})
 
+        flatten = False
+        if data.ndim == 1:
+            flatten = True
         data = np.atleast_2d(data)
         n_points, n_features = data.shape[:2]
         # Convert to numpy arrays
@@ -3561,7 +3564,7 @@ class PlotAxes(base.Axes):
                 # the range based on the number of points
                 # in this bin compared to the total number of
                 #  points
-                limit = (count / z) * (upper - lower) * 2  # correct for bin width
+                limit = (count / z) * (upper - lower) * 0.5
                 offset = np.linspace(-limit, limit, num=count, endpoint=True)
                 levels[idx, level] += offset
 
@@ -3569,10 +3572,23 @@ class PlotAxes(base.Axes):
         guide_kw = _pop_params(kwargs, self._update_guide)
         if feature_values is not None:
             kwargs = self._parse_cmap(feature_values, **kwargs)
-            kwargs["c"] = feature_values
+            kwargs["c"] = feature_values.flat
+            # Use flat to get around the issue of generating
+            # multiple colorbars when feature_values are used
+            flatten = True
+
+        # Swap the data if we are in vert mode
         if orientation == "vertical":
             data, levels = levels, data
-        objs = self.scatter(data, levels, s=ss, **kwargs)
+
+        # Put size back in kwargs
+        if ss is not None:
+            kwargs["s"] = ss
+
+        if flatten:
+            objs = self.scatter(data.flat, levels.flat, **kwargs)
+        else:
+            objs = self.scatter(data, levels, **kwargs)
         self._update_guide(objs, queue_colorbar=False, **guide_kw)
         if colorbar:
             self.colorbar(objs, loc=colorbar, **colorbar_kw)
