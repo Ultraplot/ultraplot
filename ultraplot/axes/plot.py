@@ -3564,8 +3564,9 @@ class PlotAxes(base.Axes):
                 # the range based on the number of points
                 # in this bin compared to the total number of
                 #  points
-                
-                limit = (count / z) * (upper - lower) * 0.45
+                limit = (
+                    (count / z) * (upper - lower) * 0.5 * 0.9
+                )  # give a slight space between the layers
                 offset = np.linspace(-limit, limit, num=count, endpoint=True)
                 levels[idx, level] += offset
 
