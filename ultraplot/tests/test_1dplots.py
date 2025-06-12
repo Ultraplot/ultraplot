@@ -695,7 +695,7 @@ def test_beeswarm():
     ax1.beeswarm(
         data,
         levels=levels,
-        sizes=30,
+        ss=30,
         orientation="vertical",
         alpha=0.7,
     )
@@ -713,7 +713,7 @@ def test_beeswarm():
         levels,
         feature_values=feature_values,
         orientation="horizontal",
-        size=30,
+        ss=30,
         colorbar="ul",
         colorbar_kw=dict(
             title="Feature Score",
