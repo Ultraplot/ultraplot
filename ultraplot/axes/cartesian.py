@@ -391,7 +391,11 @@ class CartesianAxes(shared._SharedAxes, plot.PlotAxes):
         # Apply Y axis sharing
         self._apply_axis_sharing_for_axis("y", border_axes)
 
-    def _apply_axis_sharing_for_axis(self, axis_name, border_axes):
+    def _apply_axis_sharing_for_axis(
+        self,
+        axis_name: str,
+        border_axes: dict[str, plot.PlotAxes],
+    ) -> None:
         """
         Apply axis sharing for a specific axis (x or y).
 
@@ -451,7 +455,7 @@ class CartesianAxes(shared._SharedAxes, plot.PlotAxes):
         label_params: list[str],
         border_sides: list[str],
         border_axes: dict[str, list[plot.PlotAxes]],
-    ) -> dict:
+    ) -> dict[str, bool]:
         """
         Determine which tick labels should be visible based on sharing rules and borders.
 
