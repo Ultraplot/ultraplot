@@ -917,6 +917,13 @@ class Figure(mfigure.Figure):
 
         if hasattr(self, "_cached_border_axes") and not force_recalculate:
             return self._cached_border_axes
+
+        border_axes = dict(
+            left=[],
+            right=[],
+            top=[],
+            bottom=[],
+        )
         gs = self.gridspec
         if gs is None:
             return border_axes
