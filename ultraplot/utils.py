@@ -1028,24 +1028,30 @@ class _Crawler:
         # Check if we reached a plot or an internal edge
         if self.grid[x, y] != self.target and self.grid[x, y] > 0:
             # check if we reached a border that has the same x and y span
-            ispan = self.ax.get_subplotspec()._get_rows_columns()
+            ispan = self.ax.get_subplotspec()._get_grid_span(hidden=False)
             onumber = int(self.grid[x, y])
             if onumber == 0:
                 return True
             other = self.ax.figure.axes[onumber - 1].get_subplotspec()
-            ospan = other._get_rows_columns()
+            ospan = other._get_grid_span(hidden=False)
 
             # Check if our spans are the same
-            rowspan = ispan[1] - ispan[0]
-            colspan = ispan[3] - ispan[2]
-            orowspan = ospan[1] - ospan[0]
-            ocolspan = ospan[3] - ospan[2]
+            irowspan, icolspan = (
+                (ispan[1] - ispan[0]),
+                (ispan[3] - ispan[2]),
+            )
+            orowspan, ocolspan = (
+                (ospan[1] - ospan[0]),
+                (ospan[3] - ospan[2]),
+            )
             dy, dx = direction
+            # Check in which way we are moving
+            # and check the span for that direction
             if dx == 0:
-                if rowspan != orowspan:
+                if irowspan != orowspan:
                     return True
             elif dy == 0:
-                if colspan != ocolspan:
+                if icolspan != ocolspan:
                     return True
             return False
 
