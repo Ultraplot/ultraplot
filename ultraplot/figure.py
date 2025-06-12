@@ -1291,18 +1291,7 @@ class Figure(mfigure.Figure):
             if isinstance(axi, paxes.GeoAxes):
                 axi._toggle_gridliner_labels(**turn_on_or_off)
             else:
-                # TODO: we need to replace the
-                #  _apply_axis_sharing with something that is
-                # more profound. Currently, it removes the
-                # ticklabels in all directions independent
-                # of the position of the subplot. This means
-                # that for top right subplots, the labels
-                # will always be off.  Furthermore,
-                # this is handled in the draw sequence
-                # which is not necessary, and we should
-                # add it to _add_subplot of the figure class
-                continue
-                # axi.tick_params(which=which, **turn_on_or_off)
+                axi._apply_axis_sharing()
 
     def _toggle_axis_sharing(
         self,
