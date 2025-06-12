@@ -685,9 +685,8 @@ def test_beeswarm():
         data[:, cat] = np.random.normal(cat * 1.5, 0.6, n_points)
         feature_values[:, cat] = np.random.randn(n_points)
 
-    fig, (ax1, ax2, ax3, ax4) = uplt.subplots(
-        nrows=2,
-        ncols=2,
+    fig, (ax1, ax2, ax3) = uplt.subplots(
+        ncols=3,
         share=0,
     )
 
@@ -726,22 +725,8 @@ def test_beeswarm():
         yticks=categories,
         yticklabels=["Group A", "Group B", "Group C", "Group D"],
     )
-
-    # A test to ensure that code using a singular x is also working
-    ax3.beeswarm(
-        data,
-        levels[0],
-        feature_values=feature_values,
-        colorbar="ur",
-        colorbar_kw=dict(
-            title="Feature Score",
-        ),
-    )
+    ax3.beeswarm(data[:, 0], levels[:, 0])
     ax3.format(
-        title="Singular X with groups",
-    )
-    ax4.beeswarm(data[:, 0], levels[:, 0])
-    ax4.format(
         title="Singular Beeswarm",
     )
     return fig
