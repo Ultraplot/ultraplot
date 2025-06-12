@@ -1933,7 +1933,7 @@ class Figure(mfigure.Figure):
             ax.number = store_old_number
         # When we apply formatting to all axes, we need
         # to potentially adjust the labels.
-        if len(axs) == len(self.axes):
+        if len(axs) == len(self.axes) and self._get_sharing_level() > 0:
             self._share_labels_with_others()
 
         # When we apply formatting to all axes, we need
