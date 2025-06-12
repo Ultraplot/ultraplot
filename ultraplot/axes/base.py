@@ -11,6 +11,13 @@ from numbers import Integral
 from typing import Union, Iterable
 from collections.abc import Iterable as IterableType
 
+try:
+    # From python 3.12
+    from typing import override
+except ImportError:
+    # From Python 3.5
+    from typing_extensions import override
+
 import matplotlib.axes as maxes
 import matplotlib.axis as maxis
 import matplotlib.cm as mcm
@@ -1688,7 +1695,12 @@ class Axes(maxes.Axes):
             indicator = self._inset_zoom_artists
             indicator.rectangle.update(kwargs)
             indicator.rectangle.set_bounds(bounds)  # otherwise the patch is not updated
+            indicator.rectangle.set_zorder(
+                self.get_zorder() + 1
+            )  # Ensure rectangle appears above axes
+            z = self.get_zorder() + 1
             for connector in indicator.connectors:
+                connector.set_zorder(z)
                 connector.update(kwargs)
         else:
             indicator = parent.indicate_inset(bounds, self, **kwargs)
@@ -3204,6 +3216,24 @@ class Axes(maxes.Axes):
                 return True
         return False
 
+    def _is_ticklabel_on(self, side: str) -> bool:
+        """
+        Check if tick labels are on for the specified sides.
+        """
+        # NOTE: This is a helper function to check if tick labels are on
+        # for the specified sides. It returns True if any of the specified
+        # sides have tick labels turned on.
+        axis = self.xaxis
+        if side in ["labelleft", "labelright"]:
+            axis = self.yaxis
+        label = "label1"
+        if side in ["labelright", "labeltop"]:
+            label = "label2"
+        for tick in axis.get_major_ticks():
+            if getattr(tick, label).get_visible():
+                return True
+        return False
+
     @docstring._snippet_manager
     def inset(self, *args, **kwargs):
         """
@@ -3218,6 +3248,7 @@ class Axes(maxes.Axes):
         """
         return self._add_inset_axes(*args, **kwargs)
 
+    @override
     @docstring._snippet_manager
     def indicate_inset_zoom(self, **kwargs):
         """

@@ -1419,16 +1419,18 @@ class _CartopyAxes(GeoAxes, _GeoAxes):
         """
         Helper function to check if tick labels are on for a given side.
         """
+        # Deal with different cartopy versions
+        left_labels, right_labels, bottom_labels, top_labels = self._get_side_labels()
         if self.gridlines_major is None:
             return False
         elif side == "labelleft":
-            return self.gridlines_major.left_labels
+            return getattr(self.gridlines_major, left_labels)
         elif side == "labelright":
-            return self.gridlines_major.right_labels
+            return getattr(self.gridlines_major, right_labels)
         elif side == "labelbottom":
-            return self.gridlines_major.bottom_labels
+            return getattr(self.gridlines_major, bottom_labels)
         elif side == "labeltop":
-            return self.gridlines_major.top_labels
+            return getattr(self.gridlines_major, top_labels)
         else:
             raise ValueError(f"Invalid side: {side}")
 
@@ -1444,18 +1446,14 @@ class _CartopyAxes(GeoAxes, _GeoAxes):
         """
         Toggle gridliner labels across different cartopy versions.
         """
-        left_labels, right_labels, bottom_labels, top_labels = (
-            _CartopyAxes._get_side_labels()
-        )
+        # Retrieve the property name depending
+        # on cartopy version.
+        side_labels = _CartopyAxes._get_side_labels()
+        togglers = (labelleft, labelright, labelbottom, labeltop)
         gl = self.gridlines_major
-        if labelleft is not None:
-            setattr(gl, left_labels, labelleft)
-        if labelright is not None:
-            setattr(gl, right_labels, labelright)
-        if labelbottom is not None:
-            setattr(gl, bottom_labels, labelbottom)
-        if labeltop is not None:
-            setattr(gl, top_labels, labeltop)
+        for toggle, side in zip(togglers, side_labels):
+            if getattr(gl, side) != toggle:
+                setattr(gl, side, toggle)
         if geo is not None:  # only cartopy 0.20 supported but harmless
             setattr(gl, "geo_labels", geo)
 
@@ -1757,7 +1755,8 @@ class _CartopyAxes(GeoAxes, _GeoAxes):
                 sides[side] = "y"
             elif lon is not None or lat is not None:
                 sides[side] = False
-        self._toggle_gridliner_labels(**sides)
+        if sides:
+            self._toggle_gridliner_labels(**sides)
 
     def _update_minor_gridlines(self, longrid=None, latgrid=None, nsteps=None):
         """

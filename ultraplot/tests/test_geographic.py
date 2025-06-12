@@ -18,7 +18,7 @@ def test_geographic_single_projection():
 
 @pytest.mark.mpl_image_compare
 def test_geographic_multiple_projections():
-    fig = uplt.figure()
+    fig = uplt.figure(share=0)
     # Add projections
     gs = uplt.GridSpec(ncols=2, nrows=3, hratios=(1, 1, 1.4))
     for i, proj in enumerate(("cyl", "hammer", "npstere")):
@@ -37,7 +37,9 @@ def test_geographic_multiple_projections():
         latlabels="r",  # or lonlabels=True, labels=True, etc.
     )
     fig.subplotgrid[-2:].format(
-        latlines=20, lonlines=30
+        latlines=20,
+        lonlines=30,
+        labels=True,
     )  # dense gridlines for polar plots
     uplt.rc.reset()
     return fig
@@ -354,8 +356,8 @@ def test_toggle_gridliner_labels():
     gl = ax[0].gridlines_major
 
     assert gl.left_labels == False
-    assert gl.right_labels == False
-    assert gl.top_labels == False
+    assert gl.right_labels == None  # initially these are none
+    assert gl.top_labels == None
     assert gl.bottom_labels == False
     ax[0]._toggle_gridliner_labels(labeltop=True)
     assert gl.top_labels == True
@@ -365,7 +367,14 @@ def test_toggle_gridliner_labels():
     fig, ax = uplt.subplots(proj="cyl", backend="basemap")
     ax.format(land=True, labels="both")  # need this otherwise no labels are printed
     ax[0]._toggle_gridliner_labels(
+<<<<<<< HEAD
         labelleft=False, labelbottom=False, labelright=False, labeltop=False
+=======
+        labelleft=False,
+        labelbottom=False,
+        labelright=False,
+        labeltop=False,
+>>>>>>> main
     )
     gl = ax[0].gridlines_major
 
@@ -602,6 +611,7 @@ def test_sharing_levels():
                 lonlim=lonlim * axi.number,
                 latlim=latlim * axi.number,
             )
+
         fig.canvas.draw()
         for idx, axi in enumerate(ax):
             axi.plot(x * (idx + 1), y * (idx + 1))
@@ -653,7 +663,7 @@ def test_cartesian_and_geo():
         ax[0].pcolormesh(np.random.rand(10, 10))
         ax[1].scatter(*np.random.rand(2, 100))
         ax[0]._apply_axis_sharing()
-        assert mocked.call_count == 2
+        assert mocked.call_count == 1
     return fig
 
 
@@ -780,4 +790,84 @@ def test_geo_with_panels():
         ),
     )
     ax.format(oceancolor="blue", coast=True)
+    return fig
+
+
+@pytest.mark.mpl_image_compare
+def test_inset_axes_geographic():
+    fig, ax = uplt.subplots(proj="cyl")
+    ax.format(labels=True)
+
+    e = [126, 30, 8.8, 10]
+    ix = ax.inset_axes(
+        e,
+        zoom=True,
+        zoom_kw={"fc": "r", "ec": "b"},
+        transform="data",
+    )
+    ix.format(
+        lonlim=(100, 110),
+        latlim=(20, 30),
+    )
+    return fig
+
+
+def test_tick_toggler():
+    fig, ax = uplt.subplots(proj="cyl")
+    for pos in "left right top bottom".split():
+        if pos in "left right".split():
+            ax.format(latlabels=pos)
+        else:
+            ax.format(lonlabels=pos)
+        ax.set_title(f"Toggle {pos} labels")
+        # Check if the labels are on
+        # For cartopy backend labelleft can contain
+        # False or x or y
+        label = f"label{pos}"
+        assert ax[0]._is_ticklabel_on(label) != False
+        ax[0]._toggle_gridliner_labels(**{label: False})
+        assert ax[0]._is_ticklabel_on(label) != True
+    uplt.close(fig)
+
+
+@pytest.mark.mpl_image_compare
+def test_sharing_cartopy_with_colorbar():
+
+    def are_labels_on(ax, which=("top", "bottom", "right", "left")) -> tuple[bool]:
+        gl = ax.gridlines_major
+
+        on = [False, False, False, False]
+        for idx, labeler in enumerate(which):
+            if getattr(gl, f"{labeler}_labels"):
+                on[idx] = True
+        return on
+
+    fig, ax = uplt.subplots(
+        ncols=3,
+        nrows=3,
+        proj="cyl",
+        share="all",
+    )
+
+    data = np.random.rand(10, 10)
+    h = ax.imshow(data)[0]
+    ax.format(land=True, labels="both")  # need this otherwise no labels are printed
+    fig.colorbar(h, loc="r")
+
+    expectations = (
+        [True, False, False, True],
+        [True, False, False, False],
+        [True, False, True, False],
+        [False, False, False, True],
+        [False, False, False, False],
+        [False, False, True, False],
+        [False, True, False, True],
+        [False, True, False, False],
+        [False, True, True, False],
+    )
+    for axi in ax:
+        state = are_labels_on(axi)
+        expectation = expectations[axi.number - 1]
+        for i, j in zip(state, expectation):
+            assert i == j
     return fig
