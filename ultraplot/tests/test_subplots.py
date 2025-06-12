@@ -240,7 +240,7 @@ def test_check_label_sharing_top_right(layout):
 
 @pytest.mark.parametrize("layout", [[1, 2], [3, 4]])
 @pytest.mark.mpl_image_compare
-def test_panel_sharing_top_right():
+def test_panel_sharing_top_right(layout):
     fig, ax = uplt.subplots(layout)
     for dir in "left right top bottom".split():
         ax[0].panel(dir)
