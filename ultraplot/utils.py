@@ -946,7 +946,7 @@ def _get_subplot_layout(
 
 
 @dataclass
-class Crawler:
+class _Crawler:
     """
     A crawler is used to find edges of axes in a grid layout.
     This is useful for determining whether to turn shared labels on or depending on the position of an axis in the grispec.

@@ -35,7 +35,7 @@ from .internals import (
     labels,
     warnings,
 )
-from .utils import units, _get_subplot_layout, Crawler
+from .utils import units, _get_subplot_layout, _Crawler
 
 __all__ = [
     "Figure",
@@ -952,7 +952,7 @@ class Figure(mfigure.Figure):
         # this in the future
         for axi in all_axes:
             axis_type = seen_axis_type.get(type(axi), 1)
-            crawler = Crawler(
+            crawler = _Crawler(
                 ax=axi,
                 grid=grid,
                 target=axi.number,
