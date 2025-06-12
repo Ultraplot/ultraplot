@@ -217,7 +217,7 @@ def test_axis_sharing(share):
     return fig
 
 
-@pytest.parametrize(
+@pytest.mark.parametrize(
     "layout",
     [
         [[1, 2], [3, 4]],  # simple 2x2
