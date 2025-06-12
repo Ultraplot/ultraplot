@@ -672,30 +672,30 @@ def test_beeswarm():
     """
 
     # Create some sample data for beeswarm
-    categories = [0, 1, 2, 3]
     n_points = 40
-    all_x = np.empty((len(categories), n_points))
-    all_y = np.empty((len(categories), n_points))
-    all_colors = np.zeros((len(categories), n_points))
-    for i, cat in enumerate(categories):
-        all_x[i] = np.ones(n_points) * cat
-        all_y[i] = np.random.normal(cat * 1.5, 0.6, n_points)
-        color_vals = np.random.uniform(0, 1, n_points)
-        all_colors[i] = color_vals
+    n_cats = 4
+    categories = np.arange(n_cats)
+    shape = (n_points, n_cats)
 
-    fig, (ax1, ax2, ax3, ax4) = uplt.subplots(
-        nrows=2,
-        ncols=2,
+    levels = np.empty(shape)
+    data = np.empty(shape)
+    feature_values = np.zeros(shape)
+    for cat in range(n_cats):
+        levels[:, cat] = np.ones(n_points) * cat
+        data[:, cat] = np.random.normal(cat * 1.5, 0.6, n_points)
+        feature_values[:, cat] = np.random.randn(n_points)
+
+    fig, (ax1, ax2, ax3) = uplt.subplots(
+        ncols=3,
         share=0,
-        refaspect=1,
     )
 
     # Traditional series coloring
     ax1.beeswarm(
-        all_x,
-        all_y,
+        data,
+        levels=levels,
+        ss=30,
         orientation="vertical",
-        size=30,
         alpha=0.7,
     )
     ax1.format(
@@ -705,13 +705,14 @@ def test_beeswarm():
         xticks=categories,
         xticklabels=["Group A", "Group B", "Group C", "Group D"],
     )
+
     # # Feature value coloring
     ax2.beeswarm(
-        all_x,
-        all_y,
-        color_values=all_colors,
+        data,
+        levels,
+        feature_values=feature_values,
         orientation="horizontal",
-        size=30,
+        ss=30,
         colorbar="ul",
         colorbar_kw=dict(
             title="Feature Score",
@@ -724,22 +725,8 @@ def test_beeswarm():
         yticks=categories,
         yticklabels=["Group A", "Group B", "Group C", "Group D"],
     )
-
-    # A test to ensure that code using a singular x is also working
-    ax3.beeswarm(
-        all_x[0],
-        all_y,
-        color_values=all_colors,
-        colorbar="ur",
-        colorbar_kw=dict(
-            title="Feature Score",
-        ),
-    )
+    ax3.beeswarm(data[:, 0], levels[:, 0])
     ax3.format(
-        title="Singular X with groups",
-    )
-    ax4.beeswarm(all_x[0], all_y[0])
-    ax4.format(
         title="Singular Beeswarm",
     )
     return fig
