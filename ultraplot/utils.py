@@ -928,7 +928,6 @@ def _get_subplot_layout(
         spans = spec._get_grid_span(hidden=False)
         rowspans = spans[:2]
         colspans = spans[-2:]
-
         grid[
             rowspans[0] : rowspans[1],
             colspans[0] : colspans[1],
@@ -993,11 +992,11 @@ class _Crawler:
 
         # Retrieve where the axis is in the grid
         spec = self.ax.get_subplotspec()
-        spans = spec._get_rows_columns()
+        spans = spec._get_grid_span(hidden=False)
         rowspan = spans[:2]
         colspan = spans[-2:]
-        xs = range(rowspan[0], rowspan[1] + 1)
-        ys = range(colspan[0], colspan[1] + 1)
+        xs = range(rowspan[0], rowspan[1])
+        ys = range(colspan[0], colspan[1])
         is_border = False
         for x, y in product(xs, ys):
             pos = (x, y)
