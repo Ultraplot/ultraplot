@@ -6,6 +6,10 @@
 # Pytest-mpl test directory ignore
 baseline
 baseline/*
+results
+results/*
+*.py
+ultraplot.yml
 
 # PyPi stuff
 build
