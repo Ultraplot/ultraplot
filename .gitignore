@@ -8,7 +8,6 @@ baseline
 baseline/*
 results
 results/*
-*.py
 ultraplot.yml
 
 # PyPi stuff
