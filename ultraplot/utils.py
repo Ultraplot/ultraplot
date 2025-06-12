@@ -1037,14 +1037,12 @@ class Crawler:
                 return True
             other = self.ax.figure.axes[onumber - 1].get_subplotspec()
             ospan = other._get_rows_columns()
-            print(self.grid)
 
             # Check if our spans are the same
             rowspan = ispan[1] - ispan[0]
             colspan = ispan[3] - ispan[2]
             orowspan = ospan[1] - ospan[0]
             ocolspan = ospan[3] - ospan[2]
-            print(rowspan, colspan, orowspan, ocolspan)
             dy, dx = direction
             if dx == 0:
                 if rowspan != orowspan:
@@ -1052,7 +1050,6 @@ class Crawler:
             elif dy == 0:
                 if colspan != ocolspan:
                     return True
-            print("here")
             return False
 
         if self.grid[x, y] == 0 or self.grid_axis_type[x, y] != self.axis_type:
