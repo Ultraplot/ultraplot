@@ -215,3 +215,33 @@ def test_axis_sharing(share):
         assert ax[2].get_ylabel() == "D"
 
     return fig
+
+
+@pytest.parametrize(
+    "layout",
+    [
+        [[1, 2], [3, 4]],  # simple 2x2
+        [[1, 0, 2], [0, 3, 0], [4, 0, 5]],  # complex 3x3 with independent plots
+        [[0, 0, 1, 1, 0, 0], [0, 2, 2, 3, 3, 0]],  # 1 spanning 2 different plot
+    ],
+)
+@pytest.mark.mpl_image_compare
+def test_check_label_sharing_top_right(layout):
+    fig, ax = uplt.subplots(layout)
+    ax.format(
+        xticklabelloc="t",
+        yticklabelloc="r",
+        xlabel="xlabel",
+        ylabel="ylabel",
+        title="Test Title",
+    )
+    return fig
+
+
+@pytest.mark.parametrize("layout", [[1, 2], [3, 4]])
+@pytest.mark.mpl_image_compare
+def test_panel_sharing_top_right():
+    fig, ax = uplt.subplots(layout)
+    for dir in "left right top bottom".split():
+        ax[0].panel(dir)
+    return fig
