@@ -925,13 +925,13 @@ def _get_subplot_layout(
     for axi in all_axes:
         # Infer coordinate from grdispec
         spec = axi.get_subplotspec()
-        spans = spec._get_rows_columns()
+        spans = spec._get_grid_span(hidden=False)
         rowspans = spans[:2]
         colspans = spans[-2:]
 
         grid[
-            rowspans[0] : rowspans[1] + 1,
-            colspans[0] : colspans[1] + 1,
+            rowspans[0] : rowspans[1],
+            colspans[0] : colspans[1],
         ] = axi.number
 
         # Allow grouping of mixed types
@@ -939,9 +939,7 @@ def _get_subplot_layout(
         if not same_type:
             axis_type = seen_axis_types.get(type(axi), 1)
 
-        grid_axis_type[rowspans[0] : rowspans[1] + 1, colspans[0] : colspans[1] + 1] = (
-            axis_type
-        )
+        grid_axis_type[rowspans[0] : rowspans[1], colspans[0] : colspans[1]] = axis_type
     return grid, grid_axis_type, seen_axis_types
 
 
