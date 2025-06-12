@@ -487,28 +487,12 @@ class CartesianAxes(shared._SharedAxes, plot.PlotAxes):
 
         for label_param, border_side in zip(label_params, border_sides):
             # Check if user has explicitly set label location via format()
-            user_override = getattr(self, f"_user_{axis_name}ticklabelloc", None)
-
+            label_visibility[label_param] = False
             if self._panel_dict[border_side]:
-                label_visibility[label_param] = False
-            elif user_override is not None:
-                # Use user's explicit choice - handle different formats
-                side_name = border_side  # 'top', 'bottom', 'left', 'right'
-                # Handle short forms: 't', 'b', 'l', 'r'
-                side_short = side_name[0]  # 't', 'b', 'l', 'r'
-
-                label_visibility[label_param] = (
-                    user_override == side_name
-                    or user_override == side_short
-                    or user_override == "both"
-                    or user_override == "all"
-                )
-            else:
-                # Use automatic border detection logic
-                label_visibility[label_param] = (
-                    ticks[label_param] or sharing_ticks[label_param]
-                ) and self in border_axes.get(border_side, [])
-
+                continue
+            # Use automatic border detection logic
+            if self in border_axes.get(border_side, []):
+                label_visibility[label_param] = ticks.get(label_param, False)
         return label_visibility
 
     def _add_alt(self, sx, **kwargs):
