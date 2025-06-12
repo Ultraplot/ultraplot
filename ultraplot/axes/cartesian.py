@@ -374,7 +374,6 @@ class CartesianAxes(shared._SharedAxes, plot.PlotAxes):
         Enforce the "shared" axis labels and axis tick labels. If this is not
         called at drawtime, "shared" labels can be inadvertantly turned off.
         """
-        # X axis
         # NOTE: Critical to apply labels to *shared* axes attributes rather
         # than testing extents or we end up sharing labels with twin axes.
         # NOTE: Similar to how _align_super_labels() calls _apply_title_above() this

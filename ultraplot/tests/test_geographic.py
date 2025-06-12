@@ -367,14 +367,10 @@ def test_toggle_gridliner_labels():
     fig, ax = uplt.subplots(proj="cyl", backend="basemap")
     ax.format(land=True, labels="both")  # need this otherwise no labels are printed
     ax[0]._toggle_gridliner_labels(
-<<<<<<< HEAD
-        labelleft=False, labelbottom=False, labelright=False, labeltop=False
-=======
         labelleft=False,
         labelbottom=False,
         labelright=False,
         labeltop=False,
->>>>>>> main
     )
     gl = ax[0].gridlines_major
 
