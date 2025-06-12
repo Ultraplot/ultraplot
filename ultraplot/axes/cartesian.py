@@ -448,9 +448,9 @@ class CartesianAxes(shared._SharedAxes, plot.PlotAxes):
         axis: maxis.Axis,
         shared_axis: maxis.Axis,
         axis_name: str,
-        label_params: list,
-        border_sides: list,
-        border_axes: dict,
+        label_params: list[str],
+        border_sides: list[str],
+        border_axes: dict[str, list[plot.PlotAxes]],
     ) -> dict:
         """
         Determine which tick labels should be visible based on sharing rules and borders.
