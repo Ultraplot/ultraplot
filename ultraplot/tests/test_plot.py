@@ -1,4 +1,5 @@
 from cycler import V
+import pandas as pd
 from pandas.core.arrays.arrow.accessors import pa
 import ultraplot as uplt, pytest, numpy as np
 from unittest import mock
@@ -397,4 +398,24 @@ def test_center_labels_colormesh_data_type():
             colorbar="r",
         )
 
+    uplt.close(fig)
+
+
+def test_pie_labeled_series_in_dataframes():
+    """
+    Test an edge case where labeled indices cause
+    labels to be grouped and passed on to pie chart
+    which does not support this way of parsing.
+
+    This only occurs when dataframes are passed.
+    See https://github.com/Ultraplot/UltraPlot/issues/259
+    """
+    data = pd.DataFrame(
+        index=pd.Index(list("abcd"), name="x"),
+        data=dict(y=range(1, 5)),
+    )
+    fig, ax = uplt.subplots()
+    wedges, texts = ax.pie("y", data=data)
+    for text, index in zip(texts, data.index):
+        assert text.get_text() == index
     uplt.close(fig)

@@ -2285,10 +2285,10 @@ class PlotAxes(base.Axes):
         autoformat = _not_none(autoformat, rc["autoformat"])
         kwargs, vert = _get_vert(**kwargs)
 
-        legend_kw = _not_none(
+        legend_kw_labels = _not_none(
             kwargs.get("legend_kw", {}).pop("labels", None),
         )
-        colorbar_kw = _not_none(
+        colorbar_kw_labels = _not_none(
             kwargs.get("colorbar_kw", {}).pop("values", None),
         )
 
@@ -2297,8 +2297,8 @@ class PlotAxes(base.Axes):
             labels=labels,
             value=value,
             values=values,
-            legend_kw_labels=legend_kw,
-            colorbar_kw_values=colorbar_kw,
+            legend_kw_labels=legend_kw_labels,
+            colorbar_kw_values=colorbar_kw_labels,
         )
 
         # Retrieve the x coords
