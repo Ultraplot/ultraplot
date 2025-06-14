@@ -443,8 +443,7 @@ class CartesianAxes(shared._SharedAxes, plot.PlotAxes):
                 border_axes,
             )
             axis.set_tick_params(which="both", **label_visibility)
-
-        # Set minor formatter for last processed axis
+        # Turn minor ticks off
         axis.set_minor_formatter(mticker.NullFormatter())
 
     def _determine_tick_label_visibility(
