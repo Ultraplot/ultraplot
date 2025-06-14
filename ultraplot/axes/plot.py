@@ -2284,13 +2284,23 @@ class PlotAxes(base.Axes):
         autox = autox and not zerox  # so far just relevant for hist()
         autoformat = _not_none(autoformat, rc["autoformat"])
         kwargs, vert = _get_vert(**kwargs)
+
+        legend_kw = _not_none(
+            kwargs.get("legend_kw", None),
+            kwargs.get("legend", None),
+        )
+        colorbar_kw = _not_none(
+            kwargs.get("colorbar_kw", None),
+            kwargs.get("colorbar", None),
+        )
+
         labels = _not_none(
             label=label,
             labels=labels,
             value=value,
             values=values,
-            legend_kw_labels=kwargs.get("legend_kw", {}).pop("labels", None),
-            colorbar_kw_values=kwargs.get("colorbar_kw", {}).pop("values", None),
+            legend_kw_labels=legend_kw,
+            colorbar_kw_values=colorbar_kw,
         )
 
         # Retrieve the x coords
@@ -4502,8 +4512,17 @@ class PlotAxes(base.Axes):
             x, autox=False, autoy=False, autoreverse=False, **kw
         )
         kw = self._parse_cycle(x.size, **kw)
+        # Pop legend and colorbar keywords forp pie as
+        # they are not used in this function
+        kw.pop("legend_kw", None)
+        kw.pop("colorbar_kw", None)
         objs = self._call_native(
-            "pie", x, explode=explode, labeldistance=pad, wedgeprops=wedge_kw, **kw
+            "pie",
+            x,
+            explode=explode,
+            labeldistance=pad,
+            wedgeprops=wedge_kw,
+            **kw,
         )
         objs = tuple(cbook.silent_list(type(seq[0]).__name__, seq) for seq in objs)
         self._fix_patch_edges(objs[0], **edgefix_kw, **wedge_kw)
