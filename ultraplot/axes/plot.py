@@ -4510,7 +4510,7 @@ class PlotAxes(base.Axes):
             x, autox=False, autoy=False, autoreverse=False, **kw
         )
         kw = self._parse_cycle(x.size, **kw)
-        # Pop legend and colorbar keywords forp pie as
+        # Pop legend and colorbar keywords for pie as
         # they are not used in this function
         kw.pop("legend_kw", None)
         kw.pop("colorbar_kw", None)
