@@ -2286,12 +2286,12 @@ class PlotAxes(base.Axes):
         kwargs, vert = _get_vert(**kwargs)
 
         legend_kw = _not_none(
-            kwargs.get("legend_kw", None),
-            kwargs.get("legend", None),
+            kwargs.pop("legend_kw", None),
+            kwargs.get("labels", None),
         )
         colorbar_kw = _not_none(
-            kwargs.get("colorbar_kw", None),
-            kwargs.get("colorbar", None),
+            kwargs.pop("colorbar_kw", None),
+            kwargs.get("values", None),
         )
 
         labels = _not_none(
