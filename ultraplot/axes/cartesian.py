@@ -487,11 +487,29 @@ class CartesianAxes(shared._SharedAxes, plot.PlotAxes):
         for label_param, border_side in zip(label_params, border_sides):
             # Check if user has explicitly set label location via format()
             label_visibility[label_param] = False
-            if self._panel_dict[border_side]:
+            is_panel = False
+            for panel in self._panel_dict[border_side]:
+                # Check if the panel is a colorbar
+                colorbars = (
+                    values
+                    for key, values in self._colorbar_dict.items()
+                    if border_side in key
+                )
+                if panel in colorbars:
+                    # If the panel is a colorbar, skip it
+                    is_panel = True
+                    break
+            if is_panel:
                 continue
+
+            # Check if the panel is not a colorbar
+            # continue
             # Use automatic border detection logic
             if self in border_axes.get(border_side, []):
-                label_visibility[label_param] = ticks.get(label_param, False)
+                getattr(shared_axis, f"{axis_name}axis").set_tick_params(
+                    **{label_param: False}
+                )
+                label_visibility[label_param] = True
         return label_visibility
 
     def _add_alt(self, sx, **kwargs):
