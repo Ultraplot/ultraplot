@@ -1589,7 +1589,7 @@ class Axes(maxes.Axes):
             return [pax for pax in paxs if not pax._panel_hidden and pax._panel_share]
 
         # Internal axis sharing, share stacks of panels and main axes with each other
-        # NOTE: This is called on the main axes whenver a panel is created.
+        # NOTE: This is called on the main axes whenever a panel is created.
         # NOTE: This block is why, even though we have figure-wide share[xy], we
         # still need the axes-specific _share[xy]_override attribute.
         if not self._panel_side:  # this is a main axes
@@ -3197,6 +3197,23 @@ class Axes(maxes.Axes):
             return True
 
         # Not in the same panel group
+
+    def _is_ticklabel_on(self, side: str) -> bool:
+        """
+        Check if tick labels are on for the specified sides.
+        """
+        # NOTE: This is a helper function to check if tick labels are on
+        # for the specified sides. It returns True if any of the specified
+        # sides have tick labels turned on.
+        axis = self.xaxis
+        if side in ["labelleft", "labelright"]:
+            axis = self.yaxis
+        label = "label1"
+        if side in ["labelright", "labeltop"]:
+            label = "label2"
+        for tick in axis.get_major_ticks():
+            if getattr(tick, label).get_visible():
+                return True
         return False
 
     def _is_ticklabel_on(self, side: str) -> bool:
