@@ -405,7 +405,7 @@ def test_scaler():
     fig, ax = uplt.subplots(ncols=2, share=0)
     ax[0].set_yscale("mercator")
     ax[1].set_yscale("asinh")
-    return fig
+    uplt.close(fig)
 
 
 @pytest.mark.mpl_image_compare
