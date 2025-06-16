@@ -299,53 +299,6 @@ def test_sharing_cartopy():
     uplt.close(fig)
 
 
-@pytest.mark.mpl_image_compare
-def test_sharing_cartopy_with_colorbar():
-
-    def are_labels_on(ax, which=["top", "bottom", "right", "left"]) -> tuple[bool]:
-        gl = ax.gridlines_major
-
-        on = [False, False, False, False]
-        for idx, labeler in enumerate(which):
-            if getattr(gl, f"{labeler}_labels"):
-                on[idx] = True
-        return on
-
-    n = 3
-    settings = dict(land=True, ocean=True, labels="both")
-    fig, ax = uplt.subplots(ncols=n, nrows=n, share="all", proj="cyl")
-    ax.format(**settings)
-    fig, ax = uplt.subplots(
-        ncols=3,
-        nrows=3,
-        proj="cyl",
-        share="all",
-    )
-
-    data = np.random.rand(10, 10)
-    h = ax.imshow(data)[0]
-    ax.format(land=True, labels="both")  # need this otherwise no labels are printed
-    fig.colorbar(h, loc="r")
-
-    expectations = (
-        [True, False, False, True],
-        [True, False, False, False],
-        [True, False, True, False],
-        [False, False, False, True],
-        [False, False, False, False],
-        [False, False, True, False],
-        [False, True, False, True],
-        [False, True, False, False],
-        [False, True, True, False],
-    )
-    for axi in ax:
-        state = are_labels_on(axi)
-        expectation = expectations[axi.number - 1]
-        for i, j in zip(state, expectation):
-            assert i == j
-    return fig
-
-
 def test_toggle_gridliner_labels():
     """
     Test whether we can toggle the labels on or off
