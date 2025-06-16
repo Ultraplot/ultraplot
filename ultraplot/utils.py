@@ -1082,8 +1082,8 @@ class _Crawler:
             other_start, other_stop = other_rowspan
 
         if this_start == other_start and this_stop == other_stop:
-            return False # not a border
-        return True 
+            return False  # not a border
+        return True
 
 
 # Deprecations
