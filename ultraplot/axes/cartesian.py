@@ -1407,6 +1407,7 @@ class CartesianAxes(shared._SharedAxes, plot.PlotAxes):
         self._dual_scale("y")
         self._apply_axis_sharing()
         self._update_rotation("x")
+
         super().draw(renderer, *args, **kwargs)
 
     def get_tightbbox(self, renderer, *args, **kwargs):
