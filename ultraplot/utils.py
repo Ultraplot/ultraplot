@@ -1044,21 +1044,18 @@ class _Crawler:
             irowspan, icolspan = ispan[:2], ispan[-2:]
             orowspan, ocolspan = ospan[:2], ospan[-2:]
 
-            # Compute the span size
-            irowspan_size = irowspan[1] - irowspan[0]
-            icolspan_size = icolspan[1] - icolspan[0]
-            orowspan_size = orowspan[1] - orowspan[0]
-            ocolspan_size = ocolspan[1] - ocolspan[0]
-
             dy, dx = direction
 
             # Check in which way we are moving
             # and check the span for that direction
+            is_x_adjacent = irowspan[0] == orowspan[-1]
+            is_y_adjacent = icolspan[0] == ocolspan[-1]
+
             if dx == 0:
-                if irowspan_size != orowspan_size:
+                if not is_x_adjacent:
                     return True
             elif dy == 0:
-                if icolspan_size != ocolspan_size:
+                if not is_y_adjacent:
                     return True
             return False
 
