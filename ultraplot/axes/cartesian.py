@@ -486,6 +486,16 @@ class CartesianAxes(shared._SharedAxes, plot.PlotAxes):
 
         label_visibility = {}
 
+        def _convert_label_param(label_param: str) -> str:
+            # Deal with logic not being consistent
+            # in prior mpl versions
+            if version.parse(str(_version_mpl)) <= version.parse("3.9"):
+                if label_param == "labeltop" and axis_name == "x":
+                    label_param = "labelright"
+                elif label_params == "labelbottom" and axis_name == "x":
+                    label_param = "labelleft"
+            return label_param
+
         for label_param, border_side in zip(label_params, border_sides):
             # Check if user has explicitly set label location via format()
             label_visibility[label_param] = False
@@ -506,17 +516,17 @@ class CartesianAxes(shared._SharedAxes, plot.PlotAxes):
             # the labels and turn-off for this axis + side.
             if has_panel:
                 continue
+            is_border = self in border_axes.get(border_side, [])
+            is_panel = (
+                self in shared_axis._panel_dict[border_side]
+                and self == shared_axis._panel_dict[border_side][-1]
+            )
 
             # Use automatic border detection logic
-            if self in border_axes.get(border_side, []):
-                # Deal with logic not being consistent
-                # in prior mpl versions
-                if version.parse(str(_version_mpl)) <= version.parse("3.9"):
-                    if label_param == "labeltop" and axis_name == "x":
-                        label_param = "labelright"
-                    elif label_params == "labelbottom" and axis_name == "x":
-                        label_param = "labelleft"
-
+            # if we are a panel we "push" the labels outwards
+            if is_border or is_panel:
+                # Deal with mpl version for label_param
+                label_param = _convert_label_param(label_param)
                 is_this_tick_on = ticks[label_param]
                 is_parent_tick_on = sharing_ticks[label_param]
                 if is_this_tick_on or is_parent_tick_on:
