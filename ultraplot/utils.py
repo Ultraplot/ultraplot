@@ -1032,38 +1032,160 @@ class _Crawler:
 
         # Check if we reached a plot or an internal edge
         if self.grid[x, y] != self.target and self.grid[x, y] > 0:
-            # check if we reached a border that has the same x and y span
-            ispan = self.ax.get_subplotspec()._get_grid_span()
-            onumber = int(self.grid[x, y])
-            if onumber == 0:
-                return True
-            other = self.ax.figure.axes[onumber - 1].get_subplotspec()
-            ospan = other._get_grid_span()
-
-            # Check if our spans are the same
-            irowspan, icolspan = ispan[:2], ispan[-2:]
-            orowspan, ocolspan = ospan[:2], ospan[-2:]
-
-            dy, dx = direction
-
-            # Check in which way we are moving
-            # and check the span for that direction
-            is_x_adjacent = irowspan[0] == orowspan[-1]
-            is_y_adjacent = icolspan[0] == ocolspan[-1]
-
-            if dx == 0:
-                if not is_x_adjacent:
-                    return True
-            elif dy == 0:
-                if not is_y_adjacent:
-                    return True
-            return False
+            return self._check_plot_boundary(x, y, direction)
 
         if self.grid[x, y] == 0 or self.grid_axis_type[x, y] != self.axis_type:
             return True
         dx, dy = direction
         pos = (x + dx, y + dy)
         return self.is_border(pos, direction)
+
+    def _check_plot_boundary(self, x: int, y: int, direction: tuple[int, int]) -> bool:
+        """
+        Check if encountering another plot at position (x, y) constitutes a border.
+
+        Returns True (border detected) if:
+        1. Axis crosses multiple different plots in the movement direction
+        2. Axis has empty spaces adjacent in perpendicular direction
+        3. Plots are not properly adjacent (have gaps between them)
+        """
+        # Get current axis span
+        ispan = self.ax.get_subplotspec()._get_grid_span()
+        irowspan, icolspan = ispan[:2], ispan[-2:]
+        dy, dx = direction
+
+        # Check if this axis crosses multiple different plots
+        if self._crosses_multiple_plots(x, y, direction, irowspan, icolspan):
+            return True
+
+        # Check single plot adjacency and empty space conditions
+        return self._check_single_plot_adjacency(x, y, direction, irowspan, icolspan)
+
+    def _crosses_multiple_plots(
+        self,
+        x: int,
+        y: int,
+        direction: tuple[int, int],
+        irowspan: tuple[int, int],
+        icolspan: tuple[int, int],
+    ) -> bool:
+        """Check if axis crosses multiple different plots in the movement direction."""
+        dy, dx = direction
+        encountered_plots = set()
+
+        if dx == 0:  # moving vertically
+            # Check all columns of this axis at the encountered row
+            for col in range(icolspan[0], icolspan[-1]):
+                if 0 <= col < self.grid.shape[1]:
+                    plot_at_pos = self.grid[x, col]
+                    if plot_at_pos != self.target and plot_at_pos > 0:
+                        encountered_plots.add(plot_at_pos)
+
+        elif dy == 0:  # moving horizontally
+            # Check all rows of this axis at the encountered column
+            for row in range(irowspan[0], irowspan[-1]):
+                if 0 <= row < self.grid.shape[0]:
+                    plot_at_pos = self.grid[row, y]
+                    if plot_at_pos != self.target and plot_at_pos > 0:
+                        encountered_plots.add(plot_at_pos)
+
+        return len(encountered_plots) >= 2
+
+    def _check_single_plot_adjacency(
+        self,
+        x: int,
+        y: int,
+        direction: tuple[int, int],
+        irowspan: tuple[int, int],
+        icolspan: tuple[int, int],
+    ) -> bool:
+        """Check adjacency conditions for a single encountered plot."""
+        onumber = int(self.grid[x, y])
+        if onumber == 0:
+            return True
+
+        # Get other plot's span
+        other = self.ax.figure.axes[onumber - 1].get_subplotspec()
+        ospan = other._get_grid_span()
+        orowspan, ocolspan = ospan[:2], ospan[-2:]
+        dy, dx = direction
+
+        if dx == 0:  # moving vertically
+            return self._check_vertical_adjacency(
+                x, y, irowspan, icolspan, orowspan, ocolspan
+            )
+        elif dy == 0:  # moving horizontally
+            return self._check_horizontal_adjacency(
+                x, y, irowspan, icolspan, orowspan, ocolspan
+            )
+
+        return False
+
+    def _check_vertical_adjacency(
+        self,
+        x: int,
+        y: int,
+        irowspan: tuple[int, int],
+        icolspan: tuple[int, int],
+        orowspan: tuple[int, int],
+        ocolspan: tuple[int, int],
+    ) -> bool:
+        """Check adjacency conditions for vertical movement."""
+        # Check if rows are adjacent
+        rows_adjacent = (irowspan[-1] == orowspan[0]) or (orowspan[-1] == irowspan[0])
+        if not rows_adjacent:
+            return True
+
+        # Check if there's column overlap for the shared boundary
+        col_overlap = max(icolspan[0], ocolspan[0]) < min(icolspan[-1], ocolspan[-1])
+        if not col_overlap:
+            return True
+
+        # Check for empty spaces adjacent to this axis
+        return self._has_empty_spaces_horizontal(x, icolspan)
+
+    def _check_horizontal_adjacency(
+        self,
+        x: int,
+        y: int,
+        irowspan: tuple[int, int],
+        icolspan: tuple[int, int],
+        orowspan: tuple[int, int],
+        ocolspan: tuple[int, int],
+    ) -> bool:
+        """Check adjacency conditions for horizontal movement."""
+        # Check if columns are adjacent
+        cols_adjacent = (icolspan[-1] == ocolspan[0]) or (ocolspan[-1] == icolspan[0])
+        if not cols_adjacent:
+            return True
+
+        # Check if there's row overlap for the shared boundary
+        row_overlap = max(irowspan[0], orowspan[0]) < min(irowspan[-1], orowspan[-1])
+        if not row_overlap:
+            return True
+
+        # Check for empty spaces adjacent to this axis
+        return self._has_empty_spaces_vertical(y, irowspan)
+
+    def _has_empty_spaces_horizontal(self, x: int, icolspan: tuple[int, int]) -> bool:
+        """Check if there are empty spaces horizontally adjacent to the axis."""
+        for col in range(icolspan[0], icolspan[-1]):
+            # Check if there are empty spaces on either side
+            if col > 0 and self.grid[x, col - 1] == 0:
+                return True
+            if col < self.grid.shape[1] - 1 and self.grid[x, col + 1] == 0:
+                return True
+        return False
+
+    def _has_empty_spaces_vertical(self, y: int, irowspan: tuple[int, int]) -> bool:
+        """Check if there are empty spaces vertically adjacent to the axis."""
+        for row in range(irowspan[0], irowspan[-1]):
+            # Check if there are empty spaces above or below
+            if row > 0 and self.grid[row - 1, y] == 0:
+                return True
+            if row < self.grid.shape[0] - 1 and self.grid[row + 1, y] == 0:
+                return True
+        return False
 
 
 # Deprecations
