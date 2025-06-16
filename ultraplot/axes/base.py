@@ -3195,6 +3195,8 @@ class Axes(maxes.Axes):
             and self._panel_parent is other._panel_parent
         ):
             return True
+        # Not in the same panel group
+        return False
 
     def _is_ticklabel_on(self, side: str) -> bool:
         """
