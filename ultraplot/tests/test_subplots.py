@@ -141,34 +141,60 @@ def test_aligned_outer_guides():
     return fig
 
 
+@pytest.mark.parametrize(
+    "test_case,refwidth,kwargs,setup_func,ref",
+    [
+        (
+            "simple",
+            1.5,
+            {"ncols": 2},
+            None,
+            None,
+        ),
+        (
+            "funky_layout",
+            1.5,
+            {"array": [[1, 1, 2, 2], [0, 3, 3, 0]]},
+            lambda fig, axs: (
+                axs[1].panel_axes("left"),
+                axs.format(xlocator=0.2, ylocator=0.2),
+            ),
+            3,
+        ),
+        (
+            "with_panels",
+            2.0,
+            {"array": [[1, 1, 2], [3, 4, 5], [3, 4, 6]], "hratios": (2, 1, 1)},
+            lambda fig, axs: (
+                axs[2].panel_axes("right", width=0.5),
+                axs[0].panel_axes("bottom", width=0.5),
+                axs[3].panel_axes("left", width=0.5),
+            ),
+            None,
+        ),
+    ],
+)
 @pytest.mark.mpl_image_compare
-def test_reference_aspect():
+def test_reference_aspect(test_case, refwidth, kwargs, setup_func, ref):
     """
     Rigorous test of reference aspect ratio accuracy.
     """
-    # A simple test
-    refwidth = 1.5
-    fig, axs = uplt.subplots(ncols=2, refwidth=refwidth)
-    fig.auto_layout()
-    assert np.isclose(refwidth, axs[fig._refnum - 1]._get_size_inches()[0])
+    # Add ref and refwidth to kwargs
+    subplot_kwargs = kwargs.copy()
+    subplot_kwargs["refwidth"] = refwidth
+    if ref is not None:
+        subplot_kwargs["ref"] = ref
 
-    # A test with funky layout
-    refwidth = 1.5
-    fig, axs = uplt.subplots([[1, 1, 2, 2], [0, 3, 3, 0]], ref=3, refwidth=refwidth)
-    axs[1].panel_axes("left")
-    axs.format(xlocator=0.2, ylocator=0.2)
-    fig.auto_layout()
-    assert np.isclose(refwidth, axs[fig._refnum - 1]._get_size_inches()[0])
+    # Create subplots
+    fig, axs = uplt.subplots(**subplot_kwargs)
 
-    # A test with panels
-    refwidth = 2.0
-    fig, axs = uplt.subplots(
-        [[1, 1, 2], [3, 4, 5], [3, 4, 6]], hratios=(2, 1, 1), refwidth=refwidth
-    )
-    axs[2].panel_axes("right", width=0.5)
-    axs[0].panel_axes("bottom", width=0.5)
-    axs[3].panel_axes("left", width=0.5)
+    # Run setup function if provided
+    if setup_func is not None:
+        setup_func(fig, axs)
+
+    # Apply auto layout
     fig.auto_layout()
+    # Assert reference width accuracy
     assert np.isclose(refwidth, axs[fig._refnum - 1]._get_size_inches()[0])
     return fig
 
