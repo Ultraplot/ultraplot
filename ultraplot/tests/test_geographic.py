@@ -238,7 +238,7 @@ def test_lon0_shifts():
         n = len(str_loc)
         assert str_loc == format[:n]
     assert locs[0] != 0  # we should not be a 0 anymore
-    return fig
+    uplt.close(fig)
 
 
 def test_sharing_cartopy():
@@ -296,7 +296,7 @@ def test_sharing_cartopy():
         state = are_labels_on(axi)
         expectation = expectations[axi.number - 1]
         assert all([i == j for i, j in zip(state, expectation)])
-    return fig
+    uplt.close(fig)
 
 
 def test_toggle_gridliner_labels():
