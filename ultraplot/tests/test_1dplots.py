@@ -615,7 +615,6 @@ def test_bar_alpha():
     y = [2]
     ax.bar(x, y, alphas=[0.2])
     ax.bar(x, y, alphas=0.2)
-    return fig
 
 
 @pytest.mark.mpl_image_compare
