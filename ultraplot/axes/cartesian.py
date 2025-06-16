@@ -487,29 +487,33 @@ class CartesianAxes(shared._SharedAxes, plot.PlotAxes):
         for label_param, border_side in zip(label_params, border_sides):
             # Check if user has explicitly set label location via format()
             label_visibility[label_param] = False
-            is_panel = False
+            has_panel = False
             for panel in self._panel_dict[border_side]:
                 # Check if the panel is a colorbar
-                colorbars = (
+                colorbars = [
                     values
                     for key, values in self._colorbar_dict.items()
-                    if border_side in key
-                )
-                if panel in colorbars:
-                    # If the panel is a colorbar, skip it
-                    is_panel = True
+                    if border_side in key  # key is tuple (side, top | center | lower)
+                ]
+                if not panel in colorbars:
+                    # Skip colorbar as their
+                    # yaxis is not shared
+                    has_panel = True
                     break
-            if is_panel:
+            # When we have a panel, let the panel have
+            # the labels and turn-off for this axis + side.
+            if has_panel:
                 continue
 
-            # Check if the panel is not a colorbar
-            # continue
             # Use automatic border detection logic
             if self in border_axes.get(border_side, []):
-                getattr(shared_axis, f"{axis_name}axis").set_tick_params(
-                    **{label_param: False}
-                )
-                label_visibility[label_param] = True
+                is_this_tick_on = ticks[label_param]
+                is_parent_tick_on = sharing_ticks[label_param]
+                if is_this_tick_on or is_parent_tick_on:
+                    getattr(shared_axis, f"{axis_name}axis").set_tick_params(
+                        **{label_param: False}
+                    )
+                    label_visibility[label_param] = True
         return label_visibility
 
     def _add_alt(self, sx, **kwargs):

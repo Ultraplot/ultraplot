@@ -925,12 +925,14 @@ def _get_subplot_layout(
     for axi in all_axes:
         # Infer coordinate from grdispec
         spec = axi.get_subplotspec()
-        spans = spec._get_grid_span(hidden=False)
-        rowspans = spans[:2]
-        colspans = spans[-2:]
+        spans = spec._get_grid_span()
+        rowspan = spans[:2]
+        colspan = spans[-2:]
+
+        x, y, xspan, yspan = spans
         grid[
-            rowspans[0] : rowspans[1],
-            colspans[0] : colspans[1],
+            slice(*rowspan),
+            slice(*colspan),
         ] = axi.number
 
         # Allow grouping of mixed types
@@ -938,7 +940,10 @@ def _get_subplot_layout(
         if not same_type:
             axis_type = seen_axis_types.get(type(axi), 1)
 
-        grid_axis_type[rowspans[0] : rowspans[1], colspans[0] : colspans[1]] = axis_type
+        grid_axis_type[
+            slice(*rowspan),
+            slice(*colspan),
+        ] = axis_type
     return grid, grid_axis_type, seen_axis_types
 
 
@@ -992,11 +997,11 @@ class _Crawler:
 
         # Retrieve where the axis is in the grid
         spec = self.ax.get_subplotspec()
-        spans = spec._get_grid_span(hidden=False)
+        spans = spec._get_grid_span()
         rowspan = spans[:2]
         colspan = spans[-2:]
-        xs = range(rowspan[0], rowspan[1])
-        ys = range(colspan[0], colspan[1])
+        xs = range(*rowspan)
+        ys = range(*colspan)
         is_border = False
         for x, y in product(xs, ys):
             pos = (x, y)
@@ -1028,30 +1033,32 @@ class _Crawler:
         # Check if we reached a plot or an internal edge
         if self.grid[x, y] != self.target and self.grid[x, y] > 0:
             # check if we reached a border that has the same x and y span
-            ispan = self.ax.get_subplotspec()._get_grid_span(hidden=False)
+            ispan = self.ax.get_subplotspec()._get_grid_span()
             onumber = int(self.grid[x, y])
             if onumber == 0:
                 return True
             other = self.ax.figure.axes[onumber - 1].get_subplotspec()
-            ospan = other._get_grid_span(hidden=False)
+            ospan = other._get_grid_span()
 
             # Check if our spans are the same
-            irowspan, icolspan = (
-                (ispan[1] - ispan[0]),
-                (ispan[3] - ispan[2]),
-            )
-            orowspan, ocolspan = (
-                (ospan[1] - ospan[0]),
-                (ospan[3] - ospan[2]),
-            )
+            irowspan, icolspan = ispan[:2], ispan[-2:]
+            orowspan, ocolspan = ospan[:2], ospan[-2:]
+
+            # Compute the span size
+            irowspan_size = irowspan[1] - irowspan[0]
+            icolspan_size = icolspan[1] - icolspan[0]
+            orowspan_size = orowspan[1] - orowspan[0]
+            ocolspan_size = ocolspan[1] - ocolspan[0]
+
             dy, dx = direction
+
             # Check in which way we are moving
             # and check the span for that direction
             if dx == 0:
-                if irowspan != orowspan:
+                if irowspan_size != orowspan_size:
                     return True
             elif dy == 0:
-                if icolspan != ocolspan:
+                if icolspan_size != ocolspan_size:
                     return True
             return False
 
