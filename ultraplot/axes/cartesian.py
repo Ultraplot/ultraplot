@@ -9,6 +9,8 @@ import matplotlib.dates as mdates
 import matplotlib.ticker as mticker
 import numpy as np
 
+from packaging import version
+
 from .. import constructor
 from .. import scale as pscale
 from .. import ticker as pticker
@@ -507,6 +509,14 @@ class CartesianAxes(shared._SharedAxes, plot.PlotAxes):
 
             # Use automatic border detection logic
             if self in border_axes.get(border_side, []):
+                # Deal with logic not being consistent
+                # in prior mpl versions
+                if version.parse(str(_version_mpl)) <= version.parse("3.9"):
+                    if label_param == "labeltop" and axis_name == "x":
+                        label_param = "labelright"
+                    elif label_params == "labelleft" and axis_name == "x":
+                        label_param = "labelleft"
+
                 is_this_tick_on = ticks[label_param]
                 is_parent_tick_on = sharing_ticks[label_param]
                 if is_this_tick_on or is_parent_tick_on:
