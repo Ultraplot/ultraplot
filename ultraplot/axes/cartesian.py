@@ -492,7 +492,7 @@ class CartesianAxes(shared._SharedAxes, plot.PlotAxes):
             if version.parse(str(_version_mpl)) <= version.parse("3.9"):
                 if label_param == "labeltop" and axis_name == "x":
                     label_param = "labelright"
-                elif label_params == "labelbottom" and axis_name == "x":
+                elif label_param == "labelbottom" and axis_name == "x":
                     label_param = "labelleft"
             return label_param
 
