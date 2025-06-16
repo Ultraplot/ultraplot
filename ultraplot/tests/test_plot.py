@@ -226,7 +226,7 @@ def test_quiver_discrete_colors():
     C = np.random.rand(3, 4)
     ax.quiver(X - 2, Y, U, V, C)
     ax.quiver(X - 3, Y, U, V, color="red", infer_rgb=True)
-    return fig
+    uplt.close(fig)
 
 
 def test_setting_log_with_rc():
@@ -281,7 +281,7 @@ def test_setting_log_with_rc():
             axi = getattr(ax, f"{target}axis")
             check_ticks(axi, target=False)
 
-    return fig
+    uplt.close(fig)
 
 
 def test_shading_pcolor():
@@ -324,7 +324,7 @@ def test_shading_pcolor():
         else:
             assert x.shape[0] == z.shape[0]
             assert x.shape[1] == z.shape[1]
-    return fig
+    uplt.close(fig)
 
 
 def test_cycle_with_singular_column():
