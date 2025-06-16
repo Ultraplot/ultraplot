@@ -1046,6 +1046,17 @@ class _Crawler:
         direction: tuple[int, int],
         other: int,
     ) -> bool:
+        """
+        Helper function to determined whether a subplot
+        is enclosed or enclosed another subplot. This is
+        key to know where a border is, e.g.
+
+        1 2
+        1 3
+
+        Implies that 1 cannot share y with 2 and 3, but 2, and 3
+        can share x.
+        """
         this_spec = self.ax.get_subplotspec()
         other_spec = self.ax.figure._subplot_dict[other].get_subplotspec()
 
@@ -1071,8 +1082,8 @@ class _Crawler:
             other_start, other_stop = other_rowspan
 
         if this_start == other_start and this_stop == other_stop:
-            return False
-        return True
+            return False # not a border
+        return True 
 
 
 # Deprecations
