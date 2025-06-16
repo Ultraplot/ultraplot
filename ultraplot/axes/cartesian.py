@@ -529,7 +529,22 @@ class CartesianAxes(shared._SharedAxes, plot.PlotAxes):
                 label_param = _convert_label_param(label_param)
                 is_this_tick_on = ticks[label_param]
                 is_parent_tick_on = sharing_ticks[label_param]
-                if is_this_tick_on or is_parent_tick_on:
+                # Only turn on the labels for the current axis
+                # if the axis it is sharing with is a main
+                # and we are not panel
+                turn_on_label = False
+                if is_panel:
+                    # When we are a panel only turn on ticks
+                    # if the parent has the labels on
+                    # Note: on panel creation we ensure
+                    # the ticks are correctly parsed.
+                    if is_parent_tick_on:
+                        turn_on_label = True
+                # For shared axes we turn them on if either or are on, but turn off the parent
+                elif is_this_tick_on or is_parent_tick_on:
+                    turn_on_label = True
+
+                if turn_on_label:
                     getattr(shared_axis, f"{axis_name}axis").set_tick_params(
                         **{label_param: False}
                     )
