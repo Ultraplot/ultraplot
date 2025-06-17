@@ -101,8 +101,8 @@ def test_three_axes():
     """
     Test basic 3D axes here.
     """
-    uplt.rc["tick.minor"] = False
-    fig, ax = uplt.subplots(proj="3d", outerpad=3)
+    with uplt.rc.context({"tick.minor": False}):
+        fig, ax = uplt.subplots(proj="3d", outerpad=3)
     return fig
 
 

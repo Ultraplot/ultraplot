@@ -115,23 +115,25 @@ def test_histogram_legend(rng):
     """
     Support complex histogram legends.
     """
-    uplt.rc.inlineformat = "svg"
-    fig, ax = uplt.subplots()
-    res = ax.hist(
-        rng.random((500, 2)), 4, labels=("label", "other"), edgefix=True, legend="b"
-    )
-    ax.legend(res, loc="r", ncol=1)  # should issue warning after ignoring numpy arrays
-    df = pd.DataFrame(
-        {"length": [1.5, 0.5, 1.2, 0.9, 3], "width": [0.7, 0.2, 0.15, 0.2, 1.1]},
-        index=["pig", "rabbit", "duck", "chicken", "horse"],
-    )
-    fig, axs = uplt.subplots(ncols=3)
-    ax = axs[0]
-    res = ax.hist(df, bins=3, legend=True, lw=3)
-    ax.legend(loc="b")
-    for ax, meth in zip(axs[1:], ("bar", "area")):
-        hs = getattr(ax, meth)(df, legend="ul", lw=3)
-        ax.legend(hs, loc="b")
+    with uplt.rc.context({"inlineformat": "svg"}):
+        fig, ax = uplt.subplots()
+        res = ax.hist(
+            rng.random((500, 2)), 4, labels=("label", "other"), edgefix=True, legend="b"
+        )
+        ax.legend(
+            res, loc="r", ncol=1
+        )  # should issue warning after ignoring numpy arrays
+        df = pd.DataFrame(
+            {"length": [1.5, 0.5, 1.2, 0.9, 3], "width": [0.7, 0.2, 0.15, 0.2, 1.1]},
+            index=["pig", "rabbit", "duck", "chicken", "horse"],
+        )
+        fig, axs = uplt.subplots(ncols=3)
+        ax = axs[0]
+        res = ax.hist(df, bins=3, legend=True, lw=3)
+        ax.legend(loc="b")
+        for ax, meth in zip(axs[1:], ("bar", "area")):
+            hs = getattr(ax, meth)(df, legend="ul", lw=3)
+            ax.legend(hs, loc="b")
     return fig
 
 

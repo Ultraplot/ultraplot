@@ -220,13 +220,13 @@ def test_pie_charts():
     """
     Test basic pie plots. No examples in user guide right now.
     """
-    uplt.rc.inlineformat = "svg"
-    labels = ["foo", "bar", "baz", "biff", "buzz"]
-    array = np.arange(1, 6)
-    data = pd.Series(array, index=labels)
-    fig, ax = uplt.subplots(ncols=2)
-    ax[0].pie(array, edgefix=True, labels=labels, ec="k", cycle="reds")
-    ax[1].pie(data, ec="k", cycle="blues")
+    with uplt.rc.context({"inlineformat": "svg"}):
+        labels = ["foo", "bar", "baz", "biff", "buzz"]
+        array = np.arange(1, 6)
+        data = pd.Series(array, index=labels)
+        fig, ax = uplt.subplots(ncols=2)
+        ax[0].pie(array, edgefix=True, labels=labels, ec="k", cycle="reds")
+        ax[1].pie(data, ec="k", cycle="blues")
     return fig
 
 
@@ -235,15 +235,15 @@ def test_parametric_labels(rng):
     """
     Test parametric plot with labels.
     """
-    uplt.rc.inlineformat = "svg"
-    fig, ax = uplt.subplots()
-    ax.parametric(
-        rng.random(5),
-        c=list("abcde"),
-        lw=20,
-        colorbar="b",
-        cmap_kw={"left": 0.2},
-    )
+    with uplt.rc.context({"inlineformat": "svg"}):
+        fig, ax = uplt.subplots()
+        ax.parametric(
+            rng.random(5),
+            c=list("abcde"),
+            lw=20,
+            colorbar="b",
+            cmap_kw={"left": 0.2},
+        )
     return fig
 
 
@@ -526,13 +526,18 @@ def test_heatmap_labels(rng):
 
 
 @pytest.mark.mpl_image_compare()
-def test_networks():
+def test_networks(rng):
     """
     Create a baseline network graph that tests
     a few features. It is not the prettiest graphs but highlights what the functions can do.
     """
     import networkx as nx
 
+    # Ensure that the seed for the networkx are
+    # using the same seed
+    from .conftest import SEED
+
+    np.random.seed(SEED)
     graphs = [
         nx.karate_club_graph(),
         nx.florentine_families_graph(),

@@ -13,17 +13,17 @@ def test_pint_quantities(rng):
     """
     Ensure auto-formatting and column iteration both work.
     """
-    uplt.rc.unitformat = "~H"
-    ureg = pint.UnitRegistry()
-    fig, ax = uplt.subplots()
-    ax.plot(
-        np.arange(10),
-        rng.random(10) * ureg.km,
-        "C0",
-        np.arange(10),
-        rng.random(10) * ureg.m * 1e2,
-        "C1",
-    )
+    with uplt.rc.context({"unitformat": "~H"}):
+        ureg = pint.UnitRegistry()
+        fig, ax = uplt.subplots()
+        ax.plot(
+            np.arange(10),
+            rng.random(10) * ureg.km,
+            "C0",
+            np.arange(10),
+            rng.random(10) * ureg.m * 1e2,
+            "C1",
+        )
     return fig
 
 

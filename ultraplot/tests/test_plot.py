@@ -236,7 +236,6 @@ def test_setting_log_with_rc():
     """
     import re
 
-    uplt.rc["formatter.log"] = True
     x, y = np.linspace(0, 1e6, 10), np.linspace(0, 1e6, 10)
 
     def check_ticks(axis, target=True):
@@ -263,24 +262,25 @@ def test_setting_log_with_rc():
         ["x", "y"],
     ]
 
-    fig, ax = uplt.subplots()
-    for func, targets in zip(funcs, conditions):
-        reset(ax)
-        # Call the function
-        getattr(ax, func)(x, y)
-        # Check if the formatter is set
-        for target in targets:
-            axi = getattr(ax, f"{target}axis")
-            check_ticks(axi, target=True)
+    with uplt.rc.context({"formatter.log": True}):
+        fig, ax = uplt.subplots()
+        for func, targets in zip(funcs, conditions):
+            reset(ax)
+            # Call the function
+            getattr(ax, func)(x, y)
+            # Check if the formatter is set
+            for target in targets:
+                axi = getattr(ax, f"{target}axis")
+                check_ticks(axi, target=True)
 
-    uplt.rc["formatter.log"] = False
-    fig, ax = uplt.subplots()
-    for func, targets in zip(funcs, conditions):
-        reset(ax)
-        getattr(ax, func)(x, y)
-        for target in targets:
-            axi = getattr(ax, f"{target}axis")
-            check_ticks(axi, target=False)
+    with uplt.rc.context({"formatter.log": False}):
+        fig, ax = uplt.subplots()
+        for func, targets in zip(funcs, conditions):
+            reset(ax)
+            getattr(ax, func)(x, y)
+            for target in targets:
+                axi = getattr(ax, f"{target}axis")
+                check_ticks(axi, target=False)
 
     uplt.close(fig)
 

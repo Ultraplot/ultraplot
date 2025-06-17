@@ -104,8 +104,8 @@ def test_colormap_mode(rng):
         axs[2].pcolor(
             rng.random((5, 5)), discrete=False, qualitative=True, colorbar="b"
         )
-    uplt.rc["cmap.discrete"] = False  # should be ignored below
-    axs[3].contourf(rng.random((5, 5)), colorbar="b")
+    with uplt.rc.context({"cmap.discrete": False}):  # should be ignored below
+        axs[3].contourf(rng.random((5, 5)), colorbar="b")
     return fig
 
 
@@ -243,9 +243,7 @@ def test_ignore_message(rng):
     warning = uplt.internals.UltraPlotWarning
     fig, axs = uplt.subplots(ncols=2, nrows=2)
     with pytest.warns(warning):
-        axs[0].contour(
-            np.random.rand(5, 5) * 10, levels=uplt.arange(10), symmetric=True
-        )
+        axs[0].contour(rng.random((5, 5)) * 10, levels=uplt.arange(10), symmetric=True)
     with pytest.warns(warning):
         axs[1].contourf(
             rng.random((10, 10)),

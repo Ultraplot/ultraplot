@@ -200,9 +200,9 @@ def test_locale_formatting(loc):
         # Your test code that is sensitive to the locale settings
         assert locale.getlocale() == (loc.split(".")[0], loc.split(".")[1])
 
-        uplt.rc["formatter.use_locale"] = False
-        uplt.rc["formatter.zerotrim"] = True
-        with uplt.rc.context({"formatter.use_locale": True}):
+        with uplt.rc.context(
+            {"formatter.use_locale": True, "formatter.zerotrim": True}
+        ):
             fig, ax = uplt.subplots()
             ticks = uplt.arange(-1, 1, 0.1)
             ax.format(ylim=(min(ticks), max(ticks)), yticks=ticks)
@@ -210,13 +210,6 @@ def test_locale_formatting(loc):
     finally:
         # Always reset to the original locale
         locale.setlocale(locale.LC_ALL, original_locale)
-    uplt.rc["formatter.use_locale"] = False
-    uplt.rc["formatter.zerotrim"] = True
-    with uplt.rc.context({"formatter.use_locale": True}):
-        fig, ax = uplt.subplots()
-        ticks = uplt.arange(-1, 1, 0.1)
-        ax.format(ylim=(min(ticks), max(ticks)), yticks=ticks)
-    return fig
 
 
 @pytest.mark.mpl_image_compare
