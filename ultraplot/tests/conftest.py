@@ -56,21 +56,37 @@ class StoreFailedMplPlugin:
             report.nodeid,
         )
         target = (self.result_dir / name).absolute()
-        if target.is_dir():
-            print(f"Removing successful test images: {target}")
-            shutil.rmtree(target)
+
+        # Thread-safe directory removal with extra safety checks
+        try:
+            if target.exists() and target.is_dir():
+                print(f"Removing successful test images: {target}")
+                shutil.rmtree(target)
+        except (FileNotFoundError, OSError, PermissionError) as e:
+            # Another worker may have already removed it, or concurrent deletion
+            # This is expected in parallel execution and can be safely ignored
+            print(
+                f"Note: Directory cleanup skipped for {target.name} (likely removed by another worker)"
+            )
+        except Exception as e:
+            # Catch any other unexpected errors to prevent test failures
+            print(f"Warning: Unexpected error during cleanup of {target}: {e}")
 
     @pytest.hookimpl(trylast=True)
     def pytest_runtest_logreport(self, report):
         """Hook that processes each test report."""
         # Track failed mpl tests and clean up successful ones
         if report.when == "call" and self._has_mpl_marker(report):
-            if report.outcome == "failed":
-                self.failed_mpl_tests.add(report.nodeid)
-                print(f"Tracking failed mpl test: {report.nodeid}")
-            else:
-                # Delete successful tests to reduce artifact size
-                self._remove_success(report)
+            try:
+                if report.outcome == "failed":
+                    self.failed_mpl_tests.add(report.nodeid)
+                    print(f"Tracking failed mpl test: {report.nodeid}")
+                else:
+                    # Delete successful tests to reduce artifact size
+                    self._remove_success(report)
+            except Exception as e:
+                # Log but don't fail on cleanup errors
+                print(f"Warning: Error during test cleanup for {report.nodeid}: {e}")
 
 
 def pytest_collection_modifyitems(config, items):
