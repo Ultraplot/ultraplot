@@ -30,4 +30,4 @@ dependencies:
   - typing-extensions
   - xarray
   - pip:
-      - git+https://github.com/ultraplot/UltraTheme.gity
+      - git+https://github.com/ultraplot/UltraTheme.git
