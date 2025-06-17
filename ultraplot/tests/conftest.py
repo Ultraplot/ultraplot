@@ -35,7 +35,6 @@ from ultraplot.tests.mpl_plugin.cleanup import get_cleanup_manager
 
 # Thread-specific RNG registry
 SEED = 51423
-_thread_rngs = {}
 
 
 @pytest.fixture
