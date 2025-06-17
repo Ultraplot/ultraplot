@@ -32,8 +32,6 @@ from ultraplot.tests.mpl_plugin.utils import (
 from ultraplot.tests.mpl_plugin.progress import get_progress_tracker
 from ultraplot.tests.mpl_plugin.cleanup import get_cleanup_manager
 
-
-# Thread-specific RNG registry
 SEED = 51423
 
 
