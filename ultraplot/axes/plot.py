@@ -4190,16 +4190,26 @@ class PlotAxes(base.Axes):
         nodes: Union[None, bool, Iterable] = None,
         edges: Union[None, bool, Iterable] = None,
         labels: Union[None, bool, Iterable] = None,
-        layout_kw={},
-        node_kw={},
-        edge_kw={},
-        label_kw={},
+        layout_kw: Optional[dict] = None,
+        node_kw: Optional[dict] = None,
+        edge_kw: Optional[dict] = None,
+        label_kw: Optional[dict] = None,
         rescale: Union[None, bool] = None,
     ):
         """
         %(plot.graph)s
         """
         import networkx as nx
+        # Handle mutable default arguments
+        layout_kw
+        if layout_kw is None:
+            layout_kw = {}
+        if node_kw is None:
+            node_kw = {}
+        if edge_kw is None:
+            edge_kw = {}
+        if label_kw is None:
+            label_kw = {}
 
         labels = _not_none(labels, rc["graph.draw_labels"])
         nodes = _not_none(nodes, rc["graph.draw_nodes"])
