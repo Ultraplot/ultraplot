@@ -2,6 +2,7 @@ import os, shutil, pytest, re, numpy as np, ultraplot as uplt
 from pathlib import Path
 import warnings, logging
 from datetime import datetime
+import threading
 
 
 @pytest.fixture(autouse=True)
@@ -28,6 +29,11 @@ def pytest_addoption(parser):
     )
 
 
+# Global set to track directories scheduled for cleanup
+_pending_cleanups = set()
+_cleanup_lock = threading.Lock()
+
+
 class StoreFailedMplPlugin:
     def __init__(self, config):
         self.config = config
@@ -47,7 +53,7 @@ class StoreFailedMplPlugin:
         return report.keywords.get("mpl_image_compare", False)
 
     def _remove_success(self, report: pytest.TestReport):
-        """Remove successful test images to reduce artifact size."""
+        """Mark successful test images for deferred cleanup to eliminate blocking."""
 
         pattern = r"(?P<sep>::|/)|\[|\]|\.py"
         name = re.sub(
@@ -57,36 +63,28 @@ class StoreFailedMplPlugin:
         )
         target = (self.result_dir / name).absolute()
 
-        # Thread-safe directory removal with extra safety checks
-        try:
+        # Use hybrid approach: track for cleanup but don't block workers
+        global _pending_cleanups
+        with _cleanup_lock:
             if target.exists() and target.is_dir():
-                print(f"Removing successful test images: {target}")
-                shutil.rmtree(target)
-        except (FileNotFoundError, OSError, PermissionError) as e:
-            # Another worker may have already removed it, or concurrent deletion
-            # This is expected in parallel execution and can be safely ignored
-            print(
-                f"Note: Directory cleanup skipped for {target.name} (likely removed by another worker)"
-            )
-        except Exception as e:
-            # Catch any other unexpected errors to prevent test failures
-            print(f"Warning: Unexpected error during cleanup of {target}: {e}")
+                _pending_cleanups.add(target)
+                print(f"Marked for cleanup: {target}")
 
     @pytest.hookimpl(trylast=True)
     def pytest_runtest_logreport(self, report):
         """Hook that processes each test report."""
-        # Track failed mpl tests and clean up successful ones
+        # Track failed mpl tests and queue successful ones for cleanup
         if report.when == "call" and self._has_mpl_marker(report):
             try:
                 if report.outcome == "failed":
                     self.failed_mpl_tests.add(report.nodeid)
                     print(f"Tracking failed mpl test: {report.nodeid}")
                 else:
-                    # Delete successful tests to reduce artifact size
+                    # Mark successful tests for cleanup to reduce artifact size
                     self._remove_success(report)
             except Exception as e:
                 # Log but don't fail on cleanup errors
-                print(f"Warning: Error during test cleanup for {report.nodeid}: {e}")
+                print(f"Warning: Error during test processing for {report.nodeid}: {e}")
 
 
 def pytest_collection_modifyitems(config, items):
@@ -116,6 +114,9 @@ def pytest_terminal_summary(terminalreporter, exitstatus, config):
     print(
         "Note: When using --store-failed-only, only failed tests will be included in the report"
     )
+
+    # Perform deferred cleanup now that all tests are done
+    _perform_deferred_cleanup()
 
     # Get the results directory - handle both pytest-mpl options
     results_dir = _get_results_directory(config)
@@ -254,6 +255,31 @@ def _get_results_directory(config):
         or "./mpl-results"
     )
     return Path(results_path)
+
+
+def _perform_deferred_cleanup():
+    """Perform cleanup of successful test directories after all tests complete."""
+    global _pending_cleanups
+
+    with _cleanup_lock:
+        cleanup_list = list(_pending_cleanups)
+        _pending_cleanups.clear()
+
+    if cleanup_list:
+        print(f"Performing deferred cleanup of {len(cleanup_list)} directories...")
+        for target in cleanup_list:
+            try:
+                if target.exists() and target.is_dir():
+                    print(f"Removing successful test images: {target}")
+                    shutil.rmtree(target)
+            except (FileNotFoundError, OSError, PermissionError):
+                # Directory might have been removed already - that's fine
+                pass
+            except Exception as e:
+                print(f"Warning: Error during cleanup of {target}: {e}")
+        print("Deferred cleanup completed")
+    else:
+        print("No directories to clean up")
 
 
 def _extract_test_name_from_filename(filename, test_id):
