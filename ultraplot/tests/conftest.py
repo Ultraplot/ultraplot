@@ -10,8 +10,7 @@ def rng():
     """
     Ensure all tests start with the same rng
     """
-    seed = 51423
-    return np.random.default_rng(seed)
+    return np.random.default_rng(SEED)
 
 
 @pytest.fixture(autouse=True)
