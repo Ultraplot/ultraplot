@@ -54,12 +54,6 @@ def rng():
     return np.random.default_rng(seed=SEED)
 
 
-@pytest.fixture(autouse=True)
-def _reset_numpy_seed():
-    """Reset numpy random seed for each test to ensure reproducibility."""
-    # Set global numpy seed for backward compatibility - same seed each test
-    np.random.seed(SEED)
-
 
 @pytest.fixture(autouse=True)
 def close_figures_after_test():
