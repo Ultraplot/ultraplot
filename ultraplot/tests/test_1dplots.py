@@ -34,7 +34,7 @@ def test_auto_reverse(rng):
 
 
 @pytest.mark.mpl_image_compare
-def test_cmap_cycles():
+def test_cmap_cycles(rng):
     """
     Test sampling of multiple continuous colormaps.
     """
@@ -49,7 +49,7 @@ def test_cmap_cycles():
         samples=[3, 4, 5, 2, 1],
     )
     fig, ax = uplt.subplots()
-    data = np.random.rand(10, len(cycle)).cumsum(axis=1)
+    data = rng.random((10, len(cycle))).cumsum(axis=1)
     data = pd.DataFrame(data, columns=list("abcdefghijklmno"))
     ax.plot(data, cycle=cycle, linewidth=2, legend="b")
     return fig

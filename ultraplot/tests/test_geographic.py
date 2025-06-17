@@ -46,12 +46,12 @@ def test_geographic_multiple_projections():
 
 
 @pytest.mark.mpl_image_compare
-def test_drawing_in_projection_without_globe():
+def test_drawing_in_projection_without_globe(rng):
     # Fake data with unusual longitude seam location and without coverage over poles
     offset = -40
     lon = uplt.arange(offset, 360 + offset - 1, 60)
     lat = uplt.arange(-60, 60 + 1, 30)
-    data = np.random.rand(len(lat), len(lon))
+    data = rng.random((len(lat), len(lon)))
 
     globe = False
     string = "with" if globe else "without"
@@ -81,12 +81,12 @@ def test_drawing_in_projection_without_globe():
 
 
 @pytest.mark.mpl_image_compare
-def test_drawing_in_projection_with_globe():
+def test_drawing_in_projection_with_globe(rng):
     # Fake data with unusual longitude seam location and without coverage over poles
     offset = -40
     lon = uplt.arange(offset, 360 + offset - 1, 60)
     lat = uplt.arange(-60, 60 + 1, 30)
-    data = np.random.rand(len(lat), len(lon))
+    data = rng.random((len(lat), len(lon)))
 
     globe = True
     string = "with" if globe else "without"
@@ -589,7 +589,7 @@ def test_sharing_levels():
 
 
 @pytest.mark.mpl_image_compare
-def test_cartesian_and_geo():
+def test_cartesian_and_geo(rng):
     """
     Test that axis sharing does not prevent
     running Cartesian based plot functions
@@ -609,8 +609,8 @@ def test_cartesian_and_geo():
     ) as mocked:
         # Make small range to speed up plotting
         ax.format(land=True, lonlim=(-10, 10), latlim=(-10, 10))
-        ax[0].pcolormesh(np.random.rand(10, 10))
-        ax[1].scatter(*np.random.rand(2, 100))
+        ax[0].pcolormesh(rng.random((10, 10)))
+        ax[1].scatter(*rng.random((2, 100)))
         ax[0]._apply_axis_sharing()
         assert mocked.call_count == 1
     return fig
@@ -689,7 +689,7 @@ def test_panels_geo():
 
 
 @pytest.mark.mpl_image_compare
-def test_geo_with_panels():
+def test_geo_with_panels(rng):
     """
     We are allowed to add panels in GeoPlots
     """
@@ -707,7 +707,7 @@ def test_geo_with_panels():
     elevation = (
         2000 * np.exp(-((lz - 90) ** 2 + (lz_grid - 30) ** 2) / 400)
         + 1000 * np.exp(-((lz - 120) ** 2 + (lz_grid - 45) ** 2) / 225)
-        + np.random.normal(0, 100, lz.shape)
+        + rng.normal(0, 100, lz.shape)
     )
     elevation = np.clip(elevation, 0, 4000)
 
@@ -780,7 +780,7 @@ def test_tick_toggler():
 
 
 @pytest.mark.mpl_image_compare
-def test_sharing_cartopy_with_colorbar():
+def test_sharing_cartopy_with_colorbar(rng):
 
     def are_labels_on(ax, which=("top", "bottom", "right", "left")) -> tuple[bool]:
         gl = ax.gridlines_major
@@ -798,7 +798,7 @@ def test_sharing_cartopy_with_colorbar():
         share="all",
     )
 
-    data = np.random.rand(10, 10)
+    data = rng.random((10, 10))
     h = ax.imshow(data)[0]
     ax.format(land=True, labels="both")  # need this otherwise no labels are printed
     fig.colorbar(h, loc="r")

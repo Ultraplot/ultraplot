@@ -38,31 +38,13 @@ SEED = 51423
 _thread_rngs = {}
 
 
-def _create_thread_rng():
-    """Create a new independent RNG instance for the current thread."""
-    return
-
-
 @pytest.fixture
 def rng():
     """
     Fixture providing an independent numpy random generator for tests.
-
-    This fixture provides a numpy.random.Generator instance that is:
-    - Independent per thread (no shared state)
-    - Deterministic across test runs
-    - Compatible with pytest-xdist parallel execution
-
-    Usage in tests:
-        def test_something(rng):
-            random_data = rng.normal(0, 1, size=100)
-            random_ints = rng.integers(0, 10, size=5)
     """
-    thread_id = threading.get_ident()
-    print(thread_id)
-
-    _thread_rngs[thread_id] = np.random.Generator(np.random.PCG64(SEED))
-    return _thread_rngs[thread_id]
+    # Always create a fresh RNG for each test
+    return np.random.Generator(np.random.PCG64(SEED))
 
 
 @pytest.fixture(autouse=True)
