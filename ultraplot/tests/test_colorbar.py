@@ -50,12 +50,12 @@ def test_colorbar_ticks():
 
 
 @pytest.mark.mpl_image_compare
-def test_discrete_ticks():
+def test_discrete_ticks(rng):
     """
     Test `DiscreteLocator`.
     """
     levels = uplt.arange(0, 2, 0.1)
-    data = np.random.rand(5, 5) * 2
+    data = rng.random((5, 5)) * 2
     fig, axs = uplt.subplots(share=False, ncols=2, nrows=2, refwidth=2)
     for i, ax in enumerate(axs):
         cmd = ax.contourf if i // 2 == 0 else ax.pcolormesh
@@ -66,36 +66,36 @@ def test_discrete_ticks():
 
 
 @pytest.mark.mpl_image_compare
-def test_discrete_vs_fixed():
+def test_discrete_vs_fixed(rng):
     """
     Test `DiscreteLocator` for numeric on-the-fly
     mappable ticks and `FixedLocator` otherwise.
     """
     fig, axs = uplt.subplots(ncols=2, nrows=3, refwidth=1.3, share=False)
-    axs[0].plot(np.random.rand(10, 5), labels=list("xyzpq"), colorbar="b")  # fixed
-    axs[1].plot(np.random.rand(10, 5), labels=np.arange(5), colorbar="b")  # discrete
+    axs[0].plot(rng.random((10, 5)), labels=list("xyzpq"), colorbar="b")  # fixed
+    axs[1].plot(rng.random((10, 5)), labels=np.arange(5), colorbar="b")  # discrete
     axs[2].contourf(
-        np.random.rand(10, 10),
+        rng.random((10, 10)),
         colorbar="b",
         colorbar_kw={"ticklabels": list("xyzpq")},  # fixed
     )
-    axs[3].contourf(np.random.rand(10, 10), colorbar="b")  # discrete
+    axs[3].contourf(rng.random((10, 10)), colorbar="b")  # discrete
     axs[4].pcolormesh(
-        np.random.rand(10, 10) * 20, colorbar="b", levels=[0, 2, 4, 6, 8, 10, 15, 20]
+        rng.random((10, 10)) * 20, colorbar="b", levels=[0, 2, 4, 6, 8, 10, 15, 20]
     )  # fixed
     axs[5].pcolormesh(
-        np.random.rand(10, 10) * 20, colorbar="b", levels=uplt.arange(0, 20, 2)
+        rng.random((10, 10)) * 20, colorbar="b", levels=uplt.arange(0, 20, 2)
     )  # discrete
     return fig
 
 
 @pytest.mark.mpl_image_compare
-def test_uneven_levels():
+def test_uneven_levels(rng):
     """
     Test even and uneven levels with discrete cmap. Ensure minor ticks are disabled.
     """
     N = 20
-    data = np.cumsum(np.random.rand(N, N), axis=1) * 12
+    data = np.cumsum(rng.random((N, N)), axis=1) * 12
     colors = [
         "white",
         "indigo1",
@@ -122,7 +122,7 @@ def test_uneven_levels():
 
 
 @pytest.mark.mpl_image_compare
-def test_on_the_fly_mappable():
+def test_on_the_fly_mappable(rng):
     """
     Test on-the-fly mappable generation.
     """
@@ -137,17 +137,17 @@ def test_on_the_fly_mappable():
 
     # Passing labels to plot function.
     fig, ax = uplt.subplots()
-    ax.scatter(np.random.rand(10, 4), labels=["foo", "bar", "baz", "xyz"], colorbar="b")
+    ax.scatter(rng.random((10, 4)), labels=["foo", "bar", "baz", "xyz"], colorbar="b")
 
     # Passing string value lists. This helps complete the analogy with legend 'labels'.
     fig, ax = uplt.subplots()
-    hs = ax.line(np.random.rand(20, 5))
+    hs = ax.line(rng.random((20, 5)))
     ax.colorbar(hs, loc="b", values=["abc", "def", "ghi", "pqr", "xyz"])
     return fig
 
 
 @pytest.mark.mpl_image_compare
-def test_inset_colorbars():
+def test_inset_colorbars(rng):
     """
     Test basic functionality.
     """
@@ -158,7 +158,7 @@ def test_inset_colorbars():
     # Colorbars from lines
     fig = uplt.figure(share=False, refwidth=2)
     ax = fig.subplot(121)
-    data = 1 + (np.random.rand(12, 10) - 0.45).cumsum(axis=0)
+    data = 1 + (rng.random((12, 10)) - 0.45).cumsum(axis=0)
     cycle = uplt.Cycle("algae")
     hs = ax.line(
         data,
@@ -198,13 +198,13 @@ def test_inset_colorbars():
 
 @pytest.mark.skip("not sure what this does")
 @pytest.mark.mpl_image_compare
-def test_segmented_norm_center():
+def test_segmented_norm_center(rng):
     """
     Test various align options.
     """
     fig, ax = uplt.subplots()
     cmap = uplt.Colormap("NegPos", cut=0.1)
-    data = np.random.rand(10, 10) * 10 - 2
+    data = rng.random((10, 10)) * 10 - 2
     levels = [-4, -3, -2, -1, 0, 1, 2, 4, 8, 16, 32, 64, 128]
     norm = uplt.SegmentedNorm(levels, vcenter=0, fair=1)
     ax.pcolormesh(data, levels=levels, norm=norm, cmap=cmap, colorbar="b")
@@ -212,12 +212,12 @@ def test_segmented_norm_center():
 
 
 @pytest.mark.mpl_image_compare
-def test_segmented_norm_ticks():
+def test_segmented_norm_ticks(rng):
     """
     Ensure segmented norm ticks show up in center when `values` are passed.
     """
     fig, ax = uplt.subplots()
-    data = np.random.rand(10, 10) * 10
+    data = rng.random((10, 10)) * 10
     values = (1, 5, 5.5, 6, 10)
     ax.contourf(
         data,
@@ -229,12 +229,12 @@ def test_segmented_norm_ticks():
 
 
 @pytest.mark.mpl_image_compare
-def test_reversed_levels():
+def test_reversed_levels(rng):
     """
     Test negative levels with a discrete norm and segmented norm.
     """
     fig, axs = uplt.subplots(ncols=4, nrows=2, refwidth=1.8)
-    data = np.random.rand(20, 20).cumsum(axis=0)
+    data = rng.random((20, 20)).cumsum(axis=0)
     i = 0
     for stride in (1, -1):
         for key in ("levels", "values"):
@@ -250,10 +250,10 @@ def test_reversed_levels():
 
 
 @pytest.mark.mpl_image_compare
-def test_minor_override():
+def test_minor_override(rng):
     """Test minor ticks override."""
     # Setting a custom minor tick should override the settings. Here we set the ticks to 1 and the minorticks to half that. We then check that the minor ticks are set correctly
-    data = np.random.rand(10, 10)
+    data = rng.random((10, 10))
     left, right, minor, n = 0, 1, 0.05, 11
     levels = np.linspace(left, right, n)
     fig, ax = uplt.subplots()
@@ -267,8 +267,8 @@ def test_minor_override():
 
 
 @pytest.mark.mpl_image_compare
-def test_draw_edges():
-    data = np.random.rand(10, 10)
+def test_draw_edges(rng):
+    data = rng.random((10, 10))
     fig, ax = uplt.subplots(ncols=2)
     for axi, drawedges in zip(ax, [True, False]):
         h = axi.pcolor(data, discrete=True)
@@ -277,12 +277,12 @@ def test_draw_edges():
     return fig
 
 
-def test_label_placement_colorbar():
+def test_label_placement_colorbar(rng):
     """
     Ensure that all potential combinations of colorbar
     label placement is possible.
     """
-    data = np.random.rand(10, 10)
+    data = rng.random((10, 10))
     fig, ax = uplt.subplots()
     h = ax.imshow(data)
     locs = "top bottom left right".split()

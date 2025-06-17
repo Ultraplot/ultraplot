@@ -46,7 +46,7 @@ def test_cartopy_labels():
 
 
 @pytest.mark.mpl_image_compare
-def test_cartopy_contours():
+def test_cartopy_contours(rng):
     """
     Test bug with cartopy contours. Sometimes results in global coverage
     with single color sometimes not.
@@ -57,7 +57,7 @@ def test_cartopy_contours():
     ax.coastlines()
     x = np.linspace(-180, 180, N)
     y = np.linspace(-90, 90, N)
-    z = np.random.rand(N, N) * 10 - 5
+    z = rng.random((N, N)) * 10 - 5
     m = ax.contourf(
         x,
         y,
@@ -75,7 +75,7 @@ def test_cartopy_contours():
     m = ax.contourf(
         np.linspace(0, 180, N),
         np.linspace(0, 90, N)[1::2],
-        np.random.rand(N // 2, N) * 10 + 5,
+        rng.random((N // 2, N)) * 10 + 5,
         cmap="BuRd",
         transform=uplt.PlateCarree(),
         edgefix=False,
@@ -101,8 +101,8 @@ def test_three_axes():
     """
     Test basic 3D axes here.
     """
-    uplt.rc["tick.minor"] = False
-    fig, ax = uplt.subplots(proj="3d", outerpad=3)
+    with uplt.rc.context({"tick.minor": False}):
+        fig, ax = uplt.subplots(proj="3d", outerpad=3)
     return fig
 
 

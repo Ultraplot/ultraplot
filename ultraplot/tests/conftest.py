@@ -3,13 +3,13 @@ from pathlib import Path
 import warnings, logging
 
 
-@pytest.fixture(autouse=True)
-def _reset_numpy_seed():
+@pytest.fixture
+def rng():
     """
     Ensure all tests start with the same rng
     """
     seed = 51423
-    np.random.seed(seed)
+    return np.random.default_rng(seed)
 
 
 @pytest.fixture(autouse=True)
