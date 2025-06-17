@@ -43,7 +43,7 @@ def _create_thread_rng():
     return
 
 
-@pytest.fixture()
+@pytest.fixture
 def rng():
     """
     Fixture providing an independent numpy random generator for tests.
