@@ -41,9 +41,19 @@ _thread_rngs = {}
 @pytest.fixture
 def rng():
     """
-    Fixture providing an independent numpy random generator for tests.
+    Fixture providing a numpy random generator for tests.
+
+    This fixture provides a numpy.random.Generator instance that:
+    - Uses the same seed (51423) for each test
+    - Ensures reproducible results
+    - Resets state for each test
+
+    Usage in tests:
+        def test_something(rng):
+            random_data = rng.normal(0, 1, size=100)
+            random_ints = rng.integers(0, 10, size=5)
     """
-    # Always create a fresh RNG for each test
+    # Each test gets the same seed for reproducibility
     return np.random.Generator(np.random.PCG64(SEED))
 
 
