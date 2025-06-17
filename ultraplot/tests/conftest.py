@@ -2,6 +2,8 @@ import os, shutil, pytest, re, numpy as np, ultraplot as uplt
 from pathlib import Path
 import warnings, logging
 
+SEED = 51423
+
 
 @pytest.fixture
 def rng():
