@@ -10,7 +10,7 @@ import re
 import sys
 from numbers import Integral, Number
 
-from typing import Any, Union, Iterable
+from typing import Any, Union, Iterable, Optional
 
 from typing import Any, Union
 from collections.abc import Callable
@@ -4200,16 +4200,12 @@ class PlotAxes(base.Axes):
         %(plot.graph)s
         """
         import networkx as nx
+
         # Handle mutable default arguments
-        layout_kw
-        if layout_kw is None:
-            layout_kw = {}
-        if node_kw is None:
-            node_kw = {}
-        if edge_kw is None:
-            edge_kw = {}
-        if label_kw is None:
-            label_kw = {}
+        layout_kw = layout_kw or {}
+        node_kw = node_kw or {}
+        edge_kw = edge_kw or {}
+        label_kw = label_kw or {}
 
         labels = _not_none(labels, rc["graph.draw_labels"])
         nodes = _not_none(nodes, rc["graph.draw_nodes"])

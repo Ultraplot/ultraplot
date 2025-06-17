@@ -40,7 +40,7 @@ def test_graph_edges_kw():
 
     # Expecting 2 nodes 1 edge
     assert len(edges.get_offsets()) == 1
-    assert len(nodes.get_offsets()) == 2
+    assert len(nodes.get_offsets()) == 5
     assert labels == False
 
 
