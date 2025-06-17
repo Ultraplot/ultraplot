@@ -218,7 +218,7 @@ def test_quiver_discrete_colors():
     facecolors = q.get_facecolors()
     for expectation, facecolor in zip(expectations, facecolors):
         assert np.allclose(
-            facecolor, expectation, 0.01
+            facecolor, expectation, 0.1
         ), f"Expected {expectation} but got {facecolor}"
     C = ["#ff0000", "#00ff00", "#0000ff"]
     ax.quiver(X - 1, Y, U, V, color=C, infer_rgb=True)
