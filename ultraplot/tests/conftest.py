@@ -65,7 +65,7 @@ class StoreFailedMplPlugin:
         """Hook that processes each test report."""
         # Track failed mpl tests and clean up successful ones
         if report.when == "call" and self._has_mpl_marker(report):
-            if report.failed:
+            if report.outcome == "failed":
                 self.failed_mpl_tests.add(report.nodeid)
                 print(f"Tracking failed mpl test: {report.nodeid}")
             else:
