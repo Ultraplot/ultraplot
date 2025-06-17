@@ -5,14 +5,11 @@ import pytest
 
 
 @pytest.mark.mpl_image_compare
-def test_statistical_boxplot():
-    # Sample data
+def test_statistical_boxplot(rng):
     N = 500
-    data1 = np.random.normal(size=(N, 5)) + 2 * (
-        np.random.rand(N, 5) - 0.5
-    ) * np.arange(5)
+    data1 = rng.normal(size=(N, 5)) + 2 * (rng.random((N, 5)) - 0.5) * np.arange(5)
     data1 = pd.DataFrame(data1, columns=pd.Index(list("abcde"), name="label"))
-    data2 = np.random.rand(100, 7)
+    data2 = rng.random((100, 7))
     data2 = pd.DataFrame(data2, columns=pd.Index(list("abcdefg"), name="label"))
 
     # Figure
@@ -37,11 +34,10 @@ def test_statistical_boxplot():
 
 
 @pytest.mark.mpl_image_compare
-def test_panel_dist():
-    # Sample data
+def test_panel_dist(rng):
     N = 500
-    x = np.random.normal(size=(N,))
-    y = np.random.normal(size=(N,))
+    x = rng.normal(size=(N,))
+    y = rng.normal(size=(N,))
     bins = uplt.arange(-3, 3, 0.25)
 
     # Histogram with marginal distributions

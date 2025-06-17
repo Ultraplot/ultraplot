@@ -11,13 +11,13 @@ import pytest
 
 
 @pytest.mark.mpl_image_compare
-def test_auto_reverse():
+def test_auto_reverse(rng):
     """
     Test enabled and disabled auto reverse.
     """
     x = np.arange(10)[::-1]
     y = np.arange(10)
-    z = np.random.rand(10, 10)
+    z = rng.random((10, 10))
     fig, axs = uplt.subplots(ncols=2, nrows=3, share=0)
     # axs[0].format(xreverse=False)  # should fail
     axs[0].plot(x, y)
@@ -34,7 +34,7 @@ def test_auto_reverse():
 
 
 @pytest.mark.mpl_image_compare
-def test_cmap_cycles():
+def test_cmap_cycles(rng):
     """
     Test sampling of multiple continuous colormaps.
     """
@@ -49,24 +49,24 @@ def test_cmap_cycles():
         samples=[3, 4, 5, 2, 1],
     )
     fig, ax = uplt.subplots()
-    data = np.random.rand(10, len(cycle)).cumsum(axis=1)
+    data = rng.random((10, len(cycle))).cumsum(axis=1)
     data = pd.DataFrame(data, columns=list("abcdefghijklmno"))
     ax.plot(data, cycle=cycle, linewidth=2, legend="b")
     return fig
 
 
 @pytest.mark.mpl_image_compare
-def test_column_iteration():
+def test_column_iteration(rng):
     """
     Test scatter column iteration.
     """
     fig, axs = uplt.subplots(ncols=2)
-    axs[0].plot(np.random.rand(5, 5), np.random.rand(5, 5), lw=5)
+    axs[0].plot(rng.random((5, 5)), rng.random((5, 5)), lw=5)
     axs[1].scatter(
-        np.random.rand(5, 5),
-        np.random.rand(5, 5),
-        np.random.rand(5, 5),
-        np.random.rand(5, 5),
+        rng.random((5, 5)),
+        rng.random((5, 5)),
+        rng.random((5, 5)),
+        rng.random((5, 5)),
     )
     return fig
 
@@ -81,13 +81,13 @@ def test_bar_stack():
 
 
 @pytest.mark.mpl_image_compare
-def test_bar_width():
+def test_bar_width(rng):
     """
     Test relative and absolute widths.
     """
     fig, axs = uplt.subplots(ncols=3)
     x = np.arange(10)
-    y = np.random.rand(10, 2)
+    y = rng.random((10, 2))
     for i, ax in enumerate(axs):
         ax.bar(x * (2 * i + 1), y, width=0.8, absolute_width=i == 1)
     return fig
@@ -112,14 +112,14 @@ def test_bar_vectors():
 
 
 @pytest.mark.mpl_image_compare
-def test_boxplot_colors():
+def test_boxplot_colors(rng):
     """
     Test box colors and cycle colors.
     """
     fig = uplt.figure(share=False)
     ax = fig.subplot(221)
-    box_data = np.random.uniform(-3, 3, size=(1000, 5))
-    violin_data = np.random.normal(0, 1, size=(1000, 5))
+    box_data = rng.uniform(-3, 3, size=(1000, 5))
+    violin_data = rng.normal(0, 1, size=(1000, 5))
     ax.box(box_data, fillcolor=["red", "blue", "green", "orange", "yellow"])
     ax = fig.subplot(222)
     ax.violin(
@@ -137,7 +137,7 @@ def test_boxplot_colors():
 
 
 @pytest.mark.mpl_image_compare
-def test_boxplot_vectors():
+def test_boxplot_vectors(rng):
     """
     Test vector property arguments.
     """
@@ -146,7 +146,7 @@ def test_boxplot_vectors():
     labels = ["foo", "bar", "baz"]
     datas = []
     for count in counts:
-        data = np.random.rand(count)
+        data = rng.random(count)
         datas.append(data)
     datas = np.array(datas, dtype=object)
     assert len(datas) == len(coords)
@@ -168,12 +168,12 @@ def test_boxplot_vectors():
 
 
 @pytest.mark.mpl_image_compare
-def test_histogram_types():
+def test_histogram_types(rng):
     """
     Test the different histogram types using basic keywords.
     """
     fig, axs = uplt.subplots(ncols=2, nrows=2, share=False)
-    data = np.random.normal(size=(100, 5))
+    data = rng.normal(size=(100, 5))
     data += np.arange(5)
     kws = ({"stack": 0}, {"stack": 1}, {"fill": 0}, {"fill": 1, "alpha": 0.5})
     for ax, kw in zip(axs, kws):
@@ -182,36 +182,36 @@ def test_histogram_types():
 
 
 @pytest.mark.mpl_image_compare
-def test_invalid_plot():
+def test_invalid_plot(rng):
     """
     Test lines with missing or invalid values.
     """
     fig, axs = uplt.subplots(ncols=2)
-    data = np.random.normal(size=(100, 5))
+    data = rng.normal(size=(100, 5))
     for j in range(5):
         data[:, j] = np.sort(data[:, j])
         data[: 19 * (j + 1), j] = np.nan
         # data[:20, :] = np.nan
     data_masked = ma.masked_invalid(data)  # should be same result
     for ax, dat in zip(axs, (data, data_masked)):
-        ax.plot(dat, means=True, shade=True)
+        ax.plot(dat, cycle="538", lw=3)
     return fig
 
 
 @pytest.mark.mpl_image_compare
-def test_invalid_dist():
+def test_invalid_dist(rng):
     """
     Test distributions with missing or invalid data.
     """
     fig, axs = uplt.subplots(ncols=2, nrows=2)
-    data = np.random.normal(size=(100, 5))
+    data = rng.normal(size=(100, 5))
     for i in range(5):  # test uneven numbers of invalid values
         data[: 10 * (i + 1), :] = np.nan
     data_masked = ma.masked_invalid(data)  # should be same result
     for ax, dat in zip(axs[:2], (data, data_masked)):
         ax.violin(dat, means=True)
     for ax, dat in zip(axs[2:], (data, data_masked)):
-        ax.box(dat, fill=True, means=True)
+        ax.box(dat)
     return fig
 
 
@@ -220,36 +220,35 @@ def test_pie_charts():
     """
     Test basic pie plots. No examples in user guide right now.
     """
-    uplt.rc.inlineformat = "svg"
-    labels = ["foo", "bar", "baz", "biff", "buzz"]
-    array = np.arange(1, 6)
-    data = pd.Series(array, index=labels)
-    fig, ax = uplt.subplots(ncols=2)
-    ax[0].pie(array, edgefix=True, labels=labels, ec="k", cycle="reds")
-    ax[1].pie(data, ec="k", cycle="blues")
+    with uplt.rc.context({"inlineformat": "svg"}):
+        labels = ["foo", "bar", "baz", "biff", "buzz"]
+        array = np.arange(1, 6)
+        data = pd.Series(array, index=labels)
+        fig, ax = uplt.subplots(ncols=2)
+        ax[0].pie(array, edgefix=True, labels=labels, ec="k", cycle="reds")
+        ax[1].pie(data, ec="k", cycle="blues")
     return fig
 
 
 @pytest.mark.mpl_image_compare
-def test_parametric_labels():
+def test_parametric_labels(rng):
     """
-    Test passing strings as parametric 'color values'. This is likely
-    a common use case.
+    Test parametric plot with labels.
     """
-    uplt.rc.inlineformat = "svg"
-    fig, ax = uplt.subplots()
-    ax.parametric(
-        np.random.rand(5),
-        c=list("abcde"),
-        lw=20,
-        colorbar="b",
-        cmap_kw={"left": 0.2},
-    )
+    with uplt.rc.context({"inlineformat": "svg"}):
+        fig, ax = uplt.subplots()
+        ax.parametric(
+            rng.random(5),
+            c=list("abcde"),
+            lw=20,
+            colorbar="b",
+            cmap_kw={"left": 0.2},
+        )
     return fig
 
 
 @pytest.mark.mpl_image_compare
-def test_parametric_colors():
+def test_parametric_colors(rng):
     """
     Test color input arguments. Should be able to make monochromatic
     plots for case where we want `line` without sticky x/y edges.
@@ -263,8 +262,8 @@ def test_parametric_colors():
     )
     for ax, color in zip(axs, colors):
         ax.parametric(
-            np.random.rand(5),
-            np.random.rand(5),
+            rng.random(5),
+            rng.random(5),
             linewidth=2,
             label="label",
             color=color,
@@ -275,12 +274,12 @@ def test_parametric_colors():
 
 
 @pytest.mark.mpl_image_compare
-def test_scatter_args():
+def test_scatter_args(rng):
     """
     Test diverse scatter keyword parsing and RGB scaling.
     """
-    x, y = np.random.randn(50), np.random.randn(50)
-    data = np.random.rand(50, 3)
+    x, y = rng.standard_normal(50), rng.standard_normal(50)
+    data = rng.random((50, 3))
     fig, axs = uplt.subplots(ncols=4, share=0)
     ax = axs[0]
     ax.scatter(x, y, s=80, fc="none", edgecolors="r")
@@ -311,12 +310,12 @@ def test_scatter_inbounds():
 
 
 @pytest.mark.mpl_image_compare
-def test_scatter_alpha():
+def test_scatter_alpha(rng):
     """
     Test behavior with multiple alpha values.
     """
     fig, ax = uplt.subplots()
-    data = np.random.rand(10)
+    data = rng.random(10)
     alpha = np.linspace(0.1, 1, data.size)
     ax.scatter(data, alpha=alpha)
     ax.scatter(data + 1, c=np.arange(data.size), cmap="BuRd", alpha=alpha)
@@ -326,7 +325,7 @@ def test_scatter_alpha():
 
 
 @pytest.mark.mpl_image_compare
-def test_scatter_cycle():
+def test_scatter_cycle(rng):
     """
     Test scatter property cycling.
     """
@@ -338,8 +337,8 @@ def test_scatter_cycle():
         edgecolors=["r", "k"],
     )
     ax.scatter(
-        np.random.rand(10, 4),
-        np.random.rand(10, 4),
+        rng.random((10, 4)),
+        rng.random((10, 4)),
         cycle=cycle,
         area_size=False,
     )
@@ -347,7 +346,7 @@ def test_scatter_cycle():
 
 
 @pytest.mark.mpl_image_compare
-def test_scatter_sizes():
+def test_scatter_sizes(rng):
     """
     Test marker size scaling.
     """
@@ -364,7 +363,7 @@ def test_scatter_sizes():
             ax.scatter(np.arange(5), [0.25 * (1 + i)] * 5, size**2, **kw)
     # Test various size arguments
     ax = fig.subplot(122, margin=0.15)
-    data = np.random.rand(5) * 500
+    data = rng.random(5) * 500
     ax.scatter(
         np.arange(5),
         [0.25] * 5,
@@ -435,7 +434,7 @@ def test_triplot_variants(x, y, z, triangles, use_triangulation, use_datadict):
 
 
 @pytest.mark.mpl_image_compare
-def test_norm_not_modified():
+def test_norm_not_modified(rng):
     """
     Ensure that norm is correctly passed to pcolor and related functions.
     """
@@ -451,7 +450,7 @@ def test_norm_not_modified():
     assert norm.vmin == 0
     assert norm.vmax == 10
 
-    arr = np.random.rand(20, 40) * 1000
+    arr = rng.random((20, 40)) * 1000
     xe = np.linspace(0, 1, num=40, endpoint=True)
     ye = np.linspace(0, 1, num=20, endpoint=True)
 
@@ -463,13 +462,13 @@ def test_norm_not_modified():
 
 
 @pytest.mark.mpl_image_compare
-def test_line_plot_cyclers():
+def test_line_plot_cyclers(rng):
     # Sample data
     M, N = 50, 10
-    data1 = (np.random.rand(M, N) - 0.48).cumsum(axis=1).cumsum(axis=0)
-    data2 = (np.random.rand(M, N) - 0.48).cumsum(axis=1).cumsum(axis=0) * 1.5
-    data1 += np.random.rand(M, N)
-    data2 += np.random.rand(M, N)
+    data1 = (rng.random((M, N)) - 0.48).cumsum(axis=1).cumsum(axis=0)
+    data2 = (rng.random((M, N)) - 0.48).cumsum(axis=1).cumsum(axis=0) * 1.5
+    data1 += rng.random((M, N))
+    data2 += rng.random((M, N))
     data1 *= 2
 
     cmaps = ("Blues", "Reds")
@@ -509,11 +508,11 @@ def test_line_plot_cyclers():
 
 
 @pytest.mark.mpl_image_compare
-def test_heatmap_labels():
+def test_heatmap_labels(rng):
     """
     Heatmap function should show labels when asked
     """
-    x = np.random.rand(10, 10)
+    x = rng.random((10, 10))
     # Nans should not be shown
     x[0, 0] = np.nan
     x[0, -1] = np.nan
@@ -527,12 +526,16 @@ def test_heatmap_labels():
 
 
 @pytest.mark.mpl_image_compare()
-def test_networks():
+def test_networks(rng):
     """
     Create a baseline network graph that tests
     a few features. It is not the prettiest graphs but highlights what the functions can do.
     """
     import networkx as nx
+
+    # Ensure that the seed for the networkx are
+    # using the same seed
+    from .conftest import SEED
 
     graphs = [
         nx.karate_club_graph(),
@@ -570,6 +573,10 @@ def test_networks():
     ):
         node_color = uplt.colormaps.get_cmap(cmap)(np.linspace(0, 1, len(g)))
         inax = ax.inset_axes([*pos, 0.2, 0.2], zoom=0)
+        layout_kw = {}
+        if layout in ("random", "spring", "arf"):
+            layout_kw = dict(seed=SEED)
+
         inax.graph(
             g,
             layout=layout,
@@ -587,7 +594,7 @@ def test_networks():
     return fig
 
 
-def test_bar_alpha():
+def test_bar_alpha(rng):
     """
     Verify that alphas are applied over the columns
     """
@@ -596,7 +603,7 @@ def test_bar_alpha():
 
     # When we make rows shorter than columns an issue appeared
     # where it was taking the x size rather than the number of bars (columns)
-    data = np.random.rand(5, 5).cumsum(axis=0).cumsum(axis=1)[:, ::-1]
+    data = rng.random((5, 5)).cumsum(axis=0).cumsum(axis=1)[:, ::-1]
     data = pd.DataFrame(
         data,
         columns=pd.Index(np.arange(1, 6), name="column"),
@@ -619,7 +626,7 @@ def test_bar_alpha():
 
 
 @pytest.mark.mpl_image_compare
-def test_lollipop_graph():
+def test_lollipop_graph(rng):
     """
     Verify that lollipop graph is plotted correctly
     """
@@ -628,7 +635,7 @@ def test_lollipop_graph():
 
     # When we make rows shorter than columns an issue appeared
     # where it was taking the x size rather than the number of bars (columns)
-    data = np.random.rand(5, 5).cumsum(axis=0).cumsum(axis=1)[:, ::-1]
+    data = rng.random((5, 5)).cumsum(axis=0).cumsum(axis=1)[:, ::-1]
     data = pd.DataFrame(
         data,
         columns=pd.Index(np.arange(1, 6), name="column"),
@@ -666,7 +673,7 @@ def test_bar_labels():
 
 
 @pytest.mark.mpl_image_compare
-def test_beeswarm():
+def test_beeswarm(rng):
     """
     Test beeswarm plots with both traditional and feature value coloring.
     """
@@ -682,8 +689,8 @@ def test_beeswarm():
     feature_values = np.zeros(shape)
     for cat in range(n_cats):
         levels[:, cat] = np.ones(n_points) * cat
-        data[:, cat] = np.random.normal(cat * 1.5, 0.6, n_points)
-        feature_values[:, cat] = np.random.randn(n_points)
+        data[:, cat] = rng.normal(cat * 1.5, 0.6, n_points)
+        feature_values[:, cat] = rng.standard_normal(n_points)
 
     fig, (ax1, ax2, ax3) = uplt.subplots(
         ncols=3,

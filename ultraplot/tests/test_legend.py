@@ -6,17 +6,17 @@ import numpy as np, pandas as pd, ultraplot as uplt, pytest
 
 
 @pytest.mark.mpl_image_compare
-def test_auto_legend():
+def test_auto_legend(rng):
     """
     Test retrieval of legends from panels, insets, etc.
     """
     fig, ax = uplt.subplots()
-    ax.line(np.random.rand(5, 3), labels=list("abc"))
+    ax.line(rng.random((5, 3)), labels=list("abc"))
     px = ax.panel_axes("right", share=False)
-    px.linex(np.random.rand(5, 3), labels=list("xyz"))
+    px.linex(rng.random((5, 3)), labels=list("xyz"))
     # px.legend(loc='r')
     ix = ax.inset_axes((-0.2, 0.8, 0.5, 0.5), zoom=False)
-    ix.line(np.random.rand(5, 2), labels=list("pq"))
+    ix.line(rng.random((5, 2)), labels=list("pq"))
     ax.legend(loc="b", order="F", edgecolor="red9", edgewidth=3)
     return fig
 
@@ -36,13 +36,13 @@ def test_singleton_legend():
 
 
 @pytest.mark.mpl_image_compare
-def test_centered_legends():
+def test_centered_legends(rng):
     """
     Test success of algorithm.
     """
     # Basic centered legends
     fig, axs = uplt.subplots(ncols=2, nrows=2, axwidth=2)
-    hs = axs[0].plot(np.random.rand(10, 6))
+    hs = axs[0].plot(rng.random((10, 6)))
     locs = ["l", "t", "r", "uc", "ul", "ll"]
     locs = ["l", "t", "uc", "ll"]
     labels = ["a", "bb", "ccc", "ddddd", "eeeeeeee", "fffffffff"]
@@ -51,7 +51,7 @@ def test_centered_legends():
 
     # Pass centered legends with keywords or list-of-list input.
     fig, ax = uplt.subplots()
-    hs = ax.plot(np.random.rand(10, 5), labels=list("abcde"))
+    hs = ax.plot(rng.random((10, 5)), labels=list("abcde"))
     ax.legend(hs, center=True, loc="b")
     ax.legend(hs + hs[:1], loc="r", ncol=1)
     ax.legend([hs[:2], hs[2:], hs[0]], loc="t")
@@ -81,7 +81,7 @@ def test_manual_labels():
 
 
 @pytest.mark.mpl_image_compare
-def test_contour_legend_with_label():
+def test_contour_legend_with_label(rng):
     """
     Support contour element labels. If has no label should trigger warning.
     """
@@ -90,78 +90,80 @@ def test_contour_legend_with_label():
 
     fig, axs = uplt.subplots(ncols=2)
     ax = axs[0]
-    ax.contour(np.random.rand(5, 5), color="k", label=label, legend="b")
+    ax.contour(rng.random((5, 5)), color="k", label=label, legend="b")
     ax = axs[1]
-    ax.pcolor(np.random.rand(5, 5), label=label, legend="b")
+    ax.pcolor(rng.random((5, 5)), label=label, legend="b")
     return fig
 
 
 @pytest.mark.mpl_image_compare
-def test_contour_legend_without_label():
+def test_contour_legend_without_label(rng):
     """
     Support contour element labels. If has no label should trigger warning.
     """
     label = None
     fig, axs = uplt.subplots(ncols=2)
     ax = axs[0]
-    ax.contour(np.random.rand(5, 5), color="k", label=label, legend="b")
+    ax.contour(rng.random((5, 5)), color="k", label=label, legend="b")
     ax = axs[1]
-    ax.pcolor(np.random.rand(5, 5), label=label, legend="b")
+    ax.pcolor(rng.random((5, 5)), label=label, legend="b")
     return fig
 
 
 @pytest.mark.mpl_image_compare
-def test_histogram_legend():
+def test_histogram_legend(rng):
     """
     Support complex histogram legends.
     """
-    uplt.rc.inlineformat = "svg"
-    fig, ax = uplt.subplots()
-    res = ax.hist(
-        np.random.rand(500, 2), 4, labels=("label", "other"), edgefix=True, legend="b"
-    )
-    ax.legend(res, loc="r", ncol=1)  # should issue warning after ignoring numpy arrays
-    df = pd.DataFrame(
-        {"length": [1.5, 0.5, 1.2, 0.9, 3], "width": [0.7, 0.2, 0.15, 0.2, 1.1]},
-        index=["pig", "rabbit", "duck", "chicken", "horse"],
-    )
-    fig, axs = uplt.subplots(ncols=3)
-    ax = axs[0]
-    res = ax.hist(df, bins=3, legend=True, lw=3)
-    ax.legend(loc="b")
-    for ax, meth in zip(axs[1:], ("bar", "area")):
-        hs = getattr(ax, meth)(df, legend="ul", lw=3)
-        ax.legend(hs, loc="b")
+    with uplt.rc.context({"inlineformat": "svg"}):
+        fig, ax = uplt.subplots()
+        res = ax.hist(
+            rng.random((500, 2)), 4, labels=("label", "other"), edgefix=True, legend="b"
+        )
+        ax.legend(
+            res, loc="r", ncol=1
+        )  # should issue warning after ignoring numpy arrays
+        df = pd.DataFrame(
+            {"length": [1.5, 0.5, 1.2, 0.9, 3], "width": [0.7, 0.2, 0.15, 0.2, 1.1]},
+            index=["pig", "rabbit", "duck", "chicken", "horse"],
+        )
+        fig, axs = uplt.subplots(ncols=3)
+        ax = axs[0]
+        res = ax.hist(df, bins=3, legend=True, lw=3)
+        ax.legend(loc="b")
+        for ax, meth in zip(axs[1:], ("bar", "area")):
+            hs = getattr(ax, meth)(df, legend="ul", lw=3)
+            ax.legend(hs, loc="b")
     return fig
 
 
 @pytest.mark.mpl_image_compare
-def test_multiple_calls():
+def test_multiple_calls(rng):
     """
     Test successive plotting additions to guides.
     """
     fig, ax = uplt.subplots()
-    ax.pcolor(np.random.rand(10, 10), colorbar="b")
-    ax.pcolor(np.random.rand(10, 5), cmap="grays", colorbar="b")
-    ax.pcolor(np.random.rand(10, 5), cmap="grays", colorbar="b")
+    ax.pcolor(rng.random((10, 10)), colorbar="b")
+    ax.pcolor(rng.random((10, 5)), cmap="grays", colorbar="b")
+    ax.pcolor(rng.random((10, 5)), cmap="grays", colorbar="b")
 
     fig, ax = uplt.subplots()
-    data = np.random.rand(10, 5)
+    data = rng.random((10, 5))
     for i in range(data.shape[1]):
         ax.plot(data[:, i], colorbar="b", label=f"x{i}", colorbar_kw={"label": "hello"})
     return fig
 
 
 @pytest.mark.mpl_image_compare
-def test_tuple_handles():
+def test_tuple_handles(rng):
     """
     Test tuple legend handles.
     """
     from matplotlib import legend_handler
 
     fig, ax = uplt.subplots(refwidth=3, abc="A.", abcloc="ul", span=False)
-    patches = ax.fill_between(np.random.rand(10, 3), stack=True)
-    lines = ax.line(1 + 0.5 * (np.random.rand(10, 3) - 0.5).cumsum(axis=0))
+    patches = ax.fill_between(rng.random((10, 3)), stack=True)
+    lines = ax.line(1 + 0.5 * (rng.random((10, 3)) - 0.5).cumsum(axis=0))
     # ax.legend([(handles[0], lines[1])], ['joint label'], loc='bottom', queue=True)
     for hs in (lines, patches):
         ax.legend(
@@ -178,14 +180,14 @@ def test_tuple_handles():
 
 
 @pytest.mark.mpl_image_compare
-def test_legend_col_spacing():
+def test_legend_col_spacing(rng):
     """
     Test legend column spacing.
     """
     fig, ax = uplt.subplots()
-    ax.plot(np.random.rand(10), label="short")
-    ax.plot(np.random.rand(10), label="longer label")
-    ax.plot(np.random.rand(10), label="even longer label")
+    ax.plot(rng.random(10), label="short")
+    ax.plot(rng.random(10), label="longer label")
+    ax.plot(rng.random(10), label="even longer label")
     for idx in range(3):
         spacing = f"{idx}em"
         if idx == 2:

@@ -2,14 +2,15 @@ import os, shutil, pytest, re, numpy as np, ultraplot as uplt
 from pathlib import Path
 import warnings, logging
 
+SEED = 51423
 
-@pytest.fixture(autouse=True)
-def _reset_numpy_seed():
+
+@pytest.fixture
+def rng():
     """
     Ensure all tests start with the same rng
     """
-    seed = 51423
-    np.random.seed(seed)
+    return np.random.default_rng(SEED)
 
 
 @pytest.fixture(autouse=True)
