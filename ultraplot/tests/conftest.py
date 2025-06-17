@@ -41,17 +41,19 @@ class StoreFailedMplPlugin:
     def __init__(self, config):
         self.config = config
 
-        # Get base directories as Path objects
-        self.result_dir = Path(config.getoption("--mpl-results-path", "./results"))
-        self.baseline_dir = Path(config.getoption("--mpl-baseline-path", "./baseline"))
+        # Get base directories as Path objects with safe defaults
+        results_path = config.getoption("--mpl-results-path", None) or "./results"
+        baseline_path = config.getoption("--mpl-baseline-path", None) or "./baseline"
+        self.result_dir = Path(results_path)
+        self.baseline_dir = Path(baseline_path)
 
         # Track failed mpl tests for HTML report generation
         self.failed_mpl_tests = set()
 
-        print(f"Store Failed MPL Plugin initialized")
-        print(f"Result dir: {self.result_dir}")
-        if _total_mpl_tests > 0:
-            print(f"📊 Detected {_total_mpl_tests} matplotlib image comparison tests")
+        # Only show initialization message if MPL tests will be run
+        if any("--mpl" in str(arg) for arg in getattr(config, "args", [])):
+            print(f"Store Failed MPL Plugin initialized")
+            print(f"Result dir: {self.result_dir}")
 
     def _has_mpl_marker(self, report: pytest.TestReport):
         """Check if the test has the mpl_image_compare marker."""
@@ -59,6 +61,10 @@ class StoreFailedMplPlugin:
 
     def _remove_success(self, report: pytest.TestReport):
         """Mark successful test images for deferred cleanup to eliminate blocking."""
+
+        # Only perform cleanup if --store-failed-only is enabled
+        if not self.config.getoption("--store-failed-only", False):
+            return
 
         pattern = r"(?P<sep>::|/)|\[|\]|\.py"
         name = re.sub(
@@ -83,14 +89,15 @@ class StoreFailedMplPlugin:
         if report.when == "call" and self._has_mpl_marker(report):
             try:
                 global _processed_mpl_tests, _total_mpl_tests, _failed_mpl_tests
-                if report.outcome == "failed":
-                    self.failed_mpl_tests.add(report.nodeid)
-                    with _cleanup_lock:
-                        _processed_mpl_tests += 1
+                with _cleanup_lock:
+                    _processed_mpl_tests += 1
+                    if report.outcome == "failed":
+                        self.failed_mpl_tests.add(report.nodeid)
                         _failed_mpl_tests += 1
-                        _update_progress_bar()
-                else:
-                    # Mark successful tests for cleanup to reduce artifact size
+                    _update_progress_bar()
+
+                if report.outcome != "failed":
+                    # Mark successful tests for cleanup to reduce artifact size (if enabled)
                     self._remove_success(report)
             except Exception as e:
                 # Log but don't fail on cleanup errors
@@ -105,6 +112,10 @@ def pytest_collection_modifyitems(config, items):
         for item in items
         if any(mark.name == "mpl_image_compare" for mark in item.own_markers)
     )
+
+    # Show detected MPL tests count if any found
+    if _total_mpl_tests > 0:
+        print(f"📊 Detected {_total_mpl_tests} matplotlib image comparison tests")
 
     for item in items:
         for mark in item.own_markers:
@@ -129,14 +140,15 @@ def pytest_terminal_summary(terminalreporter, exitstatus, config):
         return
 
     print("\nGenerating HTML report for image comparison tests...")
-    print(
-        "Note: When using --store-failed-only, only failed tests will be included in the report"
-    )
-
-    # Finalize progress bar and perform deferred cleanup
     if _total_mpl_tests > 0:
+        print(
+            "Note: When using --store-failed-only, only failed tests will be included in the report"
+        )
+        # Finalize progress bar and perform deferred cleanup
         _finalize_progress_bar()
-    _perform_deferred_cleanup()
+        _perform_deferred_cleanup()
+    else:
+        return  # No MPL tests found, skip HTML generation
 
     # Get the results directory - handle both pytest-mpl options
     results_dir = _get_results_directory(config)
@@ -319,7 +331,9 @@ def _perform_deferred_cleanup():
         _pending_cleanups.clear()
 
     if cleanup_list:
-        print(f"🧹 Cleaning up {len(cleanup_list)} successful test directories...")
+        print(
+            f"🧹 Cleaning up {len(cleanup_list)} successful test directories (--store-failed-only enabled)..."
+        )
         success_count = 0
 
         for i, target in enumerate(cleanup_list, 1):
@@ -357,10 +371,11 @@ def _perform_deferred_cleanup():
             print(
                 f"   Note: {len(cleanup_list) - success_count} directories were already removed or inaccessible"
             )
-    else:
-        print(
-            "💾 Perfect optimization: No cleanup needed (all tests failed or no mpl tests)"
-        )
+        print("💾 Artifact optimization: Only failed tests preserved for debugging")
+    elif _processed_mpl_tests > 0:
+        success_count = _processed_mpl_tests - _failed_mpl_tests
+        print(f"💾 All {_processed_mpl_tests} test images preserved for review")
+        print("   💡 Use --store-failed-only to enable artifact size optimization")
 
 
 def _extract_test_name_from_filename(filename, test_id):
@@ -636,7 +651,7 @@ def pytest_configure(config):
     logging.getLogger("matplotlib").setLevel(logging.ERROR)
     logging.getLogger("ultraplot").setLevel(logging.WARNING)
     try:
-        if config.getoption("--store-failed-only", False):
-            config.pluginmanager.register(StoreFailedMplPlugin(config))
+        # Always register the plugin - it will only activate if MPL tests are found
+        config.pluginmanager.register(StoreFailedMplPlugin(config))
     except Exception as e:
         print(f"Error during plugin configuration: {e}")
