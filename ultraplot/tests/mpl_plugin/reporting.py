@@ -186,7 +186,7 @@ class HTMLReportGenerator:
             "<head>",
             "    <meta charset='UTF-8'>",
             "    <meta name='viewport' content='width=device-width, initial-scale=1.0'>",
-            "    <title>Matplotlib Image Comparison Report</title>",
+            "    <title>UltraPlot Image Comparison Report</title>",
             "    <style>",
             "        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f5f5f5; }",
             "        .container { max-width: 1200px; margin: 0 auto; }",
@@ -224,13 +224,7 @@ class HTMLReportGenerator:
             "</head>",
             "<body>",
             "    <div class='container'>",
-            "        <h1>Matplotlib Image Comparison Report</h1>",
-            "        <div class='filter-controls'>",
-            "            <button class='filter-btn active' onclick='filterTests(\"all\")'>Show All</button>",
-            "            <button class='filter-btn' onclick='filterTests(\"failed\")'>Failed Only</button>",
-            "            <button class='filter-btn' onclick='filterTests(\"passed\")'>Passed Only</button>",
-            "            <button class='filter-btn' onclick='filterTests(\"unknown\")'>Unknown</button>",
-            "        </div>",
+            "        <h1>UltraPlot Image Comparison Report</h1>",
         ]
 
     def _generate_summary_section(self, total_tests, passed_tests, failed_tests):
@@ -248,6 +242,12 @@ class HTMLReportGenerator:
             f"                <div class='stat-item'><div class='stat-number'>{passed_tests}</div><div class='stat-label'>Passed</div></div>",
             f"                <div class='stat-item'><div class='stat-number'>{failed_tests}</div><div class='stat-label'>Failed</div></div>",
             "            </div>",
+            "        </div>",
+            "<div class='filter-controls'>",
+            "            <button class='filter-btn' onclick='filterTests(\"all\")'>Show All</button>",
+            "            <button class='filter-btn active' onclick='filterTests(\"failed\")'>Failed Only</button>",
+            "            <button class='filter-btn' onclick='filterTests(\"passed\")'>Passed Only</button>",
+            "            <button class='filter-btn' onclick='filterTests(\"unknown\")'>Unknown</button>",
             "        </div>",
         ]
 
