@@ -57,6 +57,7 @@ class StoreFailedMplPlugin:
         )
         target = (self.result_dir / name).absolute()
         if target.is_dir():
+            print(f"Removing successful test images: {target}")
             shutil.rmtree(target)
 
     @pytest.hookimpl(trylast=True)
