@@ -54,7 +54,7 @@ def rng():
             random_ints = rng.integers(0, 10, size=5)
     """
     # Each test gets the same seed for reproducibility
-    return np.random.Generator(np.random.PCG64(SEED))
+    return np.random.default_rng(seed=SEED)
 
 
 @pytest.fixture(autouse=True)
