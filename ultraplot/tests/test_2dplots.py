@@ -11,12 +11,12 @@ import ultraplot as uplt
 
 @pytest.mark.skip("not sure what this does")
 @pytest.mark.mpl_image_compare
-def test_colormap_vcenter():
+def test_colormap_vcenter(rng):
     """
     Test colormap vcenter.
     """
     fig, axs = uplt.subplots(ncols=3)
-    data = 10 * np.random.rand(10, 10) - 3
+    data = 10 * rng.random((10, 10)) - 3
     axs[0].pcolor(data, vcenter=0)
     axs[1].pcolor(data, vcenter=1)
     axs[2].pcolor(data, vcenter=2)
@@ -24,7 +24,7 @@ def test_colormap_vcenter():
 
 
 @pytest.mark.mpl_image_compare
-def test_auto_diverging1():
+def test_auto_diverging1(rng):
     """
     Test that auto diverging works.
     """
@@ -32,9 +32,9 @@ def test_auto_diverging1():
     fig = uplt.figure()
     # fig.format(collabels=('Auto sequential', 'Auto diverging'), suptitle='Default')
     ax = fig.subplot(121)
-    ax.pcolor(np.random.rand(10, 10) * 5, colorbar="b")
+    ax.pcolor(rng.random((10, 10)) * 5, colorbar="b")
     ax = fig.subplot(122)
-    ax.pcolor(np.random.rand(10, 10) * 5 - 3.5, colorbar="b")
+    ax.pcolor(rng.random((10, 10)) * 5 - 3.5, colorbar="b")
     fig.format(toplabels=("Sequential", "Diverging"))
     return fig
 
@@ -87,35 +87,33 @@ def test_autodiverging5():
 
 
 @pytest.mark.mpl_image_compare
-def test_colormap_mode():
+def test_colormap_mode(rng):
     """
     Test auto extending, auto discrete. Should issue warnings.
     """
     fig, axs = uplt.subplots(ncols=2, nrows=2, share=False)
-    axs[0].pcolor(np.random.rand(5, 5) % 0.3, extend="both", cyclic=True, colorbar="b")
+    axs[0].pcolor(rng.random((5, 5)) % 0.3, extend="both", cyclic=True, colorbar="b")
     with pytest.warns(uplt.warnings.UltraPlotWarning):
-        axs[1].pcolor(
-            np.random.rand(5, 5), sequential=True, diverging=True, colorbar="b"
-        )
+        axs[1].pcolor(rng.random((5, 5)), sequential=True, diverging=True, colorbar="b")
 
     with pytest.warns(uplt.warnings.UltraPlotWarning):
         axs[2].pcolor(
-            np.random.rand(5, 5), discrete=False, qualitative=True, colorbar="b"
+            rng.random((5, 5)), discrete=False, qualitative=True, colorbar="b"
         )
     uplt.rc["cmap.discrete"] = False  # should be ignored below
-    axs[3].contourf(np.random.rand(5, 5), colorbar="b")
+    axs[3].contourf(rng.random((5, 5)), colorbar="b")
     return fig
 
 
 @pytest.mark.mpl_image_compare
-def test_contour_labels():
+def test_contour_labels(rng):
     """
     Test contour labels. We use a separate `contour` object when adding labels to
     filled contours or else weird stuff happens (see below). We could just modify
     filled contour edges when not adding labels but that would be inconsistent with
     behavior when labels are active.
     """
-    data = np.random.rand(5, 5) * 10 - 5
+    data = rng.random((5, 5)) * 10 - 5
     fig, axs = uplt.subplots(ncols=2)
     ax = axs[0]
     ax.contourf(
@@ -136,16 +134,16 @@ def test_contour_labels():
 
 
 @pytest.mark.mpl_image_compare
-def test_contour_negative():
+def test_contour_negative(rng):
     """
     Ensure `cmap.monochrome` properly assigned.
     """
     fig = uplt.figure(share=False)
     ax = fig.subplot(131)
-    data = np.random.rand(10, 10) * 10 - 5
+    data = rng.random((10, 10)) * 10 - 5
     ax.contour(data, color="k")
     ax = fig.subplot(132)
-    ax.tricontour(*(np.random.rand(3, 20) * 10 - 5), color="k")
+    ax.tricontour(*(rng.random((3, 20)) * 10 - 5), color="k")
     ax = fig.subplot(133)
     ax.contour(data, cmap=["black"])  # fails but that's ok
     return fig

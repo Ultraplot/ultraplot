@@ -3,6 +3,12 @@ Conftest.py for UltraPlot testing with modular MPL plugin architecture.
 
 This file provides essential test fixtures and integrates the enhanced matplotlib
 testing functionality through a clean, modular plugin system.
+
+Thread-Safe Random Number Generation:
+- Provides explicit RNG fixtures for test functions that need random numbers
+- Each thread gets independent, deterministic RNG instances
+- Compatible with pytest-xdist parallel execution
+- Clean separation of concerns - tests explicitly declare RNG dependencies
 """
 
 import threading, os, shutil, pytest, re
@@ -27,11 +33,37 @@ from ultraplot.tests.mpl_plugin.progress import get_progress_tracker
 from ultraplot.tests.mpl_plugin.cleanup import get_cleanup_manager
 
 
+# Thread-specific RNG registry
+_thread_rngs = {}
+_rng_lock = threading.Lock()
+
+
+def _create_thread_rng():
+    """Create a new independent RNG instance for the current thread."""
+    base_seed = 51423
+    thread_id = threading.get_ident()
+    # Create deterministic but unique seed per thread
+    thread_seed = (base_seed + hash(thread_id)) % (2**32)
+    return np.random.Generator(np.random.PCG64(thread_seed))
+
+
+def _get_thread_rng():
+    """Get or create an independent RNG instance for the current thread."""
+    thread_id = threading.get_ident()
+
+    with _rng_lock:
+        if thread_id not in _thread_rngs:
+            _thread_rngs[thread_id] = _create_thread_rng()
+        return _thread_rngs[thread_id]
+
+
 @pytest.fixture(autouse=True)
 def _reset_numpy_seed():
-    """Ensure all tests start with the same rng."""
-    seed = 51423
-    np.random.seed(seed)
+    """Reset global numpy seed for backward compatibility."""
+    base_seed = 51423
+    thread_id = threading.get_ident()
+    thread_seed = (base_seed + hash(thread_id)) % (2**32)
+    np.random.seed(thread_seed)
 
 
 @pytest.fixture(autouse=True)
@@ -137,6 +169,58 @@ def _get_plugin_instance(config):
         if isinstance(plugin, StoreFailedMplPlugin):
             return plugin
     return None
+
+
+@pytest.fixture
+def rng():
+    """
+    Fixture providing an independent numpy random generator for tests.
+
+    This fixture provides a numpy.random.Generator instance that is:
+    - Independent per thread (no shared state)
+    - Deterministic across test runs
+    - Compatible with pytest-xdist parallel execution
+
+    Usage in tests:
+        def test_something(rng):
+            random_data = rng.normal(0, 1, size=100)
+            random_ints = rng.integers(0, 10, size=5)
+    """
+    return _get_thread_rng()
+
+
+@pytest.fixture
+def rng_seeded():
+    """
+    Fixture providing a fresh RNG instance with fixed seed for each test.
+
+    This ensures complete reproducibility within a single test, while
+    still maintaining thread independence.
+
+    Usage in tests:
+        def test_reproducible(rng_seeded):
+            # This will be the same every time this test runs
+            data = rng_seeded.normal(0, 1, size=100)
+    """
+    return np.random.Generator(np.random.PCG64(51423))
+
+
+def create_rng(seed=None):
+    """
+    Create a new independent RNG instance with optional custom seed.
+
+    This utility function can be used in helper functions or when you need
+    multiple independent RNG instances within a single test.
+
+    Args:
+        seed (int, optional): Custom seed. If None, uses thread-based seed.
+
+    Returns:
+        numpy.random.Generator: Independent random number generator
+    """
+    if seed is None:
+        return _create_thread_rng()
+    return np.random.Generator(np.random.PCG64(seed))
 
 
 # Legacy support - these functions are kept for backward compatibility
