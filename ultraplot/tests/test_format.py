@@ -77,13 +77,13 @@ def test_patch_format():
 
 
 @pytest.mark.mpl_image_compare
-def test_multi_formatting():
+def test_multi_formatting(rng):
     """
     Support formatting in multiple projections.
     """
     # Mix Cartesian with a projection
     fig, axs = uplt.subplots(ncols=2, proj=("cart", "cyl"), share=0)
-    axs[0].pcolormesh(np.random.rand(5, 5))
+    axs[0].pcolormesh(rng.random((5, 5)))
 
     # Warning is raised based on projection. Cart does not have lonlim, latllim or labels
     with pytest.warns(uplt.warnings.UltraPlotWarning):
@@ -200,9 +200,9 @@ def test_locale_formatting(loc):
         # Your test code that is sensitive to the locale settings
         assert locale.getlocale() == (loc.split(".")[0], loc.split(".")[1])
 
-        uplt.rc["formatter.use_locale"] = False
-        uplt.rc["formatter.zerotrim"] = True
-        with uplt.rc.context({"formatter.use_locale": True}):
+        with uplt.rc.context(
+            {"formatter.use_locale": True, "formatter.zerotrim": True}
+        ):
             fig, ax = uplt.subplots()
             ticks = uplt.arange(-1, 1, 0.1)
             ax.format(ylim=(min(ticks), max(ticks)), yticks=ticks)
@@ -210,13 +210,6 @@ def test_locale_formatting(loc):
     finally:
         # Always reset to the original locale
         locale.setlocale(locale.LC_ALL, original_locale)
-    uplt.rc["formatter.use_locale"] = False
-    uplt.rc["formatter.zerotrim"] = True
-    with uplt.rc.context({"formatter.use_locale": True}):
-        fig, ax = uplt.subplots()
-        ticks = uplt.arange(-1, 1, 0.1)
-        ax.format(ylim=(min(ticks), max(ticks)), yticks=ticks)
-    return fig
 
 
 @pytest.mark.mpl_image_compare
@@ -245,12 +238,12 @@ def test_cutoff_ticks():
 
 
 @pytest.mark.mpl_image_compare
-def test_spine_side():
+def test_spine_side(rng):
     """
     Test automatic spine selection when passing `xspineloc` or `yspineloc`.
     """
     fig, ax = uplt.subplots()
-    ax.plot(uplt.arange(-5, 5), (10 * np.random.rand(11, 5) - 5).cumsum(axis=0))
+    ax.plot(uplt.arange(-5, 5), (10 * rng.random((11, 5)) - 5).cumsum(axis=0))
     ax.format(xloc="bottom", yloc="zero")
     ax.alty(loc="right")
     return fig
@@ -313,13 +306,13 @@ def test_tick_width():
 
 
 @pytest.mark.mpl_image_compare
-def test_tick_labels():
+def test_tick_labels(rng):
     """
     Test default and overwriting properties of auto tick labels.
     """
     import pandas as pd
 
-    data = np.random.rand(5, 3)
+    data = rng.random((5, 3))
     data = pd.DataFrame(data, index=["foo", "bar", "baz", "bat", "bot"])
     fig, axs = uplt.subplots(abc="A.", abcloc="ul", ncols=2, refwidth=3, span=False)
     for i, ax in enumerate(axs):

@@ -1,7 +1,7 @@
 import pytest, ultraplot as uplt, numpy as np
 
 
-def test_unsharing_after_creation():
+def test_unsharing_after_creation(rng):
     """
     By default UltraPlot shares the axes. We test here if
     we can unshare them after we create the figure. This
@@ -23,7 +23,7 @@ def test_unsharing_after_creation():
             assert len(siblings) == 1
 
     # Test that the lims are different after unsharing
-    base_data = np.random.rand(2, 100)
+    base_data = rng.random((2, 100))
     ax[0].scatter(*base_data)
     xlim1 = np.array(ax[0].get_xlim())
     for idx in range(1, 4):
