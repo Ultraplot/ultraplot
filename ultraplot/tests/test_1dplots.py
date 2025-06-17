@@ -537,7 +537,6 @@ def test_networks(rng):
     # using the same seed
     from .conftest import SEED
 
-    np.random.seed(SEED)
     graphs = [
         nx.karate_club_graph(),
         nx.florentine_families_graph(),
@@ -574,6 +573,10 @@ def test_networks(rng):
     ):
         node_color = uplt.colormaps.get_cmap(cmap)(np.linspace(0, 1, len(g)))
         inax = ax.inset_axes([*pos, 0.2, 0.2], zoom=0)
+        layout_kw = {}
+        if layout in ("random", "spring", "arf"):
+            layout_kw = dict(seed=SEED)
+
         inax.graph(
             g,
             layout=layout,
