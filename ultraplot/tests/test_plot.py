@@ -214,11 +214,12 @@ def test_quiver_discrete_colors():
 
     fig, ax = uplt.subplots()
     q = ax.quiver(X, Y, U, V, color=colors, infer_rgb=True)
+    expectations = [uplt.colors.mcolors.to_rgba(color) for color in colors]
     facecolors = q.get_facecolors()
-    expectations = np.array([uplt.colors.mcolors.to_rgba(c) for c in colors])
     for expectation, facecolor in zip(expectations, facecolors):
-        facecolor = facecolor.round(1)
-        assert np.allclose(facecolor, expectation)
+        assert np.allclose(
+            facecolor, expectation, 0.01
+        ), f"Expected {expectation} but got {facecolor}"
     C = ["#ff0000", "#00ff00", "#0000ff"]
     ax.quiver(X - 1, Y, U, V, color=C, infer_rgb=True)
 
