@@ -32,6 +32,9 @@ def pytest_addoption(parser):
 # Global set to track directories scheduled for cleanup
 _pending_cleanups = set()
 _cleanup_lock = threading.Lock()
+_total_mpl_tests = 0
+_processed_mpl_tests = 0
+_failed_mpl_tests = 0
 
 
 class StoreFailedMplPlugin:
@@ -47,6 +50,8 @@ class StoreFailedMplPlugin:
 
         print(f"Store Failed MPL Plugin initialized")
         print(f"Result dir: {self.result_dir}")
+        if _total_mpl_tests > 0:
+            print(f"📊 Detected {_total_mpl_tests} matplotlib image comparison tests")
 
     def _has_mpl_marker(self, report: pytest.TestReport):
         """Check if the test has the mpl_image_compare marker."""
@@ -64,11 +69,12 @@ class StoreFailedMplPlugin:
         target = (self.result_dir / name).absolute()
 
         # Use hybrid approach: track for cleanup but don't block workers
-        global _pending_cleanups
+        global _pending_cleanups, _processed_mpl_tests, _total_mpl_tests
         with _cleanup_lock:
             if target.exists() and target.is_dir():
                 _pending_cleanups.add(target)
-                print(f"Marked for cleanup: {target}")
+                _processed_mpl_tests += 1
+                _update_progress_bar()
 
     @pytest.hookimpl(trylast=True)
     def pytest_runtest_logreport(self, report):
@@ -76,9 +82,13 @@ class StoreFailedMplPlugin:
         # Track failed mpl tests and queue successful ones for cleanup
         if report.when == "call" and self._has_mpl_marker(report):
             try:
+                global _processed_mpl_tests, _total_mpl_tests, _failed_mpl_tests
                 if report.outcome == "failed":
                     self.failed_mpl_tests.add(report.nodeid)
-                    print(f"Tracking failed mpl test: {report.nodeid}")
+                    with _cleanup_lock:
+                        _processed_mpl_tests += 1
+                        _failed_mpl_tests += 1
+                        _update_progress_bar()
                 else:
                     # Mark successful tests for cleanup to reduce artifact size
                     self._remove_success(report)
@@ -88,6 +98,14 @@ class StoreFailedMplPlugin:
 
 
 def pytest_collection_modifyitems(config, items):
+    global _total_mpl_tests
+    # Count total mpl tests for percentage calculation
+    _total_mpl_tests = sum(
+        1
+        for item in items
+        if any(mark.name == "mpl_image_compare" for mark in item.own_markers)
+    )
+
     for item in items:
         for mark in item.own_markers:
             if base_dir := config.getoption("--mpl-baseline-path", default=None):
@@ -115,7 +133,9 @@ def pytest_terminal_summary(terminalreporter, exitstatus, config):
         "Note: When using --store-failed-only, only failed tests will be included in the report"
     )
 
-    # Perform deferred cleanup now that all tests are done
+    # Finalize progress bar and perform deferred cleanup
+    if _total_mpl_tests > 0:
+        _finalize_progress_bar()
     _perform_deferred_cleanup()
 
     # Get the results directory - handle both pytest-mpl options
@@ -257,6 +277,39 @@ def _get_results_directory(config):
     return Path(results_path)
 
 
+def _update_progress_bar():
+    """Update the progress bar with current test status."""
+    global _processed_mpl_tests, _total_mpl_tests, _failed_mpl_tests
+
+    if _total_mpl_tests == 0:
+        return
+
+    percentage = int((_processed_mpl_tests / _total_mpl_tests) * 100)
+    success_count = _processed_mpl_tests - _failed_mpl_tests
+
+    # Create progress bar: [=========>    ] 67% (45/67) | ✓32 ✗13
+    bar_width = 20
+    filled_width = int((percentage / 100) * bar_width)
+    bar = (
+        "=" * filled_width
+        + (">" if filled_width < bar_width else "")
+        + " " * (bar_width - filled_width - (1 if filled_width < bar_width else 0))
+    )
+
+    progress_line = f"\rMPL Tests: [{bar}] {percentage:3d}% ({_processed_mpl_tests}/{_total_mpl_tests}) | ✓{success_count} ✗{_failed_mpl_tests}"
+    print(progress_line, end="", flush=True)
+
+
+def _finalize_progress_bar():
+    """Finalize the progress bar and show summary."""
+    print()  # New line after progress bar
+    success_count = _processed_mpl_tests - _failed_mpl_tests
+    if _failed_mpl_tests > 0:
+        print(f"📊 MPL Summary: {success_count} passed, {_failed_mpl_tests} failed")
+    else:
+        print(f"📊 MPL Summary: All {success_count} tests passed!")
+
+
 def _perform_deferred_cleanup():
     """Perform cleanup of successful test directories after all tests complete."""
     global _pending_cleanups
@@ -266,20 +319,48 @@ def _perform_deferred_cleanup():
         _pending_cleanups.clear()
 
     if cleanup_list:
-        print(f"Performing deferred cleanup of {len(cleanup_list)} directories...")
-        for target in cleanup_list:
+        print(f"🧹 Cleaning up {len(cleanup_list)} successful test directories...")
+        success_count = 0
+
+        for i, target in enumerate(cleanup_list, 1):
+            # Update cleanup progress bar
+            percentage = int((i / len(cleanup_list)) * 100)
+            bar_width = 20
+            filled_width = int((percentage / 100) * bar_width)
+            bar = (
+                "=" * filled_width
+                + (">" if filled_width < bar_width else "")
+                + " "
+                * (bar_width - filled_width - (1 if filled_width < bar_width else 0))
+            )
+
             try:
                 if target.exists() and target.is_dir():
-                    print(f"Removing successful test images: {target}")
                     shutil.rmtree(target)
+                    success_count += 1
+                    status = "✓"
+                else:
+                    status = "~"
             except (FileNotFoundError, OSError, PermissionError):
-                # Directory might have been removed already - that's fine
-                pass
+                status = "~"
             except Exception as e:
-                print(f"Warning: Error during cleanup of {target}: {e}")
-        print("Deferred cleanup completed")
+                status = "✗"
+
+            cleanup_line = f"\rCleanup: [{bar}] {percentage:3d}% ({i}/{len(cleanup_list)}) {status}"
+            print(cleanup_line, end="", flush=True)
+
+        print()  # New line after progress bar
+        print(
+            f"✅ Cleanup completed: {success_count}/{len(cleanup_list)} directories removed"
+        )
+        if success_count < len(cleanup_list):
+            print(
+                f"   Note: {len(cleanup_list) - success_count} directories were already removed or inaccessible"
+            )
     else:
-        print("No directories to clean up")
+        print(
+            "💾 Perfect optimization: No cleanup needed (all tests failed or no mpl tests)"
+        )
 
 
 def _extract_test_name_from_filename(filename, test_id):
