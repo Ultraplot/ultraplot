@@ -5,7 +5,8 @@ This file provides essential test fixtures and integrates the enhanced matplotli
 testing functionality through a clean, modular plugin system.
 """
 
-import threading, os, shutil, pytest, re, numpy as np, ultraplot as uplt
+import threading, os, shutil, pytest, re
+import numpy as np, ultraplot as uplt
 import warnings, logging
 from pathlib import Path
 from datetime import datetime
