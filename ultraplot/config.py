@@ -10,10 +10,8 @@ See the :ref:`configuration guide <ug_config>` for details.
 # Because I think it makes sense to have all the code that "runs" (i.e. not
 # just definitions) in the same place, and I was having issues with circular
 # dependencies and where import order of __init__.py was affecting behavior.
-import logging
-import os
-import re
-import sys
+import logging, os, re, sys, threading
+
 from collections import namedtuple
 from collections.abc import MutableMapping
 from numbers import Real
@@ -765,7 +763,10 @@ class Configurator(MutableMapping, dict):
         ----------
         %(rc.params)s
         """
+        import threading
+
         self._context = []
+        self._lock = threading.RLock()
         self._init(local=local, user=user, default=default, **kwargs)
 
     def __getitem__(self, key):
@@ -785,9 +786,10 @@ class Configurator(MutableMapping, dict):
         Modify an `rc_matplotlib` or `rc_ultraplot` setting using dictionary notation
         (e.g., ``uplt.rc[name] = value``).
         """
-        kw_ultraplot, kw_matplotlib = self._get_item_dicts(key, value)
-        rc_ultraplot.update(kw_ultraplot)
-        rc_matplotlib.update(kw_matplotlib)
+        with self._lock:
+            kw_ultraplot, kw_matplotlib = self._get_item_dicts(key, value)
+            rc_ultraplot.update(kw_ultraplot)
+            rc_matplotlib.update(kw_matplotlib)
 
     def __getattr__(self, attr):
         """
@@ -813,78 +815,83 @@ class Configurator(MutableMapping, dict):
         """
         Apply settings from the most recent context block.
         """
-        if not self._context:
-            raise RuntimeError(
-                "rc object must be initialized for context block using rc.context()."
-            )
-        context = self._context[-1]
-        kwargs = context.kwargs
-        rc_new = context.rc_new  # used for context-based _get_item_context
-        rc_old = context.rc_old  # used to re-apply settings without copying whole dict
-        for key, value in kwargs.items():
-            try:
-                kw_ultraplot, kw_matplotlib = self._get_item_dicts(key, value)
-            except Exception as e:
-                self.__exit__()
-                raise e
+        with self._lock:
+            if not self._context:
+                raise RuntimeError(
+                    "rc object must be initialized for context block using rc.context()."
+                )
+            context = self._context[-1]
+            kwargs = context.kwargs
+            rc_new = context.rc_new  # used for context-based _get_item_context
+            rc_old = (
+                context.rc_old
+            )  # used to re-apply settings without copying whole dict
+            for key, value in kwargs.items():
+                try:
+                    kw_ultraplot, kw_matplotlib = self._get_item_dicts(key, value)
+                except Exception as e:
+                    self.__exit__()
+                    raise e
 
-            for rc_dict, kw_new in zip(
-                (rc_ultraplot, rc_matplotlib),
-                (kw_ultraplot, kw_matplotlib),
-            ):
-                for key, value in kw_new.items():
-                    rc_old[key] = rc_dict[key]
-                    rc_new[key] = rc_dict[key] = value
+                for rc_dict, kw_new in zip(
+                    (rc_ultraplot, rc_matplotlib),
+                    (kw_ultraplot, kw_matplotlib),
+                ):
+                    for key, value in kw_new.items():
+                        rc_old[key] = rc_dict[key]
+                        rc_new[key] = rc_dict[key] = value
 
     def __exit__(self, *args):  # noqa: U100
         """
         Restore settings from the most recent context block.
         """
-        if not self._context:
-            raise RuntimeError(
-                "rc object must be initialized for context block using rc.context()."
-            )
-        context = self._context[-1]
-        for key, value in context.rc_old.items():
-            kw_ultraplot, kw_matplotlib = self._get_item_dicts(key, value)
-            rc_ultraplot.update(kw_ultraplot)
-            rc_matplotlib.update(kw_matplotlib)
-        del self._context[-1]
+        with self._lock:
+            if not self._context:
+                raise RuntimeError(
+                    "rc object must be initialized for context block using rc.context()."
+                )
+            context = self._context[-1]
+            for key, value in context.rc_old.items():
+                kw_ultraplot, kw_matplotlib = self._get_item_dicts(key, value)
+                rc_ultraplot.update(kw_ultraplot)
+                rc_matplotlib.update(kw_matplotlib)
+            del self._context[-1]
 
     def _init(self, *, local, user, default, skip_cycle=False):
         """
         Initialize the configurator.
         """
-        # Always remove context objects
-        self._context.clear()
+        with self._lock:
+            # Always remove context objects
+            self._context.clear()
 
-        # Update from default settings
-        # NOTE: see _remove_blacklisted_style_params bugfix
-        if default:
-            rc_matplotlib.update(_get_style_dict("original", filter=False))
-            rc_matplotlib.update(rcsetup._rc_matplotlib_default)
-            rc_ultraplot.update(rcsetup._rc_ultraplot_default)
-            for key, value in rc_ultraplot.items():
-                kw_ultraplot, kw_matplotlib = self._get_item_dicts(
-                    key, value, skip_cycle=skip_cycle
-                )
-                rc_matplotlib.update(kw_matplotlib)
-                rc_ultraplot.update(kw_ultraplot)
+            # Update from default settings
+            # NOTE: see _remove_blacklisted_style_params bugfix
+            if default:
+                rc_matplotlib.update(_get_style_dict("original", filter=False))
+                rc_matplotlib.update(rcsetup._rc_matplotlib_default)
+                rc_ultraplot.update(rcsetup._rc_ultraplot_default)
+                for key, value in rc_ultraplot.items():
+                    kw_ultraplot, kw_matplotlib = self._get_item_dicts(
+                        key, value, skip_cycle=skip_cycle
+                    )
+                    rc_matplotlib.update(kw_matplotlib)
+                    rc_ultraplot.update(kw_ultraplot)
 
-        # Update from user home
-        user_path = None
-        if user:
-            user_path = self.user_file()
-            if os.path.isfile(user_path):
-                self.load(user_path)
+            # Update from user home
+            user_path = None
+            if user:
+                user_path = self.user_file()
+                if os.path.isfile(user_path):
+                    self.load(user_path)
 
-        # Update from local paths
-        if local:
-            local_paths = self.local_files()
-            for path in local_paths:
-                if path == user_path:  # local files always have precedence
-                    continue
-                self.load(path)
+            # Update from local paths
+            if local:
+                local_paths = self.local_files()
+                for path in local_paths:
+                    if path == user_path:  # local files always have precedence
+                        continue
+                    self.load(path)
 
     @staticmethod
     def _validate_key(key, value=None):
@@ -930,27 +937,28 @@ class Configurator(MutableMapping, dict):
         As with `~Configurator.__getitem__` but the search is limited based
         on the context mode and ``None`` is returned if the key is not found.
         """
-        key, _ = self._validate_key(key)
-        if mode is None:
-            mode = self._context_mode
-        cache = tuple(context.rc_new for context in self._context)
-        if mode == 0:
-            rcdicts = (*cache, rc_ultraplot, rc_matplotlib)
-        elif mode == 1:
-            rcdicts = (*cache, rc_ultraplot)  # added settings only!
-        elif mode == 2:
-            rcdicts = (*cache,)
-        else:
-            raise ValueError(f"Invalid caching mode {mode!r}.")
-        for rcdict in rcdicts:
-            if not rcdict:
-                continue
-            try:
-                return rcdict[key]
-            except KeyError:
-                continue
-        if mode == 0:  # otherwise return None
-            raise KeyError(f"Invalid rc setting {key!r}.")
+        with self._lock:
+            key, _ = self._validate_key(key)
+            if mode is None:
+                mode = self._context_mode
+            cache = tuple(context.rc_new for context in self._context)
+            if mode == 0:
+                rcdicts = (*cache, rc_ultraplot, rc_matplotlib)
+            elif mode == 1:
+                rcdicts = (*cache, rc_ultraplot)  # added settings only!
+            elif mode == 2:
+                rcdicts = (*cache,)
+            else:
+                raise ValueError(f"Invalid caching mode {mode!r}.")
+            for rcdict in rcdicts:
+                if not rcdict:
+                    continue
+                try:
+                    return rcdict[key]
+                except KeyError:
+                    continue
+            if mode == 0:  # otherwise return None
+                raise KeyError(f"Invalid rc setting {key!r}.")
 
     def _get_item_dicts(self, key, value, skip_cycle=False):
         """
@@ -1452,25 +1460,26 @@ class Configurator(MutableMapping, dict):
         >>> fig, ax = uplt.subplots()
         >>> ax.format(ticklen=5, metalinewidth=2)
         """
-        # Add input dictionaries
-        for arg in args:
-            if not isinstance(arg, dict):
-                raise ValueError(f"Non-dictionary argument {arg!r}.")
-            kwargs.update(arg)
+        with self._lock:
+            # Add input dictionaries
+            for arg in args:
+                if not isinstance(arg, dict):
+                    raise ValueError(f"Non-dictionary argument {arg!r}.")
+                kwargs.update(arg)
 
-        # Add settings from file
-        if file is not None:
-            kw = self._load_file(file)
-            kw = {key: value for key, value in kw.items() if key not in kwargs}
-            kwargs.update(kw)
+            # Add settings from file
+            if file is not None:
+                kw = self._load_file(file)
+                kw = {key: value for key, value in kw.items() if key not in kwargs}
+                kwargs.update(kw)
 
-        # Activate context object
-        if mode not in range(3):
-            raise ValueError(f"Invalid mode {mode!r}.")
-        cls = namedtuple("RcContext", ("mode", "kwargs", "rc_new", "rc_old"))
-        context = cls(mode=mode, kwargs=kwargs, rc_new={}, rc_old={})
-        self._context.append(context)
-        return self
+            # Activate context object
+            if mode not in range(3):
+                raise ValueError(f"Invalid mode {mode!r}.")
+            cls = namedtuple("RcContext", ("mode", "kwargs", "rc_new", "rc_old"))
+            context = cls(mode=mode, kwargs=kwargs, rc_new={}, rc_old={})
+            self._context.append(context)
+            return self
 
     def category(self, cat, *, trimcat=True, context=False):
         """
@@ -1576,25 +1585,30 @@ class Configurator(MutableMapping, dict):
         Configurator.category
         Configurator.fill
         """
-        prefix, kw = "", {}
-        if not args:
-            pass
-        elif len(args) == 1 and isinstance(args[0], str):
-            prefix = args[0]
-        elif len(args) == 1 and isinstance(args[0], dict):
-            kw = args[0]
-        elif len(args) == 2 and isinstance(args[0], str) and isinstance(args[1], dict):
-            prefix, kw = args
-        else:
-            raise ValueError(
-                f"Invalid arguments {args!r}. Usage is either "
-                "rc.update(dict), rc.update(kwy=value, ...), "
-                "rc.update(category, dict), or rc.update(category, key=value, ...)."
-            )
-        prefix = prefix and prefix + "."
-        kw.update(kwargs)
-        for key, value in kw.items():
-            self.__setitem__(prefix + key, value)
+        with self._lock:
+            prefix, kw = "", {}
+            if not args:
+                pass
+            elif len(args) == 1 and isinstance(args[0], str):
+                prefix = args[0]
+            elif len(args) == 1 and isinstance(args[0], dict):
+                kw = args[0]
+            elif (
+                len(args) == 2
+                and isinstance(args[0], str)
+                and isinstance(args[1], dict)
+            ):
+                prefix, kw = args
+            else:
+                raise ValueError(
+                    f"Invalid arguments {args!r}. Usage is either "
+                    "rc.update(dict), rc.update(kwy=value, ...), "
+                    "rc.update(category, dict), or rc.update(category, key=value, ...)."
+                )
+            prefix = prefix and prefix + "."
+            kw.update(kwargs)
+            for key, value in kw.items():
+                self.__setitem__(prefix + key, value)
 
     @docstring._snippet_manager
     def reset(self, local=True, user=True, default=True, **kwargs):
@@ -1772,7 +1786,8 @@ class Configurator(MutableMapping, dict):
         """
         Return the highest (least permissive) context mode.
         """
-        return max((context.mode for context in self._context), default=0)
+        with self._lock:
+            return max((context.mode for context in self._context), default=0)
 
     @property
     def changed(self):
