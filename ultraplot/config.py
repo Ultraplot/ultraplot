@@ -765,7 +765,11 @@ class Configurator(MutableMapping, dict):
         """
         import threading
 
+<<<<<<< HEAD
         self._local_props = threading.local()
+=======
+        self._context = []
+>>>>>>> 500e45b1 (Add xdist to image compare (#266))
         self._lock = threading.RLock()
         self._init(local=local, user=user, default=default, **kwargs)
 
@@ -816,8 +820,13 @@ class Configurator(MutableMapping, dict):
         """
         with self._lock:
             kw_ultraplot, kw_matplotlib = self._get_item_dicts(key, value)
+<<<<<<< HEAD
             self._rc_ultraplot.update(kw_ultraplot)
             self._rc_matplotlib.update(kw_matplotlib)
+=======
+            rc_ultraplot.update(kw_ultraplot)
+            rc_matplotlib.update(kw_matplotlib)
+>>>>>>> 500e45b1 (Add xdist to image compare (#266))
 
     def __getattr__(self, attr):
         """
@@ -862,7 +871,11 @@ class Configurator(MutableMapping, dict):
                     raise e
 
                 for rc_dict, kw_new in zip(
+<<<<<<< HEAD
                     (self._rc_ultraplot, self._rc_matplotlib),
+=======
+                    (rc_ultraplot, rc_matplotlib),
+>>>>>>> 500e45b1 (Add xdist to image compare (#266))
                     (kw_ultraplot, kw_matplotlib),
                 ):
                     for key, value in kw_new.items():
@@ -881,17 +894,24 @@ class Configurator(MutableMapping, dict):
             context = self._context[-1]
             for key, value in context.rc_old.items():
                 kw_ultraplot, kw_matplotlib = self._get_item_dicts(key, value)
+<<<<<<< HEAD
                 self._rc_ultraplot.update(kw_ultraplot)
                 self._rc_matplotlib.update(kw_matplotlib)
+=======
+                rc_ultraplot.update(kw_ultraplot)
+                rc_matplotlib.update(kw_matplotlib)
+>>>>>>> 500e45b1 (Add xdist to image compare (#266))
             del self._context[-1]
 
     def _init(self, *, local, user, default, skip_cycle=False):
         """
         Initialize the configurator.
         """
-        # Always remove context objects
-        self._context.clear()
+        with self._lock:
+            # Always remove context objects
+            self._context.clear()
 
+<<<<<<< HEAD
         # Update from default settings
         # NOTE: see _remove_blacklisted_style_params bugfix
         if default:
@@ -928,21 +948,35 @@ class Configurator(MutableMapping, dict):
                 )
                 self._rc_matplotlib.update(kw_matplotlib)
                 self._rc_ultraplot.update(kw_ultraplot)
+=======
+            # Update from default settings
+            # NOTE: see _remove_blacklisted_style_params bugfix
+            if default:
+                rc_matplotlib.update(_get_style_dict("original", filter=False))
+                rc_matplotlib.update(rcsetup._rc_matplotlib_default)
+                rc_ultraplot.update(rcsetup._rc_ultraplot_default)
+                for key, value in rc_ultraplot.items():
+                    kw_ultraplot, kw_matplotlib = self._get_item_dicts(
+                        key, value, skip_cycle=skip_cycle
+                    )
+                    rc_matplotlib.update(kw_matplotlib)
+                    rc_ultraplot.update(kw_ultraplot)
+>>>>>>> 500e45b1 (Add xdist to image compare (#266))
 
-        # Update from user home
-        user_path = None
-        if user:
-            user_path = self.user_file()
-            if os.path.isfile(user_path):
-                self.load(user_path)
+            # Update from user home
+            user_path = None
+            if user:
+                user_path = self.user_file()
+                if os.path.isfile(user_path):
+                    self.load(user_path)
 
-        # Update from local paths
-        if local:
-            local_paths = self.local_files()
-            for path in local_paths:
-                if path == user_path:  # local files always have precedence
-                    continue
-                self.load(path)
+            # Update from local paths
+            if local:
+                local_paths = self.local_files()
+                for path in local_paths:
+                    if path == user_path:  # local files always have precedence
+                        continue
+                    self.load(path)
 
     @staticmethod
     def _validate_key(key, value=None):
@@ -994,9 +1028,15 @@ class Configurator(MutableMapping, dict):
                 mode = self._context_mode
             cache = tuple(context.rc_new for context in self._context)
             if mode == 0:
+<<<<<<< HEAD
                 rcdicts = (*cache, self._rc_ultraplot, self._rc_matplotlib)
             elif mode == 1:
                 rcdicts = (*cache, self._rc_ultraplot)  # added settings only!
+=======
+                rcdicts = (*cache, rc_ultraplot, rc_matplotlib)
+            elif mode == 1:
+                rcdicts = (*cache, rc_ultraplot)  # added settings only!
+>>>>>>> 500e45b1 (Add xdist to image compare (#266))
             elif mode == 2:
                 rcdicts = (*cache,)
             else:
