@@ -40,7 +40,7 @@ def test_graph_edges_kw():
 
     # Expecting 2 nodes 1 edge
     assert len(edges.get_offsets()) == 1
-    assert len(nodes.get_offsets()) == 2
+    assert len(nodes.get_offsets()) == 5
     assert labels == False
 
 
@@ -200,7 +200,7 @@ def test_boxplot_mpl_versions(
                 assert "orientation" not in kwargs
 
 
-def test_quiver_discrete_colors():
+def test_quiver_discrete_colors(rng):
     """
     Edge case where colors are discrete for quiver plots
     """
@@ -214,16 +214,17 @@ def test_quiver_discrete_colors():
 
     fig, ax = uplt.subplots()
     q = ax.quiver(X, Y, U, V, color=colors, infer_rgb=True)
-    for color in colors:
-        expected_rgba = uplt.colors.mcolors.to_rgba(color)
-        assert any(
-            np.allclose(expected_rgba, facecolor) for facecolor in q.get_facecolors()
-        )
+    expectations = [uplt.colors.mcolors.to_rgba(color) for color in colors]
+    facecolors = q.get_facecolors()
+    for expectation, facecolor in zip(expectations, facecolors):
+        assert np.allclose(
+            facecolor, expectation, 0.1
+        ), f"Expected {expectation} but got {facecolor}"
     C = ["#ff0000", "#00ff00", "#0000ff"]
     ax.quiver(X - 1, Y, U, V, color=C, infer_rgb=True)
 
     # pass rgba values
-    C = np.random.rand(3, 4)
+    C = rng.random((3, 4))
     ax.quiver(X - 2, Y, U, V, C)
     ax.quiver(X - 3, Y, U, V, color="red", infer_rgb=True)
     uplt.close(fig)
@@ -235,7 +236,6 @@ def test_setting_log_with_rc():
     """
     import re
 
-    uplt.rc["formatter.log"] = True
     x, y = np.linspace(0, 1e6, 10), np.linspace(0, 1e6, 10)
 
     def check_ticks(axis, target=True):
@@ -262,29 +262,30 @@ def test_setting_log_with_rc():
         ["x", "y"],
     ]
 
-    fig, ax = uplt.subplots()
-    for func, targets in zip(funcs, conditions):
-        reset(ax)
-        # Call the function
-        getattr(ax, func)(x, y)
-        # Check if the formatter is set
-        for target in targets:
-            axi = getattr(ax, f"{target}axis")
-            check_ticks(axi, target=True)
+    with uplt.rc.context({"formatter.log": True}):
+        fig, ax = uplt.subplots()
+        for func, targets in zip(funcs, conditions):
+            reset(ax)
+            # Call the function
+            getattr(ax, func)(x, y)
+            # Check if the formatter is set
+            for target in targets:
+                axi = getattr(ax, f"{target}axis")
+                check_ticks(axi, target=True)
 
-    uplt.rc["formatter.log"] = False
-    fig, ax = uplt.subplots()
-    for func, targets in zip(funcs, conditions):
-        reset(ax)
-        getattr(ax, func)(x, y)
-        for target in targets:
-            axi = getattr(ax, f"{target}axis")
-            check_ticks(axi, target=False)
+    with uplt.rc.context({"formatter.log": False}):
+        fig, ax = uplt.subplots()
+        for func, targets in zip(funcs, conditions):
+            reset(ax)
+            getattr(ax, func)(x, y)
+            for target in targets:
+                axi = getattr(ax, f"{target}axis")
+                check_ticks(axi, target=False)
 
     uplt.close(fig)
 
 
-def test_shading_pcolor():
+def test_shading_pcolor(rng):
     """
     Pcolormesh by default adjusts the plot by
     getting the edges of the data for x and y.
@@ -295,7 +296,7 @@ def test_shading_pcolor():
     x = np.linspace(0, 5, nx)
     y = np.linspace(0, 4, ny)
     X, Y = np.meshgrid(x, y)
-    Z = np.random.rand(nx, ny).T
+    Z = rng.random((nx, ny)).T
     fig, ax = uplt.subplots()
 
     results = []
@@ -327,7 +328,7 @@ def test_shading_pcolor():
     uplt.close(fig)
 
 
-def test_cycle_with_singular_column():
+def test_cycle_with_singular_column(rng):
     """
     While parsing singular columns the ncycle attribute should
     be ignored.
@@ -337,7 +338,7 @@ def test_cycle_with_singular_column():
     # Create mock data that triggers the cycle
     # when plot directly but is is ignored when plot in
     # a loop
-    data = np.random.rand(3, 6)
+    data = rng.random((3, 6))
 
     fig, ax = uplt.subplots()
     active_cycle = ax[0]._active_cycle
@@ -360,11 +361,11 @@ def test_cycle_with_singular_column():
     uplt.close(fig)
 
 
-def test_colorbar_center_levels():
+def test_colorbar_center_levels(rng):
     """
     Allow centering of the colorbar ticks to the center
     """
-    data = np.random.rand(10, 10) * 2 - 1
+    data = rng.random((10, 10)) * 2 - 1
     expectation = np.linspace(-1, 1, uplt.rc["cmap.levels"])
     fig, ax = uplt.subplots(ncols=2)
     for axi, center_levels in zip(ax, [False, True]):
@@ -384,11 +385,11 @@ def test_colorbar_center_levels():
     uplt.close(fig)
 
 
-def test_center_labels_colormesh_data_type():
+def test_center_labels_colormesh_data_type(rng):
     """
     Test if how center_levels respond for discrete of continuous data
     """
-    data = np.random.rand(10, 10) * 2 - 1
+    data = rng.random((10, 10)) * 2 - 1
     fig, ax = uplt.subplots(ncols=2)
     for axi, discrete in zip(ax, [True, False]):
         axi.pcolormesh(

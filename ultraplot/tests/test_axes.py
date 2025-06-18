@@ -161,7 +161,7 @@ def test_twin_axes_2():
 
 
 @pytest.mark.mpl_image_compare
-def test_twin_axes_3():
+def test_twin_axes_3(rng):
     # A worked example from Riley Brady
     # Uses auto-adjusting limits
     fig, ax = uplt.subplots()
@@ -169,7 +169,7 @@ def test_twin_axes_3():
     axs[-1].spines["right"].set_position(("axes", 1.2))
     colors = ("Green", "Red", "Blue")
     for ax, color in zip(axs, colors):
-        data = np.random.rand(1) * np.random.rand(10)
+        data = rng.random(1) * rng.random(10)
         ax.plot(data, marker="o", linestyle="none", color=color)
         ax.format(ylabel="%s Thing" % color, ycolor=color)
     axs[0].format(xlabel="xlabel")
