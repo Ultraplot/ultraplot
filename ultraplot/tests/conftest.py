@@ -54,7 +54,6 @@ def rng():
     return np.random.default_rng(seed=SEED)
 
 
-
 @pytest.fixture(autouse=True)
 def close_figures_after_test():
     """Automatically close all figures after each test."""
