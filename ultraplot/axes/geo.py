@@ -1046,10 +1046,6 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
         lonticklen = _not_none(lonticklen, ticklen)
         latticklen = _not_none(latticklen, ticklen)
 
-        # tmp store the extents as they may be
-        # affected by the tick lengths
-        latview = self._lataxis.get_view_interval()
-        lonview = self._lonaxis.get_view_interval()
         if lonticklen or latticklen:
             # Only add warning when ticks are given
             if _is_rectilinear_projection(self):
@@ -1060,9 +1056,9 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
                 # we need to force this to prevent
                 # side effects
                 if latlim == (None, None):
-                    latlim = latview
+                    latlim = self._lataxis.get_view_interval()
                 if lonlim == (None, None):
-                    lonlim = lonview
+                    lonlim = self._lonaxis.get_view_interval()
                 self._update_extent(
                     lonlim=lonlim, latlim=latlim, boundinglat=boundinglat
                 )
