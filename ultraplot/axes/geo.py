@@ -1045,11 +1045,20 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
         # Set tick lengths for flat projections
         lonticklen = _not_none(lonticklen, ticklen)
         latticklen = _not_none(latticklen, ticklen)
+
         if lonticklen or latticklen:
             # Only add warning when ticks are given
             if _is_rectilinear_projection(self):
                 self._add_geoticks("x", lonticklen, ticklen)
                 self._add_geoticks("y", latticklen, ticklen)
+                # If latlim is set to None it resets
+                # the view; this affects the visible range
+                # we need to force this to prevent
+                # side effects
+                if latlim == (None, None):
+                    latlim = self._lataxis.get_view_interval()
+                if lonlim == (None, None):
+                    lonlim = self._lonaxis.get_view_interval()
                 self._update_extent(
                     lonlim=lonlim, latlim=latlim, boundinglat=boundinglat
                 )
