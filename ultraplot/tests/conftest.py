@@ -61,12 +61,15 @@ def rng():
 
 
 @pytest.fixture(autouse=True)
-def reset_rc_after_test():
-    """Reset rc to full ultraplot defaults before each test."""
+def reset_rc_and_close_figures():
+    """Reset rc to full ultraplot defaults and close figures for each test."""
     # Reset rc to ensure each test starts with full ultraplot configuration
     uplt.rc.reset()
     yield
+    # Clean up after test
     uplt.close("all")
+    # Reset again to clean up any test modifications
+    uplt.rc.reset()
 
 
 def pytest_addoption(parser):

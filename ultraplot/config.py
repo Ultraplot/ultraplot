@@ -785,18 +785,16 @@ class Configurator(MutableMapping, dict):
     def _rc_ultraplot(self):
         """Get current thread's ultraplot config dict."""
         if not hasattr(self._local_props, "rc_ultraplot"):
-            # Use dict() to avoid validation during thread-local setup
-            self._local_props.rc_ultraplot = dict(rcsetup._rc_ultraplot_default)
+            # Copy from global rc_ultraplot which has full initialization
+            self._local_props.rc_ultraplot = dict(rc_ultraplot)
         return self._local_props.rc_ultraplot
 
     @property
     def _rc_matplotlib(self):
         """Get current thread's matplotlib config dict."""
         if not hasattr(self._local_props, "rc_matplotlib"):
-            import matplotlib as mpl
-
-            # Use dict() to avoid validation during thread-local setup
-            self._local_props.rc_matplotlib = dict(mpl.rcParams)
+            # Copy from global rc_matplotlib which has full initialization
+            self._local_props.rc_matplotlib = dict(rc_matplotlib)
         return self._local_props.rc_matplotlib
 
     def __getitem__(self, key):
