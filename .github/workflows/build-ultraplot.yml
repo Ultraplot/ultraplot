@@ -72,6 +72,7 @@ jobs:
 
       - name: Generate baseline from main
         run: |
+          ls baseline
           mkdir -p baseline
           git fetch origin ${{ github.event.pull_request.base.sha }}
           git checkout ${{ github.event.pull_request.base.sha }}
@@ -81,6 +82,7 @@ jobs:
 
       - name: Image Comparison Ultraplot
         run: |
+          ls results
           mkdir -p results
           python -c "import ultraplot as plt; plt.config.Configurator()._save_yaml('ultraplot.yml')"
           pytest -n auto -W ignore --mpl --mpl-baseline-path=baseline --mpl-generate-summary=html --mpl-results-path=./results/ --mpl-default-style="./ultraplot.yml" --store-failed-only ultraplot/tests
