@@ -566,7 +566,7 @@ def test_networks(rng):
     ]
     edge_alphas = [1, 0.75, 0.5, 0.25]
 
-    layouts = ["arf", "spring", "circular", "random"]
+    layouts = ["arf", "forceatlas2", "circular", "random"]
     cmaps = ["acton", "viko", "roma", "blues"]
     for g, facecolor, pos, layout, spines, alpha, cmap in zip(
         graphs, facecolors, positions, layouts, spines, edge_alphas, cmaps
