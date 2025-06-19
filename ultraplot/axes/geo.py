@@ -1053,6 +1053,10 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
             if _is_rectilinear_projection(self):
                 self._add_geoticks("x", lonticklen, ticklen)
                 self._add_geoticks("y", latticklen, ticklen)
+                # If latlim is set to None it resets
+                # the view; this affects the visible range
+                # we need to force this to prevent
+                # side effects
                 if latlim == (None, None):
                     latlim = latview
                 if lonlim == (None, None):
