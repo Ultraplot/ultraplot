@@ -820,3 +820,33 @@ def test_sharing_cartopy_with_colorbar(rng):
         for i, j in zip(state, expectation):
             assert i == j
     return fig
+
+
+def test_consistent_range():
+    """
+    Check if the extent of the axes is consistent
+    after setting ticklen. Ticklen uses a MaxNlocator which
+    changes the extent of the axes -- we are resetting
+    it now explicitly.
+    """
+
+    lonlim = np.array((10, 20))
+    latlim = np.array((10, 20))
+    fig, ax = uplt.subplots(ncols=2, proj="cyl", share=False)
+
+    ax.format(
+        lonlim=(10, 20),
+        latlim=latlim,
+        lonlines=2,
+        latlines=2,
+        lonlabels="both",
+        latlabels="both",
+    )
+    # Now change ticklen of ax[1], cause extent change
+    ax[1].format(ticklen=1)
+    for a in ax:
+        lonview = np.array(a._lonaxis.get_view_interval())
+        latview = np.array(a._lataxis.get_view_interval())
+
+        assert np.allclose(lonview, lonlim)
+        assert np.allclose(latview, latlim)
