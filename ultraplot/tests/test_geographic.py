@@ -848,5 +848,5 @@ def test_consistent_range():
         lonview = np.array(a._lonaxis.get_view_interval())
         latview = np.array(a._lataxis.get_view_interval())
 
-        assert np.allclose(np.linalg.norm(lonview - lonlim), 0)
-        assert np.allclose(np.linalg.norm(latview - latlim), 0)
+        assert np.allclose(lonview, lonlim)
+        assert np.allclose(latview, latlim)
