@@ -80,16 +80,16 @@ def isolate_mpl_testing():
     # Create process-specific temporary directory for mpl results
     # This prevents file conflicts between parallel processes
     worker_id = os.environ.get("PYTEST_XDIST_WORKER", "master")
-    temp_dir = tempfile.mkdtemp(prefix=f"mpl_test_{worker_id}_")
-    os.environ["MPL_TEST_TEMP_DIR"] = temp_dir
+    with tempfile.TemporaryDirectory(prefix=f"mpl_test_{worker_id}_") as temp_dir:
+        os.environ["MPL_TEST_TEMP_DIR"] = temp_dir
 
-    yield
+        yield
 
     # Clean up after test
     plt.close("all")
     uplt.close("all")
 
-    # Clean up temporary directory
+    # Remove environment variable
     if "MPL_TEST_TEMP_DIR" in os.environ:
         del os.environ["MPL_TEST_TEMP_DIR"]
 
