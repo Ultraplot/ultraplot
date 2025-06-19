@@ -61,8 +61,10 @@ def rng():
 
 
 @pytest.fixture(autouse=True)
-def close_figures_after_test():
-    """Automatically close all figures after each test."""
+def reset_rc_after_test():
+    """Reset rc to full ultraplot defaults before each test."""
+    # Reset rc to ensure each test starts with full ultraplot configuration
+    uplt.rc.reset()
     yield
     uplt.close("all")
 
