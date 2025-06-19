@@ -9,6 +9,12 @@ Thread-Safe Random Number Generation:
 - Each thread gets independent, deterministic RNG instances
 - Compatible with pytest-xdist parallel execution
 - Clean separation of concerns - tests explicitly declare RNG dependencies
+
+Matplotlib rcParams Safety:
+- Automatic rcParams isolation for all tests prevents interference
+- Tests that modify matplotlib settings are automatically isolated
+- Dedicated rcparams_isolation fixture for explicit isolation needs
+- Thread-safe for parallel execution with pytest-xdist
 """
 
 import threading, os, shutil, pytest, re
@@ -63,16 +69,20 @@ def isolate_mpl_testing():
     multiple processes can interfere with each other's image comparison tests.
     The main issue is that pytest-mpl uses shared temporary directories that
     can conflict between processes.
+
+    Additionally, this fixture provides rcParams isolation to ensure tests
+    that modify matplotlib settings don't interfere with each other.
     """
-    import matplotlib as mpl
-    import matplotlib.pyplot as plt
-    import tempfile
-    import os
+    import matplotlib as mpl, matplotlib.pyplot as plt
+    import tempfile, os, copy
 
     # Store original backend and ensure consistent state
     original_backend = mpl.get_backend()
     if original_backend != "Agg":
         mpl.use("Agg", force=True)
+
+    # Store original rcParams for isolation
+    original_rcparams = copy.deepcopy(mpl.rcParams)
 
     # Clear any existing figures
     plt.close("all")
@@ -88,6 +98,10 @@ def isolate_mpl_testing():
     # Clean up after test
     plt.close("all")
     uplt.close("all")
+
+    # Restore original rcParams to prevent test interference
+    mpl.rcParams.clear()
+    mpl.rcParams.update(original_rcparams)
 
     # Remove environment variable
     if "MPL_TEST_TEMP_DIR" in os.environ:

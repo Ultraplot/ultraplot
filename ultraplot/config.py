@@ -774,15 +774,12 @@ class Configurator(MutableMapping, dict):
         Return an `rc_matplotlib` or `rc_ultraplot` setting using dictionary notation
         (e.g., ``value = uplt.rc[name]``).
         """
-        with self._lock:
-            key, _ = self._validate_key(
-                key
-            )  # might issue ultraplot removed/renamed error
-            try:
-                return rc_ultraplot[key]
-            except KeyError:
-                pass
-            return rc_matplotlib[key]  # might issue matplotlib removed/renamed error
+        key, _ = self._validate_key(key)  # might issue ultraplot removed/renamed error
+        try:
+            return rc_ultraplot[key]
+        except KeyError:
+            pass
+        return rc_matplotlib[key]  # might issue matplotlib removed/renamed error
 
     def __setitem__(self, key, value):
         """
@@ -970,114 +967,113 @@ class Configurator(MutableMapping, dict):
         context blocks, or loading files.
         """
 
-        with self._lock:
-            # Get validated key, value, and child keys
-            key, value = self._validate_key(key, value)
-            value = self._validate_value(key, value)
-            keys = (key,) + rcsetup._rc_children.get(key, ())  # settings to change
-            contains = lambda *args: any(arg in keys for arg in args)  # noqa: E731
+        # Get validated key, value, and child keys
+        key, value = self._validate_key(key, value)
+        value = self._validate_value(key, value)
+        keys = (key,) + rcsetup._rc_children.get(key, ())  # settings to change
+        contains = lambda *args: any(arg in keys for arg in args)  # noqa: E731
 
-            # Fill dictionaries of matplotlib and ultraplot settings
-            # NOTE: Raise key error right away so it can be caught by _load_file().
-            # Also ignore deprecation warnings so we only get them *once* on assignment
-            kw_ultraplot = {}  # custom properties
-            kw_matplotlib = {}  # builtin properties
-            with warnings.catch_warnings():
-                warnings.simplefilter("ignore", mpl.MatplotlibDeprecationWarning)
-                warnings.simplefilter("ignore", warnings.UltraPlotWarning)
-                for key in keys:
-                    if key in rc_matplotlib:
-                        kw_matplotlib[key] = value
-                    elif key in rc_ultraplot:
-                        kw_ultraplot[key] = value
-                    else:
-                        raise KeyError(f"Invalid rc setting {key!r}.")
-
-            # Special key: configure inline backend
-            if contains("inlineformat"):
-                config_inline_backend(value)
-
-            # Special key: apply stylesheet
-            elif contains("style"):
-                if value is not None:
-                    ikw_matplotlib = _get_style_dict(value)
-                    kw_matplotlib.update(ikw_matplotlib)
-                    kw_ultraplot.update(_infer_ultraplot_dict(ikw_matplotlib))
-
-            # Cycler
-            # NOTE: Have to skip this step during initial ultraplot import
-            elif contains("cycle") and not skip_cycle:
-                from .colors import _get_cmap_subtype
-
-                cmap = _get_cmap_subtype(value, "discrete")
-                kw_matplotlib["axes.prop_cycle"] = cycler.cycler("color", cmap.colors)
-                kw_matplotlib["patch.facecolor"] = "C0"
-
-            # Turning bounding box on should turn border off and vice versa
-            elif contains("abc.bbox", "title.bbox", "abc.border", "title.border"):
-                if value:
-                    name, this = key.split(".")
-                    other = "border" if this == "bbox" else "bbox"
-                    kw_ultraplot[name + "." + other] = False
-
-            # Fontsize
-            # NOTE: Re-application of e.g. size='small' uses the updated 'font.size'
-            elif contains("font.size"):
-                kw_ultraplot.update(
-                    {
-                        key: value
-                        for key, value in rc_ultraplot.items()
-                        if key in rcsetup.FONT_KEYS and value in mfonts.font_scalings
-                    }
-                )
-                kw_matplotlib.update(
-                    {
-                        key: value
-                        for key, value in rc_matplotlib.items()
-                        if key in rcsetup.FONT_KEYS and value in mfonts.font_scalings
-                    }
-                )
-
-            # Tick length/major-minor tick length ratio
-            elif contains("tick.len", "tick.lenratio"):
-                if contains("tick.len"):
-                    ticklen = value
-                    ratio = rc_ultraplot["tick.lenratio"]
+        # Fill dictionaries of matplotlib and ultraplot settings
+        # NOTE: Raise key error right away so it can be caught by _load_file().
+        # Also ignore deprecation warnings so we only get them *once* on assignment
+        kw_ultraplot = {}  # custom properties
+        kw_matplotlib = {}  # builtin properties
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", mpl.MatplotlibDeprecationWarning)
+            warnings.simplefilter("ignore", warnings.UltraPlotWarning)
+            for key in keys:
+                if key in rc_matplotlib:
+                    kw_matplotlib[key] = value
+                elif key in rc_ultraplot:
+                    kw_ultraplot[key] = value
                 else:
-                    ticklen = rc_ultraplot["tick.len"]
-                    ratio = value
-                kw_matplotlib["xtick.minor.size"] = ticklen * ratio
-                kw_matplotlib["ytick.minor.size"] = ticklen * ratio
+                    raise KeyError(f"Invalid rc setting {key!r}.")
 
-            # Spine width/major-minor tick width ratio
-            elif contains("tick.width", "tick.widthratio"):
-                if contains("tick.width"):
-                    tickwidth = value
-                    ratio = rc_ultraplot["tick.widthratio"]
-                else:
-                    tickwidth = rc_ultraplot["tick.width"]
-                    ratio = value
-                kw_matplotlib["xtick.minor.width"] = tickwidth * ratio
-                kw_matplotlib["ytick.minor.width"] = tickwidth * ratio
+        # Special key: configure inline backend
+        if contains("inlineformat"):
+            config_inline_backend(value)
 
-            # Gridline width
-            elif contains("grid.width", "grid.widthratio"):
-                if contains("grid.width"):
-                    gridwidth = value
-                    ratio = rc_ultraplot["grid.widthratio"]
-                else:
-                    gridwidth = rc_ultraplot["grid.width"]
-                    ratio = value
-                kw_ultraplot["gridminor.linewidth"] = gridwidth * ratio
-                kw_ultraplot["gridminor.width"] = gridwidth * ratio
+        # Special key: apply stylesheet
+        elif contains("style"):
+            if value is not None:
+                ikw_matplotlib = _get_style_dict(value)
+                kw_matplotlib.update(ikw_matplotlib)
+                kw_ultraplot.update(_infer_ultraplot_dict(ikw_matplotlib))
 
-            # Gridline toggling
-            elif contains("grid", "gridminor"):
-                b, which = _translate_grid(
-                    value, "gridminor" if contains("gridminor") else "grid"
-                )
-                kw_matplotlib["axes.grid"] = b
-                kw_matplotlib["axes.grid.which"] = which
+        # Cycler
+        # NOTE: Have to skip this step during initial ultraplot import
+        elif contains("cycle") and not skip_cycle:
+            from .colors import _get_cmap_subtype
+
+            cmap = _get_cmap_subtype(value, "discrete")
+            kw_matplotlib["axes.prop_cycle"] = cycler.cycler("color", cmap.colors)
+            kw_matplotlib["patch.facecolor"] = "C0"
+
+        # Turning bounding box on should turn border off and vice versa
+        elif contains("abc.bbox", "title.bbox", "abc.border", "title.border"):
+            if value:
+                name, this = key.split(".")
+                other = "border" if this == "bbox" else "bbox"
+                kw_ultraplot[name + "." + other] = False
+
+        # Fontsize
+        # NOTE: Re-application of e.g. size='small' uses the updated 'font.size'
+        elif contains("font.size"):
+            kw_ultraplot.update(
+                {
+                    key: value
+                    for key, value in rc_ultraplot.items()
+                    if key in rcsetup.FONT_KEYS and value in mfonts.font_scalings
+                }
+            )
+            kw_matplotlib.update(
+                {
+                    key: value
+                    for key, value in rc_matplotlib.items()
+                    if key in rcsetup.FONT_KEYS and value in mfonts.font_scalings
+                }
+            )
+
+        # Tick length/major-minor tick length ratio
+        elif contains("tick.len", "tick.lenratio"):
+            if contains("tick.len"):
+                ticklen = value
+                ratio = rc_ultraplot["tick.lenratio"]
+            else:
+                ticklen = rc_ultraplot["tick.len"]
+                ratio = value
+            kw_matplotlib["xtick.minor.size"] = ticklen * ratio
+            kw_matplotlib["ytick.minor.size"] = ticklen * ratio
+
+        # Spine width/major-minor tick width ratio
+        elif contains("tick.width", "tick.widthratio"):
+            if contains("tick.width"):
+                tickwidth = value
+                ratio = rc_ultraplot["tick.widthratio"]
+            else:
+                tickwidth = rc_ultraplot["tick.width"]
+                ratio = value
+            kw_matplotlib["xtick.minor.width"] = tickwidth * ratio
+            kw_matplotlib["ytick.minor.width"] = tickwidth * ratio
+
+        # Gridline width
+        elif contains("grid.width", "grid.widthratio"):
+            if contains("grid.width"):
+                gridwidth = value
+                ratio = rc_ultraplot["grid.widthratio"]
+            else:
+                gridwidth = rc_ultraplot["grid.width"]
+                ratio = value
+            kw_ultraplot["gridminor.linewidth"] = gridwidth * ratio
+            kw_ultraplot["gridminor.width"] = gridwidth * ratio
+
+        # Gridline toggling
+        elif contains("grid", "gridminor"):
+            b, which = _translate_grid(
+                value, "gridminor" if contains("gridminor") else "grid"
+            )
+            kw_matplotlib["axes.grid"] = b
+            kw_matplotlib["axes.grid.which"] = which
 
         return kw_ultraplot, kw_matplotlib
 
