@@ -1062,7 +1062,7 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
                 if lonlim == (None, None):
                     lonlim = lonview
                 self._update_extent(
-                    lonlim=lonview, latlim=latview, boundinglat=boundinglat
+                    lonlim=lonlim, latlim=latlim, boundinglat=boundinglat
                 )
             else:
                 warnings._warn_ultraplot(
