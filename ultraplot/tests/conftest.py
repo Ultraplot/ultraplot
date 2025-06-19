@@ -68,7 +68,7 @@ def reset_rc_and_close_figures():
 
     yield
 
-    # Clean up after test
+    # Clean up after test - only close figures, don't reset rc
     uplt.close("all")
 
     # Reset to clean state for next test

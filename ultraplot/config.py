@@ -816,8 +816,8 @@ class Configurator(MutableMapping, dict):
         """
         with self._lock:
             kw_ultraplot, kw_matplotlib = self._get_item_dicts(key, value)
-            rc_ultraplot.update(kw_ultraplot)
-            rc_matplotlib.update(kw_matplotlib)
+            self._rc_ultraplot.update(kw_ultraplot)
+            self._rc_matplotlib.update(kw_matplotlib)
 
     def __getattr__(self, attr):
         """
