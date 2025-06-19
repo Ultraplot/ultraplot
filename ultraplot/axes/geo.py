@@ -1046,6 +1046,8 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
         lonticklen = _not_none(lonticklen, ticklen)
         latticklen = _not_none(latticklen, ticklen)
 
+        # tmp store the extents as they may be
+        # affected by the tick lengths
         latview = self._lataxis.get_view_interval()
         lonview = self._lonaxis.get_view_interval()
         if lonticklen or latticklen:
