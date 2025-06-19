@@ -1045,13 +1045,20 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
         # Set tick lengths for flat projections
         lonticklen = _not_none(lonticklen, ticklen)
         latticklen = _not_none(latticklen, ticklen)
+
+        latview = self._lataxis.get_view_interval()
+        lonview = self._lonaxis.get_view_interval()
         if lonticklen or latticklen:
             # Only add warning when ticks are given
             if _is_rectilinear_projection(self):
                 self._add_geoticks("x", lonticklen, ticklen)
                 self._add_geoticks("y", latticklen, ticklen)
+                if latlim == (None, None):
+                    latlim = latview
+                if lonlim == (None, None):
+                    lonlim = lonview
                 self._update_extent(
-                    lonlim=lonlim, latlim=latlim, boundinglat=boundinglat
+                    lonlim=lonview, latlim=latview, boundinglat=boundinglat
                 )
             else:
                 warnings._warn_ultraplot(
