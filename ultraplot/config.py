@@ -785,7 +785,7 @@ class Configurator(MutableMapping, dict):
     def _rc_ultraplot(self):
         """Get current thread's ultraplot config dict."""
         if not hasattr(self._local_props, "rc_ultraplot"):
-            # Copy from global rc_ultraplot which has full initialization
+            # Use dict() to avoid validation during thread-local setup
             self._local_props.rc_ultraplot = dict(rc_ultraplot)
         return self._local_props.rc_ultraplot
 
@@ -793,7 +793,7 @@ class Configurator(MutableMapping, dict):
     def _rc_matplotlib(self):
         """Get current thread's matplotlib config dict."""
         if not hasattr(self._local_props, "rc_matplotlib"):
-            # Copy from global rc_matplotlib which has full initialization
+            # Use dict() to avoid validation during thread-local setup
             self._local_props.rc_matplotlib = dict(rc_matplotlib)
         return self._local_props.rc_matplotlib
 
@@ -895,10 +895,34 @@ class Configurator(MutableMapping, dict):
         # Update from default settings
         # NOTE: see _remove_blacklisted_style_params bugfix
         if default:
+            # Clear thread-local dicts to force fresh initialization
+            if hasattr(self._local_props, "rc_ultraplot"):
+                delattr(self._local_props, "rc_ultraplot")
+            if hasattr(self._local_props, "rc_matplotlib"):
+                delattr(self._local_props, "rc_matplotlib")
+
+            # Apply defaults with proper processing order
             self._rc_matplotlib.update(_get_style_dict("original", filter=False))
             self._rc_matplotlib.update(rcsetup._rc_matplotlib_default)
             self._rc_ultraplot.update(rcsetup._rc_ultraplot_default)
-            for key, value in self._rc_ultraplot.items():
+
+            # Apply ultraplot settings to matplotlib in correct order
+            # Process 'gridminor' before 'grid' to avoid conflicts
+            ultraplot_items = list(self._rc_ultraplot.items())
+            grid_items = []
+            other_items = []
+
+            for key, value in ultraplot_items:
+                if key in ("grid", "gridminor"):
+                    grid_items.append((key, value))
+                else:
+                    other_items.append((key, value))
+
+            # Sort grid items so gridminor comes before grid
+            grid_items.sort(key=lambda x: 0 if x[0] == "gridminor" else 1)
+
+            # Process all items in the correct order
+            for key, value in other_items + grid_items:
                 kw_ultraplot, kw_matplotlib = self._get_item_dicts(
                     key, value, skip_cycle=skip_cycle
                 )
