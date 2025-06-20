@@ -54,8 +54,6 @@ logging.getLogger("matplotlib.mathtext").setLevel(logging.ERROR)
 __all__ = [
     "Configurator",
     "rc",
-    "rc_ultraplot",
-    "rc_matplotlib",
     "use_style",
     "config_inline_backend",
     "register_cmaps",
@@ -1853,13 +1851,6 @@ _init_user_file()
 #: Instance of `Configurator`. This controls both `rc_matplotlib` and `rc_ultraplot`
 #: settings. See the :ref:`configuration guide <ug_config>` for details.
 rc = Configurator(skip_cycle=True)
-
-#: A dictionary-like container of ultraplot settings. Assignments are
-#: validated and restricted to recognized setting names.
-rc_ultraplot = rc.rc_ultraplot
-#: A dictionary-like container of matplotlib settings. Assignments are
-#: validated and restricted to recognized setting names.
-rc_matplotlib = rc.rc_matplotlib
 
 # Deprecated
 RcConfigurator = warnings._rename_objs(

@@ -23,7 +23,7 @@ import numpy as np
 from . import axes as paxes
 from . import constructor
 from . import gridspec as pgridspec
-from .config import rc, rc_matplotlib
+from .config import rc
 from .internals import ic  # noqa: F401
 from .internals import (
     _not_none,
@@ -710,21 +710,23 @@ class Figure(mfigure.Figure):
             warnings._warn_ultraplot(
                 "Ignoring constrained_layout=True. " + self._tight_message
             )
-        if rc_matplotlib.get("figure.autolayout", False):
+        if rc.rc_matplotlib.get("figure.autolayout", False):
             warnings._warn_ultraplot(
                 "Setting rc['figure.autolayout'] to False. " + self._tight_message
             )
-        if rc_matplotlib.get("figure.constrained_layout.use", False):
+        if rc.rc_matplotlib.get("figure.constrained_layout.use", False):
             warnings._warn_ultraplot(
                 "Setting rc['figure.constrained_layout.use'] to False. "
                 + self._tight_message  # noqa: E501
             )
         try:
-            rc_matplotlib["figure.autolayout"] = False  # this is rcParams
+            rc.rc_matplotlib["figure.autolayout"] = False  # this is rcParams
         except KeyError:
             pass
         try:
-            rc_matplotlib["figure.constrained_layout.use"] = False  # this is rcParams
+            rc.rc_matplotlib["figure.constrained_layout.use"] = (
+                False  # this is rcParams
+            )
         except KeyError:
             pass
         self._tight_active = _not_none(tight, rc["subplots.tight"])
