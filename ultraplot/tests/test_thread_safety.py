@@ -11,6 +11,7 @@ def modify_rc_in_context(prop: str, value=None):
 
 def modify_rc_on_thread(prop: str, value=None):
     id = threading.get_ident()  # set it to thread id
+    uplt.rc[prop] = value
     assert uplt.rc[prop] == value, f"Thread {id} failed to set rc params {prop}={value}"
 
 
@@ -70,7 +71,7 @@ def test_setting_without_context():
     # Test an ultraplot  parameter
     prop = "abc"
     value = uplt.rc[prop]
-    options = "a b c d e f g".split()
+    options = "A. a. aa".split()
     _spawn_and_run_threads(modify_rc_on_thread, prop=prop, options=options)
     assert uplt.rc[prop] == value
 
