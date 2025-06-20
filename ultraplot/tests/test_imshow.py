@@ -81,7 +81,6 @@ def test_inbounds_data(rng):
         ylabel="ylabel",
         suptitle="Default vmin/vmax restricted to in-bounds data",
     )
-    fig.show()
     return fig
 
 
