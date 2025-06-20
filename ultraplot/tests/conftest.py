@@ -9,15 +9,6 @@ Thread-Safe Random Number Generation:
 - Each thread gets independent, deterministic RNG instances
 - Compatible with pytest-xdist parallel execution
 - Clean separation of concerns - tests explicitly declare RNG dependencies
-<<<<<<< HEAD
-=======
-
-Matplotlib rcParams Safety:
-- Automatic rcParams isolation for all tests prevents interference
-- Tests that modify matplotlib settings are automatically isolated
-- Dedicated rcparams_isolation fixture for explicit isolation needs
-- Thread-safe for parallel execution with pytest-xdist
->>>>>>> e674a3b6 (restore files)
 """
 
 import threading, os, shutil, pytest, re
