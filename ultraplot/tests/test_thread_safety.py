@@ -1,21 +1,18 @@
 import ultraplot as uplt, threading, pytest, warnings
 
 
-def modify_rc_in_context(prop: str, value=None):
+def modify_rc_on_thread(prop: str, value=None, with_context=True):
     """
     Apply arbitrary rc parameters in a thread-safe manner.
     """
-    with uplt.rc.context(fontsize=value):
+    if with_context:
+        with uplt.rc.context(fontsize=value):
+            assert uplt.rc[prop] == value, f"Thread {id} failed to set rc params"
+    else:
         assert uplt.rc[prop] == value, f"Thread {id} failed to set rc params"
 
 
-def modify_rc_on_thread(prop: str, value=None):
-    id = threading.get_ident()  # set it to thread id
-    uplt.rc[prop] = value
-    assert uplt.rc[prop] == value, f"Thread {id} failed to set rc params {prop}={value}"
-
-
-def _spawn_and_run_threads(func, n=10, **kwargs):
+def _spawn_and_run_threads(func, n=30, **kwargs):
     options = kwargs.pop("options")
     workers = []
     exceptions = []
@@ -56,7 +53,9 @@ def test_setting_within_context():
     # be local to that context and not affect the main thread.
     prop, value = "font.size", uplt.rc["font.size"]
     options = list(range(10))
-    _spawn_and_run_threads(modify_rc_in_context, prop=prop, options=options)
+    _spawn_and_run_threads(
+        modify_rc_on_thread, prop=prop, options=options, with_context=True
+    )
     assert uplt.rc[prop] == value
 
 
@@ -71,10 +70,14 @@ def test_setting_without_context():
     # Test an ultraplot  parameter
     prop = "abc"
     value = uplt.rc[prop]
-    options = "A. a. aa".split()
-    _spawn_and_run_threads(modify_rc_on_thread, prop=prop, options=options)
+    options = "A. a. aa aaa aaaa.".split()
+    _spawn_and_run_threads(
+        modify_rc_on_thread, prop=prop, options=options, with_context=False
+    )
     assert uplt.rc[prop] == value
 
     prop, value = "font.size", uplt.rc["font.size"]
     options = list(range(10))
-    _spawn_and_run_threads(modify_rc_on_thread, prop=prop, options=options)
+    _spawn_and_run_threads(
+        modify_rc_on_thread, prop=prop, options=options, with_context=False
+    )
