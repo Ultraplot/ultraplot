@@ -529,9 +529,23 @@ class _RcParams(MutableMapping, dict):
     # NOTE: By omitting __delitem__ in MutableMapping we effectively
     # disable mutability. Also disables deleting items with pop().
     def __init__(self, source, validate):
+        import threading
+
+        self._thread_props = threading.local()  # for thread-local properties
+
         self._validate = validate
         for key, value in source.items():
             self.__setitem__(key, value)  # trigger validation
+
+    @property
+    def _validate(self):
+        if not hasattr(self._thread_props, "_validate"):
+            self._thread_props._validate = _rc_ultraplot_validate
+        return self._thread_props._validate
+
+    @_validate.setter
+    def _validate(self, value):
+        self._thread_props._validate = value
 
     def __repr__(self):
         return RcParams.__repr__(self)
@@ -588,8 +602,14 @@ class _RcParams(MutableMapping, dict):
         return key, value
 
     def copy(self):
-        source = {key: dict.__getitem__(self, key) for key in self}
-        return _RcParams(source, self._validate)
+        # Access validation dict from thread-local if available, else fallback
+        validate = getattr(self._thread_props, "_validate", None)
+        if validate is None:
+            # fallback: guess it from another thread (e.g., first one that set it)
+            validate = dict()
+
+        source = dict(self)
+        return _RcParams(source, validate)
 
 
 # Borrow validators from matplotlib and construct some new ones

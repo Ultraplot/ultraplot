@@ -64,57 +64,12 @@ def rng():
 def reset_rc_and_close_figures():
     """Reset rc to full ultraplot defaults and close figures for each test."""
     # Force complete ultraplot initialization for this thread
-    _ensure_ultraplot_defaults()
+    uplt.rc.reset()
 
     yield
 
     # Clean up after test - only close figures, don't reset rc
     uplt.close("all")
-
-    # Reset to clean state for next test
-    _ensure_ultraplot_defaults()
-
-
-def _ensure_ultraplot_defaults():
-    """Ensure current thread has complete ultraplot configuration."""
-    from ultraplot.internals import rcsetup
-    from ultraplot.config import _get_style_dict
-
-    # Clear thread-local storage to force reinitialization
-    if hasattr(uplt.rc, "_local_props"):
-        if hasattr(uplt.rc._local_props, "rc_ultraplot"):
-            delattr(uplt.rc._local_props, "rc_ultraplot")
-        if hasattr(uplt.rc._local_props, "rc_matplotlib"):
-            delattr(uplt.rc._local_props, "rc_matplotlib")
-
-    # Force thread-local dicts to exist
-    _ = uplt.rc._rc_ultraplot
-    _ = uplt.rc._rc_matplotlib
-
-    # Apply complete ultraplot initialization sequence
-    uplt.rc._rc_matplotlib.update(_get_style_dict("original", filter=False))
-    uplt.rc._rc_matplotlib.update(rcsetup._rc_matplotlib_default)
-    uplt.rc._rc_ultraplot.update(rcsetup._rc_ultraplot_default)
-
-    # Apply ultraplot->matplotlib translations in correct order
-    ultraplot_items = list(uplt.rc._rc_ultraplot.items())
-    grid_items = [(k, v) for k, v in ultraplot_items if k in ("grid", "gridminor")]
-    other_items = [(k, v) for k, v in ultraplot_items if k not in ("grid", "gridminor")]
-
-    # Process gridminor before grid to avoid conflicts
-    grid_items.sort(key=lambda x: 0 if x[0] == "gridminor" else 1)
-
-    # Apply all ultraplot settings to matplotlib
-    for key, value in other_items + grid_items:
-        try:
-            kw_ultraplot, kw_matplotlib = uplt.rc._get_item_dicts(
-                key, value, skip_cycle=True
-            )
-            uplt.rc._rc_matplotlib.update(kw_matplotlib)
-            uplt.rc._rc_ultraplot.update(kw_ultraplot)
-        except:
-            # Skip any problematic settings during test setup
-            continue
 
 
 def pytest_addoption(parser):

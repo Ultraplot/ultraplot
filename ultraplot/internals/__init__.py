@@ -7,6 +7,7 @@ import inspect
 from numbers import Integral, Real
 
 import numpy as np
+
 from matplotlib import rcParams as rc_matplotlib
 
 try:  # print debugging (used with internal modules)
