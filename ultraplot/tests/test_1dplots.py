@@ -574,7 +574,7 @@ def test_networks(rng):
         node_color = uplt.colormaps.get_cmap(cmap)(np.linspace(0, 1, len(g)))
         inax = ax.inset_axes([*pos, 0.2, 0.2], zoom=0)
         layout_kw = {}
-        if layout in ("random", "arf"):
+        if layout in ("random", "arf", "forceatlas2"):
             layout_kw = dict(seed=SEED)
 
         inax.graph(
