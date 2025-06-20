@@ -44,40 +44,23 @@ def _spawn_and_run_threads(func, n=30, **kwargs):
         raise RuntimeError("Thread raised a warning")
 
 
-def test_setting_within_context():
+@pytest.mark.parametrize("with_context", [True, False])
+@pytest.mark.parametrize(
+    "prop, options",
+    [
+        ("font.size", list(range(10))),
+        ("abc", "A. a. aa aaa aaaa.".split()),
+    ],
+)
+def test_setting_without_context(prop, options, with_context):
     """
     Test the thread safety of a context setting
     """
-    # We spawn workers and these workers should try to set
-    # an arbitrarry rc parameter. This should
-    # be local to that context and not affect the main thread.
-    prop, value = "font.size", uplt.rc["font.size"]
-    options = list(range(10))
-    _spawn_and_run_threads(
-        modify_rc_on_thread, prop=prop, options=options, with_context=True
-    )
-    assert uplt.rc[prop] == value
-
-
-def test_setting_without_context():
-    """
-    Test the thread safety of a context setting
-    """
-    # We spawn workers and these workers should try to set
-    # an arbitrarry rc parameter. This should
-    # be local to that context and not affect the main thread.
-    #
-    # Test an ultraplot  parameter
-    prop = "abc"
     value = uplt.rc[prop]
-    options = "A. a. aa aaa aaaa.".split()
     _spawn_and_run_threads(
-        modify_rc_on_thread, prop=prop, options=options, with_context=False
+        modify_rc_on_thread,
+        prop=prop,
+        options=options,
+        with_context=with_context,
     )
     assert uplt.rc[prop] == value
-
-    prop, value = "font.size", uplt.rc["font.size"]
-    options = list(range(10))
-    _spawn_and_run_threads(
-        modify_rc_on_thread, prop=prop, options=options, with_context=False
-    )
