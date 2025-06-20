@@ -574,7 +574,7 @@ def test_networks(rng):
         node_color = uplt.colormaps.get_cmap(cmap)(np.linspace(0, 1, len(g)))
         inax = ax.inset_axes([*pos, 0.2, 0.2], zoom=0)
         layout_kw = {}
-        if layout in ("random", "spring", "arf"):
+        if layout in ("random", "arf"):
             layout_kw = dict(seed=SEED)
 
         inax.graph(
@@ -582,6 +582,7 @@ def test_networks(rng):
             layout=layout,
             edge_kw=dict(alpha=alpha),
             node_kw=dict(node_color=node_color),
+            layout_kw=layout_kw,
         )
         xspine, yspine = spines
         inax[0]._toggle_spines(spines)
