@@ -20,6 +20,7 @@ Matplotlib rcParams Safety:
 import threading, os, shutil, pytest, re
 import numpy as np, ultraplot as uplt
 import warnings, logging
+
 import os, shutil, pytest, re, numpy as np, ultraplot as uplt
 from pathlib import Path
 import warnings, logging
@@ -42,6 +43,11 @@ def reset_rc_and_close_figures():
     # Force complete ultraplot initialization for this thread
     uplt.rc.reset()
 
+    return np.random.default_rng(SEED)
+
+
+@pytest.fixture(autouse=True)
+def close_figures_after_test():
     yield
 
     # Clean up after test - only close figures, don't reset rc
