@@ -14,50 +14,6 @@ def rng():
 
 
 @pytest.fixture(autouse=True)
-def isolate_mpl_testing():
-    """
-    Isolate matplotlib testing for parallel execution.
-
-    This prevents race conditions in parallel testing (pytest-xdist) where
-    multiple processes can interfere with each other's image comparison tests.
-    The main issue is that pytest-mpl uses shared temporary directories that
-    can conflict between processes.
-    """
-    import matplotlib as mpl
-    import matplotlib.pyplot as plt
-    import tempfile
-    import os
-
-    # Store original backend and ensure consistent state
-    original_backend = mpl.get_backend()
-    if original_backend != "Agg":
-        mpl.use("Agg", force=True)
-
-    # Clear any existing figures
-    plt.close("all")
-
-    # Create process-specific temporary directory for mpl results
-    # This prevents file conflicts between parallel processes
-    worker_id = os.environ.get("PYTEST_XDIST_WORKER", "master")
-    with tempfile.TemporaryDirectory(prefix=f"mpl_test_{worker_id}_") as temp_dir:
-        os.environ["MPL_TEST_TEMP_DIR"] = temp_dir
-
-        yield
-
-    # Clean up after test
-    plt.close("all")
-    uplt.close("all")
-
-    # Remove environment variable
-    if "MPL_TEST_TEMP_DIR" in os.environ:
-        del os.environ["MPL_TEST_TEMP_DIR"]
-
-    # Restore original backend
-    if original_backend != "Agg":
-        mpl.use(original_backend, force=True)
-
-
-@pytest.fixture(autouse=True)
 def close_figures_after_test():
     yield
     uplt.close("all")
@@ -123,33 +79,6 @@ def pytest_collection_modifyitems(config, items):
 
 # Register the plugin if the option is used
 def pytest_configure(config):
-<<<<<<< HEAD
-    """
-    Configure pytest with the enhanced MPL plugin.
-
-    This function:
-    - Suppresses verbose matplotlib logging
-    - Registers the StoreFailedMplPlugin for enhanced functionality
-    - Sets up the plugin regardless of cleanup options (HTML reports always available)
-    - Configures process-specific temporary directories for parallel testing
-    """
-    # Suppress ultraplot config loading which mpl does not recognize
-    logging.getLogger("matplotlib").setLevel(logging.ERROR)
-    logging.getLogger("ultraplot").setLevel(logging.WARNING)
-
-    # Configure process-specific results directory for parallel testing
-    worker_id = os.environ.get("PYTEST_XDIST_WORKER", "master")
-    if (
-        not hasattr(config.option, "mpl_results_path")
-        or not config.option.mpl_results_path
-    ):
-        config.option.mpl_results_path = f"./mpl-results-{worker_id}"
-
-=======
-    # Surpress ultraplot config loading which mpl does not recognize
-    logging.getLogger("matplotlib").setLevel(logging.ERROR)
-    logging.getLogger("ultraplot").setLevel(logging.WARNING)
->>>>>>> parent of 500e45b1 (Add xdist to image compare (#266))
     try:
         if config.getoption("--store-failed-only", False):
             config.pluginmanager.register(StoreFailedMplPlugin(config))

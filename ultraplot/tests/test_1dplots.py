@@ -525,7 +525,7 @@ def test_heatmap_labels(rng):
     return fig
 
 
-@pytest.mark.mpl_image_compare
+@pytest.mark.mpl_image_compare()
 def test_networks(rng):
     """
     Create a baseline network graph that tests
@@ -575,7 +575,7 @@ def test_networks(rng):
         inax = ax.inset_axes([*pos, 0.2, 0.2], zoom=0)
         layout_kw = {}
         if layout in ("random", "spring", "arf"):
-            layout_kw = dict(seed=np.random.default_rng(SEED))
+            layout_kw = dict(seed=SEED)
 
         inax.graph(
             g,
