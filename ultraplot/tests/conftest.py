@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 """
 Conftest.py for UltraPlot testing with modular MPL plugin architecture.
 
@@ -21,9 +20,7 @@ Matplotlib rcParams Safety:
 import threading, os, shutil, pytest, re
 import numpy as np, ultraplot as uplt
 import warnings, logging
-=======
 import os, shutil, pytest, re, numpy as np, ultraplot as uplt
->>>>>>> main
 from pathlib import Path
 import warnings, logging
 
@@ -35,7 +32,6 @@ def rng():
     """
     Ensure all tests start with the same rng
     """
-<<<<<<< HEAD
     # Each test gets the same seed for reproducibility
     return np.random.default_rng(seed=SEED)
 
@@ -46,13 +42,6 @@ def reset_rc_and_close_figures():
     # Force complete ultraplot initialization for this thread
     uplt.rc.reset()
 
-=======
-    return np.random.default_rng(SEED)
-
-
-@pytest.fixture(autouse=True)
-def close_figures_after_test():
->>>>>>> main
     yield
 
     # Clean up after test - only close figures, don't reset rc
