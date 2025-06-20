@@ -840,6 +840,7 @@ class Configurator(MutableMapping, dict):
 
     def __delattr__(self, attr):  # noqa: U100
         raise RuntimeError("rc settings cannot be deleted.")
+
     def __getitem__(self, key):
         """
         Return an `rc_matplotlib` or `rc_ultraplot` setting using dictionary notation
@@ -860,7 +861,6 @@ class Configurator(MutableMapping, dict):
         kw_ultraplot, kw_matplotlib = self._get_item_dicts(key, value)
         self.rc_ultraplot.update(kw_ultraplot)
         self.rc_matplotlib.update(kw_matplotlib)
-
 
     def __getattr__(self, attr):
         """
@@ -924,9 +924,6 @@ class Configurator(MutableMapping, dict):
             self.rc_ultraplot.update(kw_ultraplot)
             self.rc_matplotlib.update(kw_matplotlib)
         del self._context[-1]
-            rc_ultraplot.update(kw_ultraplot)
-            rc_matplotlib.update(kw_matplotlib)
-        del self._context[-1]
 
     def _init(self, *, local, user, default, skip_cycle=False):
         """
@@ -962,7 +959,6 @@ class Configurator(MutableMapping, dict):
                 if path == user_path:  # local files always have precedence
                     continue
                 self.load(path)
-
 
     def _validate_key(self, key, value=None):
         """
