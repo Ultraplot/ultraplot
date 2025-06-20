@@ -6,9 +6,10 @@ def modify_rc_on_thread(prop: str, value=None, with_context=True):
     Apply arbitrary rc parameters in a thread-safe manner.
     """
     if with_context:
-        with uplt.rc.context(fontsize=value):
+        with uplt.rc.context(**{prop: value}):
             assert uplt.rc[prop] == value, f"Thread {id} failed to set rc params"
     else:
+        uplt.rc[prop] = value
         assert uplt.rc[prop] == value, f"Thread {id} failed to set rc params"
 
 
@@ -36,9 +37,9 @@ def _spawn_and_run_threads(func, n=30, **kwargs):
             w.join()
 
     if exceptions:
-        raise RuntimeError(f"Thread raised exception: {exceptions[0]}") from exceptions[
-            0
-        ]
+        raise RuntimeError(
+            f"Thread raised exception: {exceptions[0]} with {kwargs=}"
+        ) from exceptions[0]
 
     if record:
         raise RuntimeError("Thread raised a warning")
@@ -52,7 +53,7 @@ def _spawn_and_run_threads(func, n=30, **kwargs):
         ("abc", "A. a. aa aaa aaaa.".split()),
     ],
 )
-def test_setting_without_context(prop, options, with_context):
+def test_setting_rc(prop, options, with_context):
     """
     Test the thread safety of a context setting
     """
@@ -63,4 +64,6 @@ def test_setting_without_context(prop, options, with_context):
         options=options,
         with_context=with_context,
     )
-    assert uplt.rc[prop] == value
+    assert (
+        uplt.rc[prop] == value
+    ), f"Failed to reset {value=} after threads finished, {uplt.rc[prop]=}."

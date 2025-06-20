@@ -541,7 +541,7 @@ class _RcParams(MutableMapping, dict):
     def _validate(self):
         if not hasattr(self._thread_props, "_validate"):
             self._thread_props._validate = _rc_ultraplot_validate
-        return self._thread_props._validate
+        return self._thread_props._validate.copy()
 
     @_validate.setter
     def _validate(self, value):
@@ -607,9 +607,8 @@ class _RcParams(MutableMapping, dict):
         if validate is None:
             # fallback: guess it from another thread (e.g., first one that set it)
             validate = dict()
-
         source = dict(self)
-        return _RcParams(source, validate)
+        return _RcParams(source.copy(), validate.copy())
 
 
 # Borrow validators from matplotlib and construct some new ones

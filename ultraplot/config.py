@@ -841,6 +841,19 @@ class Configurator(MutableMapping, dict):
     def __delattr__(self, attr):  # noqa: U100
         raise RuntimeError("rc settings cannot be deleted.")
 
+<<<<<<< HEAD
+=======
+    @docstring._snippet_manager
+    def __init__(self, local=True, user=True, default=True, **kwargs):
+        """
+        Parameters
+        ----------
+        %(rc.params)s
+        """
+        self._context = []
+        self._init(local=local, user=user, default=default, **kwargs)
+
+>>>>>>> main
     def __getitem__(self, key):
         """
         Return an `rc_matplotlib` or `rc_ultraplot` setting using dictionary notation
@@ -859,8 +872,13 @@ class Configurator(MutableMapping, dict):
         (e.g., ``uplt.rc[name] = value``).
         """
         kw_ultraplot, kw_matplotlib = self._get_item_dicts(key, value)
+<<<<<<< HEAD
         self.rc_ultraplot.update(kw_ultraplot)
         self.rc_matplotlib.update(kw_matplotlib)
+=======
+        rc_ultraplot.update(kw_ultraplot)
+        rc_matplotlib.update(kw_matplotlib)
+>>>>>>> main
 
     def __getattr__(self, attr):
         """
@@ -902,7 +920,11 @@ class Configurator(MutableMapping, dict):
                 raise e
 
             for rc_dict, kw_new in zip(
+<<<<<<< HEAD
                 (self.rc_ultraplot, self.rc_matplotlib),
+=======
+                (rc_ultraplot, rc_matplotlib),
+>>>>>>> main
                 (kw_ultraplot, kw_matplotlib),
             ):
                 for key, value in kw_new.items():
@@ -920,11 +942,55 @@ class Configurator(MutableMapping, dict):
         context = self._context[-1]
         for key, value in context.rc_old.items():
             kw_ultraplot, kw_matplotlib = self._get_item_dicts(key, value)
+<<<<<<< HEAD
             self.rc_ultraplot.update(kw_ultraplot)
             self.rc_matplotlib.update(kw_matplotlib)
         del self._context[-1]
 
     def _validate_key(self, key, value=None):
+=======
+            rc_ultraplot.update(kw_ultraplot)
+            rc_matplotlib.update(kw_matplotlib)
+        del self._context[-1]
+
+    def _init(self, *, local, user, default, skip_cycle=False):
+        """
+        Initialize the configurator.
+        """
+        # Always remove context objects
+        self._context.clear()
+
+        # Update from default settings
+        # NOTE: see _remove_blacklisted_style_params bugfix
+        if default:
+            rc_matplotlib.update(_get_style_dict("original", filter=False))
+            rc_matplotlib.update(rcsetup._rc_matplotlib_default)
+            rc_ultraplot.update(rcsetup._rc_ultraplot_default)
+            for key, value in rc_ultraplot.items():
+                kw_ultraplot, kw_matplotlib = self._get_item_dicts(
+                    key, value, skip_cycle=skip_cycle
+                )
+                rc_matplotlib.update(kw_matplotlib)
+                rc_ultraplot.update(kw_ultraplot)
+
+        # Update from user home
+        user_path = None
+        if user:
+            user_path = self.user_file()
+            if os.path.isfile(user_path):
+                self.load(user_path)
+
+        # Update from local paths
+        if local:
+            local_paths = self.local_files()
+            for path in local_paths:
+                if path == user_path:  # local files always have precedence
+                    continue
+                self.load(path)
+
+    @staticmethod
+    def _validate_key(key, value=None):
+>>>>>>> main
         """
         Validate setting names and handle `rc_ultraplot` deprecations.
         """
@@ -971,9 +1037,15 @@ class Configurator(MutableMapping, dict):
             mode = self._context_mode
         cache = tuple(context.rc_new for context in self._context)
         if mode == 0:
+<<<<<<< HEAD
             rcdicts = (*cache, self.rc_ultraplot, self.rc_matplotlib)
         elif mode == 1:
             rcdicts = (*cache, self.rc_ultraplot)  # added settings only!
+=======
+            rcdicts = (*cache, rc_ultraplot, rc_matplotlib)
+        elif mode == 1:
+            rcdicts = (*cache, rc_ultraplot)  # added settings only!
+>>>>>>> main
         elif mode == 2:
             rcdicts = (*cache,)
         else:
