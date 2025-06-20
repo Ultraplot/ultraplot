@@ -9,21 +9,33 @@ Thread-Safe Random Number Generation:
 - Each thread gets independent, deterministic RNG instances
 - Compatible with pytest-xdist parallel execution
 - Clean separation of concerns - tests explicitly declare RNG dependencies
-
-Matplotlib rcParams Safety:
-- Automatic rcParams isolation for all tests prevents interference
-- Tests that modify matplotlib settings are automatically isolated
-- Dedicated rcparams_isolation fixture for explicit isolation needs
-- Thread-safe for parallel execution with pytest-xdist
 """
 
 import threading, os, shutil, pytest, re
 import numpy as np, ultraplot as uplt
 import warnings, logging
+<<<<<<< HEAD
 
 import os, shutil, pytest, re, numpy as np, ultraplot as uplt
+=======
+>>>>>>> e8823ad9 (restore conftest.py)
 from pathlib import Path
-import warnings, logging
+from datetime import datetime
+
+# Import the modular MPL plugin components
+from ultraplot.tests.mpl_plugin import (
+    StoreFailedMplPlugin,
+    ProgressTracker,
+    CleanupManager,
+    HTMLReportGenerator,
+)
+from ultraplot.tests.mpl_plugin.utils import (
+    count_mpl_tests,
+    should_generate_html_report,
+    get_failed_mpl_tests,
+)
+from ultraplot.tests.mpl_plugin.progress import get_progress_tracker
+from ultraplot.tests.mpl_plugin.cleanup import get_cleanup_manager
 
 SEED = 51423
 
@@ -31,13 +43,24 @@ SEED = 51423
 @pytest.fixture
 def rng():
     """
-    Ensure all tests start with the same rng
+    Fixture providing a numpy random generator for tests.
+
+    This fixture provides a numpy.random.Generator instance that:
+    - Uses the same seed (51423) for each test
+    - Ensures reproducible results
+    - Resets state for each test
+
+    Usage in tests:
+        def test_something(rng):
+            random_data = rng.normal(0, 1, size=100)
+            random_ints = rng.integers(0, 10, size=5)
     """
     # Each test gets the same seed for reproducibility
     return np.random.default_rng(seed=SEED)
 
 
 @pytest.fixture(autouse=True)
+<<<<<<< HEAD
 def reset_rc_and_close_figures():
     """Reset rc to full ultraplot defaults and close figures for each test."""
     # Force complete ultraplot initialization for this thread
@@ -48,59 +71,42 @@ def reset_rc_and_close_figures():
 
 @pytest.fixture(autouse=True)
 def close_figures_after_test():
+=======
+def close_figures_after_test():
+    """Automatically close all figures after each test."""
+>>>>>>> e8823ad9 (restore conftest.py)
     yield
-
-    # Clean up after test - only close figures, don't reset rc
     uplt.close("all")
 
 
-# Define command line option
 def pytest_addoption(parser):
+    """Add command line options for enhanced matplotlib testing."""
     parser.addoption(
         "--store-failed-only",
         action="store_true",
-        help="Store only failed matplotlib comparison images",
+        help="Store only failed matplotlib comparison images (enables artifact optimization)",
     )
 
 
-class StoreFailedMplPlugin:
-    def __init__(self, config):
-        self.config = config
-
-        # Get base directories as Path objects
-        self.result_dir = Path(config.getoption("--mpl-results-path", "./results"))
-        self.baseline_dir = Path(config.getoption("--mpl-baseline-path", "./baseline"))
-
-        print(f"Store Failed MPL Plugin initialized")
-        print(f"Result dir: {self.result_dir}")
-
-    def _has_mpl_marker(self, report: pytest.TestReport):
-        """Check if the test has the mpl_image_compare marker."""
-        return report.keywords.get("mpl_image_compare", False)
-
-    def _remove_success(self, report: pytest.TestReport):
-        """Remove successful test images."""
-
-        pattern = r"(?P<sep>::|/)|\[|\]|\.py"
-        name = re.sub(
-            pattern,
-            lambda m: "." if m.group("sep") else "_" if m.group(0) == "[" else "",
-            report.nodeid,
-        )
-        target = (self.result_dir / name).absolute()
-        if target.is_dir():
-            shutil.rmtree(target)
-
-    @pytest.hookimpl(trylast=True)
-    def pytest_runtest_logreport(self, report):
-        """Hook that processes each test report."""
-        # Delete successfull tests
-        if report.when == "call" and report.failed == False:
-            if self._has_mpl_marker(report):
-                self._remove_success(report)
-
-
 def pytest_collection_modifyitems(config, items):
+    """
+    Modify test items during collection to set up MPL testing.
+
+    This function:
+    - Counts matplotlib image comparison tests
+    - Sets up progress tracking
+    - Skips tests with missing baseline images
+    """
+    # Count total mpl tests for progress tracking
+    total_mpl_tests = count_mpl_tests(items)
+
+    if total_mpl_tests > 0:
+        print(f"📊 Detected {total_mpl_tests} matplotlib image comparison tests")
+        # Initialize progress tracker with total count
+        progress_tracker = get_progress_tracker()
+        progress_tracker.set_total_tests(total_mpl_tests)
+
+    # Skip tests that don't have baseline images
     for item in items:
         for mark in item.own_markers:
             if base_dir := config.getoption("--mpl-baseline-path", default=None):
@@ -112,10 +118,81 @@ def pytest_collection_modifyitems(config, items):
                         )
 
 
-# Register the plugin if the option is used
+@pytest.hookimpl(trylast=True)
+def pytest_terminal_summary(terminalreporter, exitstatus, config):
+    """
+    Generate enhanced summary and HTML reports after all tests complete.
+
+    This function:
+    - Finalizes progress tracking
+    - Performs deferred cleanup
+    - Generates interactive HTML reports
+    - Only runs on the main process (not xdist workers)
+    """
+    # Skip on workers, only run on the main process
+    if hasattr(config, "workerinput"):
+        return
+
+    # Check if we should generate reports
+    if not should_generate_html_report(config):
+        return
+
+    # Get the plugin instance to finalize operations
+    plugin = _get_plugin_instance(config)
+    if plugin:
+        # Finalize progress and cleanup
+        plugin.finalize()
+
+        # Generate HTML report
+        html_generator = HTMLReportGenerator(config)
+        failed_tests = plugin.get_failed_tests()
+        html_generator.generate_report(failed_tests)
+
+
 def pytest_configure(config):
+    """
+    Configure pytest with the enhanced MPL plugin.
+
+    This function:
+    - Suppresses verbose matplotlib logging
+    - Registers the StoreFailedMplPlugin for enhanced functionality
+    - Sets up the plugin regardless of cleanup options (HTML reports always available)
+    """
+    # Suppress ultraplot config loading which mpl does not recognize
+    logging.getLogger("matplotlib").setLevel(logging.ERROR)
+    logging.getLogger("ultraplot").setLevel(logging.WARNING)
+
     try:
-        if config.getoption("--store-failed-only", False):
-            config.pluginmanager.register(StoreFailedMplPlugin(config))
+        # Always register the plugin - it provides enhanced functionality beyond just cleanup
+        config.pluginmanager.register(StoreFailedMplPlugin(config))
     except Exception as e:
-        print(f"Error during plugin configuration: {e}")
+        print(f"Error during MPL plugin configuration: {e}")
+
+
+def _get_plugin_instance(config):
+    """Get the StoreFailedMplPlugin instance from the plugin manager."""
+    for plugin in config.pluginmanager.get_plugins():
+        if isinstance(plugin, StoreFailedMplPlugin):
+            return plugin
+    return None
+
+
+# Legacy support - these functions are kept for backward compatibility
+# but now delegate to the modular plugin system
+
+
+def _should_generate_html_report(config):
+    """Legacy function - delegates to utils module."""
+    return should_generate_html_report(config)
+
+
+def _get_failed_mpl_tests(config):
+    """Legacy function - delegates to utils module."""
+    return get_failed_mpl_tests(config)
+
+
+def _get_results_directory(config):
+    """Legacy function - delegates to utils module."""
+    from ultraplot.tests.mpl_plugin.utils import get_results_directory
+
+    return get_results_directory(config)
