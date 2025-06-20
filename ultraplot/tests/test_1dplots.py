@@ -525,7 +525,7 @@ def test_heatmap_labels(rng):
     return fig
 
 
-@pytest.mark.mpl_image_compare()
+@pytest.mark.mpl_image_compare
 def test_networks(rng):
     """
     Create a baseline network graph that tests
