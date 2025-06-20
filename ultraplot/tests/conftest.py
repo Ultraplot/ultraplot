@@ -9,16 +9,22 @@ Thread-Safe Random Number Generation:
 - Each thread gets independent, deterministic RNG instances
 - Compatible with pytest-xdist parallel execution
 - Clean separation of concerns - tests explicitly declare RNG dependencies
+<<<<<<< HEAD
+=======
+
+Matplotlib rcParams Safety:
+- Automatic rcParams isolation for all tests prevents interference
+- Tests that modify matplotlib settings are automatically isolated
+- Dedicated rcparams_isolation fixture for explicit isolation needs
+- Thread-safe for parallel execution with pytest-xdist
+>>>>>>> e674a3b6 (restore files)
 """
 
 import threading, os, shutil, pytest, re
 import numpy as np, ultraplot as uplt
 import warnings, logging
-<<<<<<< HEAD
 
 import os, shutil, pytest, re, numpy as np, ultraplot as uplt
-=======
->>>>>>> e8823ad9 (restore conftest.py)
 from pathlib import Path
 from datetime import datetime
 
@@ -60,7 +66,6 @@ def rng():
 
 
 @pytest.fixture(autouse=True)
-<<<<<<< HEAD
 def reset_rc_and_close_figures():
     """Reset rc to full ultraplot defaults and close figures for each test."""
     # Force complete ultraplot initialization for this thread
@@ -71,11 +76,9 @@ def reset_rc_and_close_figures():
 
 @pytest.fixture(autouse=True)
 def close_figures_after_test():
-=======
-def close_figures_after_test():
-    """Automatically close all figures after each test."""
->>>>>>> e8823ad9 (restore conftest.py)
     yield
+
+    # Clean up after test - only close figures, don't reset rc
     uplt.close("all")
 
 
@@ -157,6 +160,7 @@ def pytest_configure(config):
     - Suppresses verbose matplotlib logging
     - Registers the StoreFailedMplPlugin for enhanced functionality
     - Sets up the plugin regardless of cleanup options (HTML reports always available)
+    - Configures process-specific temporary directories for parallel testing
     """
     # Suppress ultraplot config loading which mpl does not recognize
     logging.getLogger("matplotlib").setLevel(logging.ERROR)
