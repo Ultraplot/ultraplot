@@ -528,24 +528,15 @@ class _RcParams(MutableMapping, dict):
 
     # NOTE: By omitting __delitem__ in MutableMapping we effectively
     # disable mutability. Also disables deleting items with pop().
-    def __init__(self, source, validate):
-        import threading
 
-        self._thread_props = threading.local()  # for thread-local properties
+    def __init__(self, data=None, validate=None, lazy_keys=None):
+        self._validate = validate or {}
+        self._lazy_keys = set(lazy_keys or [])
+        self._unvalidated = {}
 
-        self._validate = validate
-        for key, value in source.items():
-            self.__setitem__(key, value)  # trigger validation
-
-    @property
-    def _validate(self):
-        if not hasattr(self._thread_props, "_validate"):
-            self._thread_props._validate = _rc_ultraplot_validate
-        return self._thread_props._validate.copy()
-
-    @_validate.setter
-    def _validate(self, value):
-        self._thread_props._validate = value
+        if data:
+            for key, value in data.items():
+                self[key] = value
 
     def __repr__(self):
         return RcParams.__repr__(self)
@@ -563,17 +554,35 @@ class _RcParams(MutableMapping, dict):
 
     def __getitem__(self, key):
         key, _ = self._check_key(key)
+
+        # Perform lazy validation if required
+        if key in self._unvalidated:
+            raw_value = self._unvalidated.pop(key)
+            try:
+                validated = self._validate[key](raw_value)
+            except (ValueError, TypeError) as error:
+                raise ValueError(
+                    f"Lazy validation failed for {key!r}: {error}"
+                ) from None
+            dict.__setitem__(self, key, validated)
+
         return dict.__getitem__(self, key)
 
     def __setitem__(self, key, value):
         key, value = self._check_key(key, value)
+
         if key not in self._validate:
             raise KeyError(f"Invalid rc key {key!r}.")
-        try:
-            value = self._validate[key](value)
-        except (ValueError, TypeError) as error:
-            raise ValueError(f"Key {key}: {error}") from None
-        if key is not None:
+
+        if key in self._lazy_keys:
+            # Store unvalidated
+            self._unvalidated[key] = value
+            dict.__setitem__(self, key, value)
+        else:
+            try:
+                value = self._validate[key](value)
+            except (ValueError, TypeError) as error:
+                raise ValueError(f"Key {key!r}: {error}") from None
             dict.__setitem__(self, key, value)
 
     @staticmethod
@@ -601,14 +610,17 @@ class _RcParams(MutableMapping, dict):
             )
         return key, value
 
-    def copy(self):
-        # Access validation dict from thread-local if available, else fallback
-        validate = getattr(self._thread_props, "_validate", None)
-        if validate is None:
-            # fallback: guess it from another thread (e.g., first one that set it)
-            validate = dict()
-        source = dict(self)
-        return _RcParams(source.copy(), validate.copy())
+    def copy(self, skip_validation=False):
+        new = _RcParams(
+            data=dict(self),
+            validate=self._validate,
+            lazy_keys=self._lazy_keys,
+        )
+        if skip_validation:
+            new._unvalidated = dict(self)
+        else:
+            new._unvalidated = self._unvalidated.copy()
+        return new
 
 
 # Borrow validators from matplotlib and construct some new ones

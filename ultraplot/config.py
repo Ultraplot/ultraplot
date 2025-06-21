@@ -784,10 +784,7 @@ class Configurator(MutableMapping, dict):
 
     @property
     def _context(self):
-        if not hasattr(self._thread_local, "_context"):
-            # Initialize context as an empty list
-            self._thread_local._context = []
-        return self._thread_local._context
+        return self._get_thread_local_copy("_context", [])
 
     @_context.setter
     def _context(self, value):
@@ -807,7 +804,7 @@ class Configurator(MutableMapping, dict):
     @property
     def rc_ultraplot(self):
         return self._get_thread_local_copy(
-            "rc_ultraplot", rcsetup._rc_ultraplot_default
+            "rc_ultraplot", rcsetup._rc_ultraplot_default.copy(skip_validation=True)
         )
 
     def __repr__(self):
