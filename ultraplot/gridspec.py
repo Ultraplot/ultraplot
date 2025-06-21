@@ -20,7 +20,7 @@ from .internals import _not_none, docstring, warnings
 from .utils import _fontsize_to_pt, units
 from .internals import warnings
 
-__all__ = ["GridSpec", "SubplotGrid", "SubplotsContainer"]  # deprecated
+__all__ = ["GridSpec", "SubplotGrid"]  # deprecated
 
 
 # Gridspec vector arguments
@@ -104,6 +104,19 @@ def _disable_method(attr):
 
     _dummy_method.__name__ = attr
     return _dummy_method
+
+
+def _grid_command(func):
+    def wrapper(self, *args, **kwargs):
+        """
+        Call the command for every axes in the grid.
+        """
+        objs = self._apply_command(func.__name__, *args, **kwargs)
+        return SubplotGrid(objs)
+
+    wrapper.__name___ = func.__name__
+    wrapper.__doc__ = func.__doc__
+    return wrapper
 
 
 class _SubplotSpec(mgridspec.SubplotSpec):
@@ -1790,16 +1803,3 @@ class SubplotGrid(MutableSequence, list):
             A grid of the resulting axes.
         """
         return
-
-
-def _grid_command(func):
-    def wrapper(self, *args, **kwargs):
-        """
-        Call the command for every axes in the grid.
-        """
-        objs = self._apply_command(func.__name__, *args, **kwargs)
-        return SubplotGrid(objs)
-
-    wrapper.__name___ = func.__name__
-    wrapper.__doc__ = func.__doc__
-    return wrapper
