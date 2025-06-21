@@ -18,6 +18,7 @@ from .config import rc
 from .internals import ic  # noqa: F401
 from .internals import _not_none, docstring, warnings
 from .utils import _fontsize_to_pt, units
+from .internals import warnings
 
 __all__ = ["GridSpec", "SubplotGrid", "SubplotsContainer"]  # deprecated
 
@@ -1671,23 +1672,119 @@ class SubplotGrid(MutableSequence, list):
         # a 2D array-like object it should definitely have a shape attribute.
         return self.gridspec.get_geometry()
 
+    def _apply_command(self, name, *args, warn_on_skip=True, **kwargs):
+        """
+        Apply a command to all axes that support it.
 
-# Dynamically add commands to generate twin or inset axes
-# TODO: Add commands that plot the input data for every
-# axes in the grid along a third dimension.
-for _src, _name in (
-    (paxes.Axes, "panel"),
-    (paxes.Axes, "panel_axes"),
-    (paxes.Axes, "inset"),
-    (paxes.Axes, "inset_axes"),
-    (paxes.CartesianAxes, "altx"),
-    (paxes.CartesianAxes, "alty"),
-    (paxes.CartesianAxes, "dualx"),
-    (paxes.CartesianAxes, "dualy"),
-    (paxes.CartesianAxes, "twinx"),
-    (paxes.CartesianAxes, "twiny"),
-):
-    SubplotGrid._add_command(_src, _name)
+        Parameters
+        ----------
+        name : str
+            The method name to call on each axes.
+        warn_on_skip : bool, optional
+            Whether to warn if some axes do not support the command. Default True.
 
-# Deprecated
-SubplotsContainer = warnings._rename_objs("0.8.0", SubplotsContainer=SubplotGrid)
+        Returns
+        -------
+        list
+            List of results from axes where the command was applied.
+        """
+        objs = []
+        skipped_count = 0
+        for ax in self:
+            if hasattr(ax, name) and callable(getattr(ax, name)):
+                obj = getattr(ax, name)(*args, **kwargs)
+                objs.append(obj)
+            else:
+                skipped_count += 1
+
+        if warn_on_skip and skipped_count > 0:
+            warnings._warn_ultraplot(
+                f"Skipped {skipped_count} axes that do not support method '{name}'.",
+                UserWarning,
+                stacklevel=2,
+            )
+        return objs
+
+    def altx(self, *args, **kwargs):
+        """
+        Call `altx()` for every axes in the grid.
+
+        Returns
+        -------
+        SubplotGrid
+            A grid of the resulting axes.
+        """
+        objs = self._apply_command("altx")
+        return SubplotGrid(objs)
+
+    def dualx(self, *args, **kwargs):
+        """
+        Call `dualx()` for every axes in the grid.
+
+        Returns
+        -------
+        SubplotGrid
+            A grid of the resulting axes.
+        """
+        objs = self._apply_command("dualx")
+        return SubplotGrid(objs)
+
+    def twinx(self, *args, **kwargs):
+        """
+        Call `twinx()` for every axes in the grid.
+
+        Returns
+        -------
+        SubplotGrid
+            A grid of the resulting axes.
+        """
+        objs = self._apply_command("twinx")
+        return SubplotGrid(objs)
+
+    def alty(self, *args, **kwargs):
+        """
+        Call `alty()` for every axes in the grid.
+
+        Returns
+        -------
+        SubplotGrid
+            A grid of the resulting axes.
+        """
+        objs = self._apply_command("alty")
+        return SubplotGrid(objs)
+
+    def dualy(self, *args, **kwargs):
+        """
+        Call `dualy()` for every axes in the grid.
+
+        Returns
+        -------
+        SubplotGrid
+            A grid of the resulting axes.
+        """
+        objs = self._apply_command("dualy")
+        return SubplotGrid(objs)
+
+    def twiny(self, *args, **kwargs):
+        """
+        Call `twiny()` for every axes in the grid.
+
+        Returns
+        -------
+        SubplotGrid
+            A grid of the resulting axes.
+        """
+        objs = self._apply_command("twiny")
+        return SubplotGrid(objs)
+
+    def panel(self, *args, **kwargs):
+        """
+        Call `panel()` for every axes in the grid.
+
+        Returns
+        -------
+        SubplotGrid
+            A grid of the resulting axes.
+        """
+        objs = self._apply_command("altx")
+        return SubplotGrid(objs)
