@@ -20,7 +20,7 @@ from .internals import _not_none, docstring, warnings
 from .utils import _fontsize_to_pt, units
 from .internals import warnings
 
-__all__ = ["GridSpec", "SubplotGrid"]  # deprecated
+__all__ = ["GridSpec", "SubplotGrid", "SubplotsContainer"]  # deprecated
 
 
 # Gridspec vector arguments
@@ -1803,3 +1803,43 @@ class SubplotGrid(MutableSequence, list):
             A grid of the resulting axes.
         """
         return
+
+    @_grid_command
+    def panel_axes(self, *args, **kwargs):
+        """
+        Call `panel_axes()` for every axes in the grid.
+
+        Returns
+        -------
+        SubplotGrid
+            A grid of the resulting axes.
+        """
+        return
+
+    @_grid_command
+    def inset(self, *args, **kwargs):
+        """
+        Call `inset()` for every axes in the grid.
+
+        Returns
+        -------
+        SubplotGrid
+            A grid of the resulting axes.
+        """
+        return
+
+    @_grid_command
+    def inset_axes(self, *args, **kwargs):
+        """
+        Call `inset_axes()` for every axes in the grid.
+
+        Returns
+        -------
+        SubplotGrid
+            A grid of the resulting axes.
+        """
+        return
+
+
+# Deprecated
+SubplotsContainer = warnings._rename_objs("0.8.0", SubplotsContainer=SubplotGrid)
