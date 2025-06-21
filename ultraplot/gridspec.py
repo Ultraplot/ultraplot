@@ -1542,38 +1542,6 @@ class SubplotGrid(MutableSequence, list):
             raise IndexError("Multi dimensional item assignment is not supported.")
         return super().__setitem__(key, value)  # could be list[:] = [1, 2, 3]
 
-    @classmethod
-    def _add_command(cls, src, name):
-        """
-        Add a `SubplotGrid` method that iterates through axes methods.
-        """
-
-        # Create the method
-        def _grid_command(self, *args, **kwargs):
-            objs = []
-            for ax in self:
-                obj = getattr(ax, name)(*args, **kwargs)
-                objs.append(obj)
-            return SubplotGrid(objs)
-
-        # Clean the docstring
-        cmd = getattr(src, name)
-        doc = inspect.cleandoc(cmd.__doc__)  # dedents
-        dot = doc.find(".")
-        if dot != -1:
-            doc = doc[:dot] + " for every axes in the grid" + doc[dot:]
-        doc = re.sub(
-            r"^(Returns\n-------\n)(.+)(\n\s+)(.+)",
-            r"\1SubplotGrid\2A grid of the resulting axes.",
-            doc,
-        )
-
-        # Apply the method
-        _grid_command.__qualname__ = f"SubplotGrid.{name}"
-        _grid_command.__name__ = name
-        _grid_command.__doc__ = doc
-        setattr(cls, name, _grid_command)
-
     def _validate_item(self, items, scalar=False):
         """
         Validate assignments. Accept diverse iterable inputs.
@@ -1719,7 +1687,8 @@ class SubplotGrid(MutableSequence, list):
         return objs
 
     # Note we use a stub @_grid_command since the logic
-    # is the same everywhere
+    # is the same everywhere.
+    # Furthermore, the return type is give by the wrapper @_grid_command.
     @_grid_command
     def altx(self, *args, **kwargs):
         """
