@@ -1705,6 +1705,9 @@ class SubplotGrid(MutableSequence, list):
             )
         return objs
 
+    # Note we use a stub @_grid_command since the logic
+    # is the same everywhere
+    @_grid_command
     def altx(self, *args, **kwargs):
         """
         Call `altx()` for every axes in the grid.
@@ -1714,9 +1717,9 @@ class SubplotGrid(MutableSequence, list):
         SubplotGrid
             A grid of the resulting axes.
         """
-        objs = self._apply_command("altx")
-        return SubplotGrid(objs)
+        return
 
+    @_grid_command
     def dualx(self, *args, **kwargs):
         """
         Call `dualx()` for every axes in the grid.
@@ -1726,9 +1729,9 @@ class SubplotGrid(MutableSequence, list):
         SubplotGrid
             A grid of the resulting axes.
         """
-        objs = self._apply_command("dualx")
-        return SubplotGrid(objs)
+        return
 
+    @_grid_command
     def twinx(self, *args, **kwargs):
         """
         Call `twinx()` for every axes in the grid.
@@ -1738,9 +1741,9 @@ class SubplotGrid(MutableSequence, list):
         SubplotGrid
             A grid of the resulting axes.
         """
-        objs = self._apply_command("twinx")
-        return SubplotGrid(objs)
+        return
 
+    @_grid_command
     def alty(self, *args, **kwargs):
         """
         Call `alty()` for every axes in the grid.
@@ -1750,9 +1753,9 @@ class SubplotGrid(MutableSequence, list):
         SubplotGrid
             A grid of the resulting axes.
         """
-        objs = self._apply_command("alty")
-        return SubplotGrid(objs)
+        return
 
+    @_grid_command
     def dualy(self, *args, **kwargs):
         """
         Call `dualy()` for every axes in the grid.
@@ -1762,9 +1765,9 @@ class SubplotGrid(MutableSequence, list):
         SubplotGrid
             A grid of the resulting axes.
         """
-        objs = self._apply_command("dualy")
-        return SubplotGrid(objs)
+        return
 
+    @_grid_command
     def twiny(self, *args, **kwargs):
         """
         Call `twiny()` for every axes in the grid.
@@ -1774,9 +1777,9 @@ class SubplotGrid(MutableSequence, list):
         SubplotGrid
             A grid of the resulting axes.
         """
-        objs = self._apply_command("twiny")
-        return SubplotGrid(objs)
+        return
 
+    @_grid_command
     def panel(self, *args, **kwargs):
         """
         Call `panel()` for every axes in the grid.
@@ -1786,5 +1789,17 @@ class SubplotGrid(MutableSequence, list):
         SubplotGrid
             A grid of the resulting axes.
         """
-        objs = self._apply_command("altx")
+        return
+
+
+def _grid_command(func):
+    def wrapper(self, *args, **kwargs):
+        """
+        Call the command for every axes in the grid.
+        """
+        objs = self._apply_command(func.__name__, *args, **kwargs)
         return SubplotGrid(objs)
+
+    wrapper.__name___ = func.__name__
+    wrapper.__doc__ = func.__doc__
+    return wrapper
