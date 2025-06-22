@@ -13,6 +13,7 @@ import matplotlib.gridspec as mgridspec
 import matplotlib.transforms as mtransforms
 import numpy as np
 from typing import List
+from functools import wraps
 
 from . import axes as paxes
 from .config import rc
@@ -21,7 +22,7 @@ from .internals import _not_none, docstring, warnings
 from .utils import _fontsize_to_pt, units
 from .internals import warnings
 
-__all__ = ["GridSpec", "SubplotGrid", "SubplotsContainer"]  # deprecated
+__all__ = ["GridSpec", "SubplotGrid"]  # deprecated
 
 
 # Gridspec vector arguments
@@ -108,6 +109,7 @@ def _disable_method(attr):
 
 
 def _grid_command(func) -> callable:
+    @wraps(func)
     def wrapper(self, *args, **kwargs) -> "SubplotGrid":
         """
         Call the command for every axes in the grid.
@@ -115,8 +117,6 @@ def _grid_command(func) -> callable:
         objs = self._apply_command(func.__name__, *args, **kwargs)
         return SubplotGrid(objs)
 
-    wrapper.__name___ = func.__name__
-    wrapper.__doc__ = func.__doc__
     return wrapper
 
 
@@ -1702,7 +1702,7 @@ class SubplotGrid(MutableSequence, list):
         SubplotGrid
             A grid of the resulting axes.
         """
-        return
+        ...  # implementation is provided by @_grid_command
 
     @_grid_command
     def dualx(self, *args, **kwargs) -> "SubplotGrid":
@@ -1714,7 +1714,7 @@ class SubplotGrid(MutableSequence, list):
         SubplotGrid
             A grid of the resulting axes.
         """
-        return
+        ...  # implementation is provided by @_grid_command
 
     @_grid_command
     def twinx(self, *args, **kwargs) -> "SubplotGrid":
@@ -1726,7 +1726,7 @@ class SubplotGrid(MutableSequence, list):
         SubplotGrid
             A grid of the resulting axes.
         """
-        return
+        ...  # implementation is provided by @_grid_command
 
     @_grid_command
     def alty(self, *args, **kwargs) -> "SubplotGrid":
@@ -1738,7 +1738,7 @@ class SubplotGrid(MutableSequence, list):
         SubplotGrid
             A grid of the resulting axes.
         """
-        return
+        ...  # implementation is provided by @_grid_command
 
     @_grid_command
     def dualy(self, *args, **kwargs) -> "SubplotGrid":
@@ -1750,7 +1750,7 @@ class SubplotGrid(MutableSequence, list):
         SubplotGrid
             A grid of the resulting axes.
         """
-        return
+        ...  # implementation is provided by @_grid_command
 
     @_grid_command
     def twiny(self, *args, **kwargs) -> "SubplotGrid":
@@ -1762,7 +1762,7 @@ class SubplotGrid(MutableSequence, list):
         SubplotGrid
             A grid of the resulting axes.
         """
-        return
+        ...  # implementation is provided by @_grid_command
 
     @_grid_command
     def panel(self, *args, **kwargs) -> "SubplotGrid":
@@ -1774,7 +1774,7 @@ class SubplotGrid(MutableSequence, list):
         SubplotGrid
             A grid of the resulting axes.
         """
-        return
+        ...
 
     @_grid_command
     def panel_axes(self, *args, **kwargs) -> "SubplotGrid":
@@ -1786,7 +1786,7 @@ class SubplotGrid(MutableSequence, list):
         SubplotGrid
             A grid of the resulting axes.
         """
-        return
+        ...  # implementation is provided by @_grid_command
 
     @_grid_command
     def inset(self, *args, **kwargs) -> "SubplotGrid":
@@ -1798,7 +1798,7 @@ class SubplotGrid(MutableSequence, list):
         SubplotGrid
             A grid of the resulting axes.
         """
-        return
+        ...  # implementation is provided by @_grid_command
 
     @_grid_command
     def inset_axes(self, *args, **kwargs) -> "SubplotGrid":
@@ -1810,8 +1810,4 @@ class SubplotGrid(MutableSequence, list):
         SubplotGrid
             A grid of the resulting axes.
         """
-        return
-
-
-# Deprecated
-SubplotsContainer = warnings._rename_objs("0.8.0", SubplotsContainer=SubplotGrid)
+        ...  # implementation is provided by @_grid_command
