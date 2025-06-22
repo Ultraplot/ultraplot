@@ -8,7 +8,7 @@ def test_grid_has_dynamic_methods():
     Check that we can apply the methods to a SubplotGrid object.
     """
     fig, axs = uplt.subplots(nrows=1, ncols=2)
-    for method in ("altx", "dualx", "twinx"):
+    for method in ("altx", "dualx", "twinx", "panel"):
         assert hasattr(axs, method)
         assert callable(getattr(axs, method))
         args = []
