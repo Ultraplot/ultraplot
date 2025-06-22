@@ -1774,7 +1774,7 @@ class SubplotGrid(MutableSequence, list):
         SubplotGrid
             A grid of the resulting axes.
         """
-        ...
+        ...  # implementation is provided by @_grid_command
 
     @_grid_command
     def panel_axes(self, *args, **kwargs) -> "SubplotGrid":
