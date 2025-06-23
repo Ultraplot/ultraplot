@@ -42,7 +42,7 @@ def test_missing_command_is_skipped_gracefully():
 
 def test_docstring_injection():
     """
-    @_grid_command should inject the docstring
+    @_apply_to_all should inject the docstring
     """
     fig, axs = uplt.subplots(nrows=1, ncols=2)
     doc = axs.altx.__doc__
