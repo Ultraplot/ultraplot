@@ -22,7 +22,7 @@ from .internals import _not_none, docstring, warnings
 from .utils import _fontsize_to_pt, units
 from .internals import warnings
 
-__all__ = ["GridSpec", "SubplotGrid"]  # deprecated
+__all__ = ["GridSpec", "SubplotGrid"]
 
 
 # Gridspec vector arguments
