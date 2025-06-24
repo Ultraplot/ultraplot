@@ -346,6 +346,8 @@ def test_alt_axes_y_shared():
     for axi in ax:
         alt = axi.alty()
         alt.set_ylabel("Alt Y")
+        assert alt.get_ylabel() == "Alt Y"
+        assert alt.get_xlabel() == ""
         axi.set_ylabel("Y")
     return fig
 
@@ -358,5 +360,7 @@ def test_alt_axes_x_shared():
     for axi in ax:
         alt = axi.altx()
         alt.set_xlabel("Alt X")
+        assert alt.get_xlabel() == "Alt X"
+        assert alt.get_ylabel() == ""
         axi.set_xlabel("X")
     return fig
