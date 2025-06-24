@@ -122,7 +122,7 @@ If you use UltraPlot in your research, please cite it using the following BibTeX
       author       = {Casper van Elteren and Matthew R. Becker},
       title        = {UltraPlot: A succinct wrapper for Matplotlib},
       year         = {2025},
-      version      = {1.5.7},
+      version      = {1.57.1},
       publisher    = {GitHub},
       url          = {https://github.com/Ultraplot/UltraPlot}
     }
