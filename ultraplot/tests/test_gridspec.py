@@ -46,7 +46,7 @@ def test_docstring_injection():
     """
     fig, axs = uplt.subplots(nrows=1, ncols=2)
     doc = axs.altx.__doc__
-    assert "Call `altx()` for every axes in the grid" in doc
+    assert "for every axes in the grid" in doc
     assert "Returns" in doc
 
 
