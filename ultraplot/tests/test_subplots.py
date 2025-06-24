@@ -264,10 +264,34 @@ def test_check_label_sharing_top_right(layout):
     return fig
 
 
-@pytest.mark.parametrize("layout", [[1, 2], [3, 4]])
+@pytest.mark.parametrize("layout", [[[1, 2], [3, 4]]])
 @pytest.mark.mpl_image_compare
 def test_panel_sharing_top_right(layout):
     fig, ax = uplt.subplots(layout)
     for dir in "left right top bottom".split():
-        ax[0].panel(dir)
+        pax = ax[0].panel(dir)
+    fig.canvas.draw()  # force redraw tick labels
+    for dir, paxs in ax[0]._panel_dict.items():
+        # Since we are sharing some of the ticks
+        # should be hidden depending on where the panel is
+        # in the grid
+        for pax in paxs:
+            match dir:
+                case "left":
+                    assert pax._is_ticklabel_on("labelleft")
+                    assert pax._is_ticklabel_on("labelbottom")
+                case "top":
+                    assert pax._is_ticklabel_on("labeltop") == False
+                    assert pax._is_ticklabel_on("labelbottom") == False
+                    assert pax._is_ticklabel_on("labelleft")
+                case "right":
+                    print(pax._is_ticklabel_on("labelright"))
+                    assert pax._is_ticklabel_on("labelright") == False
+                    assert pax._is_ticklabel_on("labelbottom")
+                case "bottom":
+                    assert pax._is_ticklabel_on("labelleft")
+                    assert pax._is_ticklabel_on("labelbottom") == False
+
+        # The sharing axis is not showing any ticks
+        assert ax[0]._is_ticklabel_on(dir) == False
     return fig
