@@ -1,0 +1,33 @@
+cff-version: 1.2.0
+message: "If you use UltraPlot in your work, please cite it using the following metadata."
+title: "UltraPlot"
+authors:
+  - family-names: "van Elteren"
+    given-names: "Casper"
+    orcid: "https://orcid.org/0000-0001-9862-8936"
+  - family-names: "Becker"
+    given-names: "Matthew R."
+    orcid: "https://orcid.org/0000-0001-7774-2246"
+date-released: "2025-01-01"
+version: "1.57"
+doi: "10.5281/zenodo.15733580"
+repository-code: "https://github.com/Ultraplot/UltraPlot"
+license: "MIT"
+keywords:
+  - plotting
+  - matplotlib
+  - scientific visualization
+  - wrapper
+references:
+  - type: software
+    name: "ProPlot"
+    authors:
+      - family-names: "Davis"
+        given-names: "Luke"
+    url: "https://github.com/lukelbd/proplot"
+  - type: software
+    name: "Matplotlib"
+    authors:
+      - family-names: "Hunter"
+        given-names: "John D."
+    url: "https://matplotlib.org/"
