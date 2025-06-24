@@ -119,7 +119,7 @@ inside the ``ultraplot`` folder.
 If you use UltraPlot in your research, please cite it using the following BibTeX entry::
 
     @software{vanElteren2025,
-      author       = {Casper van Elteren and Matthew Becker},
+      author       = {Casper van Elteren and Matthew R. Becker},
       title        = {UltraPlot: A succinct wrapper for Matplotlib},
       year         = {2025},
       version      = {1.5.7},
