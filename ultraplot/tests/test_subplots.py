@@ -252,7 +252,7 @@ def test_axis_sharing(share):
     ],
 )
 @pytest.mark.mpl_image_compare
-def test_check_label_sharing_top_right(layout):
+def test_label_sharing_top_right(layout):
     fig, ax = uplt.subplots(layout)
     ax.format(
         xticklabelloc="t",
@@ -261,6 +261,19 @@ def test_check_label_sharing_top_right(layout):
         ylabel="ylabel",
         title="Test Title",
     )
+    fig.canvas.draw()  # force redraw tick labels
+    uplt.show(block=1)
+    for axi in ax:
+        assert axi._is_ticklabel_on("labelleft") == False
+        assert axi._is_ticklabel_on("labelbottom") == False
+
+    for side, axs in fig._get_border_axes().items():
+        for axi in axs:
+            if side == "top":
+                assert axi._is_ticklabel_on("labeltop") == True
+            if side == "right":
+                assert axi._is_ticklabel_on("labelright") == True
+
     return fig
 
 
