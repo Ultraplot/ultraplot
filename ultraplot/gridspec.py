@@ -108,16 +108,44 @@ def _disable_method(attr):
     return _dummy_method
 
 
-def _apply_to_all(func) -> callable:
-    @wraps(func)
-    def wrapper(self, *args, **kwargs) -> "SubplotGrid":
-        """
-        Call the command for every axes in the grid.
-        """
-        objs = self._apply_command(func.__name__, *args, **kwargs)
-        return SubplotGrid(objs)
+def _apply_to_all(func=None, *, doc_key=None):
+    def decorator(f):
+        @wraps(f)
+        def wrapper(self, *args, **kwargs):
+            objs = self._apply_command(f.__name__, *args, **kwargs)
+            return SubplotGrid(objs)
 
-    return wrapper
+        # Determine source docstring
+        if doc_key is not None and doc_key in docstring._snippet_manager:
+            doc = inspect.cleandoc(docstring._snippet_manager[doc_key])
+        elif f.__doc__:
+            doc = inspect.cleandoc(f.__doc__)
+        else:
+            doc = ""
+
+        # Inject "for every axes in the grid" into the first sentence
+        if doc:
+            dot = doc.find(".")
+            if dot != -1:
+                doc = doc[:dot] + " for every axes in the grid" + doc[dot:]
+            else:
+                doc += " for every axes in the grid."
+
+            # Patch "Returns" section if present
+            doc = re.sub(
+                r"^(Returns\n-------\n)(.+)(\n\s+)(.+)",
+                r"\1SubplotGrid\2A grid of the resulting axes.",
+                doc,
+                flags=re.MULTILINE,
+            )
+
+            wrapper.__doc__ = doc
+
+        return wrapper
+
+    if func is not None:
+        return decorator(func)
+    return decorator
 
 
 class _SubplotSpec(mgridspec.SubplotSpec):
@@ -1692,7 +1720,7 @@ class SubplotGrid(MutableSequence, list):
     # Note we use a stub @_apply_to_all since the logic
     # is the same everywhere.
     # Furthermore, the return type is give by the wrapper @_apply_to_all.
-    @_apply_to_all
+    @_apply_to_all(doc_key="axes.altx")
     def altx(self, *args, **kwargs) -> "SubplotGrid":
         """
         Call `altx()` for every axes in the grid.
@@ -1704,7 +1732,7 @@ class SubplotGrid(MutableSequence, list):
         """
         ...  # implementation is provided by @_apply_to_all
 
-    @_apply_to_all
+    @_apply_to_all(doc_key="axes.dualx")
     def dualx(self, *args, **kwargs) -> "SubplotGrid":
         """
         Call `dualx()` for every axes in the grid.
@@ -1716,7 +1744,7 @@ class SubplotGrid(MutableSequence, list):
         """
         ...  # implementation is provided by @_apply_to_all
 
-    @_apply_to_all
+    @_apply_to_all(doc_key="axes.twinx")
     def twinx(self, *args, **kwargs) -> "SubplotGrid":
         """
         Call `twinx()` for every axes in the grid.
@@ -1728,7 +1756,7 @@ class SubplotGrid(MutableSequence, list):
         """
         ...  # implementation is provided by @_apply_to_all
 
-    @_apply_to_all
+    @_apply_to_all(doc_key="axes.alty")
     def alty(self, *args, **kwargs) -> "SubplotGrid":
         """
         Call `alty()` for every axes in the grid.
@@ -1740,7 +1768,7 @@ class SubplotGrid(MutableSequence, list):
         """
         ...  # implementation is provided by @_apply_to_all
 
-    @_apply_to_all
+    @_apply_to_all(doc_key="axes.dualy")
     def dualy(self, *args, **kwargs) -> "SubplotGrid":
         """
         Call `dualy()` for every axes in the grid.
@@ -1752,62 +1780,27 @@ class SubplotGrid(MutableSequence, list):
         """
         ...  # implementation is provided by @_apply_to_all
 
-    @_apply_to_all
-    def twiny(self, *args, **kwargs) -> "SubplotGrid":
-        """
-        Call `twiny()` for every axes in the grid.
+    @_apply_to_all(doc_key="axes.twiny")
+    def twiny(
+        self, *args, **kwargs
+    ) -> "SubplotGrid": ...  # implementation is provided by @_apply_to_all
 
-        Returns
-        -------
-        SubplotGrid
-            A grid of the resulting axes.
-        """
-        ...  # implementation is provided by @_apply_to_all
+    @_apply_to_all(doc_key="axes.panel")
+    def panel(
+        self, *args, **kwargs
+    ) -> "SubplotGrid": ...  # implementation is provided by @_apply_to_all
 
-    @_apply_to_all
-    def panel(self, *args, **kwargs) -> "SubplotGrid":
-        """
-        Call `panel()` for every axes in the grid.
+    @_apply_to_all(doc_key="axes.panel_axes")
+    def panel_axes(
+        self, *args, **kwargs
+    ) -> "SubplotGrid": ...  # implementation is provided by @_apply_to_all
 
-        Returns
-        -------
-        SubplotGrid
-            A grid of the resulting axes.
-        """
-        ...  # implementation is provided by @_apply_to_all
+    @_apply_to_all(doc_key="axes.inset")
+    def inset(
+        self, *args, **kwargs
+    ) -> "SubplotGrid": ...  # implementation is provided by @_apply_to_all
 
-    @_apply_to_all
-    def panel_axes(self, *args, **kwargs) -> "SubplotGrid":
-        """
-        Call `panel_axes()` for every axes in the grid.
-
-        Returns
-        -------
-        SubplotGrid
-            A grid of the resulting axes.
-        """
-        ...  # implementation is provided by @_apply_to_all
-
-    @_apply_to_all
-    def inset(self, *args, **kwargs) -> "SubplotGrid":
-        """
-        Call `inset()` for every axes in the grid.
-
-        Returns
-        -------
-        SubplotGrid
-            A grid of the resulting axes.
-        """
-        ...  # implementation is provided by @_apply_to_all
-
-    @_apply_to_all
-    def inset_axes(self, *args, **kwargs) -> "SubplotGrid":
-        """
-        Call `inset_axes()` for every axes in the grid.
-
-        Returns
-        -------
-        SubplotGrid
-            A grid of the resulting axes.
-        """
-        ...  # implementation is provided by @_apply_to_all
+    @_apply_to_all(doc_key="axes.inset_axes")
+    def inset_axes(
+        self, *args, **kwargs
+    ) -> "SubplotGrid": ...  # implementation is provided by @_apply_to_all
