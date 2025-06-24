@@ -115,6 +115,9 @@ def _apply_to_all(func=None, *, doc_key=None):
             objs = self._apply_command(f.__name__, *args, **kwargs)
             return SubplotGrid(objs)
 
+        # Note: we generate the doc string on the fly by
+        # updating the original docstring in the snippet manager
+        # and adding "for every axis" in grid to the # first sentence.
         # Determine source docstring
         if doc_key is not None and doc_key in docstring._snippet_manager:
             doc = inspect.cleandoc(docstring._snippet_manager[doc_key])
