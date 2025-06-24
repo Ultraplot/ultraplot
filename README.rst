@@ -2,7 +2,7 @@
     :alt: UltraPlot Logo
     :width: 100%
 
-|build-status| |coverage| |docs| |pypi| |code-style| |pre-commit| |pr-welcome| |license|
+|build-status| |coverage| |docs| |pypi| |code-style| |pre-commit| |pr-welcome| |license| |zenodo|
 
 A succinct `matplotlib <https://matplotlib.org/>`__ wrapper for making beautiful,
 publication-quality graphics. It builds upon ProPlot_ and transports it into the modern age (supporting mpl 3.9.0+).
@@ -154,3 +154,5 @@ If you use UltraPlot in your research, please cite it using the following BibTeX
 .. |coverage| image:: https://codecov.io/gh/Ultraplot/ultraplot/graph/badge.svg?token=C6ZB7Q9II4
    :target: https://codecov.io/gh/Ultraplot/ultraplot
    :alt: coverage
+.. |zenodo| image:: https://zenodo.org/badge/909651179.svg
+  :target: https://doi.org/10.5281/zenodo.15733564
