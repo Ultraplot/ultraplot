@@ -1257,6 +1257,10 @@ class Figure(mfigure.Figure):
         # Note: this action performs it for all the axes in
         # the figure. We use the stale here to only perform
         # it once as it is an expensive action.
+        # The axis will be a border if it is either
+        # (a) on the edge
+        # (b) not next to a subplot
+        # (c) not next to a subplot of the same kind
         border_axes = self._get_border_axes()
         # Recode:
         recoded = {}
@@ -1275,10 +1279,7 @@ class Figure(mfigure.Figure):
             # Turn the ticks on or off depending on the position
             sides = recoded.get(axi, [])
             turn_on_or_off = default.copy()
-            # The axis will be a border if it is either
-            # (a) on the edge
-            # (b) not next to a subplot
-            # (c) not next to a subplot of the same kind
+
             for side in sides:
                 sidelabel = f"label{side}"
                 is_label_on = axi._is_ticklabel_on(sidelabel)
