@@ -913,7 +913,10 @@ def _get_subplot_layout(
     same_type=True,
 ) -> tuple[np.ndarray[int, int], np.ndarray[int, int], dict[type, int]]:
     """
-    Helper function to determine the grid layout of axes in a GridSpec. It returns a grid of axis numbers and a grid of axis types. This function is used internally to determine the layout of axes in a GridSpec.
+    Helper function to determine the grid layout of axes in a
+    GridSpec. It returns a grid of axis numbers and a grid of
+    axis types. This function is used internally to determine
+    the layout of axes in a GridSpec.
     """
     grid = np.zeros((gs.nrows, gs.ncols))
     grid_axis_type = np.zeros((gs.nrows, gs.ncols))
