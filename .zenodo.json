@@ -1,0 +1,39 @@
+{
+  "title": "UltraPlot: A succinct wrapper for Matplotlib",
+  "upload_type": "software",
+  "description": "UltraPlot provides a compact and extensible API on top of Matplotlib, inspired by ProPlot. It simplifies the creation of scientific plots with consistent layout, colorbars, and shared axes.",
+  "creators": [
+    {
+      "name": "van Elteren, Casper",
+      "orcid": "0000-0001-9862-8936",
+      "affiliation": "University of Amsterdam, Polder Center, Institute for Advanced Study Amsterdam"
+    },
+    {
+      "name": "Becker, Matthew R.",
+      "orcid": "0000-0001-7774-2246",
+      "affiliation": "Argonne National Laboratory, Lemont, IL USA"
+    }
+  ],
+  "license": "MIT",
+  "keywords": [
+    "matplotlib",
+    "scientific visualization",
+    "plotting",
+    "wrapper",
+    "python"
+  ],
+  "related_identifiers": [
+    {
+      "relation": "isDerivedFrom",
+      "identifier": "https://github.com/lukelbd/proplot",
+      "scheme": "url"
+    },
+    {
+      "relation": "isDerivedFrom",
+      "identifier": "https://matplotlib.org/",
+      "scheme": "url"
+    }
+  ],
+  "version": "1.57",
+  "publication_date": "2025-01-01" // need to fix
+}

@@ -263,7 +263,7 @@ This enforces the following default settings:
 # Alt docstrings
 # NOTE: Used by SubplotGrid.altx
 _alt_descrip = """
-Add an axes locked to the same location with a
+Add an axis locked to the same location with a
 distinct {x} axis.
 This is an alias and arguably more intuitive name for
 `~ultraplot.axes.CartesianAxes.twin{y}`, which generates
@@ -276,7 +276,7 @@ docstring._snippet_manager["axes.alty"] = _alt_docstring.format(**_shared_y_keys
 # Twin docstrings
 # NOTE: Used by SubplotGrid.twinx
 _twin_descrip = """
-Add an axes locked to the same location with a
+Add an axis locked to the same location with a
 distinct {x} axis.
 This builds upon `matplotlib.axes.Axes.twin{y}`.
 """
