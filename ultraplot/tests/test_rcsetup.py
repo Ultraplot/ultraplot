@@ -20,7 +20,9 @@ def test_rc_init_invalid_key():
     default = uplt.internals.rcsetup._rc_ultraplot_default.copy()
     default["doesnotexist"] = "test"
     with pytest.raises(KeyError):
-        uplt.internals.rcsetup._RcParams(data=default)
+        uplt.internals.rcsetup._RcParams(
+            data=default, validate=uplt.internals.rcsetup._rc_ultraplot_validate
+        )
 
 
 def test_tight_layout_warnings():
