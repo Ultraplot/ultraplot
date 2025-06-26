@@ -160,10 +160,9 @@ def _to_numpy_array(data, strip_units=False):
             result = np.atleast_1d(data.magnitude) * data.units
     else:
         result = np.atleast_1d(data)  # natively preserves masked arrays
-
     # If the array contains cftime objects, ensure nc-time-axis is available.
     if result.size:
-        first_elem = result.flat[0]
+        first_elem = result.flatten()[0]
         if hasattr(
             first_elem, "__class__"
         ) and first_elem.__class__.__module__.startswith("cftime"):
