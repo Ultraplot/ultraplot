@@ -157,6 +157,13 @@ def pytest_configure(config):
     logging.getLogger("matplotlib").setLevel(logging.ERROR)
     logging.getLogger("ultraplot").setLevel(logging.WARNING)
 
+    results_path = Path(config.getoption("--results-path", default="results"))
+    if results_path.exists():
+        import shutil
+
+        shutil.rmtree(results_path)
+    results_path.mkdir(parents=True, exist_ok=True)
+
     try:
         # Always register the plugin - it provides enhanced functionality beyond just cleanup
         config.pluginmanager.register(StoreFailedMplPlugin(config))
