@@ -742,16 +742,21 @@ class Configurator(MutableMapping, dict):
         """
         import threading
 
-        self._thread_local = threading.local()
+        # Initialize threading first to avoid recursion issues
+        super().__setattr__("_thread_local", threading.local())
+        super().__setattr__("_initialized", False)
         self._init(local=local, user=user, default=default, **kwargs)
+        super().__setattr__("_initialized", True)
 
     def _init(self, *, local, user, default, skip_cycle=False):
         """
         Initialize the configurator.
         Note: this is also used to reset the class.
         """
-        # Always remove context objects
-        self._context.clear()
+        # Always remove context objects - use direct access to avoid recursion
+        if hasattr(self, "_thread_local"):
+            context = self._get_thread_local_copy("_context", [])
+            context.clear()
 
         # Update from default settings
         # NOTE: see _remove_blacklisted_style_params bugfix
@@ -803,9 +808,14 @@ class Configurator(MutableMapping, dict):
 
     @property
     def rc_ultraplot(self):
-        return self._get_thread_local_copy(
-            "rc_ultraplot", rcsetup._rc_ultraplot_default.copy(skip_validation=True)
-        )
+        if not hasattr(self._thread_local, "rc_ultraplot"):
+            # Initialize with a copy of the default ultraplot settings
+            # NOTE: skip_validation=True is necessary to avoid warnings
+            # about deprecated rc parameters.
+            self._thread_local.rc_ultraplot = rcsetup._rc_ultraplot_default.copy(
+                skip_validation=True
+            )
+        return self._thread_local.rc_ultraplot
 
     def __repr__(self):
         cls = type("rc", (dict,), {})  # temporary class with short name
@@ -872,10 +882,14 @@ class Configurator(MutableMapping, dict):
         Modify an `rc_matplotlib` or `rc_ultraplot` setting using "dot" notation
         (e.g., ``uplt.rc.name = value``).
         """
-        if attr[:1] == "_":
+        if attr[:1] == "_" or attr in ("_thread_local", "_initialized"):
             super().__setattr__(attr, value)
         else:
-            self.__setitem__(attr, value)
+            # Check if we're initialized to avoid recursion during __init__
+            if not getattr(self, "_initialized", False):
+                super().__setattr__(attr, value)
+            else:
+                self.__setitem__(attr, value)
 
     def __enter__(self):
         """
@@ -932,9 +946,13 @@ class Configurator(MutableMapping, dict):
         key = key.lower()
         if "." not in key:
             key = rcsetup._rc_nodots.get(key, key)
-        key, value = self.rc_ultraplot._check_key(
-            key, value
-        )  # may issue deprecation warning
+        # Use the raw thread-local copy of rc_ultraplot instead of the property getter
+        if not hasattr(self._thread_local, "rc_ultraplot"):
+            self._thread_local.rc_ultraplot = rcsetup._rc_ultraplot_default.copy(
+                skip_validation=True
+            )
+        rc_ultraplot = self._thread_local.rc_ultraplot
+        key, value = rc_ultraplot._check_key(key, value)
         return key, value
 
     def _validate_value(self, key, value):

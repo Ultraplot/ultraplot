@@ -529,13 +529,12 @@ class _RcParams(MutableMapping, dict):
     # NOTE: By omitting __delitem__ in MutableMapping we effectively
     # disable mutability. Also disables deleting items with pop().
 
-    def __init__(self, data=None, validate=None, lazy_keys=None):
+    def __init__(self, data=None, validate=None):
         self._validate = validate or {}
-        self._lazy_keys = set(lazy_keys or [])
-        self._unvalidated = {}
-
         if data:
             for key, value in data.items():
+                if key not in self._validate:
+                    raise KeyError(f"Inalid rc {key!r}.")
                 self[key] = value
 
     def __repr__(self):
@@ -554,36 +553,11 @@ class _RcParams(MutableMapping, dict):
 
     def __getitem__(self, key):
         key, _ = self._check_key(key)
-
-        # Perform lazy validation if required
-        if key in self._unvalidated:
-            raw_value = self._unvalidated.pop(key)
-            try:
-                validated = self._validate[key](raw_value)
-            except (ValueError, TypeError) as error:
-                raise ValueError(
-                    f"Lazy validation failed for {key!r}: {error}"
-                ) from None
-            dict.__setitem__(self, key, validated)
-
         return dict.__getitem__(self, key)
 
     def __setitem__(self, key, value):
         key, value = self._check_key(key, value)
-
-        if key not in self._validate:
-            raise KeyError(f"Invalid rc key {key!r}.")
-
-        if key in self._lazy_keys:
-            # Store unvalidated
-            self._unvalidated[key] = value
-            dict.__setitem__(self, key, value)
-        else:
-            try:
-                value = self._validate[key](value)
-            except (ValueError, TypeError) as error:
-                raise ValueError(f"Key {key!r}: {error}") from None
-            dict.__setitem__(self, key, value)
+        dict.__setitem__(self, key, value)
 
     @staticmethod
     def _check_key(key, value=None):
@@ -614,12 +588,7 @@ class _RcParams(MutableMapping, dict):
         new = _RcParams(
             data=dict(self),
             validate=self._validate,
-            lazy_keys=self._lazy_keys,
         )
-        if skip_validation:
-            new._unvalidated = dict(self)
-        else:
-            new._unvalidated = self._unvalidated.copy()
         return new
 
 
