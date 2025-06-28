@@ -832,7 +832,7 @@ class _CartopyFormatter(_PlateCarreeFormatter):
     # After 0.18 you can avoid this behavior by not setting axis but really
     # dislike that inconsistency. Solution is temporarily assign PlateCarre().
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        import cartopy  # noqa: F401 (ensure available)
 
     def __call__(self, value, pos=None):
         ctx = context._empty_context()
