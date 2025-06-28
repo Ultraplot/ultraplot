@@ -745,7 +745,6 @@ class Configurator(MutableMapping, dict):
         # Initialize threading first to avoid recursion issues
         super().__setattr__("_thread_local", threading.local())
         super().__setattr__("_initialized", False)
-        self._lock = threading.Lock()
         self._init(local=local, user=user, default=default, **kwargs)
         super().__setattr__("_initialized", True)
 
