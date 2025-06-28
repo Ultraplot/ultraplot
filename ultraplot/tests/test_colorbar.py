@@ -392,3 +392,97 @@ def test_colorbar_label_placement(labelloc, cbarloc):
     )
 
     uplt.close(fig)
+
+
+@pytest.mark.parametrize(
+    ("cbarloc", "invalid_labelloc"),
+    product(
+        ["top", "bottom", "upper left", "lower right"],
+        ["invalid", "diagonal", "center", "middle", 123, "unknown"],
+    ),
+)
+def test_colorbar_invalid_horizontal_label(cbarloc, invalid_labelloc):
+    """
+    Test error conditions and edge cases for colorbar label placement.
+    """
+    cmap = uplt.Colormap("plasma_r")
+    title = "Test Label"
+    fig, ax = uplt.subplots()
+
+    # Test ValueError cases - invalid labelloc for different colorbar locations
+
+    # Horizontal colorbar location with invalid labelloc
+    with pytest.raises(ValueError, match="Could not determine position"):
+        ax.colorbar(cmap, loc=cbarloc, labelloc=invalid_labelloc, label=title)
+    uplt.close(fig)
+
+
+@pytest.mark.parametrize(
+    ("cbarloc", "invalid_labelloc"),
+    product(
+        ["left", "right", "ll", "ul", "ur", "lr"],
+        [
+            "invalid",
+            "diagonal",
+            "center",
+            "middle",
+            123,
+            "unknown",
+        ],
+    ),
+)
+def test_colorbar_invalid_vertical_label(cbarloc, invalid_labelloc):
+    # Vertical colorbar location with invalid labelloc
+    cmap = uplt.Colormap("plasma_r")
+    title = "Test Label"
+    fig, ax = uplt.subplots()
+    with pytest.raises(ValueError, match="Could not determine position"):
+        ax.colorbar(cmap, loc=cbarloc, labelloc=invalid_labelloc, label=title)
+    uplt.close(fig)
+
+
+@pytest.mark.parametrize(
+    "invalid_labelloc", ["fill", "unknown", "custom", "weird_location", 123]
+)
+def test_colorbar_invalid_fill_label_placement(invalid_labelloc):
+    # Fill location with invalid labelloc
+    cmap = uplt.Colormap("plasma_r")
+    title = "Test Label"
+    fig, ax = uplt.subplots()
+    with pytest.raises(ValueError, match="Could not determine position"):
+        ax.colorbar(cmap, loc="fill", labelloc=invalid_labelloc, label=title)
+
+
+@pytest.mark.parametrize("unknown_loc", ["unknown", "custom", "weird_location", 123])
+def test_colorbar_label_placement_default(unknown_loc):
+    # Test the default case (final else statement)
+    # Unknown/unrecognized locations should default to obj.set_label(label)
+    cmap = uplt.Colormap("plasma_r")
+    title = "Test Label"
+    fig, ax = uplt.subplots()
+    # This should not raise an error and should use the default behavior
+    with pytest.raises(KeyError):
+        cbar = ax.colorbar(cmap, loc=unknown_loc, label=title)
+
+
+@pytest.mark.parametrize("loc", ["top", "bottom", "left", "right", "fill"])
+def test_colorbar_label_no_labelloc(loc):
+    cmap = uplt.Colormap("plasma_r")
+    title = "Test Label"
+    fig, ax = uplt.subplots()
+    # None labelloc should always work without error
+    cbar = ax.colorbar(cmap, loc=loc, labelloc=None, label=title)
+
+    # Should have the label set somewhere
+    label_found = (
+        cbar.ax.get_title() == title
+        or (
+            hasattr(cbar.ax.xaxis.label, "get_text")
+            and cbar.ax.xaxis.label.get_text() == title
+        )
+        or (
+            hasattr(cbar.ax.yaxis.label, "get_text")
+            and cbar.ax.yaxis.label.get_text() == title
+        )
+    )
+    assert label_found, f"Label not found for loc='{loc}' with labelloc=None"
