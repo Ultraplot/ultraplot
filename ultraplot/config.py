@@ -747,6 +747,7 @@ class Configurator(MutableMapping, dict):
         super().__setattr__("_initialized", False)
         self._init(local=local, user=user, default=default, **kwargs)
         super().__setattr__("_initialized", True)
+        self._lock = threading.Lock()
 
     def _init(self, *, local, user, default, skip_cycle=False):
         """
@@ -912,14 +913,14 @@ class Configurator(MutableMapping, dict):
             except Exception as e:
                 self.__exit__()
                 raise e
-
-            for rc_dict, kw_new in zip(
-                (self.rc_ultraplot, self.rc_matplotlib),
-                (kw_ultraplot, kw_matplotlib),
-            ):
-                for key, value in kw_new.items():
-                    rc_old[key] = rc_dict[key]
-                    rc_new[key] = rc_dict[key] = value
+            with self._lock:  # ensure thread safety
+                for rc_dict, kw_new in zip(
+                    (self.rc_ultraplot, self.rc_matplotlib),
+                    (kw_ultraplot, kw_matplotlib),
+                ):
+                    for key, value in kw_new.items():
+                        rc_old[key] = rc_dict[key]
+                        rc_new[key] = rc_dict[key] = value
 
     def __exit__(self, *args):  # noqa: U100
         """

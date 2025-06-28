@@ -8,8 +8,9 @@ def modify_rc_on_thread(prop: str, value=None, with_context=True):
     """
     time.sleep(random.uniform(0, 0.001))
     if with_context:
-        with uplt.rc.context(**{prop: value}):
-            assert uplt.rc[prop] == value, f"Thread {id} failed to set rc params"
+        for i in range(10):
+            with uplt.rc.context(**{prop: value}):
+                assert uplt.rc[prop] == value, f"Thread {id} failed to set rc params"
     else:
         uplt.rc[prop] = value
         assert uplt.rc[prop] == value, f"Thread {id} failed to set rc params"
