@@ -822,7 +822,7 @@ class FracFormatter(mticker.Formatter):
         return string
 
 
-class _CartopyFormatter(object):
+class _CartopyFormatter(_PlateCarreeFormatter):
     """
     Mixin class for cartopy formatters.
     """
@@ -832,8 +832,6 @@ class _CartopyFormatter(object):
     # After 0.18 you can avoid this behavior by not setting axis but really
     # dislike that inconsistency. Solution is temporarily assign PlateCarre().
     def __init__(self, *args, **kwargs):
-        import cartopy  # noqa: F401 (ensure available)
-
         super().__init__(*args, **kwargs)
 
     def __call__(self, value, pos=None):
@@ -883,17 +881,6 @@ class LongitudeFormatter(_CartopyFormatter, LongitudeFormatter):
         """
         self.lon0 = lon0
         super().__init__(*args, **kwargs)
-
-    def __call__(self, x, pos=None):
-        """
-        Format the longitude, accounting for lon0 offset.
-        """
-        # Adjust longitude value based on lon0
-        adjusted_lon = x - self.lon0
-        # Normalize to -180 to 180 range
-        adjusted_lon = ((adjusted_lon + 180) % 360) - 180
-        # Use the original formatter with the adjusted longitude
-        return super().__call__(adjusted_lon, pos)
 
 
 class LatitudeFormatter(_CartopyFormatter, LatitudeFormatter):

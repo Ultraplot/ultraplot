@@ -241,9 +241,7 @@ class _GeoAxis(object):
         self._interval = None
         self._use_dms = (
             ccrs is not None
-            and isinstance(
-                axes.projection, (ccrs._RectangularProjection, ccrs.Mercator)
-            )  # noqa: E501
+            and isinstance(axes.projection, ccrs._RectangularProjection)  # noqa: E501
             and _version_cartopy >= "0.18"
         )
 
@@ -1706,6 +1704,9 @@ class _CartopyAxes(GeoAxes, _GeoAxes):
             latgrid=latgrid,
             nsteps=nsteps,
         )
+        gl.xformatter = self._lonaxis.get_major_formatter()
+        gl.yformatter = self._lataxis.get_major_formatter()
+
         # Turn the tick labels off as they are handled
         # separately from the matplotlib defaults
         self.xaxis.set_major_formatter(mticker.NullFormatter())
