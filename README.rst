@@ -127,7 +127,7 @@ If you use UltraPlot in your research, please cite it using the following BibTeX
       url          = {https://github.com/Ultraplot/UltraPlot}
     }
 
-.. |downloads| image:: https://static.pepy.tech/personalized-badge/UltraPlot?period=total&units=international_system&left_color=000000&right_color=f77f00&left_text=Downloads
+.. |downloads| image:: https://static.pepy.tech/personalized-badge/UltraPlot?period=total&units=international_system&left_color=black&right_color=orange&left_text=Downloads
     :target: https://pepy.tech/project/ultraplot
     :alt: Downloads
 
