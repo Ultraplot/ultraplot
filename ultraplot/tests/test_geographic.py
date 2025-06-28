@@ -861,8 +861,16 @@ def test_dms_used_for_mercator():
     fig, ax = uplt.subplots(ncols=2, proj=("cyl", "merc"), share=0)
     ax.format(land=True, labels=True, lonlocator=limit)
     ax.format(land=True, labels=True, lonlocator=limit)
-    for tick in limit:
+    import matplotlib.ticker as mticker
+
+    expectations = (
+        ("0°36′E", "0.6°E"),
+        ("113°15′E", "113.25°E"),
+    )
+
+    for (expectation_a, expectatinon_b), tick in zip(expectations, limit):
         a = ax[0].gridlines_major.xformatter(tick)
         b = ax[1].gridlines_major.xformatter(tick)
-        assert a == b
+        assert a == expectation_a
+        assert b == expectatinon_b
     return fig
