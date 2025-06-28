@@ -6,7 +6,7 @@ def modify_rc_on_thread(prop: str, value=None, with_context=True):
     """
     Apply arbitrary rc parameters in a thread-safe manner.
     """
-    time.sleep(random.uniform(0, 0.01))
+    time.sleep(random.uniform(0, 0.001))
     if with_context:
         with uplt.rc.context(**{prop: value}):
             assert uplt.rc[prop] == value, f"Thread {id} failed to set rc params"
@@ -20,8 +20,11 @@ def _spawn_and_run_threads(func, n=100, **kwargs):
     workers = []
     exceptions = []
 
+    start_barrier = threading.Barrier(n)
+
     def wrapped_func(**kw):
         try:
+            start_barrier.wait()
             func(**kw)
         except Exception as e:
             exceptions.append(e)
@@ -66,6 +69,11 @@ def test_setting_rc(prop, options, with_context):
         options=options,
         with_context=with_context,
     )
-    assert (
-        uplt.rc[prop] == value
-    ), f"Failed to reset {value=} after threads finished, {uplt.rc[prop]=}."
+    if with_context:
+        assert (
+            uplt.rc[prop] == value
+        ), f"Failed {with_context=} to reset {value=} after threads finished, {uplt.rc[prop]=}."
+    else:
+        # without a context, the value should assume
+        # the last value set by the threads
+        uplt.rc[prop] != value
