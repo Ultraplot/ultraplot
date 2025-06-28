@@ -21,13 +21,16 @@ def _spawn_and_run_threads(func, n=100, **kwargs):
     exceptions = []
 
     start_barrier = threading.Barrier(n)
+    exceptions_lock = threading.Lock()
 
     def wrapped_func(**kw):
         try:
             start_barrier.wait()
             func(**kw)
         except Exception as e:
-            exceptions.append(e)
+            with exceptions_lock:
+                # Store the exception in a thread-safe manner
+                exceptions.append(e)
 
     for worker in range(n):
         kw = kwargs.copy()
