@@ -42,7 +42,9 @@ def _spawn_and_run_threads(func, n=100, **kwargs):
     with warnings.catch_warnings(record=True) as record:
         warnings.simplefilter("always")  # catch all warnings
         for w in workers:
-            w.join()
+            w.join(timeout=30.0)
+            if w.is_alive():
+                raise RuntimeError(f"Thread {w.name} did not finish in time, {kwargs=}")
 
     if exceptions:
         raise RuntimeError(
