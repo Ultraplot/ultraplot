@@ -745,9 +745,9 @@ class Configurator(MutableMapping, dict):
         # Initialize threading first to avoid recursion issues
         super().__setattr__("_thread_local", threading.local())
         super().__setattr__("_initialized", False)
+        self._lock = threading.Lock()
         self._init(local=local, user=user, default=default, **kwargs)
         super().__setattr__("_initialized", True)
-        self._lock = threading.Lock()
 
     def _init(self, *, local, user, default, skip_cycle=False):
         """
@@ -800,7 +800,7 @@ class Configurator(MutableMapping, dict):
     def _get_thread_local_copy(self, attr, source):
         if not hasattr(self._thread_local, attr):
             # Initialize with a copy of the source dictionary
-            setattr(self._thread_local, attr, source)
+            setattr(self._thread_local, attr, source.copy())
         return getattr(self._thread_local, attr)
 
     @property
@@ -809,14 +809,9 @@ class Configurator(MutableMapping, dict):
 
     @property
     def rc_ultraplot(self):
-        if not hasattr(self._thread_local, "rc_ultraplot"):
-            # Initialize with a copy of the default ultraplot settings
-            # NOTE: skip_validation=True is necessary to avoid warnings
-            # about deprecated rc parameters.
-            self._thread_local.rc_ultraplot = rcsetup._rc_ultraplot_default.copy(
-                skip_validation=True
-            )
-        return self._thread_local.rc_ultraplot
+        return self._get_thread_local_copy(
+            "rc_ultraplot", rcsetup._rc_ultraplot_default
+        )
 
     def __repr__(self):
         cls = type("rc", (dict,), {})  # temporary class with short name
@@ -913,14 +908,14 @@ class Configurator(MutableMapping, dict):
             except Exception as e:
                 self.__exit__()
                 raise e
-            with self._lock:  # ensure thread safety
-                for rc_dict, kw_new in zip(
-                    (self.rc_ultraplot, self.rc_matplotlib),
-                    (kw_ultraplot, kw_matplotlib),
-                ):
-                    for key, value in kw_new.items():
-                        rc_old[key] = rc_dict[key]
-                        rc_new[key] = rc_dict[key] = value
+
+            for rc_dict, kw_new in zip(
+                (self.rc_ultraplot, self.rc_matplotlib),
+                (kw_ultraplot, kw_matplotlib),
+            ):
+                for key, value in kw_new.items():
+                    rc_old[key] = rc_dict[key]
+                    rc_new[key] = rc_dict[key] = value
 
     def __exit__(self, *args):  # noqa: U100
         """
