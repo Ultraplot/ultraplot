@@ -241,7 +241,9 @@ class _GeoAxis(object):
         self._interval = None
         self._use_dms = (
             ccrs is not None
-            and isinstance(axes.projection, ccrs._RectangularProjection)  # noqa: E501
+            and isinstance(
+                axes.projection, (ccrs._RectangularProjection, ccrs.Mercator)
+            )  # noqa: E501
             and _version_cartopy >= "0.18"
         )
 
