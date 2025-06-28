@@ -822,7 +822,7 @@ class FracFormatter(mticker.Formatter):
         return string
 
 
-class _CartopyFormatter(_PlateCarreeFormatter):
+class _CartopyFormatter(object):
     """
     Mixin class for cartopy formatters.
     """
