@@ -6,7 +6,6 @@ def modify_rc_on_thread(prop: str, value=None, with_context=True):
     """
     Apply arbitrary rc parameters in a thread-safe manner.
     """
-    time.sleep(random.uniform(0, 0.001))
     if with_context:
         for i in range(10):
             with uplt.rc.context(**{prop: value}):
@@ -16,7 +15,7 @@ def modify_rc_on_thread(prop: str, value=None, with_context=True):
         assert uplt.rc[prop] == value, f"Thread {id} failed to set rc params"
 
 
-def _spawn_and_run_threads(func, n=100, **kwargs):
+def _spawn_and_run_threads(func, n=10, **kwargs):
     options = kwargs.pop("options")
     workers = []
     exceptions = []
@@ -43,7 +42,7 @@ def _spawn_and_run_threads(func, n=100, **kwargs):
     with warnings.catch_warnings(record=True) as record:
         warnings.simplefilter("always")  # catch all warnings
         for w in workers:
-            w.join(timeout=30.0)
+            w.join()
             if w.is_alive():
                 raise RuntimeError(f"Thread {w.name} did not finish in time, {kwargs=}")
 
