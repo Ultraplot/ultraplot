@@ -134,3 +134,32 @@ def test_toggle_input_axis_sharing():
     fig = uplt.figure()
     with pytest.warns(uplt.internals.warnings.UltraPlotWarning):
         fig._toggle_axis_sharing(which="does not exist")
+
+
+def test_warning_on_constrained_layout():
+    """
+    Test that a warning is raised when constrained layout is used with shared axes.
+    """
+    with pytest.warns(uplt.internals.warnings.UltraPlotWarning):
+        fig, ax = uplt.subplots(ncols=2, nrows=2, share="all", constrained_layout=True)
+
+    # This should be unset; we therefore warn
+    uplt.rc.rc_matplotlib["figure.constrained_layout.use"] = True
+    with pytest.warns(uplt.internals.warnings.UltraPlotWarning):
+        fig, ax = uplt.subplots(ncols=2, nrows=2, share="all", constrained_layout=True)
+    uplt.close(fig)
+
+
+def test_warning_on_tight_layout():
+    """
+    Test that a warning is raised when tight layout is used with shared axes.
+    """
+    with pytest.warns(uplt.internals.warnings.UltraPlotWarning):
+        fig, ax = uplt.subplots(ncols=2, nrows=2, share="all", tight_layout=True)
+
+    # This should be unset; we therefore warn
+    uplt.rc.rc_matplotlib["figure.autolayout"] = True
+    with pytest.warns(uplt.internals.warnings.UltraPlotWarning):
+        fig, ax = uplt.subplots(ncols=2, nrows=2, share="all", tight_layout=True)
+
+    uplt.close(fig)

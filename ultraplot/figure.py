@@ -714,21 +714,15 @@ class Figure(mfigure.Figure):
             warnings._warn_ultraplot(
                 "Setting rc['figure.autolayout'] to False. " + self._tight_message
             )
+            rc.rc_matplotlib["figure.autolayout"] = False  # this is rcParams
         if rc.rc_matplotlib.get("figure.constrained_layout.use", False):
             warnings._warn_ultraplot(
                 "Setting rc['figure.constrained_layout.use'] to False. "
                 + self._tight_message  # noqa: E501
             )
-        try:
-            rc.rc_matplotlib["figure.autolayout"] = False  # this is rcParams
-        except KeyError:
-            pass
-        try:
             rc.rc_matplotlib["figure.constrained_layout.use"] = (
                 False  # this is rcParams
             )
-        except KeyError:
-            pass
         self._tight_active = _not_none(tight, rc["subplots.tight"])
 
         # Translate share settings
