@@ -944,12 +944,7 @@ class Configurator(MutableMapping, dict):
         if "." not in key:
             key = rcsetup._rc_nodots.get(key, key)
         # Use the raw thread-local copy of rc_ultraplot instead of the property getter
-        if not hasattr(self._thread_local, "rc_ultraplot"):
-            self._thread_local.rc_ultraplot = rcsetup._rc_ultraplot_default.copy(
-                skip_validation=True
-            )
-        rc_ultraplot = self._thread_local.rc_ultraplot
-        key, value = rc_ultraplot._check_key(key, value)
+        key, value = self.rc_ultraplot._check_key(key, value)
         return key, value
 
     def _validate_value(self, key, value):
