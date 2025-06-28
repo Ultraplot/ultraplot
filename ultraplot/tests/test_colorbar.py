@@ -5,6 +5,7 @@ Test colorbars.
 import numpy as np
 import pytest
 import ultraplot as uplt
+from itertools import product
 
 
 @pytest.mark.mpl_image_compare
@@ -357,16 +358,19 @@ def test_label_placement_fig_colorbar2():
 
 @pytest.mark.parametrize(
     ("labelloc", "cbarloc"),
-    [
-        ("bottom", "top"),
-        ("top", "bottom"),
-        ("left", "right"),
-        ("right", "left"),
-        ("bottom", "upper right"),
-        ("top", "upper left"),
-        ("left", "lower left"),
-        ("right", "lower right"),
-    ],
+    product(
+        ["bottom", "top", "left", "right"],
+        [
+            "top",
+            "bottom",
+            "left",
+            "right",
+            "upper right",
+            "upper left",
+            "lower left",
+            "lower right",
+        ],
+    ),
 )
 def test_colorbar_label_placement(labelloc, cbarloc):
     """
@@ -378,56 +382,13 @@ def test_colorbar_label_placement(labelloc, cbarloc):
 
     cbar = ax.colorbar(cmap, loc=cbarloc, labelloc=labelloc, title=title)
 
-    # Check the label position based on our label placement logic
-    if labelloc in ("top", "bottom"):
-        # Horizontal label locations
-        if cbarloc in (
-            "top",
-            "bottom",
-            "upper right",
-            "lower right",
-            "upper left",
-            "lower left",
-        ):
-            # Horizontal colorbar locations - label goes on x-axis
-            assert cbar.ax.xaxis.label.get_text() == title
-        elif cbarloc in ("left", "right"):
-            # Vertical colorbar locations - label goes on y-axis
-            assert cbar.ax.yaxis.label.get_text() == title
+    x_label = cbar.ax.xaxis.label.get_text()
+    y_label = cbar.ax.yaxis.label.get_text()
 
-    elif labelloc in ("left", "right"):
-        # Vertical label locations
-        if cbarloc in (
-            "left",
-            "right",
-            "upper left",
-            "upper right",
-            "lower left",
-            "lower right",
-        ):
-            # Vertical colorbar locations - label goes on y-axis
-            assert cbar.ax.yaxis.label.get_text() == title
-        elif cbarloc in ("top", "bottom"):
-            # Horizontal colorbar locations - label goes on x-axis
-            assert cbar.ax.xaxis.label.get_text() == title
+    assert title in (x_label, y_label), (
+        f"Expected label '{title}' not found. "
+        f"xaxis label: '{x_label}', yaxis label: '{y_label}', "
+        f"labelloc='{labelloc}', cbarloc='{cbarloc}'"
+    )
 
-    # Also check that the label text is set correctly regardless of axis
-    label_found = False
-    if (
-        hasattr(cbar.ax.xaxis.label, "get_text")
-        and cbar.ax.xaxis.label.get_text() == title
-    ):
-        label_found = True
-    if (
-        hasattr(cbar.ax.yaxis.label, "get_text")
-        and cbar.ax.yaxis.label.get_text() == title
-    ):
-        label_found = True
-    if hasattr(cbar, "get_label") and cbar.get_label() == title:
-        label_found = True
-
-    # Assert that we found the label in one of the expected places
-    assert (
-        label_found
-    ), f"Label '{title}' not found for labelloc='{labelloc}', cbarloc='{cbarloc}'"
     uplt.close(fig)
