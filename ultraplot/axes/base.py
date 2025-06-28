@@ -1301,7 +1301,7 @@ class Axes(maxes.Axes):
         elif _is_vertical_loc(loc):
             if labelloc is None or _is_vertical_label(labelloc):
                 obj.set_label(label)
-            elif is_horizontal_label(labelloc):
+            elif _is_horizontal_label(labelloc):
                 obj.ax.set_xlabel(label)
             else:
                 raise ValueError("Could not determine position")
