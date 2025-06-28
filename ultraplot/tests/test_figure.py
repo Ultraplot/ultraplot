@@ -142,6 +142,7 @@ def test_warning_on_constrained_layout():
     """
     with pytest.warns(uplt.internals.warnings.UltraPlotWarning):
         fig, ax = uplt.subplots(ncols=2, nrows=2, share="all", constrained_layout=True)
+    uplt.close(fig)
 
     # This should be unset; we therefore warn
     uplt.rc.rc_matplotlib["figure.constrained_layout.use"] = True
@@ -160,6 +161,7 @@ def test_warning_on_tight_layout():
     """
     with pytest.warns(uplt.internals.warnings.UltraPlotWarning):
         fig, ax = uplt.subplots(ncols=2, nrows=2, share="all", tight_layout=True)
+    uplt.close(fig)
 
     # This should be unset; we therefore warn
     uplt.rc.rc_matplotlib["figure.autolayout"] = True
