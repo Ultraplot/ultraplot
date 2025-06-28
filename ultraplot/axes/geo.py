@@ -239,13 +239,7 @@ class _GeoAxis(object):
         self.isDefault_majloc = True
         self.isDefault_minloc = True
         self._interval = None
-        self._use_dms = (
-            ccrs is not None
-            and isinstance(
-                axes.projection, (ccrs._RectangularProjection, ccrs.Mercator)
-            )  # noqa: E501
-            and _version_cartopy >= "0.18"
-        )
+        self._use_dms = _is_rectilinear_projection(axes)
 
     def _get_extent(self):
         # Try to get extent but bail out for projections where this is
