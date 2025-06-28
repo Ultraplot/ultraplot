@@ -19,20 +19,21 @@ import os, shutil, pytest, re, numpy as np, ultraplot as uplt
 from pathlib import Path
 from datetime import datetime
 
+
 # Import the modular MPL plugin components
-from ultraplot.tests.mpl_plugin import (
+from pytest_ultraimagecompare import (
     StoreFailedMplPlugin,
     ProgressTracker,
     CleanupManager,
     HTMLReportGenerator,
 )
-from ultraplot.tests.mpl_plugin.utils import (
+from pytest_ultraimagecompare.utils import (
     count_mpl_tests,
     should_generate_html_report,
     get_failed_mpl_tests,
 )
-from ultraplot.tests.mpl_plugin.progress import get_progress_tracker
-from ultraplot.tests.mpl_plugin.cleanup import get_cleanup_manager
+from pytest_ultraimagecompare.progress import get_progress_tracker
+from pytest_ultraimagecompare.cleanup import get_cleanup_manager
 
 SEED = 51423
 

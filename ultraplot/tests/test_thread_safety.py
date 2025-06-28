@@ -15,7 +15,7 @@ def modify_rc_on_thread(prop: str, value=None, with_context=True):
         assert uplt.rc[prop] == value, f"Thread {id} failed to set rc params"
 
 
-def _spawn_and_run_threads(func, n=10, **kwargs):
+def _spawn_and_run_threads(func, n=100, **kwargs):
     options = kwargs.pop("options")
     workers = []
     exceptions = []
