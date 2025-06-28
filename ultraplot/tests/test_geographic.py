@@ -850,3 +850,18 @@ def test_consistent_range():
 
         assert np.allclose(lonview, lonlim)
         assert np.allclose(latview, latlim)
+
+
+@pytest.mark.mpl_image_compare
+def test_dms_used_for_mercator():
+    """
+    Test that DMS is used for Mercator projection
+    """
+    limit = (0.6, 113.25)
+    fig, ax = uplt.subplots(ncols=2, proj=("cyl", "merc"), share=0)
+    ax.format(land=True, labels="both", lonlocator=limit)
+    for tick in limit:
+        a = ax[0].gridlines_major.xformatter(tick)
+        b = ax[1].gridlines_major.xformatter(tick)
+        assert a == b
+    return fig
