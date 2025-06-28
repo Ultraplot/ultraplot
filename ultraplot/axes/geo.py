@@ -1706,8 +1706,8 @@ class _CartopyAxes(GeoAxes, _GeoAxes):
             latgrid=latgrid,
             nsteps=nsteps,
         )
-        gl.xformatter = self._lonaxis.get_major_formatter()
-        gl.yformatter = self._lataxis.get_major_formatter()
+        # gl.xformatter = self._lonaxis.get_major_formatter()
+        # gl.yformatter = self._lataxis.get_major_formatter()
         # Turn the tick labels off as they are handled
         # separately from the matplotlib defaults
         self.xaxis.set_major_formatter(mticker.NullFormatter())
