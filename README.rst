@@ -2,7 +2,7 @@
     :alt: UltraPlot Logo
     :width: 100%
 
-|build-status| |coverage| |docs| |pypi| |code-style| |pre-commit| |pr-welcome| |license| |zenodo|
+|downloads| |build-status| |coverage| |docs| |pypi| |code-style| |pre-commit| |pr-welcome| |license| |zenodo|
 
 A succinct `matplotlib <https://matplotlib.org/>`__ wrapper for making beautiful,
 publication-quality graphics. It builds upon ProPlot_ and transports it into the modern age (supporting mpl 3.9.0+).
@@ -127,32 +127,40 @@ If you use UltraPlot in your research, please cite it using the following BibTeX
       url          = {https://github.com/Ultraplot/UltraPlot}
     }
 
+.. |downloads| image:: https://static.pepy.tech/personalized-badge/UltraPlot?period=total&units=international_system&left_color=000000&right_color=f77f00&left_text=Downloads
+    :target: https://pepy.tech/project/ultraplot
+    :alt: Downloads
 
+.. |build-status| image:: https://github.com/ultraplot/ultraplot/actions/workflows/build-ultraplot.yml/badge.svg
+    :target: https://github.com/ultraplot/ultraplot/actions/workflows/build-ultraplot.yml
+    :alt: Build Status
 
-.. |build-status| image::  https://github.com/ultraplot/ultraplot/actions/workflows/build-ultraplot.yml/badge.svg
+.. |coverage| image:: https://codecov.io/gh/Ultraplot/ultraplot/graph/badge.svg?token=C6ZB7Q9II4&style=flat&color=53C334
+    :target: https://codecov.io/gh/Ultraplot/ultraplot
+    :alt: Coverage
 
-.. |code-style| image:: https://img.shields.io/badge/code%20style-black-000000.svg
+.. |docs| image:: https://readthedocs.org/projects/ultraplot/badge/?version=latest&style=flat&color=4F5D95
+    :target: https://ultraplot.readthedocs.io/en/latest/?badge=latest
+    :alt: Docs
 
-.. |pr-welcome| image:: https://img.shields.io/badge/PRs-welcome-brightgreen
+.. |pypi| image:: https://img.shields.io/pypi/v/ultraplot?style=flat&color=53C334&logo=pypi
+    :target: https://pypi.org/project/ultraplot/
+    :alt: PyPI
 
-.. |docs| image:: https://readthedocs.org/projects/ultraplot/badge/?version=latest
-   :alt: docs
-   :target: https://ultraplot.readthedocs.io/en/latest/?badge=latest
-
-.. |pypi| image:: https://img.shields.io/pypi/v/ultraplot?color=83%20197%2052
-   :alt: pypi
-   :target: https://pypi.org/project/ultraplot/
-
-.. |license| image:: https://img.shields.io/github/license/ultraplot/ultraplot.svg
-   :alt: license
-   :target: LICENSE.txt
+.. |code-style| image:: https://img.shields.io/badge/code%20style-black-000000.svg?style=flat&logo=python
+    :alt: Code style: black
 
 .. |pre-commit| image:: https://results.pre-commit.ci/badge/github/Ultraplot/ultraplot/main.svg
-   :target: https://results.pre-commit.ci/latest/github/Ultraplot/ultraplot/main
-   :alt: pre-commit.ci status
+    :target: https://results.pre-commit.ci/latest/github/Ultraplot/ultraplot/main
+    :alt: pre-commit.ci status
 
-.. |coverage| image:: https://codecov.io/gh/Ultraplot/ultraplot/graph/badge.svg?token=C6ZB7Q9II4
-   :target: https://codecov.io/gh/Ultraplot/ultraplot
-   :alt: coverage
+.. |pr-welcome| image:: https://img.shields.io/badge/PRs-welcome-f77f00?style=flat&logo=github
+    :alt: PRs Welcome
+
+.. |license| image:: https://img.shields.io/github/license/ultraplot/ultraplot.svg?style=flat&color=808080
+    :target: LICENSE.txt
+    :alt: License
+
 .. |zenodo| image:: https://zenodo.org/badge/909651179.svg
-  :target: https://doi.org/10.5281/zenodo.15733564
+    :target: https://doi.org/10.5281/zenodo.15733564
+    :alt: DOI
