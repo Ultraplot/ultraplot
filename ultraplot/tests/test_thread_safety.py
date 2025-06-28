@@ -6,7 +6,7 @@ def modify_rc_on_thread(prop: str, value=None, with_context=True):
     """
     Apply arbitrary rc parameters in a thread-safe manner.
     """
-    time.sleep(random.uniform(0, 0.001))
+    time.sleep(random.uniform(0, 0.01))
     if with_context:
         with uplt.rc.context(**{prop: value}):
             assert uplt.rc[prop] == value, f"Thread {id} failed to set rc params"
