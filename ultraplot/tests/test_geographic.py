@@ -864,8 +864,8 @@ def test_dms_used_for_mercator():
     import matplotlib.ticker as mticker
 
     expectations = (
-        ("0°36′E", "0.6°E"),
-        ("113°15′E", "113.25°E"),
+        ("0°36′E", "0°0′0.019″E"),
+        ("113°15′E", "0°0′3.662″E"),
     )
 
     for (expectation_a, expectatinon_b), tick in zip(expectations, limit):

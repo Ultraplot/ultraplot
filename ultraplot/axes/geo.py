@@ -2297,7 +2297,32 @@ def _is_rectilinear_projection(ax):
     # Determine what the projection function is
     # Create a square and determine if the lengths are preserved
     # For geoaxes projc is always set in format, and thus is not None
+    # Cylindrical projections are generally rectilinear
     proj = getattr(ax, "projection", None)
+    rectilinear_projections = {
+        # Cartopy projections
+        "platecarree",
+        "mercator",
+        "lambertcylindrical",
+        "miller",
+        # Basemap projections
+        "cyl",
+        "merc",
+        "mill",
+        "rect",
+        "rectilinear",
+        "unknown",
+    }
+
+    # For Cartopy
+    if hasattr(proj, "name"):
+        if proj.name.lower() in rectilinear_projections:
+            return True
+    # For Basemap
+    elif hasattr(proj, "projection"):
+        if proj.projection.lower() in rectilinear_projections:
+            return True
+
     transform = None
     if hasattr(proj, "transform_point"):  # cartopy
         if proj.transform_point is not None:
@@ -2330,27 +2355,5 @@ def _is_rectilinear_projection(ax):
 
         # If slopes are equal (within a small tolerance), the projection preserves straight lines
         return np.allclose(slope1 - slope2, 0)
-    # Cylindrical projections are generally rectilinear
-    rectilinear_projections = {
-        # Cartopy projections
-        "platecarree",
-        "mercator",
-        "lambertcylindrical",
-        "miller",
-        # Basemap projections
-        "cyl",
-        "merc",
-        "mill",
-        "rect",
-        "rectilinear",
-        "unknown",
-    }
-
-    # For Cartopy
-    if hasattr(proj, "name"):
-        return proj.name.lower() in rectilinear_projections
-    # For Basemap
-    elif hasattr(proj, "projection"):
-        return proj.projection.lower() in rectilinear_projections
     # If we can't determine, assume it's not rectilinear
     return False
