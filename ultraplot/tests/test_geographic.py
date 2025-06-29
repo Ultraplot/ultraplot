@@ -236,7 +236,7 @@ def test_lon0_shifts():
         # abs is taken due to north-west
         str_loc = str(abs(int(loc)))
         n = len(str_loc)
-        assert str_loc == format[:n]
+        assert str_loc == format[:n], f"Epxected: {str_loc}, got: {format[:n]}"
     assert locs[0] != 0  # we should not be a 0 anymore
     uplt.close(fig)
 
