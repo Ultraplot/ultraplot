@@ -839,10 +839,7 @@ class _CartopyFormatter(object):
     def __call__(self, value, pos=None):
         ctx = context._empty_context()
         if self.axis is not None:
-            ctx = context._state_context(
-                self.axis.axes,
-                projection=ccrs.PlateCarree(),
-            )
+            ctx = context._state_context(self.axis.axes, projection=ccrs.PlateCarree())
         with ctx:
             return super().__call__(value, pos)
 
@@ -895,7 +892,6 @@ class LongitudeFormatter(_CartopyFormatter, LongitudeFormatter):
         adjusted_lon = x - self.lon0
         # Normalize to -180 to 180 range
         adjusted_lon = ((adjusted_lon + 180) % 360) - 180
-        print(x)
         # Use the original formatter with the adjusted longitude
         return super().__call__(adjusted_lon, pos)
 
