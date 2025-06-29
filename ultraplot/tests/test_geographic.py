@@ -864,13 +864,13 @@ def test_dms_used_for_mercator():
     import matplotlib.ticker as mticker
 
     expectations = (
-        ("0°36′E", "0°0′0.019″E"),
-        ("113°15′E", "0°0′3.662″E"),
+        "0°36′E",
+        "113°15′E",
     )
 
-    for (expectation_a, expectatinon_b), tick in zip(expectations, limit):
+    for expectation, tick in zip(expectations, limit):
         a = ax[0].gridlines_major.xformatter(tick)
         b = ax[1].gridlines_major.xformatter(tick)
-        assert a == expectation_a
-        assert b == expectatinon_b
+        assert a == expectation
+        assert b == expectation
     return fig
