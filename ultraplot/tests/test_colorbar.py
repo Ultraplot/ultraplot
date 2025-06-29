@@ -454,13 +454,11 @@ def test_colorbar_invalid_fill_label_placement(invalid_labelloc):
 
 
 @pytest.mark.parametrize("unknown_loc", ["unknown", "custom", "weird_location", 123])
-def test_colorbar_label_placement_default(unknown_loc):
-    # Test the default case (final else statement)
-    # Unknown/unrecognized locations should default to obj.set_label(label)
+def test_colorbar_wrong_label_placement_should_raise_error(unknown_loc):
+    # Unknown locs should raise errors
     cmap = uplt.Colormap("plasma_r")
     title = "Test Label"
     fig, ax = uplt.subplots()
-    # This should not raise an error and should use the default behavior
     with pytest.raises(KeyError):
         cbar = ax.colorbar(cmap, loc=unknown_loc, label=title)
 
