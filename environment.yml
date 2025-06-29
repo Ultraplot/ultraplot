@@ -30,3 +30,4 @@ dependencies:
   - pyarrow
   - pip:
       - git+https://github.com/ultraplot/UltraTheme.git
+      - git+https://github.com/ultraplot/UltraImageCompare.git
