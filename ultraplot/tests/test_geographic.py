@@ -241,8 +241,49 @@ def test_lon0_shifts():
     uplt.close(fig)
 
 
-def test_sharing_cartopy():
-
+@pytest.mark.parametrize(
+    "layout, expectations",
+    [
+        (
+            # layout 1: 3x3 grid with unique IDs
+            [
+                [1, 2, 3],
+                [4, 5, 6],
+                [7, 8, 9],
+            ],
+            # expectations: per element ID (1-9), four booleans: [top, right, bottom, left]
+            [
+                [True, False, False, True],  # 1
+                [True, False, False, False],  # 2
+                [True, False, True, False],  # 3
+                [False, False, False, True],  # 4
+                [False, False, False, False],  # 5
+                [False, False, True, False],  # 6
+                [False, True, False, True],  # 7
+                [False, True, False, False],  # 8
+                [False, True, True, False],  # 9
+            ],
+        ),
+        (
+            # layout 2: shared IDs (merged subplots?)
+            [
+                [1, 2, 0],
+                [1, 2, 5],
+                [3, 4, 5],
+                [3, 4, 0],
+            ],
+            # expectations for IDs 1–5: [top, right, bottom, left]
+            [
+                [True, False, False, True],  # 1
+                [True, False, True, False],  # 2
+                [False, True, False, True],  # 3
+                [False, True, True, False],  # 4
+                [True, True, True, True],  # 5
+            ],
+        ),
+    ],
+)
+def test_sharing_cartopy(layout, expectations):
     def are_labels_on(ax, which=["top", "bottom", "right", "left"]) -> tuple[bool]:
         gl = ax.gridlines_major
 
@@ -252,50 +293,14 @@ def test_sharing_cartopy():
                 on[idx] = True
         return on
 
-    n = 3
     settings = dict(land=True, ocean=True, labels="both")
-    fig, ax = uplt.subplots(ncols=n, nrows=n, share="all", proj="cyl")
+    fig, ax = uplt.subplots(layout, share="all", proj="cyl")
     ax.format(**settings)
-
-    expectations = (
-        [True, False, False, True],
-        [True, False, False, False],
-        [True, False, True, False],
-        [False, False, False, True],
-        [False, False, False, False],
-        [False, False, True, False],
-        [False, True, False, True],
-        [False, True, False, False],
-        [False, True, True, False],
-    )
     for axi in ax:
         state = are_labels_on(axi)
         expectation = expectations[axi.number - 1]
         for i, j in zip(state, expectation):
             assert i == j
-
-    layout = [
-        [1, 2, 0],
-        [1, 2, 5],
-        [3, 4, 5],
-        [3, 4, 0],
-    ]
-
-    fig, ax = uplt.subplots(layout, share="all", proj="cyl")
-    ax.format(**settings)
-    fig.canvas.draw()  # need a draw to trigger ax.draw for  sharing
-
-    expectations = (
-        [True, False, False, True],  # top left
-        [True, False, True, False],  # top right
-        [False, True, False, True],  # bottom left
-        [False, True, True, False],  # bottom right
-        [True, True, True, False],  # right plot (5)
-    )
-    for axi in ax:
-        state = are_labels_on(axi)
-        expectation = expectations[axi.number - 1]
-        assert all([i == j for i, j in zip(state, expectation)])
     uplt.close(fig)
 
 
