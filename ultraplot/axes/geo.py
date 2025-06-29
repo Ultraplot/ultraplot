@@ -1024,13 +1024,7 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
             # Apply worker extent, feature, and gridline functions
             lonlim = _not_none(lonlim, default=(None, None))
             latlim = _not_none(latlim, default=(None, None))
-
-            self._update_extent(
-                lonlim=lonlim,
-                latlim=latlim,
-                boundinglat=boundinglat,
-            )
-
+            self._update_extent(lonlim=lonlim, latlim=latlim, boundinglat=boundinglat)
             self._update_features()
             self._update_major_gridlines(
                 longrid=longrid,
@@ -1048,22 +1042,30 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
                 latgrid=latgridminor,
                 nsteps=nsteps,
             )
+        # Set tick lengths for flat projections
+        lonticklen = _not_none(lonticklen, ticklen)
+        latticklen = _not_none(latticklen, ticklen)
 
-            # Set tick lengths for flat projections
-            lonticklen = _not_none(lonticklen, ticklen)
-            latticklen = _not_none(latticklen, ticklen)
-            if lonticklen or latticklen:
-                # Only add warning when ticks are given
-                if _is_rectilinear_projection(self):
-                    self._add_geoticks("x", lonticklen, ticklen)
-                    self._add_geoticks("y", latticklen, ticklen)
-                    self._update_extent(
-                        lonlim=lonlim, latlim=latlim, boundinglat=boundinglat
-                    )
-                else:
-                    warnings._warn_ultraplot(
-                        f"Projection is not rectilinear. Ignoring {lonticklen=} and {latticklen=} settings."
-                    )
+        if lonticklen or latticklen:
+            # Only add warning when ticks are given
+            if _is_rectilinear_projection(self):
+                self._add_geoticks("x", lonticklen, ticklen)
+                self._add_geoticks("y", latticklen, ticklen)
+                # If latlim is set to None it resets
+                # the view; this affects the visible range
+                # we need to force this to prevent
+                # side effects
+                if latlim == (None, None):
+                    latlim = self._lataxis.get_view_interval()
+                if lonlim == (None, None):
+                    lonlim = self._lonaxis.get_view_interval()
+                self._update_extent(
+                    lonlim=lonlim, latlim=latlim, boundinglat=boundinglat
+                )
+            else:
+                warnings._warn_ultraplot(
+                    f"Projection is not rectilinear. Ignoring {lonticklen=} and {latticklen=} settings."
+                )
 
         # Parent format method
         super().format(rc_kw=rc_kw, rc_mode=rc_mode, **kwargs)
@@ -1109,9 +1111,11 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
 
         else:
             if x_or_y == "x":
+                lim = self._lonaxis.get_view_interval()
                 locator = gl.xlocator
                 tick_positions = self._lonaxis._get_ticklocs(locator)
             else:
+                lim = self._lataxis.get_view_interval()
                 locator = gl.ylocator
                 tick_positions = self._lataxis._get_ticklocs(locator)
 
@@ -1269,7 +1273,7 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
         if not isinstance(map_projection, cls):
             raise ValueError(f"Projection must be a {cls} instance.")
         self._map_projection = map_projection
-        if hasattr(self, "_lonaxis"):
+        if hasattr(self, "_lonaxis") or hasattr(self, "_lataxis"):
             # Update the projection of the lon and lat axes
             self._lonaxis.get_major_formatter()._source_projection = map_projection
             self._lataxis.get_major_formatter()._source_projection = map_projection
