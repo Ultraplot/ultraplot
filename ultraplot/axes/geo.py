@@ -1057,6 +1057,9 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
                 if _is_rectilinear_projection(self):
                     self._add_geoticks("x", lonticklen, ticklen)
                     self._add_geoticks("y", latticklen, ticklen)
+                    self._update_extent(
+                        lonlim=lonlim, latlim=latlim, boundinglat=boundinglat
+                    )
                 else:
                     warnings._warn_ultraplot(
                         f"Projection is not rectilinear. Ignoring {lonticklen=} and {latticklen=} settings."
