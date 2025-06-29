@@ -1264,6 +1264,10 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
         if not isinstance(map_projection, cls):
             raise ValueError(f"Projection must be a {cls} instance.")
         self._map_projection = map_projection
+        if hasattr(self, "_lonaxis"):
+            # Update the projection of the lon and lat axes
+            self._lonaxis.get_major_formatter()._source_projection = map_projection
+            self._lataxis.get_major_formatter()._source_projection = map_projection
 
 
 class _CartopyAxes(GeoAxes, _GeoAxes):
@@ -1650,6 +1654,9 @@ class _CartopyAxes(GeoAxes, _GeoAxes):
         gl.xlabel_style.update(kwtext)
         gl.ylabel_style.update(kwtext)
 
+        gl.xformatter = self._lonaxis.get_major_formatter()
+        gl.yformatter = self._lataxis.get_major_formatter()
+
         # Apply tick locations from dummy _LonAxis and _LatAxis axes
         # NOTE: This will re-apply existing gridline locations if unchanged.
         if nsteps is not None:
@@ -1697,9 +1704,6 @@ class _CartopyAxes(GeoAxes, _GeoAxes):
             latgrid=latgrid,
             nsteps=nsteps,
         )
-        gl.xformatter = self._lonaxis.get_major_formatter()
-        gl.yformatter = self._lataxis.get_major_formatter()
-
         # Turn the tick labels off as they are handled
         # separately from the matplotlib defaults
         self.xaxis.set_major_formatter(mticker.NullFormatter())

@@ -839,7 +839,10 @@ class _CartopyFormatter(object):
     def __call__(self, value, pos=None):
         ctx = context._empty_context()
         if self.axis is not None:
-            ctx = context._state_context(self.axis.axes, projection=ccrs.PlateCarree())
+            ctx = context._state_context(
+                self.axis.axes,
+                projection=ccrs.PlateCarree(),
+            )
         with ctx:
             return super().__call__(value, pos)
 
