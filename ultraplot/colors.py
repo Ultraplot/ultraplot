@@ -1272,14 +1272,12 @@ class ContinuousColormap(mcolors.LinearSegmentedColormap, _Colormap):
         matplotlib.colors.LinearSegmentedColormap.reversed
         """
         # Reverse segments
-        segmentdata = {
-            key: (
-                (lambda x, func=data: func(x))
-                if callable(data)
-                else [(1.0 - x, y1, y0) for x, y0, y1 in reversed(data)]
-            )
-            for key, data in self._segmentdata.items()
-        }
+        segmentdata = {}
+        for key, data in self._segmentdata.items():
+            if callable(data):
+                segmentdata[key] = lambda x, func=data: func(1.0 - x)
+            else:
+                segmentdata[key] = tuple((1.0 - x, y1, y0) for x, y0, y1 in data)
 
         # Reverse gammas
         if name is None:
@@ -3156,7 +3154,7 @@ class ColormapDatabase(mcm.ColormapRegistry):
 
             # Try mirroring the non-lowered key
             if reverse:
-                original_key = original_key.strip("_r")
+                original_key = original_key.rstrip("_r")
             half = len(original_key) // 2
             mirrored_key = original_key[half:] + original_key[:half]
             if self._has_item(mirrored_key):
