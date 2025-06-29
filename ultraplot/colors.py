@@ -1271,14 +1271,17 @@ class ContinuousColormap(mcolors.LinearSegmentedColormap, _Colormap):
         --------
         matplotlib.colors.LinearSegmentedColormap.reversed
         """
-        # Reverse segments
-        segmentdata = {}
-        for key, data in self._segmentdata.items():
-            if callable(data):
-                segmentdata[key] = lambda x, func=data: func(1.0 - x)
-            else:
-                segmentdata[key] = tuple((1.0 - x, y1, y0) for x, y0, y1 in data)
 
+        # Reverse segments
+        def _reverse_data(data):
+            if callable(data):
+                return lambda x, func=data: func(1 - x)
+            else:
+                return [(1.0 - x, y1, y0) for x, y0, y1 in reversed(data)]
+
+        segmentdata = {
+            key: _reverse_data(data) for key, data in self._segmentdata.items()
+        }
         # Reverse gammas
         if name is None:
             name = self._make_name(suffix="r")
