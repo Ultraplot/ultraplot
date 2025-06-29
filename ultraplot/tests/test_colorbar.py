@@ -5,6 +5,7 @@ Test colorbars.
 import numpy as np
 import pytest
 import ultraplot as uplt
+from itertools import product
 
 
 @pytest.mark.mpl_image_compare
@@ -353,3 +354,133 @@ def test_label_placement_fig_colorbar2():
     fig, axs = uplt.subplots(nrows=1, ncols=2)
     fig.colorbar(cmap, loc="bottom", label="My Label", labelloc="right")
     return fig
+
+
+@pytest.mark.parametrize(
+    ("labelloc", "cbarloc"),
+    product(
+        ["bottom", "top", "left", "right"],
+        [
+            "top",
+            "bottom",
+            "left",
+            "right",
+            "upper right",
+            "upper left",
+            "lower left",
+            "lower right",
+        ],
+    ),
+)
+def test_colorbar_label_placement(labelloc, cbarloc):
+    """
+    Ensure that colorbar label placement works correctly.
+    """
+    cmap = uplt.Colormap("plasma_r")
+    title = "My Label"
+    fig, ax = uplt.subplots()
+
+    cbar = ax.colorbar(cmap, loc=cbarloc, labelloc=labelloc, title=title)
+
+    x_label = cbar.ax.xaxis.label.get_text()
+    y_label = cbar.ax.yaxis.label.get_text()
+
+    assert title in (x_label, y_label), (
+        f"Expected label '{title}' not found. "
+        f"xaxis label: '{x_label}', yaxis label: '{y_label}', "
+        f"labelloc='{labelloc}', cbarloc='{cbarloc}'"
+    )
+
+    uplt.close(fig)
+
+
+@pytest.mark.parametrize(
+    ("cbarloc", "invalid_labelloc"),
+    product(
+        ["top", "bottom", "upper left", "lower right"],
+        ["invalid", "diagonal", "center", "middle", 123, "unknown"],
+    ),
+)
+def test_colorbar_invalid_horizontal_label(cbarloc, invalid_labelloc):
+    """
+    Test error conditions and edge cases for colorbar label placement.
+    """
+    cmap = uplt.Colormap("plasma_r")
+    title = "Test Label"
+    fig, ax = uplt.subplots()
+
+    # Test ValueError cases - invalid labelloc for different colorbar locations
+
+    # Horizontal colorbar location with invalid labelloc
+    with pytest.raises(ValueError, match="Could not determine position"):
+        ax.colorbar(cmap, loc=cbarloc, labelloc=invalid_labelloc, label=title)
+    uplt.close(fig)
+
+
+@pytest.mark.parametrize(
+    ("cbarloc", "invalid_labelloc"),
+    product(
+        ["left", "right", "ll", "ul", "ur", "lr"],
+        [
+            "invalid",
+            "diagonal",
+            "center",
+            "middle",
+            123,
+            "unknown",
+        ],
+    ),
+)
+def test_colorbar_invalid_vertical_label(cbarloc, invalid_labelloc):
+    # Vertical colorbar location with invalid labelloc
+    cmap = uplt.Colormap("plasma_r")
+    title = "Test Label"
+    fig, ax = uplt.subplots()
+    with pytest.raises(ValueError, match="Could not determine position"):
+        ax.colorbar(cmap, loc=cbarloc, labelloc=invalid_labelloc, label=title)
+    uplt.close(fig)
+
+
+@pytest.mark.parametrize(
+    "invalid_labelloc", ["fill", "unknown", "custom", "weird_location", 123]
+)
+def test_colorbar_invalid_fill_label_placement(invalid_labelloc):
+    # Fill location with invalid labelloc
+    cmap = uplt.Colormap("plasma_r")
+    title = "Test Label"
+    fig, ax = uplt.subplots()
+    with pytest.raises(ValueError, match="Could not determine position"):
+        ax.colorbar(cmap, loc="fill", labelloc=invalid_labelloc, label=title)
+
+
+@pytest.mark.parametrize("unknown_loc", ["unknown", "custom", "weird_location", 123])
+def test_colorbar_wrong_label_placement_should_raise_error(unknown_loc):
+    # Unknown locs should raise errors
+    cmap = uplt.Colormap("plasma_r")
+    title = "Test Label"
+    fig, ax = uplt.subplots()
+    with pytest.raises(KeyError):
+        cbar = ax.colorbar(cmap, loc=unknown_loc, label=title)
+
+
+@pytest.mark.parametrize("loc", ["top", "bottom", "left", "right", "fill"])
+def test_colorbar_label_no_labelloc(loc):
+    cmap = uplt.Colormap("plasma_r")
+    title = "Test Label"
+    fig, ax = uplt.subplots()
+    # None labelloc should always work without error
+    cbar = ax.colorbar(cmap, loc=loc, labelloc=None, label=title)
+
+    # Should have the label set somewhere
+    label_found = (
+        cbar.ax.get_title() == title
+        or (
+            hasattr(cbar.ax.xaxis.label, "get_text")
+            and cbar.ax.xaxis.label.get_text() == title
+        )
+        or (
+            hasattr(cbar.ax.yaxis.label, "get_text")
+            and cbar.ax.yaxis.label.get_text() == title
+        )
+    )
+    assert label_found, f"Label not found for loc='{loc}' with labelloc=None"

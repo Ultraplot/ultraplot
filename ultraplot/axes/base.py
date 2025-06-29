@@ -1289,51 +1289,49 @@ class Axes(maxes.Axes):
             length=ticklen * ticklenratio,
             width=tickwidth * tickwidthratio,
         )  # noqa: E501
-        if label is not None:
-            # Note for some reason axis.set_label does not work here. We need to use set_x/ylabel explicitly
-            match loc:
-                case "top" | "bottom":
-                    if labelloc in (None, "top", "bottom"):
-                        obj.set_label(label)
-                    elif labelloc in ("left", "right"):
-                        obj.ax.set_ylabel(label)
-                    else:
-                        raise ValueError("Could not determine position")
-                case "left" | "right":
-                    if labelloc in (None, "left", "right"):
-                        obj.set_label(label)
-                    elif labelloc in ("top", "bottom"):
-                        obj.ax.set_xlabel(label)
-                    else:
-                        raise ValueError("Could not determine position")
-                case "fill":
-                    if labelloc in ("left", "right"):
-                        obj.ax.set_ylabel(label)
-                    elif labelloc in ("top", "bottom"):
-                        obj.ax.set_xlabel(label)
-                    elif labelloc is None:
-                        obj.set_label(label)
-                    else:
-                        raise ValueError("Could not determine position")
-                # Default to setting label on long axis
-                case _:
-                    obj.set_label(label)
+
+        if _is_horizontal_loc(loc):
+            if labelloc is None or _is_horizontal_label(labelloc):
+                obj.set_label(label)
+            elif _is_vertical_label(labelloc):
+                obj.ax.set_ylabel(label)
+            else:
+                raise ValueError("Could not determine position")
+
+        elif _is_vertical_loc(loc):
+            if labelloc is None or _is_vertical_label(labelloc):
+                obj.set_label(label)
+            elif _is_horizontal_label(labelloc):
+                obj.ax.set_xlabel(label)
+            else:
+                raise ValueError("Could not determine position")
+
+        elif loc == "fill":
+            if labelloc is None:
+                obj.set_label(label)
+            elif _is_vertical_label(labelloc):
+                obj.ax.set_ylabel(label)
+            elif _is_horizontal_label(labelloc):
+                obj.ax.set_xlabel(label)
+            else:
+                raise ValueError("Could not determine position")
+
+        else:
+            # Default to setting label on long axis
+            obj.set_label(label)
+
+        # Set axis properties if labelloc is specified
         if labelloc is not None:
-            # Temporarily modify the axis to set the label and its properties
-            match loc:
-                case "top" | "bottom":
-                    if labelloc in ("left", "right"):
-                        axis = obj._short_axis()
-                case "left" | "right":
-                    if labelloc in ("top", "bottom"):
-                        axis = obj._short_axis()
-                case "fill":
-                    if labelloc in ("top", "bottom"):
-                        axis = obj._long_axis()
-                    elif labelloc in ("left", "right"):
-                        axis = obj._short_axis()
-                case _:
-                    raise ValueError("Location not understood.")
+            if _is_horizontal_loc(loc) and _is_vertical_label(labelloc):
+                axis = obj._short_axis()
+            elif _is_vertical_loc(loc) and _is_horizontal_label(labelloc):
+                axis = obj._short_axis()
+            elif loc == "fill":
+                if _is_horizontal_label(labelloc):
+                    axis = obj._long_axis()
+                elif _is_vertical_label(labelloc):
+                    axis = obj._short_axis()
+
             axis.set_label_position(labelloc)
         labelrotation = _not_none(labelrotation, rc["colorbar.labelrotation"])
         if labelrotation == "auto":
@@ -3631,3 +3629,23 @@ def _get_pos_from_locator(
         case "lower left" | "lower right" | "lower center":
             y = y_pad
     return (x, y)
+
+
+def _is_horizontal_loc(loc):
+    """Check if location is horizontally oriented."""
+    return any(keyword in loc for keyword in ["top", "bottom", "upper", "lower"])
+
+
+def _is_vertical_loc(loc):
+    """Check if location is vertically oriented."""
+    return loc in ("left", "right")
+
+
+def _is_horizontal_label(labelloc):
+    """Check if label location is horizontal."""
+    return labelloc in ("top", "bottom")
+
+
+def _is_vertical_label(labelloc):
+    """Check if label location is vertical."""
+    return labelloc in ("left", "right")
