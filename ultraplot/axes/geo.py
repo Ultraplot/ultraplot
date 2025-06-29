@@ -1024,24 +1024,13 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
             # Apply worker extent, feature, and gridline functions
             lonlim = _not_none(lonlim, default=(None, None))
             latlim = _not_none(latlim, default=(None, None))
-            # Set tick lengths for flat projections
-            lonticklen = _not_none(lonticklen, ticklen)
-            latticklen = _not_none(latticklen, ticklen)
 
-            if lonticklen or latticklen:
-                # Only add warning when ticks are given
-                if _is_rectilinear_projection(self):
-                    self._add_geoticks("x", lonticklen, ticklen)
-                    self._add_geoticks("y", latticklen, ticklen)
-                else:
-                    warnings._warn_ultraplot(
-                        f"Projection is not rectilinear. Ignoring {lonticklen=} and {latticklen=} settings."
-                    )
             self._update_extent(
                 lonlim=lonlim,
                 latlim=latlim,
                 boundinglat=boundinglat,
             )
+
             self._update_features()
             self._update_major_gridlines(
                 longrid=longrid,
@@ -1059,6 +1048,19 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
                 latgrid=latgridminor,
                 nsteps=nsteps,
             )
+
+            # Set tick lengths for flat projections
+            lonticklen = _not_none(lonticklen, ticklen)
+            latticklen = _not_none(latticklen, ticklen)
+            if lonticklen or latticklen:
+                # Only add warning when ticks are given
+                if _is_rectilinear_projection(self):
+                    self._add_geoticks("x", lonticklen, ticklen)
+                    self._add_geoticks("y", latticklen, ticklen)
+                else:
+                    warnings._warn_ultraplot(
+                        f"Projection is not rectilinear. Ignoring {lonticklen=} and {latticklen=} settings."
+                    )
 
         # Parent format method
         super().format(rc_kw=rc_kw, rc_mode=rc_mode, **kwargs)
