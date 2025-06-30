@@ -1273,6 +1273,10 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
         if not isinstance(map_projection, cls):
             raise ValueError(f"Projection must be a {cls} instance.")
         self._map_projection = map_projection
+        if hasattr(self, "_lonaxis") or hasattr(self, "_lataxis"):
+            # Update the projection of the lon and lat axes
+            self._lonaxis.get_major_formatter()._source_projection = map_projection
+            self._lataxis.get_major_formatter()._source_projection = map_projection
 
 
 class _CartopyAxes(GeoAxes, _GeoAxes):
