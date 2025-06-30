@@ -236,7 +236,7 @@ def test_lon0_shifts():
         # abs is taken due to north-west
         str_loc = str(abs(int(loc)))
         n = len(str_loc)
-        assert str_loc == format[:n]
+        assert str_loc == format[:n], f"Epxected: {str_loc}, got: {format[:n]}"
     assert locs[0] != 0  # we should not be a 0 anymore
     uplt.close(fig)
 
@@ -850,3 +850,27 @@ def test_consistent_range():
 
         assert np.allclose(lonview, lonlim)
         assert np.allclose(latview, latlim)
+
+
+@pytest.mark.mpl_image_compare
+def test_dms_used_for_mercator():
+    """
+    Test that DMS is used for Mercator projection
+    """
+    limit = (0.6, 113.25)
+    fig, ax = uplt.subplots(ncols=2, proj=("cyl", "merc"), share=0)
+    ax.format(land=True, labels=True, lonlocator=limit)
+    ax.format(land=True, labels=True, lonlocator=limit)
+    import matplotlib.ticker as mticker
+
+    expectations = (
+        "0°36′E",
+        "113°15′E",
+    )
+
+    for expectation, tick in zip(expectations, limit):
+        a = ax[0].gridlines_major.xformatter(tick)
+        b = ax[1].gridlines_major.xformatter(tick)
+        assert a == expectation
+        assert b == expectation
+    return fig
