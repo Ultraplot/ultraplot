@@ -884,18 +884,6 @@ class LongitudeFormatter(_CartopyFormatter, LongitudeFormatter):
         self.lon0 = lon0
         super().__init__(*args, **kwargs)
 
-    def __call__(self, x, pos=None):
-        """
-        Format the longitude, accounting for lon0 offset.
-        """
-        # Adjust longitude value based on lon0
-        adjusted_lon = x - self.lon0
-        # Normalize to -180 to 180 range
-        adjusted_lon = ((adjusted_lon + 180) % 360) - 180
-        print(x)
-        # Use the original formatter with the adjusted longitude
-        return super().__call__(adjusted_lon, pos)
-
 
 class LatitudeFormatter(_CartopyFormatter, LatitudeFormatter):
     """
