@@ -98,10 +98,8 @@ for _key in (
 
 # Validate color names now that colors are registered
 # NOTE: This updates all settings with 'color' in name (harmless if it's not a color)
-from .config import rc_ultraplot, rc_matplotlib
-
 rcsetup.VALIDATE_REGISTERED_COLORS = True
-for _src in (rc_ultraplot, rc_matplotlib):
+for _src in (rc.rc_ultraplot, rc.rc_matplotlib):
     for _key in _src:  # loop through unsynced properties
         if "color" not in _key:
             continue
