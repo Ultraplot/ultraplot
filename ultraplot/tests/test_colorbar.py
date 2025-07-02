@@ -484,3 +484,33 @@ def test_colorbar_label_no_labelloc(loc):
         )
     )
     assert label_found, f"Label not found for loc='{loc}' with labelloc=None"
+
+
+@pytest.mark.parametrize(
+    ("loc", "orientation"),
+    product(
+        [
+            "upper left",
+            "upper right",
+            "lower left",
+            "lower right",
+        ],
+        ["horizontal", "vertical"],
+    ),
+)
+def test_inset_colorbar_orientation(loc, orientation):
+    """ """
+    cmap = uplt.Colormap("viko")
+    fig, ax = uplt.subplots()
+    ax.colorbar(
+        cmap,
+        loc=loc,
+        orientation=orientation,
+        label="My Label",
+    )
+    found = False
+    for k, v in ax[0]._colorbar_dict.items():
+        if loc in k:
+            found = True
+            break
+    assert found, f"Colorbar not found for loc='{loc}' with orientation='{orientation}'"
