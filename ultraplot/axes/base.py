@@ -2158,9 +2158,9 @@ class Axes(maxes.Axes):
 
         # Determine space for labels
         if orientation == "horizontal":
-            labspace /= self._get_size_inches()[0]
-        else:
             labspace /= self._get_size_inches()[1]
+        else:
+            labspace /= self._get_size_inches()[0]
 
         # Bounds are x0, y0, width, height in axes-relative coordinates
         # Location in axes-relative coordinates
