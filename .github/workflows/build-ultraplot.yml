@@ -26,7 +26,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: mamba-org/setup-micromamba@v2.0.4
+      - uses: mamba-org/setup-micromamba@v2.0.5
         with:
           environment-file: ./environment.yml
           init-shell: bash
@@ -59,7 +59,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: mamba-org/setup-micromamba@v2.0.4
+      - uses: mamba-org/setup-micromamba@v2.0.5
         with:
           environment-file: ./environment.yml
           init-shell: bash
