@@ -3138,7 +3138,7 @@ class ColormapDatabase(mcm.ColormapRegistry):
         # Handle reversal
         reverse = key.endswith("_r")
         if reverse:
-            key = key.rstrip("_r")
+            key = key.removesuffix("_r")
 
         # Check if the key exists in builtin colormaps
         if self._has_item(key):
@@ -3157,7 +3157,7 @@ class ColormapDatabase(mcm.ColormapRegistry):
 
             # Try mirroring the non-lowered key
             if reverse:
-                original_key = original_key.rstrip("_r")
+                original_key = original_key.removesuffix("_r")
             half = len(original_key) // 2
             mirrored_key = original_key[half:] + original_key[:half]
             if self._has_item(mirrored_key):
@@ -3183,11 +3183,11 @@ class ColormapDatabase(mcm.ColormapRegistry):
         key = self._translate_key(key, mirror=True)
         shift = key.endswith("_s") and not self._has_item(key)
         if shift:
-            key = key.rstrip("_s")
+            key = key.removesuffix("_s")
         reverse = key.endswith("_r") and not self._has_item(key)
 
         if reverse:
-            key = key.rstrip("_r")
+            key = key.removesuffix("_r")
         # Retrieve colormap
         if self._has_item(key):
             value = self._cmaps[key].copy()
