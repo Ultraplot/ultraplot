@@ -2135,6 +2135,10 @@ class Axes(maxes.Axes):
         )  # noqa: E501
         width = _not_none(width, rc["colorbar.insetwidth"])
         pad = _not_none(pad, rc["colorbar.insetpad"])
+        orientation = _not_none(orientation, "horizontal")
+        ticklocation = _not_none(
+            tickloc, ticklocation, "bottom" if orientation == "horizontal" else "right"
+        )
         length = units(length, "em", "ax", axes=self, width=True)  # x direction
         width = units(width, "em", "ax", axes=self, width=False)  # y direction
         xpad = units(pad, "em", "ax", axes=self, width=True)
@@ -2144,74 +2148,97 @@ class Axes(maxes.Axes):
         labspace = rc["xtick.major.size"] / 72
         fontsize = rc["xtick.labelsize"]
         fontsize = _fontsize_to_pt(fontsize)
+        scale = 1.2
+        if orientation == "vertical":
+            scale = 1.8  # we need a little more room
         if label is not None:
-            labspace += 2.4 * fontsize / 72
+            labspace += 2 * scale * fontsize / 72
         else:
-            labspace += 1.2 * fontsize / 72
-        labspace /= self._get_size_inches()[1]  # space for labels
+            labspace += scale * fontsize / 72
 
-        # Determine colorbar dimensions and frame sizes based on orientation
-        # Bounds are x0, y0, width, height in axes-relative coordinates
+        # Determine space for labels
         if orientation == "horizontal":
-            # For horizontal: length is width, width is height
-            cb_width = length  # colorbar extends horizontally
-            cb_height = width  # colorbar thickness
-            frame_width = 2 * xpad + cb_width
-            frame_height = 2 * ypad + cb_height + labspace  # labels below
+            labspace /= self._get_size_inches()[0]
+        else:
+            labspace /= self._get_size_inches()[1]
+
+        # Bounds are x0, y0, width, height in axes-relative coordinates
+        # Location in axes-relative coordinates
+        # Bounds are x0, y0, width, height in axes-relative coordinates
+        # Determine where labels will appear based on orientation and tick location
+
+        if orientation == "horizontal":
+            # For horizontal colorbars: 'top' or 'bottom'
+            labels_on_top = ticklocation == "top"
+            labels_on_bottom = ticklocation == "bottom"
+
+            # Frame is always the same size, slightly larger to accommodate labels
+            frame_width = 2 * xpad + length
+            frame_height = 2 * ypad + width + labspace
+
         else:  # vertical
-            # For vertical: length is height, width is width
-            cb_width = width  # colorbar thickness
-            cb_height = length  # colorbar extends vertically
-            frame_width = 2 * xpad + cb_width + labspace  # labels to the left
-            frame_height = 2 * ypad + cb_height
+            # For vertical colorbars: 'left' or 'right'
+            labels_on_left = ticklocation == "left"
+            labels_on_right = ticklocation == "right"
+
+            # Frame is always the same size, slightly larger to accommodate labels
+            frame_width = 2 * xpad + width + labspace
+            frame_height = 2 * ypad + length
 
         # Location in axes-relative coordinates
         # Bounds are x0, y0, width, height in axes-relative coordinates
         if loc == "upper right":
             bounds_frame = [1 - frame_width, 1 - frame_height]
             if orientation == "horizontal":
-                # Center horizontally, labels below so shift up by labspace/2
-                bounds_inset = [
-                    1 - frame_width + xpad,
-                    1 - frame_height + ypad + labspace / 2,
-                ]
+                # Position colorbar within frame, accounting for label position
+                cb_x = 1 - frame_width + xpad
+                cb_y = 1 - frame_height + ypad + (labspace if labels_on_bottom else 0)
+                bounds_inset = [cb_x, cb_y]
             else:  # vertical
-                # Center vertically, labels left so shift right by labspace/2
-                bounds_inset = [
-                    1 - frame_width + xpad + labspace / 2,
-                    1 - frame_height + ypad,
-                ]
+                cb_x = 1 - frame_width + xpad + (labspace if labels_on_left else 0)
+                cb_y = 1 - frame_height + ypad
+                bounds_inset = [cb_x, cb_y]
 
         elif loc == "upper left":
             bounds_frame = [0, 1 - frame_height]
             if orientation == "horizontal":
-                # Center horizontally, labels below so shift up by labspace/2
-                bounds_inset = [xpad, 1 - frame_height + ypad + labspace / 2]
+                cb_x = xpad
+                cb_y = 1 - frame_height + ypad + (labspace if labels_on_bottom else 0)
+                bounds_inset = [cb_x, cb_y]
             else:  # vertical
-                # Center vertically, labels left so shift right by labspace/2
-                bounds_inset = [xpad + labspace / 2, 1 - frame_height + ypad]
+                cb_x = xpad + (labspace if labels_on_left else 0)
+                cb_y = 1 - frame_height + ypad
+                bounds_inset = [cb_x, cb_y]
 
         elif loc == "lower left":
             bounds_frame = [0, 0]
             if orientation == "horizontal":
-                # Center horizontally, labels below so shift up by labspace/2
-                bounds_inset = [xpad, ypad + labspace / 2]
+                cb_x = xpad
+                cb_y = ypad + (labspace if labels_on_bottom else 0)
+                bounds_inset = [cb_x, cb_y]
             else:  # vertical
-                # Center vertically, labels left so shift right by labspace/2
-                bounds_inset = [xpad + labspace / 2, ypad]
+                cb_x = xpad + (labspace if labels_on_left else 0)
+                cb_y = ypad
+                bounds_inset = [cb_x, cb_y]
 
         else:  # lower right
             bounds_frame = [1 - frame_width, 0]
             if orientation == "horizontal":
-                # Center horizontally, labels below so shift up by labspace/2
-                bounds_inset = [1 - frame_width + xpad, ypad + labspace / 2]
+                cb_x = 1 - frame_width + xpad
+                cb_y = ypad + (labspace if labels_on_bottom else 0)
+                bounds_inset = [cb_x, cb_y]
             else:  # vertical
-                # Center vertically, labels left so shift right by labspace/2
-                bounds_inset = [1 - frame_width + xpad + labspace / 2, ypad]
+                cb_x = 1 - frame_width + xpad + (labspace if labels_on_left else 0)
+                cb_y = ypad
+                bounds_inset = [cb_x, cb_y]
 
-        # Set final bounds - IMPORTANT: these must be width, height not length, width
-        bounds_inset.extend((cb_width, cb_height))  # inset axes (width, height)
-        bounds_frame.extend((frame_width, frame_height))  # frame (width, height)
+        # Set final bounds with proper dimensions
+        if orientation == "horizontal":
+            bounds_inset.extend((length, width))
+        else:  # vertical
+            bounds_inset.extend((width, length))
+
+        bounds_frame.extend((frame_width, frame_height))
 
         # Make axes and frame with zorder matching default legend zorder
         cls = mproj.get_projection_class("ultraplot_cartesian")
@@ -2224,19 +2251,7 @@ class Axes(maxes.Axes):
         if frame:
             frame = self._add_guide_frame(*bounds_frame, fontsize=fontsize, **kw_frame)
 
-        # Handle default keyword args
-        if orientation is not None and orientation != "horizontal":
-            warnings._warn_ultraplot(
-                f"Orientation for inset colorbars must be horizontal. "
-                f"Ignoring orientation={orientation!r}."
-            )
-        ticklocation = _not_none(tickloc=tickloc, ticklocation=ticklocation)
-        if ticklocation is not None and ticklocation != "bottom":
-            warnings._warn_ultraplot(
-                "Inset colorbars can only have ticks on the bottom."
-            )
-        kwargs["orientation"] = orientation
-        # kwargs.update({"orientation": "horizontal", "ticklocation": "bottom"})
+        kwargs.update({"orientation": orientation, "ticklocation": ticklocation})
         return ax, kwargs
 
     def _parse_legend_aligned(self, pairs, ncol=None, order=None, **kwargs):
