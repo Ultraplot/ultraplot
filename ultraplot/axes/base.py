@@ -2164,7 +2164,6 @@ class Axes(maxes.Axes):
 
         # Bounds are x0, y0, width, height in axes-relative coordinates
         # Location in axes-relative coordinates
-        # Bounds are x0, y0, width, height in axes-relative coordinates
         # Determine where labels will appear based on orientation and tick location
 
         if orientation == "horizontal":
