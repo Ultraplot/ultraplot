@@ -2150,7 +2150,7 @@ class Axes(maxes.Axes):
         fontsize = _fontsize_to_pt(fontsize)
         scale = 1.2
         if orientation == "vertical":
-            scale = 1.8  # we need a little more room
+            scale *= 2.1  # we need a little more room
         if label is not None:
             labspace += 2 * scale * fontsize / 72
         else:
