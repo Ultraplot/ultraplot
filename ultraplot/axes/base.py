@@ -3673,7 +3673,6 @@ def _get_axis_for(
         raise ValueError(
             f"Could not determine label axis for {labelloc=}, with {orientation=}."
         )
-    print(label_axis, labelloc, orientation)
     return label_axis
 
 
