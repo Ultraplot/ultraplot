@@ -3695,7 +3695,7 @@ def _determine_label_rotation(
         # extra nice for 90 degree rotations
         if orientation == "horizontal":
             if labelloc in ["left", "right"]:
-                labelrotation = 90 if "left" else -90
+                labelrotation = 90 if "left" in labelloc else -90
                 kw_label["ha"] = "center"
                 kw_label["va"] = "bottom" if "left" in labelloc else "top"
             elif labelloc in ["top", "bottom"]:
@@ -3704,7 +3704,7 @@ def _determine_label_rotation(
                 kw_label["va"] = "bottom" if "top" in labelloc else "top"
         elif orientation == "vertical":
             if labelloc in ["left", "right"]:
-                labelrotation = 90 if "left" in labelloc else 90
+                labelrotation = 90 if "left" in labelloc else -90
                 kw_label["ha"] = "center"
                 kw_label["va"] = "bottom" if "left" in labelloc else "top"
             elif labelloc in ["top", "bottom"]:
