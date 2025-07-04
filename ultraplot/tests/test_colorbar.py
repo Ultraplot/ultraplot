@@ -309,39 +309,37 @@ def test_label_rotation_colorbar():
             break
 
 
-def test_auto_labelrotation():
-    from itertools import product
-
-    locs = ["top", "bottom", "left", "right"]
-    labellocs = ["top", "bottom", "left", "right"]
-
+@pytest.mark.parametrize(
+    ("loc", "labelloc"),
+    product(["top", "bottom", "left", "right"], ["top", "bottom", "left", "right"]),
+)
+def test_auto_labelrotation(loc, labelloc):
     cmap = uplt.colormaps.get_cmap("viridis")
     mylabel = "My Label"
 
-    for loc, labelloc in product(locs, labellocs):
-        fig, ax = uplt.subplots()
-        cbar = ax.colorbar(cmap, loc=loc, labelloc=labelloc, label=mylabel)
+    fig, ax = uplt.subplots()
+    cbar = ax.colorbar(cmap, loc=loc, labelloc=labelloc, label=mylabel)
 
-        # Get the label Text object
-        for which in "xy":
-            tmp = getattr(cbar.ax, f"{which}axis").label
-            if tmp.get_text() == mylabel:
-                label = tmp
-                break
+    # Get the label Text object
+    for which in "xy":
+        tmp = getattr(cbar.ax, f"{which}axis").label
+        if tmp.get_text() == mylabel:
+            label = tmp
+            break
 
-        is_vertical = loc in ("left", "right")
-        is_horizontal = not is_vertical
+    is_vertical = loc in ("left", "right")
+    is_horizontal = not is_vertical
 
-        expected_rotation = 0
-        if labelloc == "left":
-            expected_rotation = 90
-        elif labelloc == "right":
-            expected_rotation = 270
+    expected_rotation = 0
+    if labelloc == "left":
+        expected_rotation = 90
+    elif labelloc == "right":
+        expected_rotation = 270
 
-        actual_rotation = label.get_rotation()
-        ax.set_title(f"loc={loc}, labelloc={labelloc}, rotation={actual_rotation}")
-        assert actual_rotation == expected_rotation
-        uplt.close(fig)
+    actual_rotation = label.get_rotation()
+    ax.set_title(f"loc={loc}, labelloc={labelloc}, rotation={actual_rotation}")
+    assert actual_rotation == expected_rotation
+    uplt.close(fig)
 
 
 @pytest.mark.mpl_image_compare
