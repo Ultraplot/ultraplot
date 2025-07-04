@@ -3657,7 +3657,7 @@ def _get_axis_for(
     # For fill or none, we use default locations.
     # This would be the long axis for horizontal orientation
     # and the short axis for vertical orientation.
-    if labelloc is None:
+    if not isinstance(labelloc, str):
         label_axis = long
     # if the orientation is horizontal,
     # the short axis is the y-axis, and the long axis is the
@@ -3689,7 +3689,7 @@ def _determine_label_rotation(
         # extra nice for 90 degree rotations
         if orientation == "horizontal":
             if labelloc in ["left", "right"]:
-                labelrotation = 90
+                labelrotation = 270 if "left" in labelloc else 90
                 kw_label["ha"] = "center"
                 kw_label["va"] = "bottom" if "left" in labelloc else "top"
             elif labelloc in ["top", "bottom"]:
@@ -3698,7 +3698,7 @@ def _determine_label_rotation(
                 kw_label["va"] = "bottom" if "top" in labelloc else "top"
         elif orientation == "vertical":
             if labelloc in ["left", "right"]:
-                labelrotation = 90
+                labelrotation = 90 if "left" in labelloc else 270
                 kw_label["ha"] = "center"
                 kw_label["va"] = "bottom" if "left" in labelloc else "top"
             elif labelloc in ["top", "bottom"]:
