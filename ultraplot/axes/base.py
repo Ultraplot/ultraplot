@@ -3660,11 +3660,8 @@ def _get_axis_for(
     # For fill or none, we use default locations.
     # This would be the long axis for horizontal orientation
     # and the short axis for vertical orientation.
-    if labelloc is None or loc == "fill":
-        if orientation == "horizontal":
-            label_axis = long
-        elif orientation == "vertical":
-            label_axis = short
+    if labelloc is None:
+        label_axis = long
     # if the orientation is horizontal,
     # the short axis is the y-axis, and the long axis is the
     # x-axis. The inverse holds true for vertical orientation.
