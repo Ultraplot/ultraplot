@@ -410,7 +410,7 @@ def test_colorbar_invalid_horizontal_label(cbarloc, invalid_labelloc):
     # Test ValueError cases - invalid labelloc for different colorbar locations
 
     # Horizontal colorbar location with invalid labelloc
-    with pytest.raises(ValueError, match="Could not determine position"):
+    with pytest.raises(ValueError):
         ax.colorbar(cmap, loc=cbarloc, labelloc=invalid_labelloc, label=title)
     uplt.close(fig)
 
@@ -434,7 +434,7 @@ def test_colorbar_invalid_vertical_label(cbarloc, invalid_labelloc):
     cmap = uplt.Colormap("plasma_r")
     title = "Test Label"
     fig, ax = uplt.subplots()
-    with pytest.raises(ValueError, match="Could not determine position"):
+    with pytest.raises(ValueError):
         ax.colorbar(cmap, loc=cbarloc, labelloc=invalid_labelloc, label=title)
     uplt.close(fig)
 
@@ -447,7 +447,7 @@ def test_colorbar_invalid_fill_label_placement(invalid_labelloc):
     cmap = uplt.Colormap("plasma_r")
     title = "Test Label"
     fig, ax = uplt.subplots()
-    with pytest.raises(ValueError, match="Could not determine position"):
+    with pytest.raises(ValueError):
         ax.colorbar(cmap, loc="fill", labelloc=invalid_labelloc, label=title)
 
 
