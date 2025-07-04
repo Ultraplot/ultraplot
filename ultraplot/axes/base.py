@@ -1301,7 +1301,7 @@ class Axes(maxes.Axes):
         long_or_short_axis.set_label_position(labelloc)
 
         labelrotation = _not_none(labelrotation, rc["colorbar.labelrotation"])
-        # Note kw_label is update in place
+        # Note kw_label is updated in place
         _determine_label_rotation(
             labelrotation,
             labelloc=labelloc,
@@ -3655,10 +3655,6 @@ def _get_axis_for(
 
     short = get_short_or_long("short")
     long = get_short_or_long("long")
-    # if the orientation is horizontal,
-    # the short axis is the y-axis, and the long axis is the
-    # x-axis. The inverse holds true for vertical orientation.
-    label_axis = None
 
     label_axis = None
     # For fill or none, we use default locations.
