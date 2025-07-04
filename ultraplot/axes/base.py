@@ -7,8 +7,8 @@ import copy
 import inspect
 import re
 import types
-from numbers import Integral
-from typing import Union, Iterable
+from numbers import Integral, Number
+from typing import Union, Iterable, MutableMapping
 from collections.abc import Iterable as IterableType
 
 try:
@@ -31,8 +31,6 @@ import matplotlib.projections as mproj
 import matplotlib.text as mtext
 import matplotlib.ticker as mticker
 import matplotlib.transforms as mtransforms
-from typing import Union
-from numbers import Number
 import numpy as np
 from matplotlib import cbook
 from packaging import version
