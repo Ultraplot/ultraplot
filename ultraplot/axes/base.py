@@ -1288,82 +1288,23 @@ class Axes(maxes.Axes):
             width=tickwidth * tickwidthratio,
         )  # noqa: E501
 
-        if _is_horizontal_loc(loc):
-            if labelloc is None or _is_horizontal_label(labelloc):
-                obj.set_label(label)
-            elif _is_vertical_label(labelloc):
-                obj.ax.set_ylabel(label)
-            else:
-                raise ValueError("Could not determine position")
+        # Set label and label location
+        long_or_short_axis = _get_axis_for(
+            labelloc, loc, orientation=orientation, ax=obj
+        )
+        long_or_short_axis.set_label_text(label)
+        long_or_short_axis.set_label_position(labelloc)
 
-        elif _is_vertical_loc(loc):
-            if labelloc is None or _is_vertical_label(labelloc):
-                obj.set_label(label)
-            elif _is_horizontal_label(labelloc):
-                obj.ax.set_xlabel(label)
-            else:
-                raise ValueError("Could not determine position")
-
-        elif loc == "fill":
-            if labelloc is None:
-                obj.set_label(label)
-            elif _is_vertical_label(labelloc):
-                obj.ax.set_ylabel(label)
-            elif _is_horizontal_label(labelloc):
-                obj.ax.set_xlabel(label)
-            else:
-                raise ValueError("Could not determine position")
-
-        else:
-            # Default to setting label on long axis
-            obj.set_label(label)
-
-        # Set axis properties if labelloc is specified
-        if labelloc is not None:
-            if _is_horizontal_loc(loc) and _is_vertical_label(labelloc):
-                axis = obj._short_axis()
-            elif _is_vertical_loc(loc) and _is_horizontal_label(labelloc):
-                axis = obj._short_axis()
-            elif loc == "fill":
-                if _is_horizontal_label(labelloc):
-                    axis = obj._long_axis()
-                elif _is_vertical_label(labelloc):
-                    axis = obj._short_axis()
-
-            axis.set_label_position(labelloc)
         labelrotation = _not_none(labelrotation, rc["colorbar.labelrotation"])
-        if labelrotation == "auto":
-            # When set to auto, we make the colorbar appear "natural". For example, when we have a
-            # horizontal colorbar on the top, but we want the label to the sides, we make sure that the horizontal alignment is correct and the labelrotation is horizontal. Below produces "sensible defaults", but can be overridden by the user.
-            match (vert, labelloc, loc):
-                # Vertical colorbars
-                case (True, "left", "left" | "right"):
-                    labelrotation = 90
-                case (True, "right", "left" | "right"):
-                    if labelloc == "right":
-                        kw_label["va"] = "bottom"
-                    elif labelloc == "left":
-                        kw_label["va"] = "top"
-                    labelrotation = -90
-                case (True, None, _):
-                    labelrotation = 90
-                # Horizontal colorbar
-                case (False, _, _):
-                    if labelloc == "left":
-                        kw_label["va"] = "center"
-                        labelrotation = 90
-                    elif labelloc == "right":
-                        kw_label["va"] = "center"
-                        labelrotation = 270
-                    else:
-                        labelrotation = 0
-                case Number():
-                    pass
-                case _:
-                    labelrotation = 0
+        # Note kw_label is update in place
+        _determine_label_rotation(
+            labelrotation,
+            labelloc=labelloc,
+            orientation=orientation,
+            kw_label=kw_label,
+        )
 
-            kw_label.update({"rotation": labelrotation})
-        axis.label.update(kw_label)
+        long_or_short_axis.label.update(kw_label)
         # Assume ticks are set on the long axis(!))
         if hasattr(obj, "_long_axis"):
             # mpl <=3.9
@@ -3690,21 +3631,85 @@ def _get_pos_from_locator(
     return (x, y)
 
 
-def _is_horizontal_loc(loc):
-    """Check if location is horizontally oriented."""
-    return any(keyword in loc for keyword in ["top", "bottom", "upper", "lower"])
+def _get_axis_for(
+    labelloc: str,
+    loc: str,
+    *,
+    ax: Axes,
+    orientation: str,
+) -> Axes:
+    """
+    Helper function to determine the axis for a label.
+    Particularly used for colorbars but can be used for other purposes
+    """
+
+    def get_short_or_long(which):
+        if hasattr(ax, f"{which}_axis"):
+            return getattr(ax, f"{which}_axis")
+        return getattr(ax, f"_{which}_axis")()
+
+    short = get_short_or_long("short")
+    long = get_short_or_long("long")
+    # if the orientation is horizontal,
+    # the short axis is the y-axis, and the long axis is the
+    # x-axis. The inverse holds true for vertical orientation.
+    label_axis = None
+
+    if "left" in labelloc or "right" in labelloc:
+        # Vertical label, use short axis
+        label_axis = short if orientation == "horizontal" else long
+    elif "top" in labelloc or "bottom" in labelloc:
+        label_axis = long if orientation == "horizontal" else short
+    # For fill or none, we use default locations.
+    # This would be the long axis for horizontal orientation
+    # and the short axis for vertical orientation.
+    elif labelloc is None or loc == "fill":
+        if orientation == "horizontal":
+            label_axis = long
+        elif orientation == "vertical":
+            label_axis = short
+
+    if label_axis is None:
+        raise ValueError(
+            f"Could not determine label axis for {labelloc=}, with {orientation=}."
+        )
+    print(label_axis, labelloc, orientation)
+    return label_axis
 
 
-def _is_vertical_loc(loc):
-    """Check if location is vertically oriented."""
-    return loc in ("left", "right")
+def _determine_label_rotation(
+    labelrotation: str | Number,
+    labelloc: str,
+    orientation: str,
+    kw_label: MutableMapping,
+):
+    """
+    Note we update kw_label in place.
+    """
+    if labelrotation == "auto":
+        # Automatically determine label rotation based on location, we also align the label to make it look
+        # extra nice for 90 degree rotations
+        if orientation == "horizontal":
+            if labelloc in ["left", "right"]:
+                labelrotation = 90 if "left" else -90
+                kw_label["ha"] = "center"
+                kw_label["va"] = "bottom" if "left" in labelloc else "top"
+            elif labelloc in ["top", "bottom"]:
+                labelrotation = 0
+                kw_label["ha"] = "center"
+                kw_label["va"] = "bottom" if "top" in labelloc else "top"
+        elif orientation == "vertical":
+            if labelloc in ["left", "right"]:
+                labelrotation = 90 if "left" in labelloc else 90
+                kw_label["ha"] = "center"
+                kw_label["va"] = "bottom" if "left" in labelloc else "top"
+            elif labelloc in ["top", "bottom"]:
+                labelrotation = 0
+                kw_label["ha"] = "right" if "top" in labelloc else "left"
+                kw_label["va"] = "center"
 
-
-def _is_horizontal_label(labelloc):
-    """Check if label location is horizontal."""
-    return labelloc in ("top", "bottom")
-
-
-def _is_vertical_label(labelloc):
-    """Check if label location is vertical."""
-    return labelloc in ("left", "right")
+    if not isinstance(labelrotation, (int, float)):
+        raise ValueError(
+            f"Label rotation must be a number or 'auto', got {labelrotation!r}."
+        )
+    kw_label.update({"rotation": labelrotation})
