@@ -278,7 +278,8 @@ def test_draw_edges(rng):
     return fig
 
 
-def test_label_placement_colorbar(rng):
+@pytest.mark.parametrize("loc", ["top", "bottom", "left", "right"])
+def test_label_placement_colorbar(rng, loc):
     """
     Ensure that all potential combinations of colorbar
     label placement is possible.
@@ -286,9 +287,7 @@ def test_label_placement_colorbar(rng):
     data = rng.random((10, 10))
     fig, ax = uplt.subplots()
     h = ax.imshow(data)
-    locs = "top bottom left right".split()
-    for loc, labelloc in zip(locs, locs):
-        ax.colorbar(h, loc=loc, labelloc=labelloc)
+    ax.colorbar(h, loc=loc, labelloc=loc)
 
 
 def test_label_rotation_colorbar():
