@@ -17,7 +17,6 @@ def test_outer_align():
     ax.plot(np.empty((0, 4)), labels=list("abcd"))
     ax.legend(loc="bottom", align="right", ncol=2)
     ax.legend(loc="left", align="bottom", ncol=1)
-    ax.colorbar("magma", loc="r", align="top", shrink=0.5, label="label", extend="both")
     ax.colorbar(
         "magma",
         loc="top",
@@ -30,7 +29,18 @@ def test_outer_align():
         labelloc="top",
         labelweight="bold",
     )
-    ax.colorbar("magma", loc="right", extend="both", label="test extensions")
+    ax.colorbar(
+        "magma",
+        loc="r",
+        align="top",
+        shrink=0.5,
+        label="label",
+        extend="both",
+        labelrotation=90,
+    )
+    ax.colorbar(
+        "magma", loc="right", extend="both", label="test extensions", labelrotation=90
+    )
     fig.suptitle("Align demo")
     return fig
 
