@@ -1289,6 +1289,11 @@ class Axes(maxes.Axes):
         )  # noqa: E501
 
         # Set label and label location
+        labelloc = _infer_labelloc_if_none(
+            labelloc,
+            orientation=orientation,
+            loc=loc,
+        )
         long_or_short_axis = _get_axis_for(
             labelloc, loc, orientation=orientation, ax=obj
         )
@@ -3712,3 +3717,26 @@ def _determine_label_rotation(
             f"Label rotation must be a number or 'auto', got {labelrotation!r}."
         )
     kw_label.update({"rotation": labelrotation})
+
+
+def _infer_labelloc_if_none(labelloc: None | str, orientation: str, loc: str) -> str:
+    if labelloc is None:
+        # Determine a sensible default
+        if orientation == "horizontal":
+            # set default to bottom
+            # independent on wheter the loc
+            # is inset or not
+            labelloc = "bottom"
+            if labelloc == "top":
+                labelloc = "top"
+        elif orientation == "vertical":
+            # Set default to right
+            labelloc = "right"
+            # ..unless we are on the left
+            if loc == "left":
+                labelloc = "left"
+        else:
+            raise ValueError(
+                f"Could not determine labelloc position for {orientation=!r}, with {loc=}."
+            )
+    return labelloc
