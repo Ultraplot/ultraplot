@@ -3720,6 +3720,8 @@ def _determine_label_rotation(
 
 
 def _infer_labelloc_if_none(labelloc: None | str, orientation: str, loc: str) -> str:
+    if not isinstance(labelloc, str | None):
+        raise ValueError(f"Invalid labelloc {labelloc!r}. Must be a string or None.")
     if labelloc is None:
         # Determine a sensible default
         if orientation == "horizontal":
