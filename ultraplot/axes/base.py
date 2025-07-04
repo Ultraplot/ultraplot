@@ -3660,19 +3660,23 @@ def _get_axis_for(
     # x-axis. The inverse holds true for vertical orientation.
     label_axis = None
 
-    if "left" in labelloc or "right" in labelloc:
-        # Vertical label, use short axis
-        label_axis = short if orientation == "horizontal" else long
-    elif "top" in labelloc or "bottom" in labelloc:
-        label_axis = long if orientation == "horizontal" else short
+    label_axis = None
     # For fill or none, we use default locations.
     # This would be the long axis for horizontal orientation
     # and the short axis for vertical orientation.
-    elif labelloc is None or loc == "fill":
+    if labelloc is None or loc == "fill":
         if orientation == "horizontal":
             label_axis = long
         elif orientation == "vertical":
             label_axis = short
+    # if the orientation is horizontal,
+    # the short axis is the y-axis, and the long axis is the
+    # x-axis. The inverse holds true for vertical orientation.
+    elif "left" in labelloc or "right" in labelloc:
+        # Vertical label, use short axis
+        label_axis = short if orientation == "horizontal" else long
+    elif "top" in labelloc or "bottom" in labelloc:
+        label_axis = long if orientation == "horizontal" else short
 
     if label_axis is None:
         raise ValueError(
@@ -3709,8 +3713,8 @@ def _determine_label_rotation(
                 kw_label["va"] = "bottom" if "left" in labelloc else "top"
             elif labelloc in ["top", "bottom"]:
                 labelrotation = 0
-                kw_label["ha"] = "right" if "top" in labelloc else "left"
-                kw_label["va"] = "center"
+                kw_label["ha"] = "center"
+                kw_label["va"] = "bottom" if "top" in labelloc else "top"
 
     if not isinstance(labelrotation, (int, float)):
         raise ValueError(
