@@ -94,7 +94,7 @@ ALIGN_OPTS = {
 
 # Projection docstring
 _proj_docstring = """
-proj, projection : \
+proj, projection : \\
 str, `cartopy.crs.Projection`, or `~mpl_toolkits.basemap.Basemap`, optional
     The map projection specification(s). If ``'cart'`` or ``'cartesian'``
     (the default), a `~ultraplot.axes.CartesianAxes` is created. If ``'polar'``,
@@ -157,7 +157,7 @@ docstring._snippet_manager["axes.colorbar_space"] = _space_docstring.format(
 # Transform docstring
 # Used for text and add_axes
 _transform_docstring = """
-transform : {'data', 'axes', 'figure', 'subfigure'} \
+transform : {'data', 'axes', 'figure', 'subfigure'} \\
 or `~matplotlib.transforms.Transform`, optional
     The transform used to interpret the bounds. Can be a
     `~matplotlib.transforms.Transform` instance or a string representing
@@ -175,7 +175,7 @@ Add an inset axes.
 This is similar to `matplotlib.axes.Axes.inset_axes`.
 
 Parameters
-----------
+-----------
 bounds : 4-tuple of float
     The (left, bottom, width, height) coordinates for the axes.
 %(axes.transform)s
@@ -194,17 +194,17 @@ zoom_kw : dict, optional
     Passed to `~Axes.indicate_inset_zoom`.
 
 Other parameters
-----------------
+-----------------
 **kwargs
     Passed to `ultraplot.axes.Axes`.
 
 Returns
--------
+--------
 ultraplot.axes.Axes
     The inset axes.
 
 See also
---------
+---------
 Axes.indicate_inset_zoom
 matplotlib.axes.Axes.inset_axes
 matplotlib.axes.Axes.indicate_inset
@@ -215,26 +215,26 @@ Add indicators denoting the zoom range of the inset axes.
 This will replace previously drawn zoom indicators.
 
 Parameters
-----------
+-----------
 %(artist.patch)s
 zorder : float, default: 3.5
     The `zorder <https://matplotlib.org/stable/gallery/misc/zorder_demo.html>`__ of
     the indicators. Should be greater than the zorder of elements in the parent axes.
 
 Other parameters
-----------------
+-----------------
 **kwargs
     Passed to `~matplotlib.patches.Patch`.
 
 Note
-----
+-----
 This command must be called from the inset axes rather than the parent axes.
 It is called automatically when ``zoom=True`` is passed to `~Axes.inset_axes`
 and whenever the axes are drawn (so the line positions always track the axis
 limits even if they are later changed).
 
 See also
---------
+---------
 matplotlib.axes.Axes.indicate_inset
 matplotlib.axes.Axes.indicate_inset_zoom
 """
@@ -258,7 +258,7 @@ _panel_docstring = """
 Add a panel axes.
 
 Parameters
-----------
+-----------
 side : str, optional
     The panel location. Valid location keys are as follows.
 
@@ -283,13 +283,13 @@ share : bool, default: True
     is determined by figure-wide `sharex` and `sharey` settings.
 
 Other parameters
-----------------
+-----------------
 **kwargs
     Passed to `ultraplot.axes.CartesianAxes`. Supports all valid
     `~ultraplot.axes.CartesianAxes.format` keywords.
 
 Returns
--------
+--------
 ultraplot.axes.CartesianAxes
     The panel axes.
 """
@@ -355,15 +355,15 @@ titleabove : bool, default: :rc:`title.above`
 abctitlepad : float, default: :rc:`abc.titlepad`
     The horizontal padding between a-b-c labels and titles in the same location.
     %(units.pt)s
-ltitle, ctitle, rtitle, ultitle, uctitle, urtitle, lltitle, lctitle, lrtitle \
+ltitle, ctitle, rtitle, ultitle, uctitle, urtitle, lltitle, lctitle, lrtitle \\
 : str or sequence, optional
     Shorthands for the below keywords.
-lefttitle, centertitle, righttitle, upperlefttitle, uppercentertitle, upperrighttitle, \
+lefttitle, centertitle, righttitle, upperlefttitle, uppercentertitle, upperrighttitle, \\
 lowerlefttitle, lowercentertitle, lowerrighttitle : str or sequence, optional
     Additional titles in specific positions (see `title` for details). This works as
     an alternative to the ``ax.format(title='Title', titleloc=loc)`` workflow and
     permits adding more than one title-like label for a single axes.
-a, alpha, fc, facecolor, ec, edgecolor, lw, linewidth, ls, linestyle : default: \
+a, alpha, fc, facecolor, ec, edgecolor, lw, linewidth, ls, linestyle : default: \\
 :rc:`axes.alpha`, :rc:`axes.facecolor`, :rc:`axes.edgecolor`, :rc:`axes.linewidth`, '-'
     Additional settings applied to the background patch, and their
     shorthands. Their defaults values are the ``'axes'`` properties.
@@ -376,7 +376,7 @@ leftlabels, toplabels, rightlabels, bottomlabels : sequence of str, optional
     Labels for the subplots lying along the left, top, right, and
     bottom edges of the figure. The length of each list must match
     the number of subplots along the corresponding edge.
-leftlabelpad, toplabelpad, rightlabelpad, bottomlabelpad : float or unit-spec, default\
+leftlabelpad, toplabelpad, rightlabelpad, bottomlabelpad : float or unit-spec, default\\
 : :rc:`leftlabel.pad`, :rc:`toplabel.pad`, :rc:`rightlabel.pad`, :rc:`bottomlabel.pad`
     The padding between the labels and the axes content.
     %(units.pt)s
@@ -415,7 +415,7 @@ rc_kw : dict-like, optional
     settings passed to `~ultraplot.config.Configurator.context`.
 """
 docstring._snippet_manager["rc.init"] = _rc_format_docstring.format(
-    "Remaining keyword arguments are passed to `matplotlib.axes.Axes`.\n    "
+    "Remaining keyword arguments are passed to `matplotlib.axes.Axes`.\\n    "
 )
 docstring._snippet_manager["rc.format"] = _rc_format_docstring.format("")
 docstring._snippet_manager["axes.format"] = _axes_format_docstring
@@ -424,7 +424,7 @@ docstring._snippet_manager["figure.format"] = _figure_format_docstring
 
 # Colorbar docstrings
 _colorbar_args_docstring = """
-mappable : mappable, colormap-spec, sequence of color-spec, \
+mappable : mappable, colormap-spec, sequence of color-spec, \\
 or sequence of `~matplotlib.artist.Artist`
     There are four options here:
 
@@ -532,16 +532,16 @@ tickwidth : unit-spec, default: `linewidth`
     or :rc:`tick.width` if `linewidth` was not passed.
 tickwidthratio : float, default: :rc:`tick.widthratio`
     Relative scaling of `tickwidth` used to determine minor tick widths.
-ticklabelcolor, ticklabelsize, ticklabelweight \
+ticklabelcolor, ticklabelsize, ticklabelweight \\
 : default: :rc:`tick.labelcolor`, :rc:`tick.labelsize`, :rc:`tick.labelweight`.
     The font color, size, and weight for colorbar tick labels
 labelloc, labellocation : {'bottom', 'top', 'left', 'right'}
     The colorbar label location. Inherits from `tickloc` by default. Default is toward
     the outside of the subplot for outer colorbars and ``'bottom'`` for inset colorbars.
-labelcolor, labelsize, labelweight \
+labelcolor, labelsize, labelweight \\
 : default: :rc:`label.color`, :rc:`label.size`, and :rc:`label.weight`.
     The font color, size, and weight for the colorbar label.
-a, alpha, framealpha, fc, facecolor, framecolor, ec, edgecolor, ew, edgewidth : default\
+a, alpha, framealpha, fc, facecolor, framecolor, ec, edgecolor, ew, edgewidth : default\\
 : :rc:`colorbar.framealpha`, :rc:`colorbar.framecolor`
     For inset colorbars only. Controls the transparency and color of
     the background frame.
@@ -598,8 +598,8 @@ labels : list of str, optional
     from the artists in the tuple (if there are multiple unique labels in the tuple
     group of artists, the tuple group is expanded into unique legend entries --
     otherwise, the tuple group elements are drawn on top of eachother). For details
-    on matplotlib legend handlers and tuple groups, see the matplotlib `legend guide \
-<https://matplotlib.org/stable/tutorials/intermediate/legend_guide.html>`__.
+    on matplotlib legend handlers and tuple groups, see the matplotlib `legend guide \\
+-<https://matplotlib.org/stable/tutorials/intermediate/legend_guide.html>`__.
 """
 _legend_kwargs_docstring = """
 frame, frameon : bool, optional
@@ -629,12 +629,12 @@ fontsize, fontweight, fontcolor : optional
 titlefontsize, titlefontweight, titlefontcolor : optional
     The font size, weight, and color for the legend title. Font size is interpreted
     by `~ultraplot.utils.units`. The default size is `fontsize`.
-borderpad, borderaxespad, handlelength, handleheight, handletextpad, \
+borderpad, borderaxespad, handlelength, handleheight, handletextpad, \\
 labelspacing, columnspacing : unit-spec, optional
     Various matplotlib `~matplotlib.axes.Axes.legend` spacing arguments.
     %(units.em)s
-a, alpha, framealpha, fc, facecolor, framecolor, ec, edgecolor, ew, edgewidth \
-: default: :rc:`legend.framealpha`, :rc:`legend.facecolor`, :rc:`legend.edgecolor`, \
+a, alpha, framealpha, fc, facecolor, framecolor, ec, edgecolor, ew, edgewidth \\
+: default: :rc:`legend.framealpha`, :rc:`legend.facecolor`, :rc:`legend.edgecolor`, \\
 :rc:`axes.linewidth`
     The opacity, face color, edge color, and edge width for the legend frame.
 c, color, lw, linewidth, m, marker, ls, linestyle, dashes, ms, markersize : optional
@@ -992,7 +992,7 @@ class Axes(maxes.Axes):
             s.set_visible(False)
         ax.xaxis.set_visible(False)
         ax.yaxis.set_visible(False)
-        ax.patch.set_facecolor("none")
+        ax.patch.set_facecolor("none")  # ignore axes.alpha application
         ax._panel_hidden = True
         ax._panel_align[align] = bbox
         return ax
@@ -1113,7 +1113,7 @@ class Axes(maxes.Axes):
                 warnings._warn_ultraplot(
                     f"The colorbar() keyword {key!r} was deprecated in v0.10. To "
                     "achieve the same effect, you can pass 'nbins' to the new default "
-                    f"locator DiscreteLocator using {name}_kw={{'nbins': {nbins}}}."
+                    f"locator DiscreteLocator using {name}_kw={{'nbins': {nbins}}}. "
                 )
 
         # Generate and prepare the colorbar axes
@@ -1131,7 +1131,7 @@ class Axes(maxes.Axes):
             kwargs.update({"label": label, "length": length, "width": width})
             extendsize = _not_none(extendsize, rc["colorbar.insetextend"])
             cax, kwargs = self._parse_colorbar_inset(
-                loc=loc, pad=pad, **kwargs
+                loc=loc, labelloc=labelloc, pad=pad, **kwargs
             )  # noqa: E501
 
         # Parse the colorbar mappable
@@ -2064,6 +2064,7 @@ class Axes(maxes.Axes):
         tickloc=None,
         ticklocation=None,
         orientation=None,
+        labelloc=None,
         **kwargs,
     ):
         """
@@ -2091,7 +2092,7 @@ class Axes(maxes.Axes):
         fontsize = _fontsize_to_pt(fontsize)
         scale = 1.2
         if orientation == "vertical":
-            scale *= 2.1  # we need a little more room
+            scale = 1.8  # we need a little more room
         if label is not None:
             labspace += 2 * scale * fontsize / 72
         else:
@@ -2108,71 +2109,60 @@ class Axes(maxes.Axes):
         # Determine where labels will appear based on orientation and tick location
 
         if orientation == "horizontal":
-            # For horizontal colorbars: 'top' or 'bottom'
-            labels_on_top = ticklocation == "top"
-            labels_on_bottom = ticklocation == "bottom"
-
             # Frame is always the same size, slightly larger to accommodate labels
             frame_width = 2 * xpad + length
             frame_height = 2 * ypad + width + labspace
 
         else:  # vertical
-            # For vertical colorbars: 'left' or 'right'
-            labels_on_left = ticklocation == "left"
-            labels_on_right = ticklocation == "right"
-
             # Frame is always the same size, slightly larger to accommodate labels
             frame_width = 2 * xpad + width + labspace
             frame_height = 2 * ypad + length
+
+        labeltop = labelbottom = labelright = labelleft = 0
+        labelspacing = 0.5 * fontsize / 72
+        match labelloc:
+            case "left":
+                labelleft = labelspacing
+            case "right":
+                labelright = labelspacing
+            case "bottom":
+                labelbottom = labelspacing
+            case "top":
+                labeltop = labelspacing
 
         # Location in axes-relative coordinates
         # Bounds are x0, y0, width, height in axes-relative coordinates
         if loc == "upper right":
             bounds_frame = [1 - frame_width, 1 - frame_height]
-            if orientation == "horizontal":
-                # Position colorbar within frame, accounting for label position
-                cb_x = 1 - frame_width + xpad
-                cb_y = 1 - frame_height + ypad + (labspace if labels_on_bottom else 0)
-                bounds_inset = [cb_x, cb_y]
-            else:  # vertical
-                cb_x = 1 - frame_width + xpad + (labspace if labels_on_left else 0)
-                cb_y = 1 - frame_height + ypad
-                bounds_inset = [cb_x, cb_y]
-
+            # Position colorbar within frame, accounting for label position
+            cb_x = 1 - frame_width + xpad
+            cb_y = 1 - frame_height + ypad
         elif loc == "upper left":
             bounds_frame = [0, 1 - frame_height]
-            if orientation == "horizontal":
-                cb_x = xpad
-                cb_y = 1 - frame_height + ypad + (labspace if labels_on_bottom else 0)
-                bounds_inset = [cb_x, cb_y]
-            else:  # vertical
-                cb_x = xpad + (labspace if labels_on_left else 0)
-                cb_y = 1 - frame_height + ypad
-                bounds_inset = [cb_x, cb_y]
-
+            cb_x = xpad
+            cb_y = 1 - frame_height + ypad
         elif loc == "lower left":
             bounds_frame = [0, 0]
-            if orientation == "horizontal":
-                cb_x = xpad
-                cb_y = ypad + (labspace if labels_on_bottom else 0)
-                bounds_inset = [cb_x, cb_y]
-            else:  # vertical
-                cb_x = xpad + (labspace if labels_on_left else 0)
-                cb_y = ypad
-                bounds_inset = [cb_x, cb_y]
-
+            cb_x = xpad
+            cb_y = ypad
         else:  # lower right
             bounds_frame = [1 - frame_width, 0]
-            if orientation == "horizontal":
-                cb_x = 1 - frame_width + xpad
-                cb_y = ypad + (labspace if labels_on_bottom else 0)
-                bounds_inset = [cb_x, cb_y]
-            else:  # vertical
-                cb_x = 1 - frame_width + xpad + (labspace if labels_on_left else 0)
-                cb_y = ypad
-                bounds_inset = [cb_x, cb_y]
+            cb_x = 1 - frame_width + xpad
+            cb_y = ypad
+
+        # Center colorbar in frame
+        if orientation == "vertical" and labelloc in ("top", "bottom"):
+            cb_x += (frame_width - 2 * xpad - width) / 2
+        elif orientation == "horizontal" and labelloc in ("left", "right"):
+            cb_y += (frame_height - 2 * ypad - width) / 2
+
+        if orientation == "horizontal":
+            labelbottom *= 1.5
+        if orientation == "vertical":
+            labeltop *= -0.25
 
         # Set final bounds with proper dimensions
+        bounds_inset = [cb_x + labelleft, cb_y + labeltop + labelbottom]
         if orientation == "horizontal":
             bounds_inset.extend((length, width))
         else:  # vertical
@@ -3301,7 +3291,7 @@ class Axes(maxes.Axes):
         shrink
             Alias for `length`. This is included for consistency with
             `matplotlib.figure.Figure.colorbar`.
-        length \
+        length \\
 : float or unit-spec, default: :rc:`colorbar.length` or :rc:`colorbar.insetlength`
             The colorbar length. For outer colorbars, units are relative to the axes
             width or height (default is :rcraw:`colorbar.length`). For inset
@@ -3455,7 +3445,7 @@ class Axes(maxes.Axes):
         borderinvert : bool, optional
             If ``True``, the text and border colors are swapped.
         borderstyle : {'miter', 'round', 'bevel'}, optional
-            The `line join style \
+            The `line join style \\
 <https://matplotlib.org/stable/gallery/lines_bars_and_markers/joinstyle.html>`__
             used for the border.
         bbox : bool, default: False
