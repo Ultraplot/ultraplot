@@ -494,7 +494,7 @@ def test_colorbar_label_no_labelloc(loc):
 
 
 @pytest.mark.parametrize(
-    ("loc", "orientation"),
+    ("loc", "orientation", "labelloc"),
     product(
         [
             "upper left",
@@ -503,9 +503,10 @@ def test_colorbar_label_no_labelloc(loc):
             "lower right",
         ],
         ["horizontal", "vertical"],
+        ["left", "right", "top", "bottom"],
     ),
 )
-def test_inset_colorbar_orientation(loc, orientation):
+def test_inset_colorbar_orientation(loc, orientation, labelloc):
     """ """
     cmap = uplt.Colormap("viko")
     fig, ax = uplt.subplots()
@@ -513,6 +514,7 @@ def test_inset_colorbar_orientation(loc, orientation):
         cmap,
         loc=loc,
         orientation=orientation,
+        labellocation=labelloc,
         label="My Label",
     )
     found = False
