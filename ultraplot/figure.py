@@ -35,7 +35,7 @@ from .internals import (
     labels,
     warnings,
 )
-from .utils import units
+from .utils import units, _get_subplot_layout, _Crawler
 
 __all__ = [
     "Figure",
@@ -905,7 +905,9 @@ class Figure(mfigure.Figure):
         axs = [ax for ax in axs if ax.get_visible()]
         return axs
 
-    def _get_border_axes(self) -> dict[str, list[paxes.Axes]]:
+    def _get_border_axes(
+        self, *, same_type=False, force_recalculate=False
+    ) -> dict[str, list[paxes.Axes]]:
         """
         Identifies axes located on the outer boundaries of the GridSpec layout.
 
@@ -913,7 +915,15 @@ class Figure(mfigure.Figure):
         containing a list of axes on that border.
         """
 
-        border_axes = dict(top=[], bottom=[], left=[], right=[])
+        if hasattr(self, "_cached_border_axes") and not force_recalculate:
+            return self._cached_border_axes
+
+        border_axes = dict(
+            left=[],
+            right=[],
+            top=[],
+            bottom=[],
+        )
         gs = self.gridspec
         if gs is None:
             return border_axes
@@ -931,68 +941,28 @@ class Figure(mfigure.Figure):
         # Reconstruct the grid based on axis locations. Note that
         # spanning axes will fit into one of the boxes. Check
         # this with unittest to see how empty axes are handles
-        grid = np.zeros((gs.nrows, gs.ncols))
+        grid, grid_axis_type, seen_axis_type = _get_subplot_layout(
+            gs,
+            all_axes,
+            same_type=same_type,
+        )
+        # We check for all axes is they are a border or not
+        # Note we could also write the crawler in a way where
+        # it find the borders by moving around in the grid, without spawning on each axis point. We may change
+        # this in the future
         for axi in all_axes:
-            # Infer coordinate from grdispec
-            spec = axi.get_subplotspec()
-            spans = spec._get_rows_columns()
-            rowspans = spans[:2]
-            colspans = spans[-2:]
-
-            grid[
-                rowspans[0] : rowspans[1] + 1,
-                colspans[0] : colspans[1] + 1,
-            ] = axi.number
-        directions = {
-            "left": (0, -1),
-            "right": (0, 1),
-            "top": (-1, 0),
-            "bottom": (1, 0),
-        }
-
-        def is_border(pos, grid, target, direction):
-            x, y = pos
-            # Check if we are at an edge of the grid (out-of-bounds).
-            if x < 0:
-                return True
-            elif x > grid.shape[0] - 1:
-                return True
-
-            if y < 0:
-                return True
-            elif y > grid.shape[1] - 1:
-                return True
-
-            # Check if we reached a plot or an internal edge
-            if grid[x, y] != target and grid[x, y] > 0:
-                return False
-            if grid[x, y] == 0:
-                return True
-            dx, dy = direction
-            new_pos = (x + dx, y + dy)
-            return is_border(new_pos, grid, target, direction)
-
-        from itertools import product
-
-        for axi in all_axes:
-            spec = axi.get_subplotspec()
-            spans = spec._get_rows_columns()
-            rowspan = spans[:2]
-            colspan = spans[-2:]
-            # Check all cardinal directions. When we find a
-            #  border for any starting conditions we break and
-            # consider it a border. This could mean that for some
-            # partial overlaps we consider borders that should
-            # not be borders -- we are conservative in this
-            # regard
-            for direction, d in directions.items():
-                xs = range(rowspan[0], rowspan[1] + 1)
-                ys = range(colspan[0], colspan[1] + 1)
-                for x, y in product(xs, ys):
-                    pos = (x, y)
-                    if is_border(pos=pos, grid=grid, target=axi.number, direction=d):
-                        border_axes[direction].append(axi)
-                        break
+            axis_type = seen_axis_type.get(type(axi), 1)
+            crawler = _Crawler(
+                ax=axi,
+                grid=grid,
+                target=axi.number,
+                axis_type=axis_type,
+                grid_axis_type=grid_axis_type,
+            )
+            for direction, is_border in crawler.find_edges():
+                if is_border:
+                    border_axes[direction].append(axi)
+        self._cached_border_axes = border_axes
         return border_axes
 
     def _get_align_coord(self, side, axs, includepanels=False):
@@ -1257,6 +1227,9 @@ class Figure(mfigure.Figure):
 
         if ax.number:
             self._subplot_dict[ax.number] = ax
+        # Invalidate border axes cache
+        if hasattr(self, "_cached_border_axes"):
+            delattr(self, "_cached_border_axes")
         return ax
 
     def _unshare_axes(self):
@@ -1284,6 +1257,10 @@ class Figure(mfigure.Figure):
         # Note: this action performs it for all the axes in
         # the figure. We use the stale here to only perform
         # it once as it is an expensive action.
+        # The axis will be a border if it is either
+        # (a) on the edge
+        # (b) not next to a subplot
+        # (c) not next to a subplot of the same kind
         border_axes = self._get_border_axes()
         # Recode:
         recoded = {}
@@ -1302,10 +1279,7 @@ class Figure(mfigure.Figure):
             # Turn the ticks on or off depending on the position
             sides = recoded.get(axi, [])
             turn_on_or_off = default.copy()
-            # The axis will be a border if it is either
-            # (a) on the edge
-            # (b) not next to a subplot
-            # (c) not next to a subplot of the same kind
+
             for side in sides:
                 sidelabel = f"label{side}"
                 is_label_on = axi._is_ticklabel_on(sidelabel)
@@ -1318,18 +1292,7 @@ class Figure(mfigure.Figure):
             if isinstance(axi, paxes.GeoAxes):
                 axi._toggle_gridliner_labels(**turn_on_or_off)
             else:
-                # TODO: we need to replace the
-                #  _apply_axis_sharing with something that is
-                # more profound. Currently, it removes the
-                # ticklabels in all directions independent
-                # of the position of the subplot. This means
-                # that for top right subplots, the labels
-                # will always be off.  Furthermore,
-                # this is handled in the draw sequence
-                # which is not necessary, and we should
-                # add it to _add_subplot of the figure class
-                continue
-                # axi.tick_params(which=which, **turn_on_or_off)
+                axi._apply_axis_sharing()
 
     def _toggle_axis_sharing(
         self,
@@ -1971,7 +1934,8 @@ class Figure(mfigure.Figure):
             ax.number = store_old_number
         # When we apply formatting to all axes, we need
         # to potentially adjust the labels.
-        if len(axs) == len(self.axes):
+
+        if len(axs) == len(self.axes) and self._get_sharing_level() > 0:
             self._share_labels_with_others()
 
         # Warn unused keyword argument(s)
@@ -1984,6 +1948,53 @@ class Figure(mfigure.Figure):
             warnings._warn_ultraplot(
                 f"Ignoring unused projection-specific format() keyword argument(s): {kw}"  # noqa: E501
             )
+
+    def _share_labels_with_others(self, *, which="both"):
+        """
+        Helpers function to ensure the labels
+        are shared for rectilinear GeoAxes.
+        """
+        # Turn all labels off
+        # Note: this action performs it for all the axes in
+        # the figure. We use the stale here to only perform
+        # it once as it is an expensive action.
+        border_axes = self._get_border_axes(same_type=False)
+        # Recode:
+        recoded = {}
+        for direction, axes in border_axes.items():
+            for axi in axes:
+                recoded[axi] = recoded.get(axi, []) + [direction]
+
+        # We turn off the tick labels when the scale and
+        # ticks are shared (level > 0)
+        are_ticks_on = False
+        default = dict(
+            labelleft=are_ticks_on,
+            labelright=are_ticks_on,
+            labeltop=are_ticks_on,
+            labelbottom=are_ticks_on,
+        )
+        for axi in self._iter_axes(hidden=False, panels=False, children=False):
+            # Turn the ticks on or off depending on the position
+            sides = recoded.get(axi, [])
+            turn_on_or_off = default.copy()
+            # The axis will be a border if it is either
+            # (a) on the edge
+            # (b) not next to a subplot
+            # (c) not next to a subplot of the same kind
+            for side in sides:
+                sidelabel = f"label{side}"
+                is_label_on = axi._is_ticklabel_on(sidelabel)
+                if is_label_on:
+                    # When we are a border an the labels are on
+                    # we keep them on
+                    assert sidelabel in turn_on_or_off
+                    turn_on_or_off[sidelabel] = True
+
+            if isinstance(axi, paxes.GeoAxes):
+                axi._toggle_gridliner_labels(**turn_on_or_off)
+            else:
+                axi.tick_params(which=which, **turn_on_or_off)
 
     @docstring._concatenate_inherited
     @docstring._snippet_manager

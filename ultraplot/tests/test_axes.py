@@ -259,51 +259,108 @@ def test_sharing_labels_top_right():
             assert i == j
 
 
-@pytest.mark.skip("Need to fix sharing labels for odd layouts")
-def test_sharing_labels_top_right_odd_layout():
+@pytest.mark.parametrize(
+    "layout, share, tick_loc, y_visible_indices, x_visible_indices",
+    [
+        # Test case 1: Irregular layout with share=3 (default)
+        (
+            [
+                [1, 2, 0],
+                [1, 2, 5],
+                [3, 4, 5],
+                [3, 4, 0],
+            ],
+            3,  # default sharing level
+            {"xticklabelloc": "t", "yticklabelloc": "r"},
+            [1, 3, 4],  # y-axis labels visible indices
+            [0, 1, 4],  # x-axis labels visible indices
+        ),
+        # Test case 2: Irregular layout with share=1
+        (
+            [
+                [1, 0, 2],
+                [0, 3, 0],
+                [4, 0, 5],
+            ],
+            1,  # share only labels, not tick labels
+            {"xticklabelloc": "t", "yticklabelloc": "r"},
+            [0, 1, 2, 3, 4],  # all y-axis labels visible
+            [0, 1, 2, 3, 4],  # all x-axis labels visible
+        ),
+    ],
+)
+def test_sharing_labels_with_layout(
+    layout, share, tick_loc, y_visible_indices, x_visible_indices
+):
+    """
+    Test if tick labels are correctly visible or hidden based on layout and sharing.
 
-    # Helper function to check if the labels
-    # on an axis direction is visible
-    def check_state(numbers: list, state: bool, which: str):
+    Parameters
+    ----------
+    layout : list of list of int
+        The layout configuration for the subplots
+    share : int
+        The sharing level (0-4)
+    tick_loc : dict
+        Tick label location settings
+    y_visible_indices : list
+        Indices in the axes array where y-tick labels should be visible
+    x_visible_indices : list
+        Indices in the axes array where x-tick labels should be visible
+    """
+
+    # Helper function to check if the labels on an axis direction are visible
+    def check_state(ax, numbers, state, which):
         for number in numbers:
             for label in getattr(ax[number], f"get_{which}ticklabels")():
-                assert label.get_visible() == state
+                assert label.get_visible() == state, (
+                    f"Expected {which}-tick label visibility to be {state} "
+                    f"for axis {number}, but got {not state}"
+                )
 
-    layout = [
-        [1, 2, 0],
-        [1, 2, 5],
-        [3, 4, 5],
-        [3, 4, 0],
-    ]
-    fig, ax = uplt.subplots(layout)
-    ax.format(
-        xticklabelloc="t",
-        yticklabelloc="r",
-    )
+    # Create figure with the specified layout and sharing level
+    fig, ax = uplt.subplots(layout, share=share)
 
-    # these correspond to the indices of the axis
-    # in the axes array (so the grid number minus 1)
-    check_state([0, 2], False, which="y")
-    check_state([1, 3, 4], True, which="y")
-    check_state([2, 3], False, which="x")
-    check_state([0, 1, 4], True, which="x")
+    # Format axes with the specified tick label locations
+    ax.format(**tick_loc)
+
+    # Calculate the indices where labels should be hidden
+    all_indices = list(range(len(ax)))
+    y_hidden_indices = [i for i in all_indices if i not in y_visible_indices]
+    x_hidden_indices = [i for i in all_indices if i not in x_visible_indices]
+
+    # Check that labels are visible or hidden as expected
+    check_state(ax, y_visible_indices, True, which="y")
+    check_state(ax, y_hidden_indices, False, which="y")
+    check_state(ax, x_visible_indices, True, which="x")
+    check_state(ax, x_hidden_indices, False, which="x")
+
     uplt.close(fig)
 
-    layout = [
-        [1, 0, 2],
-        [0, 3, 0],
-        [4, 0, 5],
-    ]
 
-    fig, ax = uplt.subplots(layout, hspace=0.2, wspace=0.2, share=1)
-    ax.format(
-        xticklabelloc="t",
-        yticklabelloc="r",
-    )
-    # these correspond to the indices of the axis
-    # in the axes array (so the grid number minus 1)
-    check_state([0, 3], True, which="y")
-    check_state([1, 2, 4], True, which="y")
-    check_state([0, 1, 2], True, which="x")
-    check_state([3, 4], True, which="x")
-    uplt.close(fig)
+@pytest.mark.mpl_image_compare
+def test_alt_axes_y_shared():
+    layout = [[1, 2], [3, 4]]
+    fig, ax = uplt.subplots(ncols=2, nrows=2)
+
+    for axi in ax:
+        alt = axi.alty()
+        alt.set_ylabel("Alt Y")
+        assert alt.get_ylabel() == "Alt Y"
+        assert alt.get_xlabel() == ""
+        axi.set_ylabel("Y")
+    return fig
+
+
+@pytest.mark.mpl_image_compare
+def test_alt_axes_x_shared():
+    layout = [[1, 2], [3, 4]]
+    fig, ax = uplt.subplots(ncols=2, nrows=2)
+
+    for axi in ax:
+        alt = axi.altx()
+        alt.set_xlabel("Alt X")
+        assert alt.get_xlabel() == "Alt X"
+        assert alt.get_ylabel() == ""
+        axi.set_xlabel("X")
+    return fig
