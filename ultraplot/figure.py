@@ -1966,7 +1966,7 @@ class Figure(mfigure.Figure):
                 recoded[axi] = recoded.get(axi, []) + [direction]
 
         # We turn off the tick labels when the scale and
-        # ticks are shared (level >= 3)
+        # ticks are shared (level > 0)
         are_ticks_on = False
         default = dict(
             labelleft=are_ticks_on,
