@@ -1131,7 +1131,7 @@ class Axes(maxes.Axes):
             kwargs.update({"label": label, "length": length, "width": width})
             extendsize = _not_none(extendsize, rc["colorbar.insetextend"])
             cax, kwargs = self._parse_colorbar_inset(
-                loc=loc, labelloc=labelloc, pad=pad, **kwargs
+                loc=loc, labelloc=labelloc, labelrotation = labelrotation, pad=pad, **kwargs
             )  # noqa: E501
 
         # Parse the colorbar mappable
@@ -2065,6 +2065,7 @@ class Axes(maxes.Axes):
         ticklocation=None,
         orientation=None,
         labelloc=None,
+        labelrotation=None,
         **kwargs,
     ):
         """
@@ -2133,6 +2134,38 @@ class Axes(maxes.Axes):
 
         # Adjust frame and colorbar position based on label location
         label_offset = 0.5 * labspace
+
+        # Account for label rotation if specified
+        labelrotation = _not_none(labelrotation, 0)  # default to 0 degrees
+        if labelrotation != 0 and label is not None:
+            # Estimate label text dimensions
+            import math
+
+            # Rough estimate of text width (characters * font size * 0.6)
+            estimated_text_width = len(str(label)) * fontsize * 0.6 / 72
+            text_height = fontsize / 72
+
+            # Convert rotation to radians
+            angle_rad = math.radians(abs(labelrotation))
+
+            # Calculate rotated dimensions
+            rotated_width = estimated_text_width * math.cos(
+                angle_rad
+            ) + text_height * math.sin(angle_rad)
+            rotated_height = estimated_text_width * math.sin(
+                angle_rad
+            ) + text_height * math.cos(angle_rad)
+
+            # Convert back to axes-relative coordinates
+            if orientation == "horizontal":
+                # For horizontal colorbars, rotation affects vertical space
+                rotation_offset = rotated_height / self._get_size_inches()[1]
+            else:
+                # For vertical colorbars, rotation affects horizontal space
+                rotation_offset = rotated_width / self._get_size_inches()[0]
+
+            # Use the larger of the original offset or rotation-adjusted offset
+            label_offset = max(label_offset, rotation_offset)
 
         if orientation == "vertical":
             if labelloc == "left":
