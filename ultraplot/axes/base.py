@@ -2086,7 +2086,7 @@ class Axes(maxes.Axes):
         xpad = units(pad, "em", "ax", axes=self, width=True)
         ypad = units(pad, "em", "ax", axes=self, width=False)
 
-        # Extra space accounting for colorbar label and tick labels
+        # Calculate space requirements for labels and ticks
         labspace = rc["xtick.major.size"] / 72
         fontsize = rc["xtick.labelsize"]
         fontsize = _fontsize_to_pt(fontsize)
@@ -2098,36 +2098,27 @@ class Axes(maxes.Axes):
         else:
             labspace += scale * fontsize / 72
 
-        # Determine space for labels
+        # Convert to axes-relative coordinates
         if orientation == "horizontal":
             labspace /= self._get_size_inches()[1]
         else:
             labspace /= self._get_size_inches()[0]
 
-        # Bounds are x0, y0, width, height in axes-relative coordinates
-        # Location in axes-relative coordinates
-        # Determine where labels will appear based on orientation and tick location
-
+        # Initial frame dimensions (will be adjusted based on label position)
         if orientation == "horizontal":
-            # Frame is always the same size, slightly larger to accommodate labels
             frame_width = 2 * xpad + length
             frame_height = 2 * ypad + width + labspace
-
         else:  # vertical
-            # Frame is always the same size, slightly larger to accommodate labels
             frame_width = 2 * xpad + width + labspace
             frame_height = 2 * ypad + length
 
-        # Location in axes-relative coordinates
-        # Bounds are x0, y0, width, height in axes-relative coordinates
-        xframe = yframe = 0  # lower left corner of frame
+        # Initialize frame position and colorbar position
+        xframe = yframe = 0  # frame lower left corner
         if loc == "upper right":
             xframe = 1 - frame_width
             yframe = 1 - frame_height
-            # Position colorbar within frame, accounting for label position
             cb_x = xframe + xpad
             cb_y = yframe + ypad
-
         elif loc == "upper left":
             yframe = 1 - frame_height
             cb_x = xpad
@@ -2140,59 +2131,75 @@ class Axes(maxes.Axes):
             cb_x = xframe + xpad
             cb_y = ypad
 
-        # Adjust colorbar position based on label location
-        u = 0.5 * labspace
-        if orientation == "vertical" and labelloc == "left":
-            # Move more to the right to accomodate label
-            cb_x += u
-        if orientation == "vertical" and labelloc == "top":
-            cb_x += u
-            if "upper" in loc:
-                cb_y -= u
-                yframe -= u
-                frame_height += u
-                frame_width += u
-                if "right" in loc:
-                    xframe -= u
-                    cb_x -= u
-            elif "lower" in loc:
-                frame_height += u
-                frame_width += u
-                if "right" in loc:
-                    xframe -= u
-                    cb_x -= u
-        if orientation == "vertical" and labelloc == "bottom":
-            if "left" in loc:
-                cb_x += u
-                frame_width += u
-            else:
-                xframe -= u
-                frame_width += u
-            if "lower" in loc:
-                cb_y += u
-                frame_height += u
-            if "upper" in loc:
-                yframe -= u
-                frame_height += u
-        if orientation == "horizontal":
-            cb_y += 2 * u
-            if "upper" in loc and labelloc == "bottom":
-                yframe -= u
-                frame_height += u
-            elif "lower" in loc and labelloc == "bottom":
-                frame_height += u
-                cb_y += 0.5 * u
-            elif "upper" in loc and labelloc == "top":
-                cb_y -= 1.5 * u
-                yframe -= u
-                frame_height += u
-            elif "lower" in loc and labelloc == "top":
-                frame_height += u
-                cb_y -= 0.5 * u
+        # Adjust frame and colorbar position based on label location
+        label_offset = 0.5 * labspace
 
-        # Set final bounds with proper dimensions
+        if orientation == "vertical":
+            if labelloc == "left":
+                # Move colorbar right to make room for left labels
+                cb_x += label_offset
+
+            elif labelloc == "top":
+                # Center colorbar horizontally and extend frame for top labels
+                cb_x += label_offset
+                if "upper" in loc:
+                    # Upper positions: extend frame downward
+                    cb_y -= label_offset
+                    yframe -= label_offset
+                    frame_height += label_offset
+                    frame_width += label_offset
+                    if "right" in loc:
+                        xframe -= label_offset
+                        cb_x -= label_offset
+                elif "lower" in loc:
+                    # Lower positions: extend frame upward
+                    frame_height += label_offset
+                    frame_width += label_offset
+                    if "right" in loc:
+                        xframe -= label_offset
+                        cb_x -= label_offset
+
+            elif labelloc == "bottom":
+                # Extend frame for bottom labels
+                if "left" in loc:
+                    cb_x += label_offset
+                    frame_width += label_offset
+                else:  # right
+                    xframe -= label_offset
+                    frame_width += label_offset
+
+                if "lower" in loc:
+                    cb_y += label_offset
+                    frame_height += label_offset
+                elif "upper" in loc:
+                    yframe -= label_offset
+                    frame_height += label_offset
+
+        elif orientation == "horizontal":
+            # Base vertical adjustment for horizontal colorbars
+            cb_y += 2 * label_offset
+
+            if labelloc == "bottom":
+                if "upper" in loc:
+                    yframe -= label_offset
+                    frame_height += label_offset
+                elif "lower" in loc:
+                    frame_height += label_offset
+                    cb_y += 0.5 * label_offset
+
+            elif labelloc == "top":
+                if "upper" in loc:
+                    cb_y -= 1.5 * label_offset
+                    yframe -= label_offset
+                    frame_height += label_offset
+                elif "lower" in loc:
+                    frame_height += label_offset
+                    cb_y -= 0.5 * label_offset
+
+        # Set final bounds
         bounds_inset = [cb_x, cb_y]
         bounds_frame = [xframe, yframe]
+
         if orientation == "horizontal":
             bounds_inset.extend((length, width))
         else:  # vertical
@@ -2200,7 +2207,7 @@ class Axes(maxes.Axes):
 
         bounds_frame.extend((frame_width, frame_height))
 
-        # Make axes and frame with zorder matching default legend zorder
+        # Create axes and frame
         cls = mproj.get_projection_class("ultraplot_cartesian")
         locator = self._make_inset_locator(bounds_inset, self.transAxes)
         ax = cls(self.figure, locator(self, None).bounds, zorder=5)
