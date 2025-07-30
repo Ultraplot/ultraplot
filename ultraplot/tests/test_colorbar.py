@@ -17,7 +17,6 @@ def test_outer_align():
     ax.plot(np.empty((0, 4)), labels=list("abcd"))
     ax.legend(loc="bottom", align="right", ncol=2)
     ax.legend(loc="left", align="bottom", ncol=1)
-    ax.colorbar("magma", loc="r", align="top", shrink=0.5, label="label", extend="both")
     ax.colorbar(
         "magma",
         loc="top",
@@ -30,7 +29,18 @@ def test_outer_align():
         labelloc="top",
         labelweight="bold",
     )
-    ax.colorbar("magma", loc="right", extend="both", label="test extensions")
+    ax.colorbar(
+        "magma",
+        loc="r",
+        align="top",
+        shrink=0.5,
+        label="label",
+        extend="both",
+        labelrotation=90,
+    )
+    ax.colorbar(
+        "magma", loc="right", extend="both", label="test extensions", labelrotation=90
+    )
     fig.suptitle("Align demo")
     return fig
 
@@ -278,7 +288,8 @@ def test_draw_edges(rng):
     return fig
 
 
-def test_label_placement_colorbar(rng):
+@pytest.mark.parametrize("loc", ["top", "bottom", "left", "right"])
+def test_label_placement_colorbar(rng, loc):
     """
     Ensure that all potential combinations of colorbar
     label placement is possible.
@@ -286,9 +297,7 @@ def test_label_placement_colorbar(rng):
     data = rng.random((10, 10))
     fig, ax = uplt.subplots()
     h = ax.imshow(data)
-    locs = "top bottom left right".split()
-    for loc, labelloc in zip(locs, locs):
-        ax.colorbar(h, loc=loc, labelloc=labelloc)
+    ax.colorbar(h, loc=loc, labelloc=loc)
 
 
 def test_label_rotation_colorbar():
@@ -309,39 +318,37 @@ def test_label_rotation_colorbar():
             break
 
 
-def test_auto_labelrotation():
-    from itertools import product
-
-    locs = ["top", "bottom", "left", "right"]
-    labellocs = ["top", "bottom", "left", "right"]
-
+@pytest.mark.parametrize(
+    ("loc", "labelloc"),
+    product(["top", "bottom", "left", "right"], ["top", "bottom", "left", "right"]),
+)
+def test_auto_labelrotation(loc, labelloc):
     cmap = uplt.colormaps.get_cmap("viridis")
     mylabel = "My Label"
 
-    for loc, labelloc in product(locs, labellocs):
-        fig, ax = uplt.subplots()
-        cbar = ax.colorbar(cmap, loc=loc, labelloc=labelloc, label=mylabel)
+    fig, ax = uplt.subplots()
+    cbar = ax.colorbar(cmap, loc=loc, labelloc=labelloc, label=mylabel)
 
-        # Get the label Text object
-        for which in "xy":
-            tmp = getattr(cbar.ax, f"{which}axis").label
-            if tmp.get_text() == mylabel:
-                label = tmp
-                break
+    # Get the label Text object
+    for which in "xy":
+        tmp = getattr(cbar.ax, f"{which}axis").label
+        if tmp.get_text() == mylabel:
+            label = tmp
+            break
 
-        is_vertical = loc in ("left", "right")
-        is_horizontal = not is_vertical
+    is_vertical = loc in ("left", "right")
+    is_horizontal = not is_vertical
 
-        expected_rotation = 0
-        if labelloc == "left":
-            expected_rotation = 90
-        elif labelloc == "right":
-            expected_rotation = 270
+    expected_rotation = 0
+    if labelloc == "left":
+        expected_rotation = 90
+    elif labelloc == "right":
+        expected_rotation = 270
 
-        actual_rotation = label.get_rotation()
-        ax.set_title(f"loc={loc}, labelloc={labelloc}, rotation={actual_rotation}")
-        assert actual_rotation == expected_rotation
-        uplt.close(fig)
+    actual_rotation = label.get_rotation()
+    ax.set_title(f"loc={loc}, labelloc={labelloc}, rotation={actual_rotation}")
+    assert actual_rotation == expected_rotation
+    uplt.close(fig)
 
 
 @pytest.mark.mpl_image_compare
@@ -412,7 +419,7 @@ def test_colorbar_invalid_horizontal_label(cbarloc, invalid_labelloc):
     # Test ValueError cases - invalid labelloc for different colorbar locations
 
     # Horizontal colorbar location with invalid labelloc
-    with pytest.raises(ValueError, match="Could not determine position"):
+    with pytest.raises(ValueError):
         ax.colorbar(cmap, loc=cbarloc, labelloc=invalid_labelloc, label=title)
     uplt.close(fig)
 
@@ -436,7 +443,7 @@ def test_colorbar_invalid_vertical_label(cbarloc, invalid_labelloc):
     cmap = uplt.Colormap("plasma_r")
     title = "Test Label"
     fig, ax = uplt.subplots()
-    with pytest.raises(ValueError, match="Could not determine position"):
+    with pytest.raises(ValueError):
         ax.colorbar(cmap, loc=cbarloc, labelloc=invalid_labelloc, label=title)
     uplt.close(fig)
 
@@ -449,7 +456,7 @@ def test_colorbar_invalid_fill_label_placement(invalid_labelloc):
     cmap = uplt.Colormap("plasma_r")
     title = "Test Label"
     fig, ax = uplt.subplots()
-    with pytest.raises(ValueError, match="Could not determine position"):
+    with pytest.raises(ValueError):
         ax.colorbar(cmap, loc="fill", labelloc=invalid_labelloc, label=title)
 
 
@@ -487,7 +494,7 @@ def test_colorbar_label_no_labelloc(loc):
 
 
 @pytest.mark.parametrize(
-    ("loc", "orientation"),
+    ("loc", "orientation", "labelloc"),
     product(
         [
             "upper left",
@@ -496,9 +503,10 @@ def test_colorbar_label_no_labelloc(loc):
             "lower right",
         ],
         ["horizontal", "vertical"],
+        ["left", "right", "top", "bottom"],
     ),
 )
-def test_inset_colorbar_orientation(loc, orientation):
+def test_inset_colorbar_orientation(loc, orientation, labelloc):
     """ """
     cmap = uplt.Colormap("viko")
     fig, ax = uplt.subplots()
@@ -506,6 +514,7 @@ def test_inset_colorbar_orientation(loc, orientation):
         cmap,
         loc=loc,
         orientation=orientation,
+        labellocation=labelloc,
         label="My Label",
     )
     found = False

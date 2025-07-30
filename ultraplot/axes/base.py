@@ -7,8 +7,8 @@ import copy
 import inspect
 import re
 import types
-from numbers import Integral
-from typing import Union, Iterable
+from numbers import Integral, Number
+from typing import Union, Iterable, MutableMapping
 from collections.abc import Iterable as IterableType
 
 try:
@@ -31,8 +31,6 @@ import matplotlib.projections as mproj
 import matplotlib.text as mtext
 import matplotlib.ticker as mticker
 import matplotlib.transforms as mtransforms
-from typing import Union
-from numbers import Number
 import numpy as np
 from matplotlib import cbook
 from packaging import version
@@ -96,7 +94,7 @@ ALIGN_OPTS = {
 
 # Projection docstring
 _proj_docstring = """
-proj, projection : \
+proj, projection : \\
 str, `cartopy.crs.Projection`, or `~mpl_toolkits.basemap.Basemap`, optional
     The map projection specification(s). If ``'cart'`` or ``'cartesian'``
     (the default), a `~ultraplot.axes.CartesianAxes` is created. If ``'polar'``,
@@ -159,7 +157,7 @@ docstring._snippet_manager["axes.colorbar_space"] = _space_docstring.format(
 # Transform docstring
 # Used for text and add_axes
 _transform_docstring = """
-transform : {'data', 'axes', 'figure', 'subfigure'} \
+transform : {'data', 'axes', 'figure', 'subfigure'} \\
 or `~matplotlib.transforms.Transform`, optional
     The transform used to interpret the bounds. Can be a
     `~matplotlib.transforms.Transform` instance or a string representing
@@ -177,7 +175,7 @@ Add an inset axes.
 This is similar to `matplotlib.axes.Axes.inset_axes`.
 
 Parameters
-----------
+-----------
 bounds : 4-tuple of float
     The (left, bottom, width, height) coordinates for the axes.
 %(axes.transform)s
@@ -196,17 +194,17 @@ zoom_kw : dict, optional
     Passed to `~Axes.indicate_inset_zoom`.
 
 Other parameters
-----------------
+-----------------
 **kwargs
     Passed to `ultraplot.axes.Axes`.
 
 Returns
--------
+--------
 ultraplot.axes.Axes
     The inset axes.
 
 See also
---------
+---------
 Axes.indicate_inset_zoom
 matplotlib.axes.Axes.inset_axes
 matplotlib.axes.Axes.indicate_inset
@@ -217,26 +215,26 @@ Add indicators denoting the zoom range of the inset axes.
 This will replace previously drawn zoom indicators.
 
 Parameters
-----------
+-----------
 %(artist.patch)s
 zorder : float, default: 3.5
     The `zorder <https://matplotlib.org/stable/gallery/misc/zorder_demo.html>`__ of
     the indicators. Should be greater than the zorder of elements in the parent axes.
 
 Other parameters
-----------------
+-----------------
 **kwargs
     Passed to `~matplotlib.patches.Patch`.
 
 Note
-----
+-----
 This command must be called from the inset axes rather than the parent axes.
 It is called automatically when ``zoom=True`` is passed to `~Axes.inset_axes`
 and whenever the axes are drawn (so the line positions always track the axis
 limits even if they are later changed).
 
 See also
---------
+---------
 matplotlib.axes.Axes.indicate_inset
 matplotlib.axes.Axes.indicate_inset_zoom
 """
@@ -260,7 +258,7 @@ _panel_docstring = """
 Add a panel axes.
 
 Parameters
-----------
+-----------
 side : str, optional
     The panel location. Valid location keys are as follows.
 
@@ -285,13 +283,13 @@ share : bool, default: True
     is determined by figure-wide `sharex` and `sharey` settings.
 
 Other parameters
-----------------
+-----------------
 **kwargs
     Passed to `ultraplot.axes.CartesianAxes`. Supports all valid
     `~ultraplot.axes.CartesianAxes.format` keywords.
 
 Returns
--------
+--------
 ultraplot.axes.CartesianAxes
     The panel axes.
 """
@@ -357,15 +355,15 @@ titleabove : bool, default: :rc:`title.above`
 abctitlepad : float, default: :rc:`abc.titlepad`
     The horizontal padding between a-b-c labels and titles in the same location.
     %(units.pt)s
-ltitle, ctitle, rtitle, ultitle, uctitle, urtitle, lltitle, lctitle, lrtitle \
+ltitle, ctitle, rtitle, ultitle, uctitle, urtitle, lltitle, lctitle, lrtitle \\
 : str or sequence, optional
     Shorthands for the below keywords.
-lefttitle, centertitle, righttitle, upperlefttitle, uppercentertitle, upperrighttitle, \
+lefttitle, centertitle, righttitle, upperlefttitle, uppercentertitle, upperrighttitle, \\
 lowerlefttitle, lowercentertitle, lowerrighttitle : str or sequence, optional
     Additional titles in specific positions (see `title` for details). This works as
     an alternative to the ``ax.format(title='Title', titleloc=loc)`` workflow and
     permits adding more than one title-like label for a single axes.
-a, alpha, fc, facecolor, ec, edgecolor, lw, linewidth, ls, linestyle : default: \
+a, alpha, fc, facecolor, ec, edgecolor, lw, linewidth, ls, linestyle : default: \\
 :rc:`axes.alpha`, :rc:`axes.facecolor`, :rc:`axes.edgecolor`, :rc:`axes.linewidth`, '-'
     Additional settings applied to the background patch, and their
     shorthands. Their defaults values are the ``'axes'`` properties.
@@ -378,7 +376,7 @@ leftlabels, toplabels, rightlabels, bottomlabels : sequence of str, optional
     Labels for the subplots lying along the left, top, right, and
     bottom edges of the figure. The length of each list must match
     the number of subplots along the corresponding edge.
-leftlabelpad, toplabelpad, rightlabelpad, bottomlabelpad : float or unit-spec, default\
+leftlabelpad, toplabelpad, rightlabelpad, bottomlabelpad : float or unit-spec, default\\
 : :rc:`leftlabel.pad`, :rc:`toplabel.pad`, :rc:`rightlabel.pad`, :rc:`bottomlabel.pad`
     The padding between the labels and the axes content.
     %(units.pt)s
@@ -417,7 +415,7 @@ rc_kw : dict-like, optional
     settings passed to `~ultraplot.config.Configurator.context`.
 """
 docstring._snippet_manager["rc.init"] = _rc_format_docstring.format(
-    "Remaining keyword arguments are passed to `matplotlib.axes.Axes`.\n    "
+    "Remaining keyword arguments are passed to `matplotlib.axes.Axes`.\\n    "
 )
 docstring._snippet_manager["rc.format"] = _rc_format_docstring.format("")
 docstring._snippet_manager["axes.format"] = _axes_format_docstring
@@ -426,7 +424,7 @@ docstring._snippet_manager["figure.format"] = _figure_format_docstring
 
 # Colorbar docstrings
 _colorbar_args_docstring = """
-mappable : mappable, colormap-spec, sequence of color-spec, \
+mappable : mappable, colormap-spec, sequence of color-spec, \\
 or sequence of `~matplotlib.artist.Artist`
     There are four options here:
 
@@ -534,16 +532,16 @@ tickwidth : unit-spec, default: `linewidth`
     or :rc:`tick.width` if `linewidth` was not passed.
 tickwidthratio : float, default: :rc:`tick.widthratio`
     Relative scaling of `tickwidth` used to determine minor tick widths.
-ticklabelcolor, ticklabelsize, ticklabelweight \
+ticklabelcolor, ticklabelsize, ticklabelweight \\
 : default: :rc:`tick.labelcolor`, :rc:`tick.labelsize`, :rc:`tick.labelweight`.
     The font color, size, and weight for colorbar tick labels
 labelloc, labellocation : {'bottom', 'top', 'left', 'right'}
     The colorbar label location. Inherits from `tickloc` by default. Default is toward
     the outside of the subplot for outer colorbars and ``'bottom'`` for inset colorbars.
-labelcolor, labelsize, labelweight \
+labelcolor, labelsize, labelweight \\
 : default: :rc:`label.color`, :rc:`label.size`, and :rc:`label.weight`.
     The font color, size, and weight for the colorbar label.
-a, alpha, framealpha, fc, facecolor, framecolor, ec, edgecolor, ew, edgewidth : default\
+a, alpha, framealpha, fc, facecolor, framecolor, ec, edgecolor, ew, edgewidth : default\\
 : :rc:`colorbar.framealpha`, :rc:`colorbar.framecolor`
     For inset colorbars only. Controls the transparency and color of
     the background frame.
@@ -600,8 +598,8 @@ labels : list of str, optional
     from the artists in the tuple (if there are multiple unique labels in the tuple
     group of artists, the tuple group is expanded into unique legend entries --
     otherwise, the tuple group elements are drawn on top of eachother). For details
-    on matplotlib legend handlers and tuple groups, see the matplotlib `legend guide \
-<https://matplotlib.org/stable/tutorials/intermediate/legend_guide.html>`__.
+    on matplotlib legend handlers and tuple groups, see the matplotlib `legend guide \\
+-<https://matplotlib.org/stable/tutorials/intermediate/legend_guide.html>`__.
 """
 _legend_kwargs_docstring = """
 frame, frameon : bool, optional
@@ -631,12 +629,12 @@ fontsize, fontweight, fontcolor : optional
 titlefontsize, titlefontweight, titlefontcolor : optional
     The font size, weight, and color for the legend title. Font size is interpreted
     by `~ultraplot.utils.units`. The default size is `fontsize`.
-borderpad, borderaxespad, handlelength, handleheight, handletextpad, \
+borderpad, borderaxespad, handlelength, handleheight, handletextpad, \\
 labelspacing, columnspacing : unit-spec, optional
     Various matplotlib `~matplotlib.axes.Axes.legend` spacing arguments.
     %(units.em)s
-a, alpha, framealpha, fc, facecolor, framecolor, ec, edgecolor, ew, edgewidth \
-: default: :rc:`legend.framealpha`, :rc:`legend.facecolor`, :rc:`legend.edgecolor`, \
+a, alpha, framealpha, fc, facecolor, framecolor, ec, edgecolor, ew, edgewidth \\
+: default: :rc:`legend.framealpha`, :rc:`legend.facecolor`, :rc:`legend.edgecolor`, \\
 :rc:`axes.linewidth`
     The opacity, face color, edge color, and edge width for the legend frame.
 c, color, lw, linewidth, m, marker, ls, linestyle, dashes, ms, markersize : optional
@@ -994,7 +992,7 @@ class Axes(maxes.Axes):
             s.set_visible(False)
         ax.xaxis.set_visible(False)
         ax.yaxis.set_visible(False)
-        ax.patch.set_facecolor("none")
+        ax.patch.set_facecolor("none")  # ignore axes.alpha application
         ax._panel_hidden = True
         ax._panel_align[align] = bbox
         return ax
@@ -1115,7 +1113,7 @@ class Axes(maxes.Axes):
                 warnings._warn_ultraplot(
                     f"The colorbar() keyword {key!r} was deprecated in v0.10. To "
                     "achieve the same effect, you can pass 'nbins' to the new default "
-                    f"locator DiscreteLocator using {name}_kw={{'nbins': {nbins}}}."
+                    f"locator DiscreteLocator using {name}_kw={{'nbins': {nbins}}}. "
                 )
 
         # Generate and prepare the colorbar axes
@@ -1133,7 +1131,7 @@ class Axes(maxes.Axes):
             kwargs.update({"label": label, "length": length, "width": width})
             extendsize = _not_none(extendsize, rc["colorbar.insetextend"])
             cax, kwargs = self._parse_colorbar_inset(
-                loc=loc, pad=pad, **kwargs
+                loc=loc, labelloc=labelloc, labelrotation = labelrotation, pad=pad, **kwargs
             )  # noqa: E501
 
         # Parse the colorbar mappable
@@ -1290,82 +1288,25 @@ class Axes(maxes.Axes):
             width=tickwidth * tickwidthratio,
         )  # noqa: E501
 
-        if _is_horizontal_loc(loc):
-            if labelloc is None or _is_horizontal_label(labelloc):
-                obj.set_label(label)
-            elif _is_vertical_label(labelloc):
-                obj.ax.set_ylabel(label)
-            else:
-                raise ValueError("Could not determine position")
+        # Set label and label location
+        long_or_short_axis = _get_axis_for(
+            labelloc, loc, orientation=orientation, ax=obj
+        )
+        if labelloc is None:
+            labelloc = long_or_short_axis.get_ticks_position()
+        long_or_short_axis.set_label_text(label)
+        long_or_short_axis.set_label_position(labelloc)
 
-        elif _is_vertical_loc(loc):
-            if labelloc is None or _is_vertical_label(labelloc):
-                obj.set_label(label)
-            elif _is_horizontal_label(labelloc):
-                obj.ax.set_xlabel(label)
-            else:
-                raise ValueError("Could not determine position")
-
-        elif loc == "fill":
-            if labelloc is None:
-                obj.set_label(label)
-            elif _is_vertical_label(labelloc):
-                obj.ax.set_ylabel(label)
-            elif _is_horizontal_label(labelloc):
-                obj.ax.set_xlabel(label)
-            else:
-                raise ValueError("Could not determine position")
-
-        else:
-            # Default to setting label on long axis
-            obj.set_label(label)
-
-        # Set axis properties if labelloc is specified
-        if labelloc is not None:
-            if _is_horizontal_loc(loc) and _is_vertical_label(labelloc):
-                axis = obj._short_axis()
-            elif _is_vertical_loc(loc) and _is_horizontal_label(labelloc):
-                axis = obj._short_axis()
-            elif loc == "fill":
-                if _is_horizontal_label(labelloc):
-                    axis = obj._long_axis()
-                elif _is_vertical_label(labelloc):
-                    axis = obj._short_axis()
-
-            axis.set_label_position(labelloc)
         labelrotation = _not_none(labelrotation, rc["colorbar.labelrotation"])
-        if labelrotation == "auto":
-            # When set to auto, we make the colorbar appear "natural". For example, when we have a
-            # horizontal colorbar on the top, but we want the label to the sides, we make sure that the horizontal alignment is correct and the labelrotation is horizontal. Below produces "sensible defaults", but can be overridden by the user.
-            match (vert, labelloc, loc):
-                # Vertical colorbars
-                case (True, "left", "left" | "right"):
-                    labelrotation = 90
-                case (True, "right", "left" | "right"):
-                    if labelloc == "right":
-                        kw_label["va"] = "bottom"
-                    elif labelloc == "left":
-                        kw_label["va"] = "top"
-                    labelrotation = -90
-                case (True, None, _):
-                    labelrotation = 90
-                # Horizontal colorbar
-                case (False, _, _):
-                    if labelloc == "left":
-                        kw_label["va"] = "center"
-                        labelrotation = 90
-                    elif labelloc == "right":
-                        kw_label["va"] = "center"
-                        labelrotation = 270
-                    else:
-                        labelrotation = 0
-                case Number():
-                    pass
-                case _:
-                    labelrotation = 0
+        # Note kw_label is updated in place
+        _determine_label_rotation(
+            labelrotation,
+            labelloc=labelloc,
+            orientation=orientation,
+            kw_label=kw_label,
+        )
 
-            kw_label.update({"rotation": labelrotation})
-        axis.label.update(kw_label)
+        long_or_short_axis.label.update(kw_label)
         # Assume ticks are set on the long axis(!))
         if hasattr(obj, "_long_axis"):
             # mpl <=3.9
@@ -2123,6 +2064,8 @@ class Axes(maxes.Axes):
         tickloc=None,
         ticklocation=None,
         orientation=None,
+        labelloc=None,
+        labelrotation=None,
         **kwargs,
     ):
         """
@@ -2144,94 +2087,152 @@ class Axes(maxes.Axes):
         xpad = units(pad, "em", "ax", axes=self, width=True)
         ypad = units(pad, "em", "ax", axes=self, width=False)
 
-        # Extra space accounting for colorbar label and tick labels
+        # Calculate space requirements for labels and ticks
         labspace = rc["xtick.major.size"] / 72
         fontsize = rc["xtick.labelsize"]
         fontsize = _fontsize_to_pt(fontsize)
         scale = 1.2
-        if orientation == "vertical":
-            scale = 1.8  # we need a little more room
+        if orientation == "vertical" and labelloc in ("left", "right"):
+            scale = 2  # we need a little more room
         if label is not None:
             labspace += 2 * scale * fontsize / 72
         else:
             labspace += scale * fontsize / 72
 
-        # Determine space for labels
+        # Convert to axes-relative coordinates
         if orientation == "horizontal":
             labspace /= self._get_size_inches()[1]
         else:
             labspace /= self._get_size_inches()[0]
 
-        # Bounds are x0, y0, width, height in axes-relative coordinates
-        # Location in axes-relative coordinates
-        # Determine where labels will appear based on orientation and tick location
-
+        # Initial frame dimensions (will be adjusted based on label position)
         if orientation == "horizontal":
-            # For horizontal colorbars: 'top' or 'bottom'
-            labels_on_top = ticklocation == "top"
-            labels_on_bottom = ticklocation == "bottom"
-
-            # Frame is always the same size, slightly larger to accommodate labels
             frame_width = 2 * xpad + length
             frame_height = 2 * ypad + width + labspace
-
         else:  # vertical
-            # For vertical colorbars: 'left' or 'right'
-            labels_on_left = ticklocation == "left"
-            labels_on_right = ticklocation == "right"
-
-            # Frame is always the same size, slightly larger to accommodate labels
             frame_width = 2 * xpad + width + labspace
             frame_height = 2 * ypad + length
 
-        # Location in axes-relative coordinates
-        # Bounds are x0, y0, width, height in axes-relative coordinates
+        # Initialize frame position and colorbar position
+        xframe = yframe = 0  # frame lower left corner
         if loc == "upper right":
-            bounds_frame = [1 - frame_width, 1 - frame_height]
-            if orientation == "horizontal":
-                # Position colorbar within frame, accounting for label position
-                cb_x = 1 - frame_width + xpad
-                cb_y = 1 - frame_height + ypad + (labspace if labels_on_bottom else 0)
-                bounds_inset = [cb_x, cb_y]
-            else:  # vertical
-                cb_x = 1 - frame_width + xpad + (labspace if labels_on_left else 0)
-                cb_y = 1 - frame_height + ypad
-                bounds_inset = [cb_x, cb_y]
-
+            xframe = 1 - frame_width
+            yframe = 1 - frame_height
+            cb_x = xframe + xpad
+            cb_y = yframe + ypad
         elif loc == "upper left":
-            bounds_frame = [0, 1 - frame_height]
-            if orientation == "horizontal":
-                cb_x = xpad
-                cb_y = 1 - frame_height + ypad + (labspace if labels_on_bottom else 0)
-                bounds_inset = [cb_x, cb_y]
-            else:  # vertical
-                cb_x = xpad + (labspace if labels_on_left else 0)
-                cb_y = 1 - frame_height + ypad
-                bounds_inset = [cb_x, cb_y]
-
+            yframe = 1 - frame_height
+            cb_x = xpad
+            cb_y = yframe + ypad
         elif loc == "lower left":
-            bounds_frame = [0, 0]
-            if orientation == "horizontal":
-                cb_x = xpad
-                cb_y = ypad + (labspace if labels_on_bottom else 0)
-                bounds_inset = [cb_x, cb_y]
-            else:  # vertical
-                cb_x = xpad + (labspace if labels_on_left else 0)
-                cb_y = ypad
-                bounds_inset = [cb_x, cb_y]
-
+            cb_x = xpad
+            cb_y = ypad
         else:  # lower right
-            bounds_frame = [1 - frame_width, 0]
-            if orientation == "horizontal":
-                cb_x = 1 - frame_width + xpad
-                cb_y = ypad + (labspace if labels_on_bottom else 0)
-                bounds_inset = [cb_x, cb_y]
-            else:  # vertical
-                cb_x = 1 - frame_width + xpad + (labspace if labels_on_left else 0)
-                cb_y = ypad
-                bounds_inset = [cb_x, cb_y]
+            xframe = 1 - frame_width
+            cb_x = xframe + xpad
+            cb_y = ypad
 
-        # Set final bounds with proper dimensions
+        # Adjust frame and colorbar position based on label location
+        label_offset = 0.5 * labspace
+
+        # Account for label rotation if specified
+        labelrotation = _not_none(labelrotation, 0)  # default to 0 degrees
+        if labelrotation != 0 and label is not None:
+            # Estimate label text dimensions
+            import math
+
+            # Rough estimate of text width (characters * font size * 0.6)
+            estimated_text_width = len(str(label)) * fontsize * 0.6 / 72
+            text_height = fontsize / 72
+
+            # Convert rotation to radians
+            angle_rad = math.radians(abs(labelrotation))
+
+            # Calculate rotated dimensions
+            rotated_width = estimated_text_width * math.cos(
+                angle_rad
+            ) + text_height * math.sin(angle_rad)
+            rotated_height = estimated_text_width * math.sin(
+                angle_rad
+            ) + text_height * math.cos(angle_rad)
+
+            # Convert back to axes-relative coordinates
+            if orientation == "horizontal":
+                # For horizontal colorbars, rotation affects vertical space
+                rotation_offset = rotated_height / self._get_size_inches()[1]
+            else:
+                # For vertical colorbars, rotation affects horizontal space
+                rotation_offset = rotated_width / self._get_size_inches()[0]
+
+            # Use the larger of the original offset or rotation-adjusted offset
+            label_offset = max(label_offset, rotation_offset)
+
+        if orientation == "vertical":
+            if labelloc == "left":
+                # Move colorbar right to make room for left labels
+                cb_x += label_offset
+
+            elif labelloc == "top":
+                # Center colorbar horizontally and extend frame for top labels
+                cb_x += label_offset
+                if "upper" in loc:
+                    # Upper positions: extend frame downward
+                    cb_y -= label_offset
+                    yframe -= label_offset
+                    frame_height += label_offset
+                    frame_width += label_offset
+                    if "right" in loc:
+                        xframe -= label_offset
+                        cb_x -= label_offset
+                elif "lower" in loc:
+                    # Lower positions: extend frame upward
+                    frame_height += label_offset
+                    frame_width += label_offset
+                    if "right" in loc:
+                        xframe -= label_offset
+                        cb_x -= label_offset
+
+            elif labelloc == "bottom":
+                # Extend frame for bottom labels
+                if "left" in loc:
+                    cb_x += label_offset
+                    frame_width += label_offset
+                else:  # right
+                    xframe -= label_offset
+                    frame_width += label_offset
+
+                if "lower" in loc:
+                    cb_y += label_offset
+                    frame_height += label_offset
+                elif "upper" in loc:
+                    yframe -= label_offset
+                    frame_height += label_offset
+
+        elif orientation == "horizontal":
+            # Base vertical adjustment for horizontal colorbars
+            cb_y += 2 * label_offset
+
+            if labelloc == "bottom":
+                if "upper" in loc:
+                    yframe -= label_offset
+                    frame_height += label_offset
+                elif "lower" in loc:
+                    frame_height += label_offset
+                    cb_y += 0.5 * label_offset
+
+            elif labelloc == "top":
+                if "upper" in loc:
+                    cb_y -= 1.5 * label_offset
+                    yframe -= label_offset
+                    frame_height += label_offset
+                elif "lower" in loc:
+                    frame_height += label_offset
+                    cb_y -= 0.5 * label_offset
+
+        # Set final bounds
+        bounds_inset = [cb_x, cb_y]
+        bounds_frame = [xframe, yframe]
+
         if orientation == "horizontal":
             bounds_inset.extend((length, width))
         else:  # vertical
@@ -2239,7 +2240,7 @@ class Axes(maxes.Axes):
 
         bounds_frame.extend((frame_width, frame_height))
 
-        # Make axes and frame with zorder matching default legend zorder
+        # Create axes and frame
         cls = mproj.get_projection_class("ultraplot_cartesian")
         locator = self._make_inset_locator(bounds_inset, self.transAxes)
         ax = cls(self.figure, locator(self, None).bounds, zorder=5)
@@ -3360,7 +3361,7 @@ class Axes(maxes.Axes):
         shrink
             Alias for `length`. This is included for consistency with
             `matplotlib.figure.Figure.colorbar`.
-        length \
+        length \\
 : float or unit-spec, default: :rc:`colorbar.length` or :rc:`colorbar.insetlength`
             The colorbar length. For outer colorbars, units are relative to the axes
             width or height (default is :rcraw:`colorbar.length`). For inset
@@ -3514,7 +3515,7 @@ class Axes(maxes.Axes):
         borderinvert : bool, optional
             If ``True``, the text and border colors are swapped.
         borderstyle : {'miter', 'round', 'bevel'}, optional
-            The `line join style \
+            The `line join style \\
 <https://matplotlib.org/stable/gallery/lines_bars_and_markers/joinstyle.html>`__
             used for the border.
         bbox : bool, default: False
@@ -3692,21 +3693,81 @@ def _get_pos_from_locator(
     return (x, y)
 
 
-def _is_horizontal_loc(loc):
-    """Check if location is horizontally oriented."""
-    return any(keyword in loc for keyword in ["top", "bottom", "upper", "lower"])
+def _get_axis_for(
+    labelloc: str,
+    loc: str,
+    *,
+    ax: Axes,
+    orientation: str,
+) -> Axes:
+    """
+    Helper function to determine the axis for a label.
+    Particularly used for colorbars but can be used for other purposes
+    """
+
+    def get_short_or_long(which):
+        if hasattr(ax, f"{which}_axis"):
+            return getattr(ax, f"{which}_axis")
+        return getattr(ax, f"_{which}_axis")()
+
+    short = get_short_or_long("short")
+    long = get_short_or_long("long")
+
+    label_axis = None
+    # For fill or none, we use default locations.
+    # This would be the long axis for horizontal orientation
+    # and the short axis for vertical orientation.
+    if not isinstance(labelloc, str):
+        label_axis = long
+    # if the orientation is horizontal,
+    # the short axis is the y-axis, and the long axis is the
+    # x-axis. The inverse holds true for vertical orientation.
+    elif "left" in labelloc or "right" in labelloc:
+        # Vertical label, use short axis
+        label_axis = short if orientation == "horizontal" else long
+    elif "top" in labelloc or "bottom" in labelloc:
+        label_axis = long if orientation == "horizontal" else short
+
+    if label_axis is None:
+        raise ValueError(
+            f"Could not determine label axis for {labelloc=}, with {orientation=}."
+        )
+    return label_axis
 
 
-def _is_vertical_loc(loc):
-    """Check if location is vertically oriented."""
-    return loc in ("left", "right")
+def _determine_label_rotation(
+    labelrotation: str | Number,
+    labelloc: str,
+    orientation: str,
+    kw_label: MutableMapping,
+):
+    """
+    Note we update kw_label in place.
+    """
+    if labelrotation == "auto":
+        # Automatically determine label rotation based on location, we also align the label to make it look
+        # extra nice for 90 degree rotations
+        if orientation == "horizontal":
+            if labelloc in ["left", "right"]:
+                labelrotation = 90 if "left" in labelloc else -90
+                kw_label["ha"] = "center"
+                kw_label["va"] = "bottom" if "left" in labelloc else "bottom"
+            elif labelloc in ["top", "bottom"]:
+                labelrotation = 0
+                kw_label["ha"] = "center"
+                kw_label["va"] = "bottom" if "top" in labelloc else "top"
+        elif orientation == "vertical":
+            if labelloc in ["left", "right"]:
+                labelrotation = 90 if "left" in labelloc else -90
+                kw_label["ha"] = "center"
+                kw_label["va"] = "bottom" if "left" in labelloc else "bottom"
+            elif labelloc in ["top", "bottom"]:
+                labelrotation = 0
+                kw_label["ha"] = "center"
+                kw_label["va"] = "bottom" if "top" in labelloc else "top"
 
-
-def _is_horizontal_label(labelloc):
-    """Check if label location is horizontal."""
-    return labelloc in ("top", "bottom")
-
-
-def _is_vertical_label(labelloc):
-    """Check if label location is vertical."""
-    return labelloc in ("left", "right")
+    if not isinstance(labelrotation, (int, float)):
+        raise ValueError(
+            f"Label rotation must be a number or 'auto', got {labelrotation!r}."
+        )
+    kw_label.update({"rotation": labelrotation})
