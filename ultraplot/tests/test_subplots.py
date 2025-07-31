@@ -247,8 +247,16 @@ def test_axis_sharing(share):
     "layout",
     [
         [[1, 2], [3, 4]],  # simple 2x2
-        [[1, 0, 2], [0, 3, 0], [4, 0, 5]],  # complex 3x3 with independent plots
+        [[1, 6, 2], [0, 3, 0], [4, 0, 5]],  # complex 3x3 with independent plots
         [[0, 0, 1, 1, 0, 0], [0, 2, 2, 3, 3, 0]],  # 1 spanning 2 different plot
+        [
+            [0, 2, 2, 3, 3, 0],
+            [0, 0, 1, 1, 0, 0],
+        ],  # horizontal inverse of the previous
+        [
+            [0, 2, 2, 0, 3, 3, 0],
+            [0, 0, 1, 1, 1, 0, 0],
+        ],  # horizontal inverse of the previous
     ],
 )
 @pytest.mark.mpl_image_compare
@@ -262,6 +270,7 @@ def test_label_sharing_top_right(layout):
         title="Test Title",
     )
     fig.canvas.draw()  # force redraw tick labels
+    uplt.show(block=1)
     for axi in ax:
         assert axi._is_ticklabel_on("labelleft") == False
         assert axi._is_ticklabel_on("labelbottom") == False
@@ -272,7 +281,6 @@ def test_label_sharing_top_right(layout):
                 assert axi._is_ticklabel_on("labeltop") == True
             if side == "right":
                 assert axi._is_ticklabel_on("labelright") == True
-
     return fig
 
 
