@@ -537,9 +537,6 @@ class CartesianAxes(shared._SharedAxes, plot.PlotAxes):
                     # Note: we set the current axis to visible
                     # as we are dealing with borders
                     # or panels
-                    getattr(shared_axis, f"{axis_name}axis").set_tick_params(
-                        **{label_param: False}
-                    )
                     label_visibility[label_param] = True
         return label_visibility
 

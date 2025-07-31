@@ -4762,6 +4762,7 @@ class PlotAxes(base.Axes):
         x, y, kw = self._parse_1d_args(
             x, y, autoy=False, autoguide=False, vert=vert, **kw
         )
+        print(x, y)
         kw = self._parse_cycle(x.size, **kw)
         if fillcolor is None:
             parser = self._get_patches_for_fill
@@ -4790,6 +4791,8 @@ class PlotAxes(base.Axes):
             raise ValueError(f"Retrieved {len(hatches)} hatches but need {len(y)}")
 
         legend_labels = kw.pop("labels", None)
+        kw.pop("positions", None)
+        print(len(y))
         if version.parse(str(_version_mpl)) >= version.parse("3.10.0"):
             # For matplotlib 3.10+:
             # Use orientation parameter
