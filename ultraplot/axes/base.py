@@ -1131,7 +1131,11 @@ class Axes(maxes.Axes):
             kwargs.update({"label": label, "length": length, "width": width})
             extendsize = _not_none(extendsize, rc["colorbar.insetextend"])
             cax, kwargs = self._parse_colorbar_inset(
-                loc=loc, labelloc=labelloc, labelrotation = labelrotation, pad=pad, **kwargs
+                loc=loc,
+                labelloc=labelloc,
+                labelrotation=labelrotation,
+                pad=pad,
+                **kwargs,
             )  # noqa: E501
 
         # Parse the colorbar mappable
