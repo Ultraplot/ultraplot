@@ -521,14 +521,13 @@ class CartesianAxes(shared._SharedAxes, plot.PlotAxes):
                 self in shared_axis._panel_dict[border_side]
                 and self == shared_axis._panel_dict[border_side][-1]
             )
-
             # Use automatic border detection logic
             # if we are a panel we "push" the labels outwards
             if is_border or is_panel:
-                # Deal with mpl version for label_param
-                label_param = _convert_label_param(label_param)
-                is_this_tick_on = ticks[label_param]
-                is_parent_tick_on = sharing_ticks[label_param]
+                # MPL < 3.10 labels top and bottom as left and right
+                label_param_trans = _convert_label_param(label_param)
+                is_this_tick_on = ticks[label_param_trans]
+                is_parent_tick_on = sharing_ticks[label_param_trans]
                 # Only turn on the labels for the current axis
                 # if the axis it is sharing with is a main
                 # and we are not panel
