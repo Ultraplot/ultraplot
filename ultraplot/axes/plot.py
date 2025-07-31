@@ -4790,7 +4790,6 @@ class PlotAxes(base.Axes):
             raise ValueError(f"Retrieved {len(hatches)} hatches but need {len(y)}")
 
         legend_labels = kw.pop("labels", None)
-        kw.pop("positions", None)
         if version.parse(str(_version_mpl)) >= version.parse("3.10.0"):
             # For matplotlib 3.10+:
             # Use orientation parameter
