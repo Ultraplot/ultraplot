@@ -28,7 +28,7 @@ class Legend(mlegend.Legend):
                     old_loc = k
                     break
         super().set_loc(loc)
-        if old_loc:
+        if old_loc is not None:
             value = self.axes._legend_dict.pop(old_loc, None)
             where, type = old_loc
             self.axes._legend_dict[(loc, type)] = value
