@@ -205,7 +205,7 @@ def test_sync_label_dict(rng):
 
     We need to ensure that the legend is updated in the dictionary when its location is changed.
     """
-    data = rng.random.rand(2, 100)
+    data = rng.random((2, 100))
     fig, ax = uplt.subplots()
     ax.plot(*data, label="test")
     leg = ax.legend(loc="lower right")

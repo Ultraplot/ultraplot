@@ -1,4 +1,3 @@
-from typing_extensions import override
 from matplotlib import legend as mlegend
 
 try:
