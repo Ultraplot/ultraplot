@@ -24,7 +24,6 @@ import matplotlib.cm as mcm
 import matplotlib.colors as mcolors
 import matplotlib.container as mcontainer
 import matplotlib.contour as mcontour
-import matplotlib.legend as mlegend
 import matplotlib.offsetbox as moffsetbox
 import matplotlib.patches as mpatches
 import matplotlib.projections as mproj
@@ -35,6 +34,7 @@ import numpy as np
 from matplotlib import cbook
 from packaging import version
 
+from .. import legend as plegend
 from .. import colors as pcolors
 from .. import constructor
 from .. import ticker as pticker
@@ -925,7 +925,7 @@ class Axes(maxes.Axes):
         # _parse_legend_args to search for everything. Ensure None if empty.
         for (loc, align), legend in tuple(self._legend_dict.items()):
             if not isinstance(legend, tuple) or any(
-                isinstance(_, mlegend.Legend) for _ in legend
+                isinstance(_, plegend.Legend) for _ in legend
             ):  # noqa: E501
                 continue
             handles, labels, kwargs = legend
@@ -1131,7 +1131,11 @@ class Axes(maxes.Axes):
             kwargs.update({"label": label, "length": length, "width": width})
             extendsize = _not_none(extendsize, rc["colorbar.insetextend"])
             cax, kwargs = self._parse_colorbar_inset(
-                loc=loc, labelloc=labelloc, labelrotation = labelrotation, pad=pad, **kwargs
+                loc=loc,
+                labelloc=labelloc,
+                labelrotation=labelrotation,
+                pad=pad,
+                **kwargs,
             )  # noqa: E501
 
         # Parse the colorbar mappable
@@ -1681,14 +1685,14 @@ class Axes(maxes.Axes):
         else:  # this is a figure-wide legend
             axs = list(self.figure._iter_axes(hidden=False, children=True))
         handles = []
-        handler_map_full = mlegend.Legend.get_default_handler_map()
+        handler_map_full = plegend.Legend.get_default_handler_map()
         handler_map_full = handler_map_full.copy()
         handler_map_full.update(handler_map or {})
         for ax in axs:
             for attr in ("lines", "patches", "collections", "containers"):
                 for handle in getattr(ax, attr, []):  # guard against API changes
                     label = handle.get_label()
-                    handler = mlegend.Legend.get_legend_handler(
+                    handler = plegend.Legend.get_legend_handler(
                         handler_map_full, handle
                     )  # noqa: E501
                     if handler and label and label[0] != "_":
@@ -1802,7 +1806,7 @@ class Axes(maxes.Axes):
         # Replace with instance or update the queue
         # NOTE: This is valid for both mappable-values pairs and handles-labels pairs
         if not isinstance(obj, tuple) or any(
-            isinstance(_, mlegend.Legend) for _ in obj
+            isinstance(_, plegend.Legend) for _ in obj
         ):  # noqa: E501
             dict_[key] = obj
         else:
@@ -2273,7 +2277,7 @@ class Axes(maxes.Axes):
         # NOTE: Permit drawing empty legend to catch edge cases
         pairs = [pair for pair in array.flat if isinstance(pair, tuple)]
         args = tuple(zip(*pairs)) or ([], [])
-        return mlegend.Legend(self, *args, ncol=ncol, **kwargs)
+        return plegend.Legend(self, *args, ncol=ncol, **kwargs)
 
     def _parse_legend_centered(
         self,
@@ -2328,7 +2332,7 @@ class Axes(maxes.Axes):
                 base, offset = 0.5, 0.5 * (len(pairs) - extra)
             y0, y1 = base + (offset - np.array([i + 1, i])) * height
             bb = mtransforms.Bbox([[0, y0], [1, y1]])
-            leg = mlegend.Legend(
+            leg = plegend.Legend(
                 self,
                 *zip(*ipairs),
                 bbox_to_anchor=bb,
