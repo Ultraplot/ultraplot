@@ -3,7 +3,7 @@ from matplotlib import legend as mlegend
 
 try:
     from typing import override
-except:
+except ImportError:
     from typing_extensions import override
 
 
