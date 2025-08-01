@@ -24,9 +24,11 @@ class Legend(mlegend.Legend):
             # Get old location which is a tuple of location and
             # legend type
             for k, v in self.axes._legend_dict.items():
-                old_loc = k
-            value = self.axes._legend_dict.pop(old_loc, None)
+                if v is self:
+                    old_loc = k
+                    break
         super().set_loc(loc)
         if old_loc:
+            value = self.axes._legend_dict.pop(old_loc, None)
             where, type = old_loc
             self.axes._legend_dict[(loc, type)] = value
