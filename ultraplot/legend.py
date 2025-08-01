@@ -12,7 +12,7 @@ class Legend(mlegend.Legend):
     # Currently we only override the syncing of the location.
     # The user may change the location and the legend_dict should
     # be updated accordingly. This caused an issue where
-    # a legend format was not behvaving according to the docs
+    # a legend format was not behaving according to the docs
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
