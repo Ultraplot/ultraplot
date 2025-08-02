@@ -197,3 +197,25 @@ def test_legend_col_spacing(rng):
     with pytest.raises(ValueError):
         ax.legend(loc="bottom", ncol=3, columnspacing="15x")
     return fig
+
+
+def test_sync_label_dict(rng):
+    """
+    Legends are held within _legend_dict for which the key is a tuple of location and alignment.
+
+    We need to ensure that the legend is updated in the dictionary when its location is changed.
+    """
+    data = rng.random((2, 100))
+    fig, ax = uplt.subplots()
+    ax.plot(*data, label="test")
+    leg = ax.legend(loc="lower right")
+    assert ("lower right", "center") in ax[0]._legend_dict, "Legend not found in dict"
+    leg.set_loc("upper left")
+    assert ("upper left", "center") in ax[
+        0
+    ]._legend_dict, "Legend not found in dict after update"
+    assert leg is ax[0]._legend_dict[("upper left", "center")]
+    assert ("lower right", "center") not in ax[
+        0
+    ]._legend_dict, "Old legend not removed from dict"
+    uplt.close(fig)
