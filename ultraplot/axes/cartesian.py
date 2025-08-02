@@ -9,6 +9,8 @@ import matplotlib.dates as mdates
 import matplotlib.ticker as mticker
 import numpy as np
 
+from packaging import version
+
 from .. import constructor
 from .. import scale as pscale
 from .. import ticker as pticker
@@ -16,6 +18,7 @@ from ..config import rc
 from ..internals import ic  # noqa: F401
 from ..internals import _not_none, _pop_rc, _version_mpl, docstring, labels, warnings
 from . import plot, shared
+import matplotlib.axis as maxis
 
 __all__ = ["CartesianAxes"]
 
@@ -373,7 +376,6 @@ class CartesianAxes(shared._SharedAxes, plot.PlotAxes):
         Enforce the "shared" axis labels and axis tick labels. If this is not
         called at drawtime, "shared" labels can be inadvertantly turned off.
         """
-        # X axis
         # NOTE: Critical to apply labels to *shared* axes attributes rather
         # than testing extents or we end up sharing labels with twin axes.
         # NOTE: Similar to how _align_super_labels() calls _apply_title_above() this
@@ -381,26 +383,154 @@ class CartesianAxes(shared._SharedAxes, plot.PlotAxes):
         # NOTE: The "panel sharing group" refers to axes and panels *above* the
         # bottommost or to the *right* of the leftmost panel. But the sharing level
         # used for the leftmost and bottommost is the *figure* sharing level.
-        axis = self.xaxis
-        if self._sharex is not None and axis.get_visible():
-            level = 3 if self._panel_sharex_group else self.figure._sharex
-            if level > 0:
-                labels._transfer_label(axis.label, self._sharex.xaxis.label)
-                axis.label.set_visible(False)
-            if level > 2:
-                # WARNING: Cannot set NullFormatter because shared axes share the
-                # same Ticker(). Instead use approach copied from mpl subplots().
-                axis.set_tick_params(which="both", labelbottom=False, labeltop=False)
-        # Y axis
-        axis = self.yaxis
-        if self._sharey is not None and axis.get_visible():
-            level = 3 if self._panel_sharey_group else self.figure._sharey
-            if level > 0:
-                labels._transfer_label(axis.label, self._sharey.yaxis.label)
-                axis.label.set_visible(False)
-            if level > 2:
-                axis.set_tick_params(which="both", labelleft=False, labelright=False)
+
+        # Get border axes once for efficiency
+        border_axes = self.figure._get_border_axes()
+
+        # Apply X axis sharing
+        self._apply_axis_sharing_for_axis("x", border_axes)
+
+        # Apply Y axis sharing
+        self._apply_axis_sharing_for_axis("y", border_axes)
+
+    def _apply_axis_sharing_for_axis(
+        self,
+        axis_name: str,
+        border_axes: dict[str, plot.PlotAxes],
+    ) -> None:
+        """
+        Apply axis sharing for a specific axis (x or y).
+
+        Parameters
+        ----------
+        axis_name : str
+            Either 'x' or 'y'
+        border_axes : dict
+            Dictionary from _get_border_axes() containing border information
+        """
+        if axis_name == "x":
+            axis = self.xaxis
+            shared_axis = self._sharex
+            panel_group = self._panel_sharex_group
+            sharing_level = self.figure._sharex
+            label_params = ["labeltop", "labelbottom"]
+            border_sides = ["top", "bottom"]
+        else:  # axis_name == 'y'
+            axis = self.yaxis
+            shared_axis = self._sharey
+            panel_group = self._panel_sharey_group
+            sharing_level = self.figure._sharey
+            label_params = ["labelleft", "labelright"]
+            border_sides = ["left", "right"]
+
+        if shared_axis is None or not axis.get_visible():
+            return
+
+        level = 3 if panel_group else sharing_level
+
+        # Handle axis label sharing (level > 0)
+        if level > 0:
+            shared_axis_obj = getattr(shared_axis, f"{axis_name}axis")
+            labels._transfer_label(axis.label, shared_axis_obj.label)
+            axis.label.set_visible(False)
+
+        # Handle tick label sharing (level > 2)
+        if level > 2:
+            label_visibility = self._determine_tick_label_visibility(
+                axis,
+                shared_axis,
+                axis_name,
+                label_params,
+                border_sides,
+                border_axes,
+            )
+            axis.set_tick_params(which="both", **label_visibility)
+        # Turn minor ticks off
         axis.set_minor_formatter(mticker.NullFormatter())
+
+    def _determine_tick_label_visibility(
+        self,
+        axis: maxis.Axis,
+        shared_axis: maxis.Axis,
+        axis_name: str,
+        label_params: list[str],
+        border_sides: list[str],
+        border_axes: dict[str, list[plot.PlotAxes]],
+    ) -> dict[str, bool]:
+        """
+        Determine which tick labels should be visible based on sharing rules and borders.
+
+        Parameters
+        ----------
+        axis : matplotlib axis
+            The current axis object
+        shared_axis : Axes
+            The axes this one shares with
+        axis_name : str
+            Either 'x' or 'y'
+        label_params : list
+            List of label parameter names (e.g., ['labeltop', 'labelbottom'])
+        border_sides : list
+            List of border side names (e.g., ['top', 'bottom'])
+        border_axes : dict
+            Dictionary from _get_border_axes()
+
+        Returns
+        -------
+        dict
+            Dictionary of label visibility parameters
+        """
+        ticks = axis.get_tick_params()
+        shared_axis_obj = getattr(shared_axis, f"{axis_name}axis")
+        sharing_ticks = shared_axis_obj.get_tick_params()
+
+        label_visibility = {}
+
+        def _convert_label_param(label_param: str) -> str:
+            # Deal with logic not being consistent
+            # in prior mpl versions
+            if version.parse(str(_version_mpl)) <= version.parse("3.9"):
+                if label_param == "labeltop" and axis_name == "x":
+                    label_param = "labelright"
+                elif label_param == "labelbottom" and axis_name == "x":
+                    label_param = "labelleft"
+            return label_param
+
+        for label_param, border_side in zip(label_params, border_sides):
+            # Check if user has explicitly set label location via format()
+            label_visibility[label_param] = False
+            has_panel = False
+            for panel in self._panel_dict[border_side]:
+                # Check if the panel is a colorbar
+                colorbars = [
+                    values
+                    for key, values in self._colorbar_dict.items()
+                    if border_side in key  # key is tuple (side, top | center | lower)
+                ]
+                if not panel in colorbars:
+                    # Skip colorbar as their
+                    # yaxis is not shared
+                    has_panel = True
+                    break
+            # When we have a panel, let the panel have
+            # the labels and turn-off for this axis + side.
+            if has_panel:
+                continue
+            is_border = self in border_axes.get(border_side, [])
+            is_panel = (
+                self in shared_axis._panel_dict[border_side]
+                and self == shared_axis._panel_dict[border_side][-1]
+            )
+            # Use automatic border detection logic
+            # if we are a panel we "push" the labels outwards
+            label_param_trans = _convert_label_param(label_param)
+            is_this_tick_on = ticks[label_param_trans]
+            is_parent_tick_on = sharing_ticks[label_param_trans]
+            if is_panel:
+                label_visibility[label_param] = is_parent_tick_on
+            elif is_border:
+                label_visibility[label_param] = is_this_tick_on
+        return label_visibility
 
     def _add_alt(self, sx, **kwargs):
         """

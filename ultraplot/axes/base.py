@@ -1532,7 +1532,7 @@ class Axes(maxes.Axes):
             return [pax for pax in paxs if not pax._panel_hidden and pax._panel_share]
 
         # Internal axis sharing, share stacks of panels and main axes with each other
-        # NOTE: This is called on the main axes whenver a panel is created.
+        # NOTE: This is called on the main axes whenever a panel is created.
         # NOTE: This block is why, even though we have figure-wide share[xy], we
         # still need the axes-specific _share[xy]_override attribute.
         if not self._panel_side:  # this is a main axes
@@ -3259,7 +3259,6 @@ class Axes(maxes.Axes):
             and self._panel_parent is other._panel_parent
         ):
             return True
-
         # Not in the same panel group
         return False
 
