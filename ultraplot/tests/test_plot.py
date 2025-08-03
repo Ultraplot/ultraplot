@@ -420,3 +420,16 @@ def test_pie_labeled_series_in_dataframes():
     for text, index in zip(texts, data.index):
         assert text.get_text() == index
     uplt.close(fig)
+
+
+def test_color_parsing_for_none():
+    """
+    Ensure that none is not parsed to white
+    """
+    fig, ax = uplt.subplots()
+    ax.scatter(0.4, 0.5, 100, fc="none", ec="k", alpha=0.2)
+    ax.scatter(0.5, 0.5, 100, fc="none", ec="k")
+    ax.scatter(0.6, 0.5, 100, fc="none", ec="k", alpha=1)
+    for artist in ax[0].collections:
+        assert artist.get_facecolor().shape[0] == 0
+    uplt.close(fig)
