@@ -2509,7 +2509,7 @@ class PlotAxes(base.Axes):
         # functions and helper functions.
         parsers = (self._parse_cmap, *self._level_parsers)
         if c is None or mcolors.is_color_like(c):
-            if infer_rgb and c is not None:
+            if infer_rgb and c is not None and c != "none":
                 c = pcolors.to_hex(c)  # avoid scatter() ambiguous color warning
             if apply_cycle:  # False for scatter() so we can wait to get correct 'N'
                 kwargs = self._parse_cycle(**kwargs)
