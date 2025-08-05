@@ -376,8 +376,14 @@ for (name1, equal), (name2, group) in zip(equals, groups):
 #    are defined as follows:
 #
 #    * ``False`` or ``0``: Axis sharing is disabled.
-#    * ``'labels'``, ``'labs'``, or ``1``: Axis labels are shared, but
-#      nothing else. Labels will appear on the leftmost and bottommost subplots.
+#    * ``'labels'``, ``'labs'``, or ``1``: Axis labels are shared, but nothing else. Labels will appear on the outermost
+#  plots. This implies that for left, and bottom labels (default)
+# the labels will appear on the leftmost and bottommost subplots
+#  bottommost subplots. Note that labels will be shared only for
+#  plots that are immediately adjacent in the same row or column
+#  of the :class:`~ultraplot.gridspec.GridSpec`; a space or
+#  empty plot will add the labels, but not break the limit
+#  sharing. See below for a more complex example.
 #    * ``'limits'``, ``'lims'``, or ``2``: Same as ``1``, but axis limits, axis
 #      scales, and major and minor tick locations and formatting are also shared.
 #    * ``True`` or ``3`` (default): Same as ``2``, but axis tick labels are also
@@ -446,6 +452,25 @@ for span, share, title in zip(spans, shares, titles):
         yticks=5,
     )
 
+# %% [raw] raw_mimetype="text/restructuredtext"
+# When subplots are arranged on a grid, UltraPlot will
+# automatically share axis labels where appropriate. For more
+# complex layouts, UltraPlot will add the labels when the subplot
+# is facing and "edge" which is defined as not immediately having a subplot next to it. For example:
+import ultraplot as uplt, numpy as np
+
+layout = [[1, 0, 2], [0, 3, 0], [4, 0, 6]]
+fig, ax = uplt.subplots(layout)
+ax.format(xticklabelloc="top", yticklabelloc="right")
+# plot data to indicate that limits are still shared
+x = y = np.linspace(0, 1, 10)
+for axi in ax:
+    axi.plot(axi.number * x, axi.number * y)
+fig.show()
+
+# %% [raw] raw_mimetype="text/restructuredtext"
+# Notice how the top and right labels here are added since no
+# subplot is immediately adjacent to another, the limits however, are shared.
 
 # %% [raw] raw_mimetype="text/restructuredtext"
 # .. _ug_units:
