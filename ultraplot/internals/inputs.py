@@ -139,24 +139,41 @@ def _to_duck_array(data, strip_units=False):
 
 def _to_numpy_array(data, strip_units=False):
     """
-    Convert arbitrary input to numpy array. Preserve masked arrays and unit arrays.
+    Convert arbitrary input to a numpy array. Preserve masked arrays and unit arrays.
+    If the array contains cftime objects, require nc-time-axis to be installed.
     """
     _load_objects()
     if data is None:
         raise ValueError("Invalid data None.")
+
     if isinstance(data, ndarray):
         pass
     elif isinstance(data, DataArray):
         data = data.data  # support pint quantities that get unit-stripped later
     elif isinstance(data, (DataFrame, Series, Index)):
         data = data.values
+
     if Quantity is not ndarray and isinstance(data, Quantity):
         if strip_units:
-            return np.atleast_1d(data.magnitude)
+            result = np.atleast_1d(data.magnitude)
         else:
-            return np.atleast_1d(data.magnitude) * data.units
+            result = np.atleast_1d(data.magnitude) * data.units
     else:
-        return np.atleast_1d(data)  # natively preserves masked arrays
+        result = np.atleast_1d(data)  # natively preserves masked arrays
+    # If the array contains cftime objects, ensure nc-time-axis is available.
+    if result.size:
+        first_elem = result.flatten()[0]
+        if hasattr(
+            first_elem, "__class__"
+        ) and first_elem.__class__.__module__.startswith("cftime"):
+            try:
+                import nc_time_axis  # This module registers its converter automatically.
+            except ImportError:
+                raise ImportError(
+                    "The input data contains cftime objects, but nc_time_axis is not available. "
+                    "Please install nc_time_axis to handle these dates correctly."
+                )
+    return result
 
 
 def _to_masked_array(data, *, copy=False):
