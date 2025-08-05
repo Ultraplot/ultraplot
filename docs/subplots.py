@@ -376,8 +376,9 @@ for (name1, equal), (name2, group) in zip(equals, groups):
 #    are defined as follows:
 #
 #    * ``False`` or ``0``: Axis sharing is disabled.
-#    * ``'labels'``, ``'labs'``, or ``1``: Axis labels are shared, but
-#      nothing else. Labels will appear on the outermost plots. This implies that for left, and bottom labels (default) the labels will appear on the leftmost and bottommost subplots
+#    * ``'labels'``, ``'labs'``, or ``1``: Axis labels are shared, but nothing else. Labels will appear on the outermost
+#  plots. This implies that for left, and bottom labels (default)
+# the labels will appear on the leftmost and bottommost subplots
 #  bottommost subplots. Note that labels will be shared only for
 #  plots that are immediately adjacent in the same row or column
 #  of the :class:`~ultraplot.gridspec.GridSpec`; a space or
