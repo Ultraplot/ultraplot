@@ -2751,7 +2751,7 @@ class DivergingNorm(mcolors.Normalize):
     def __str__(self):
         return type(self).__name__ + f"(center={self.vcenter!r})"
 
-    def __init__(self, vcenter=None, vmin=None, vmax=None, fair=True, clip=None):
+    def __init__(self, vcenter=0, vmin=None, vmax=None, fair=True, clip=None):
         """
         Parameters
         ----------
