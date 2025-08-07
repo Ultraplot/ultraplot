@@ -2751,7 +2751,7 @@ class DivergingNorm(mcolors.Normalize):
     def __str__(self):
         return type(self).__name__ + f"(center={self.vcenter!r})"
 
-    def __init__(self, vcenter=0, vmin=None, vmax=None, fair=True, clip=None):
+    def __init__(self, vcenter=None, vmin=None, vmax=None, fair=True, clip=None):
         """
         Parameters
         ----------
@@ -2782,6 +2782,12 @@ class DivergingNorm(mcolors.Normalize):
         # a diverging norm like they would prefer if they didn't have to worry about
         # confusing users: single class, default "fair" scaling that can be turned off.
         super().__init__(vmin, vmax, clip)
+        if fair and vcenter is None:
+            vcenter = 0
+            if vmin is not None and vmax is not None:
+                vcenter = 0.5 * (vmax + vmin)
+        else:
+            vcenter = 0
         self.vcenter = vcenter
         self.fair = fair
 
