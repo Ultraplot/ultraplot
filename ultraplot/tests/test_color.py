@@ -1,4 +1,4 @@
-import ultraplot as uplt, pytest
+import ultraplot as uplt, numpy as np, pytest
 
 
 @pytest.mark.mpl_image_compare
