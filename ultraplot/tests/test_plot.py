@@ -436,12 +436,12 @@ def test_color_parsing_for_none():
 
 
 @pytest.mark.mpl_image_compare
-def test_inhomogeneous_violin():
+def test_inhomogeneous_violin(rng):
     """
     Test that inhomogeneous violin plots work correctly.
     """
     fig, ax = uplt.subplots()
-    data = [np.random.normal(size=100), np.random.normal(size=200)]
+    data = [rng.normal(size=100), np.random.normal(size=200)]
     violins = ax.violinplot(data, vert=True, labels=["A", "B"])
     assert len(violins) == 2
     for violin in violins:
