@@ -158,7 +158,7 @@ def _to_numpy_array(data, strip_units=False):
             return np.atleast_1d(data.magnitude) * data.units
     try:
         return np.atleast_1d(data)  # natively preserves masked arrays
-    except:
+    except (TypeError, ValueError):
         # handle  non-homogeneous data
         return np.array(data, dtype=object)
 
