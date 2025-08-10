@@ -17,3 +17,29 @@ def test_wrong_keyword_reset():
     fig, ax = uplt.subplots(proj="cyl")
     ax.format(coastcolor="black")
     fig.canvas.draw()
+
+
+def test_configurator_update_and_reset():
+    """
+    Test updating a configuration key and resetting configuration.
+    """
+    config = uplt.rc
+    # Update a configuration key
+    config["coastcolor"] = "red"
+    assert config["coastcolor"] == "red"
+    # Reset configuration; after reset the key should not remain as "red"
+    config.reset()
+    assert config["coastcolor"] != "red"
+
+
+def test_context_manager_local_changes():
+    """
+    Test that changes made in a local context do not persist globally.
+    """
+    config = uplt.rc
+    # Save original value if present, else None
+    original = config["coastcolor"] if "coastcolor" in config else None
+    with config.context(coastcolor="blue"):
+        assert config["coastcolor"] == "blue"
+    # After the context, the change should be reverted to original
+    assert config["coastcolor"] == original

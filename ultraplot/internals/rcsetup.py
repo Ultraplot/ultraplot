@@ -528,10 +528,14 @@ class _RcParams(MutableMapping, dict):
 
     # NOTE: By omitting __delitem__ in MutableMapping we effectively
     # disable mutability. Also disables deleting items with pop().
-    def __init__(self, source, validate):
-        self._validate = validate
-        for key, value in source.items():
-            self.__setitem__(key, value)  # trigger validation
+
+    def __init__(self, data=None, validate=None):
+        self._validate = validate or {}
+        if data:
+            for key, value in data.items():
+                if key not in self._validate:
+                    raise KeyError(f"Inalid rc {key!r}.")
+                self[key] = value
 
     def __repr__(self):
         return RcParams.__repr__(self)
@@ -553,14 +557,7 @@ class _RcParams(MutableMapping, dict):
 
     def __setitem__(self, key, value):
         key, value = self._check_key(key, value)
-        if key not in self._validate:
-            raise KeyError(f"Invalid rc key {key!r}.")
-        try:
-            value = self._validate[key](value)
-        except (ValueError, TypeError) as error:
-            raise ValueError(f"Key {key}: {error}") from None
-        if key is not None:
-            dict.__setitem__(self, key, value)
+        dict.__setitem__(self, key, value)
 
     @staticmethod
     def _check_key(key, value=None):
@@ -587,9 +584,12 @@ class _RcParams(MutableMapping, dict):
             )
         return key, value
 
-    def copy(self):
-        source = {key: dict.__getitem__(self, key) for key in self}
-        return _RcParams(source, self._validate)
+    def copy(self, skip_validation=False):
+        new = _RcParams(
+            data=dict(self),
+            validate=self._validate,
+        )
+        return new
 
 
 # Borrow validators from matplotlib and construct some new ones

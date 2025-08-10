@@ -575,6 +575,7 @@ def test_networks(rng):
         inax = ax.inset_axes([*pos, 0.2, 0.2], zoom=0)
         layout_kw = {}
         if layout in ("random", "arf", "forceatlas2"):
+
             layout_kw = dict(seed=SEED)
 
         inax.graph(
