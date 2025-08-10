@@ -1,11 +1,6 @@
 import ultraplot as uplt, pytest, numpy as np
 
 
-class BrokenObject:
-    def __str__(self):
-        raise Exception("I am broken.")
-
-
 @pytest.mark.parametrize(
     "data, dtype",
     [
