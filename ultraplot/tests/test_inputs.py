@@ -6,7 +6,7 @@ import ultraplot as uplt, pytest, numpy as np
     [
         ([1, 2, 3], int),
         ([[1, 2], [1, 2, 3]], object),
-        (["hello", 1], np.dtype("<U21")),  # will convert 1 to string
+        (["hello", 1], "unicode"),  # will convert 1 to string
         ([["hello"], 1], object),  # non-homogeneous  # mixed types
     ],
 )
