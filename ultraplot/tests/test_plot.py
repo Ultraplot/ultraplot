@@ -446,4 +446,4 @@ def test_inhomogeneous_violin(rng):
     assert len(violins) == 2
     for violin in violins:
         assert violin.get_paths()  # Ensure paths are created
-    uplt.close(fig)
+    return fig
