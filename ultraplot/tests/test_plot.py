@@ -433,3 +433,17 @@ def test_color_parsing_for_none():
     for artist in ax[0].collections:
         assert artist.get_facecolor().shape[0] == 0
     uplt.close(fig)
+
+
+@pytest.mark.mpl_image_compare
+def test_inhomogeneous_violin(rng):
+    """
+    Test that inhomogeneous violin plots work correctly.
+    """
+    fig, ax = uplt.subplots()
+    data = [rng.normal(size=100), np.random.normal(size=200)]
+    violins = ax.violinplot(data, vert=True, labels=["A", "B"])
+    assert len(violins) == 2
+    for violin in violins:
+        assert violin.get_paths()  # Ensure paths are created
+    return fig

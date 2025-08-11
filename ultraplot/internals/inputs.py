@@ -150,13 +150,17 @@ def _to_numpy_array(data, strip_units=False):
         data = data.data  # support pint quantities that get unit-stripped later
     elif isinstance(data, (DataFrame, Series, Index)):
         data = data.values
+
     if Quantity is not ndarray and isinstance(data, Quantity):
         if strip_units:
             return np.atleast_1d(data.magnitude)
         else:
             return np.atleast_1d(data.magnitude) * data.units
-    else:
+    try:
         return np.atleast_1d(data)  # natively preserves masked arrays
+    except (TypeError, ValueError):
+        # handle  non-homogeneous data
+        return np.array(data, dtype=object)
 
 
 def _to_masked_array(data, *, copy=False):
