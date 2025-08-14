@@ -282,16 +282,20 @@ def _parse_triangulation_with_preprocess(*keys, keywords=None, allow_extra=True)
     """
 
     def _decorator(func):
-        @_preprocess_or_redirect(*keys, keywords=keywords, allow_extra=allow_extra)
-        def wrapper(self, *args, **kwargs):
-            # Parse triangulation inputs after preprocessing
+        # Change order of wrap to preserve the
+        # function name which is used
+        # to do processing on geo axes
+        def triangulation_wrapper(self, *args, **kwargs):
             triangulation, z, remaining_args, updated_kwargs = (
                 _parse_triangulation_inputs(*args, **kwargs)
             )
-            # Call the original function with parsed inputs
             return func(self, triangulation, z, *remaining_args, **updated_kwargs)
 
-        return wrapper
+        final_wrapper = _preprocess_or_redirect(
+            *keys, keywords=keywords, allow_extra=allow_extra
+        )(triangulation_wrapper)
+
+        return functools.wraps(func)(final_wrapper)
 
     return _decorator
 
