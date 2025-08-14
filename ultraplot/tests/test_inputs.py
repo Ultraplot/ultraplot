@@ -1,5 +1,5 @@
 import ultraplot as uplt, pytest, numpy as np
-from unittest.mock import patch, Mock
+from unittest.mock import Mock
 
 
 @pytest.mark.parametrize(
