@@ -1151,7 +1151,7 @@ class GeoAxes(shared._SharedAxes, plot.PlotAxes):
         """
         This function is intended for the Basemap backend
         and mirrors the label placement behavior of Cartopy.
-        See: https://scitools.org.uk/cartopy/docs/v0.16/_modules/cartopy/mpl/gridliner.html#Gridliner
+        See: https://cartopy.readthedocs.io/stable/reference/generated/cartopy.mpl.gridliner.Gridliner.html
         """
         sides = dict()
         for which, formatter in zip("xy", gl):
@@ -1341,7 +1341,7 @@ class _CartopyAxes(GeoAxes, _GeoAxes):
         Return a circle `~matplotlib.path.Path` used as the outline for polar
         stereographic, azimuthal equidistant, Lambert conformal, and gnomonic
         projections. This was developed from `this cartopy example \
-    <https://scitools.org.uk/cartopy/docs/v0.15/examples/always_circular_stereo.html>`__.
+    <https://cartopy.readthedocs.io/v0.25.0.post2/gallery/lines_and_polygons/always_circular_stereo.html>`__.
         """
         theta = np.linspace(0, 2 * np.pi, N)
         center, radius = [0.5, 0.5], 0.5

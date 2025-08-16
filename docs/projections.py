@@ -17,7 +17,7 @@
 #
 # .. _polar: https://matplotlib.org/3.1.0/gallery/pie_and_polar_charts/polar_demo.html
 #
-# .. _cartopy: https://scitools.org.uk/cartopy/docs/latest/
+# .. _cartopy: https://cartopy.readthedocs.io/stable/
 #
 # .. _basemap: https://matplotlib.org/basemap/index.html
 #
@@ -205,7 +205,7 @@ axs.format(
 #      to :func:`~ultraplot.axes.GeoAxes.format`.
 #    * By default, UltraPlot gives circular boundaries to polar cartopy and basemap
 #      projections like :class:`~cartopy.crs.NorthPolarStereo` (see `this example
-#      <https://scitools.org.uk/cartopy/docs/latest/gallery/lines_and_polygons/always_circular_stereo.html>`__
+#      <https://cartopy.readthedocs.io/stable/gallery/lines_and_polygons/always_circular_stereo.html>`__
 #      from the cartopy website). To disable this feature, set :rcraw:`geo.round` to
 #      ``False`` or pass ``round=False` to :func:`~ultraplot.axes.GeoAxes.format`. Please note
 #      that older versions of cartopy cannot add gridlines to maps bounded by circles.
@@ -510,7 +510,7 @@ uplt.rc.reset()
 # Included projections
 # --------------------
 #
-# The available `cartopy <https://scitools.org.uk/cartopy/docs/latest/>`__
+# The available `cartopy <https://cartopy.readthedocs.io/stable/>`__
 # and `basemap <https://matplotlib.org/basemap/index.html>`__ projections are
 # plotted below. The full table of projection names with links to the relevant
 # `PROJ <https://proj.org>`__ documentation is found :ref:`here <proj_table>`.

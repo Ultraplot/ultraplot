@@ -22,7 +22,7 @@ dependencies of UltraPlot, or are distributed with UltraPlot:
 * `pint <https://github.com/hgrecco/pint>`__ - A package for tracking and
   converting between physical units during mathematical operations and when
   plotting in matplotlib axes.
-* `cartopy <https://scitools.org.uk/cartopy/docs/latest/>`__ - A package for
+* `cartopy <https://cartopy.readthedocs.io/stable/>`__ - A package for
   plotting geographic and geophysical data in matplotlib. Includes a suite of
   different map projections.
 * `basemap <https://github.com/matplotlib/basemap>`__ - The original cartographic
