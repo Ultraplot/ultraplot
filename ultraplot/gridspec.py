@@ -1360,12 +1360,6 @@ class GridSpec(mgridspec.GridSpec):
     # Also delete obsolete 'subplotpars' and built-in tight layout function.
     tight_layout = _disable_method("tight_layout")  # instead use custom tight layout
     subgridspec = _disable_method("subgridspec")  # instead use variable spaces
-    # get_width_ratios = _disable_method("get_width_ratios")
-    # get_height_ratios = _disable_method("get_height_ratios")
-    # set_width_ratios = _disable_method("set_width_ratios")
-    # set_height_ratios = _disable_method("set_height_ratios")
-    # get_subplot_params = _disable_method("get_subplot_params")
-    # locally_modified_subplot_params = _disable_method("locally_modified_subplot_params")
 
     # Immutable helper properties used to calculate figure size and subplot positions
     # NOTE: The spaces are auto-filled with defaults wherever user left them unset
