@@ -1,4 +1,4 @@
-.. _cartopy: https://scitools.org.uk/cartopy/docs/latest/
+.. _cartopy: https://cartopy.readthedocs.io/stable/
 
 .. _basemap: https://matplotlib.org/basemap/index.html
 
