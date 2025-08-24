@@ -1552,7 +1552,10 @@ class Figure(mfigure.Figure):
         pad = (self._suptitle_pad / 72) / self.get_size_inches()[1]
         x, _ = self._get_align_coord("top", axs, includepanels=self._includepanels)
         y = self._get_offset_coord("top", axs, renderer, pad=pad, extra=labs)
-        self._suptitle.set_ha("center")
+        # Preserve user-specified horizontal alignment, only set to center if unmodified
+        # Since we initialize with ha="center", we check if it's been changed by the user
+        if not hasattr(self, "_suptitle_ha_set_by_user"):
+            self._suptitle.set_ha("center")
         self._suptitle.set_va("bottom")
         self._suptitle.set_position((x, y))
 
@@ -1688,6 +1691,9 @@ class Figure(mfigure.Figure):
             context=True,
         )
         kw.update(kwargs)
+        # Track if user has specified a custom horizontal alignment
+        if "ha" in kwargs:
+            self._suptitle_ha_set_by_user = True
         if kw:
             self._suptitle.update(kw)
         if title is not None:

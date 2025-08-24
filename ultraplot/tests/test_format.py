@@ -563,3 +563,29 @@ def test_axis_label_anchor(angle):
         assert tick2.get_rotation() == angle
         assert tick1.get_position()[0] == tick2.get_position()[0]
         assert tick1.get_position()[1] == tick2.get_position()[1]
+
+
+@pytest.mark.mpl_image_compare
+def test_suptitle_alignment():
+    """
+    Test suptitle horizontal alignment works correctly.
+    Issue #324 - suptitle_kw ha parameter should be respected.
+    """
+    fig, axs = uplt.subplots(ncols=3, figwidth=12)
+
+    # Test left alignment
+    axs[0].plot([1, 2, 3], [1, 2, 3])
+    axs[0].format(title="Left aligned")
+
+    # Test center alignment (default)
+    axs[1].plot([1, 2, 3], [1, 2, 3])
+    axs[1].format(title="Center aligned")
+
+    # Test right alignment
+    axs[2].plot([1, 2, 3], [1, 2, 3])
+    axs[2].format(title="Right aligned")
+
+    # Set different suptitle alignments
+    fig.format(suptitle="Left\nAlignment", suptitle_kw={"ha": "left"})
+
+    return fig
