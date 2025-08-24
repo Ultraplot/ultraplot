@@ -231,7 +231,6 @@ def test_suptitle_kw_position_reverted(ha, expectation):
     """
     Test that position remains the same while alignment properties differ.
     """
-    print(ha, expectation)
     fig, ax = uplt.subplots(ncols=3)
     fig.format(suptitle=ha, suptitle_kw=dict(ha=ha))
     fig.canvas.draw()  # trigger alignment
