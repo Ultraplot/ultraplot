@@ -134,3 +134,43 @@ def test_toggle_input_axis_sharing():
     fig = uplt.figure()
     with pytest.warns(uplt.internals.warnings.UltraPlotWarning):
         fig._toggle_axis_sharing(which="does not exist")
+
+
+def test_suptitle_alignment():
+    """
+    Test that suptitle alignment works correctly with includepanels parameter.
+    """
+    # Test 1: Default behavior should center at figure center (0.5)
+    fig1, ax1 = uplt.subplots(ncols=3)
+    for ax in ax1:
+        ax.panel('top', width='1em')  # Add panels
+    fig1.suptitle('Default')
+    fig1.canvas.draw()  # Trigger alignment
+    pos1 = fig1._suptitle.get_position()
+    
+    # Test 2: includepanels=False should center at figure center (0.5)
+    fig2, ax2 = uplt.subplots(ncols=3, includepanels=False)
+    for ax in ax2:
+        ax.panel('top', width='1em')  # Add panels
+    fig2.suptitle('includepanels=False')
+    fig2.canvas.draw()  # Trigger alignment
+    pos2 = fig2._suptitle.get_position()
+    
+    # Test 3: includepanels=True should center over content area
+    fig3, ax3 = uplt.subplots(ncols=3, includepanels=True)
+    for ax in ax3:
+        ax.panel('top', width='1em')  # Add panels
+    fig3.suptitle('includepanels=True')  
+    fig3.canvas.draw()  # Trigger alignment
+    pos3 = fig3._suptitle.get_position()
+    
+    # Assertions
+    assert abs(pos1[0] - 0.5) < 0.01, f"Default should center at 0.5, got {pos1[0]}"
+    assert abs(pos2[0] - 0.5) < 0.01, f"includepanels=False should center at 0.5, got {pos2[0]}" 
+    assert abs(pos3[0] - 0.5) > 0.005, f"includepanels=True should be offset from 0.5, got {pos3[0]}"
+    
+    # The difference between False and True should be significant
+    diff = abs(pos3[0] - pos2[0])
+    assert diff > 0.005, f"includepanels should make a difference, difference is {diff}"
+    
+    uplt.close('all')

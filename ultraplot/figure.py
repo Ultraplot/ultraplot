@@ -1550,7 +1550,15 @@ class Figure(mfigure.Figure):
             return
         labs = tuple(t for t in self._suplabel_dict["top"].values() if t.get_text())
         pad = (self._suptitle_pad / 72) / self.get_size_inches()[1]
-        x, _ = self._get_align_coord("top", axs, includepanels=self._includepanels)
+        
+        # For suptitle, use different alignment logic based on includepanels setting
+        if self._includepanels:
+            # When includepanels=True, center over the visual content area (including panels)
+            x, _ = self._get_align_coord("top", axs, includepanels=True)
+        else:
+            # When includepanels=False or None, center at figure center like matplotlib
+            x = 0.5
+            
         y = self._get_offset_coord("top", axs, renderer, pad=pad, extra=labs)
         self._suptitle.set_ha("center")
         self._suptitle.set_va("bottom")
