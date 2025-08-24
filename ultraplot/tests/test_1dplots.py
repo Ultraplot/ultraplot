@@ -295,6 +295,7 @@ def test_scatter_args(rng):
     return fig
 
 
+@pytest.mark.mpl_image_compare
 def test_scatter_edgecolor_single_row():
     """
     Test that edgecolor is properly handled for single-row DataFrame input.
