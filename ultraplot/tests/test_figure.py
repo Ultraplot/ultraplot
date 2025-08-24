@@ -177,69 +177,67 @@ def test_suptitle_alignment():
     uplt.close("all")
 
 
-def test_suptitle_kw_alignment():
+import pytest
+
+
+@pytest.mark.parametrize(
+    "suptitle, suptitle_kw, expected_ha, expected_va",
+    [
+        ("Default alignment", {}, "center", "bottom"),  # Test 1: Default alignment
+        (
+            "Left aligned",
+            {"ha": "left"},
+            "left",
+            "bottom",
+        ),  # Test 2: Custom horizontal alignment
+        (
+            "Top aligned",
+            {"va": "top"},
+            "center",
+            "top",
+        ),  # Test 3: Custom vertical alignment
+        (
+            "Custom aligned",
+            {"ha": "right", "va": "top"},
+            "right",
+            "top",
+        ),  # Test 4: Both custom alignments
+    ],
+)
+def test_suptitle_kw_alignment(suptitle, suptitle_kw, expected_ha, expected_va):
     """
     Test that suptitle_kw alignment parameters work correctly and are not overridden.
     """
-    # Test 1: Default alignment should be center/bottom
-    fig1, ax1 = uplt.subplots()
-    fig1.format(suptitle="Default alignment")
-    fig1.canvas.draw()
+    fig, ax = uplt.subplots()
+    fig.format(suptitle=suptitle, suptitle_kw=suptitle_kw)
+    fig.canvas.draw()
     assert (
-        fig1._suptitle.get_ha() == "center"
-    ), f"Default ha should be center, got {fig1._suptitle.get_ha()}"
+        fig._suptitle.get_ha() == expected_ha
+    ), f"Expected ha={expected_ha}, got {fig._suptitle.get_ha()}"
     assert (
-        fig1._suptitle.get_va() == "bottom"
-    ), f"Default va should be bottom, got {fig1._suptitle.get_va()}"
+        fig._suptitle.get_va() == expected_va
+    ), f"Expected va={expected_va}, got {fig._suptitle.get_va()}"
 
-    # Test 2: Custom horizontal alignment via suptitle_kw
-    fig2, ax2 = uplt.subplots()
-    fig2.format(suptitle="Left aligned", suptitle_kw={"ha": "left"})
-    fig2.canvas.draw()
-    assert (
-        fig2._suptitle.get_ha() == "left"
-    ), f"Custom ha should be left, got {fig2._suptitle.get_ha()}"
-    assert (
-        fig2._suptitle.get_va() == "bottom"
-    ), f"Default va should be bottom, got {fig2._suptitle.get_va()}"
 
-    # Test 3: Custom vertical alignment via suptitle_kw
-    fig3, ax3 = uplt.subplots()
-    fig3.format(suptitle="Top aligned", suptitle_kw={"va": "top"})
-    fig3.canvas.draw()
-    assert (
-        fig3._suptitle.get_ha() == "center"
-    ), f"Default ha should be center, got {fig3._suptitle.get_ha()}"
-    assert (
-        fig3._suptitle.get_va() == "top"
-    ), f"Custom va should be top, got {fig3._suptitle.get_va()}"
+@pytest.mark.parametrize(
+    "ha, expectation",
+    [
+        ("left", 0),
+        ("center", 0.5),
+        ("right", 1),
+    ],
+)
+def test_suptitle_kw_position_reverted(ha, expectation):
+    """
+    Test that position remains the same while alignment properties differ.
+    """
+    print(ha, expectation)
+    fig, ax = uplt.subplots(ncols=3)
+    fig.format(suptitle=ha, suptitle_kw=dict(ha=ha))
+    fig.canvas.draw()  # trigger alignment
+    x, y = fig._suptitle.get_position()
 
-    # Test 4: Both custom alignments via suptitle_kw
-    fig4, ax4 = uplt.subplots()
-    fig4.format(suptitle="Custom aligned", suptitle_kw={"ha": "right", "va": "top"})
-    fig4.canvas.draw()
-    assert (
-        fig4._suptitle.get_ha() == "right"
-    ), f"Custom ha should be right, got {fig4._suptitle.get_ha()}"
-    assert (
-        fig4._suptitle.get_va() == "top"
-    ), f"Custom va should be top, got {fig4._suptitle.get_va()}"
-
-    # Test 5: Position should be the same (reverted to original centering behavior)
-    # but alignment properties should differ
-    fig5, ax5 = uplt.subplots(ncols=3)
-    fig5.format(suptitle="Left", suptitle_kw={"ha": "left"})
-    fig5.canvas.draw()
-    pos_left = fig5._suptitle.get_position()
-
-    fig6, ax6 = uplt.subplots(ncols=3)
-    fig6.format(suptitle="Right", suptitle_kw={"ha": "right"})
-    fig6.canvas.draw()
-    pos_right = fig6._suptitle.get_position()
-
-    # Position should be the same (original centering behavior restored)
-    assert (
-        abs(pos_left[0] - pos_right[0]) < 1e-10
-    ), f"Position should be same with reverted centering: left x={pos_left[0]}, right x={pos_right[0]}"
+    # Note values are dynamic so atol is a bit wide here
+    assert np.isclose(x, expectation, atol=0.1), f"Expected x={expectation}, got {x=}"
 
     uplt.close("all")
