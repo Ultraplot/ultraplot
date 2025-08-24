@@ -965,7 +965,7 @@ class Figure(mfigure.Figure):
         self._cached_border_axes = border_axes
         return border_axes
 
-    def _get_align_coord(self, side, axs, includepanels=False):
+    def _get_align_coord(self, side, axs, align="center", includepanels=False):
         """
         Return the figure coordinate for centering spanning axis labels or super titles.
         """
@@ -985,7 +985,12 @@ class Figure(mfigure.Figure):
         box_lo = ax_lo.get_subplotspec().get_position(self)
         box_hi = ax_hi.get_subplotspec().get_position(self)
         if s == "x":
-            pos = 0.5 * (box_lo.x0 + box_hi.x1)
+            if align == "left":
+                pos = box_lo.x0
+            elif align == "right":
+                pos = box_hi.x1
+            else:  # 'center'
+                pos = 0.5 * (box_lo.x0 + box_hi.x1)
         else:
             pos = 0.5 * (box_lo.y1 + box_hi.y0)  # 'lo' is actually on top of figure
         ax = axs[(np.argmin(ranges[:, 0]) + np.argmax(ranges[:, 1])) // 2]
@@ -1562,7 +1567,9 @@ class Figure(mfigure.Figure):
             va = "bottom"  # default vertical alignment
 
         # Use original centering behavior regardless of alignment
-        x, _ = self._get_align_coord("top", axs, includepanels=self._includepanels)
+        x, _ = self._get_align_coord(
+            "top", axs, includepanels=self._includepanels, align=ha
+        )
         y = self._get_offset_coord("top", axs, renderer, pad=pad, extra=labs)
 
         # Apply the alignment settings (preserving user's choices)
