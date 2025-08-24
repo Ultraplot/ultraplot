@@ -1577,15 +1577,9 @@ class Figure(mfigure.Figure):
         ha = self._suptitle.get_ha()
         va = self._suptitle.get_va()
 
-        # Apply ultraplot defaults only when no custom alignment was provided
-        if not getattr(self, "_suptitle_custom_ha", False):
-            ha = "center"  # ultraplot default for horizontal alignment
-        if not getattr(self, "_suptitle_custom_va", False):
-            va = "bottom"  # ultraplot default for vertical alignment
-
         # Use original centering algorithm for positioning (regardless of alignment)
         x, _ = self._get_align_coord(
-            "top", axs, includepanels=self._includepanels, align="center"
+            "top", axs, includepanels=self._includepanels, align=ha
         )
         y = self._get_offset_coord("top", axs, renderer, pad=pad, extra=labs)
 
@@ -1726,11 +1720,6 @@ class Figure(mfigure.Figure):
             context=True,
         )
         kw.update(kwargs)
-
-        # Track whether custom alignment was provided via suptitle_kw
-        self._suptitle_custom_ha = "ha" in kwargs
-        self._suptitle_custom_va = "va" in kwargs
-
         if kw:
             self._suptitle.update(kw)
         if title is not None:
