@@ -1551,17 +1551,69 @@ class Figure(mfigure.Figure):
         labs = tuple(t for t in self._suplabel_dict["top"].values() if t.get_text())
         pad = (self._suptitle_pad / 72) / self.get_size_inches()[1]
         
-        # For suptitle, use different alignment logic based on includepanels setting
-        if self._includepanels:
-            # When includepanels=True, center over the visual content area (including panels)
-            x, _ = self._get_align_coord("top", axs, includepanels=True)
+        # Get current alignment settings (may have been set by user via suptitle_kw)
+        ha = self._suptitle.get_ha()
+        va = self._suptitle.get_va()
+        
+        # Set default alignment if not already set by user
+        if ha == "center":  # matplotlib default, assume user wants our default
+            ha = "center"  # default horizontal alignment
+        if va == "baseline":  # matplotlib default, assume user wants our default  
+            va = "bottom"  # default vertical alignment
+            
+        # Calculate horizontal position based on alignment and includepanels setting
+        if ha == "center":
+            # Center alignment - use existing logic
+            if self._includepanels:
+                # When includepanels=True, center over the visual content area (including panels)
+                x, _ = self._get_align_coord("top", axs, includepanels=True)
+            else:
+                # When includepanels=False or None, center at figure center like matplotlib
+                x = 0.5
+        elif ha == "left":
+            # Left alignment - position at left edge of content area
+            if self._includepanels:
+                # Get left edge of content area including panels
+                left_edges = [ax.get_position().x0 for ax in axs]
+                x = min(left_edges)
+            else:
+                # Left edge of subplot area only
+                left_edges = []
+                for ax in axs:
+                    pos = ax.get_position()
+                    # Get subplot bounds without panels
+                    bbox = ax.get_tightbbox(renderer) or ax.bbox
+                    if bbox:
+                        left_edges.append(pos.x0)
+                x = min(left_edges) if left_edges else 0.0
+        elif ha == "right":
+            # Right alignment - position at right edge of content area  
+            if self._includepanels:
+                # Get right edge of content area including panels
+                right_edges = [ax.get_position().x1 for ax in axs]
+                x = max(right_edges)
+            else:
+                # Right edge of subplot area only
+                right_edges = []
+                for ax in axs:
+                    pos = ax.get_position()
+                    # Get subplot bounds without panels
+                    bbox = ax.get_tightbbox(renderer) or ax.bbox
+                    if bbox:
+                        right_edges.append(pos.x1)
+                x = max(right_edges) if right_edges else 1.0
         else:
-            # When includepanels=False or None, center at figure center like matplotlib
-            x = 0.5
+            # Fallback to center for any other alignment
+            if self._includepanels:
+                x, _ = self._get_align_coord("top", axs, includepanels=True)
+            else:
+                x = 0.5
             
         y = self._get_offset_coord("top", axs, renderer, pad=pad, extra=labs)
-        self._suptitle.set_ha("center")
-        self._suptitle.set_va("bottom")
+        
+        # Apply the alignment settings (preserving user's choices)
+        self._suptitle.set_ha(ha)
+        self._suptitle.set_va(va)
         self._suptitle.set_position((x, y))
 
     def _update_axis_label(self, side, axs):

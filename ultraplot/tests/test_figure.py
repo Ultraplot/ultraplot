@@ -174,3 +174,52 @@ def test_suptitle_alignment():
     assert diff > 0.005, f"includepanels should make a difference, difference is {diff}"
     
     uplt.close('all')
+
+
+def test_suptitle_kw_alignment():
+    """
+    Test that suptitle_kw alignment parameters work correctly and are not overridden.
+    """
+    # Test 1: Default alignment should be center/bottom
+    fig1, ax1 = uplt.subplots()
+    fig1.format(suptitle='Default alignment')
+    fig1.canvas.draw()
+    assert fig1._suptitle.get_ha() == 'center', f"Default ha should be center, got {fig1._suptitle.get_ha()}"
+    assert fig1._suptitle.get_va() == 'bottom', f"Default va should be bottom, got {fig1._suptitle.get_va()}"
+    
+    # Test 2: Custom horizontal alignment via suptitle_kw
+    fig2, ax2 = uplt.subplots()
+    fig2.format(suptitle='Left aligned', suptitle_kw={'ha': 'left'})
+    fig2.canvas.draw()
+    assert fig2._suptitle.get_ha() == 'left', f"Custom ha should be left, got {fig2._suptitle.get_ha()}"
+    assert fig2._suptitle.get_va() == 'bottom', f"Default va should be bottom, got {fig2._suptitle.get_va()}"
+    
+    # Test 3: Custom vertical alignment via suptitle_kw
+    fig3, ax3 = uplt.subplots()
+    fig3.format(suptitle='Top aligned', suptitle_kw={'va': 'top'})
+    fig3.canvas.draw()
+    assert fig3._suptitle.get_ha() == 'center', f"Default ha should be center, got {fig3._suptitle.get_ha()}"
+    assert fig3._suptitle.get_va() == 'top', f"Custom va should be top, got {fig3._suptitle.get_va()}"
+    
+    # Test 4: Both custom alignments via suptitle_kw
+    fig4, ax4 = uplt.subplots()
+    fig4.format(suptitle='Custom aligned', suptitle_kw={'ha': 'right', 'va': 'top'})
+    fig4.canvas.draw()
+    assert fig4._suptitle.get_ha() == 'right', f"Custom ha should be right, got {fig4._suptitle.get_ha()}"
+    assert fig4._suptitle.get_va() == 'top', f"Custom va should be top, got {fig4._suptitle.get_va()}"
+    
+    # Test 5: Position should differ based on alignment
+    fig5, ax5 = uplt.subplots(ncols=3)
+    fig5.format(suptitle='Left', suptitle_kw={'ha': 'left'})
+    fig5.canvas.draw()
+    pos_left = fig5._suptitle.get_position()
+    
+    fig6, ax6 = uplt.subplots(ncols=3) 
+    fig6.format(suptitle='Right', suptitle_kw={'ha': 'right'})
+    fig6.canvas.draw()
+    pos_right = fig6._suptitle.get_position()
+    
+    # Left alignment should have smaller x coordinate than right alignment
+    assert pos_left[0] < pos_right[0], f"Left alignment x={pos_left[0]} should be < right alignment x={pos_right[0]}"
+    
+    uplt.close('all')
