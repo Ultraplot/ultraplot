@@ -1579,7 +1579,10 @@ class Figure(mfigure.Figure):
 
         # Use original centering algorithm for positioning (regardless of alignment)
         x, _ = self._get_align_coord(
-            "top", axs, includepanels=self._includepanels, align=ha
+            "top",
+            axs,
+            includepanels=self._includepanels,
+            align=ha,
         )
         y = self._get_offset_coord("top", axs, renderer, pad=pad, extra=labs)
 
@@ -1819,6 +1822,7 @@ class Figure(mfigure.Figure):
         # subsequent tight layout really weird. Have to resize twice.
         _draw_content()
         if not gs:
+            print("hello")
             return
         if aspect:
             gs._auto_layout_aspect()
