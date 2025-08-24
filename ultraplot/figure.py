@@ -1563,7 +1563,7 @@ class Figure(mfigure.Figure):
         Adjust the position of the super title based on user alignment preferences.
 
         Respects horizontal and vertical alignment settings from suptitle_kw parameters,
-        while applying sensible defaults when matplotlib defaults are detected.
+        while applying sensible defaults when no custom alignment is provided.
         """
         if not self._suptitle.get_text():
             return
@@ -1577,11 +1577,11 @@ class Figure(mfigure.Figure):
         ha = self._suptitle.get_ha()
         va = self._suptitle.get_va()
 
-        # Apply default alignment when matplotlib defaults are detected
-        if ha == "center":  # matplotlib default, apply our default
-            ha = "center"  # default horizontal alignment
-        if va == "baseline":  # matplotlib default, apply our default
-            va = "bottom"  # default vertical alignment
+        # Apply ultraplot defaults only when no custom alignment was provided
+        if not getattr(self, "_suptitle_custom_ha", False):
+            ha = "center"  # ultraplot default for horizontal alignment
+        if not getattr(self, "_suptitle_custom_va", False):
+            va = "bottom"  # ultraplot default for vertical alignment
 
         # Use original centering algorithm for positioning (regardless of alignment)
         x, _ = self._get_align_coord(
@@ -1726,6 +1726,11 @@ class Figure(mfigure.Figure):
             context=True,
         )
         kw.update(kwargs)
+
+        # Track whether custom alignment was provided via suptitle_kw
+        self._suptitle_custom_ha = "ha" in kwargs
+        self._suptitle_custom_va = "va" in kwargs
+
         if kw:
             self._suptitle.update(kw)
         if title is not None:
