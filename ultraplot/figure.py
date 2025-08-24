@@ -1583,9 +1583,9 @@ class Figure(mfigure.Figure):
         if va == "baseline":  # matplotlib default, apply our default
             va = "bottom"  # default vertical alignment
 
-        # Calculate horizontal position based on alignment preference
+        # Use original centering algorithm for positioning (regardless of alignment)
         x, _ = self._get_align_coord(
-            "top", axs, includepanels=self._includepanels, align=ha
+            "top", axs, includepanels=self._includepanels, align="center"
         )
         y = self._get_offset_coord("top", axs, renderer, pad=pad, extra=labs)
 
