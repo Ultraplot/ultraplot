@@ -247,6 +247,7 @@ def _from_data(data, *args):
     if data is None:
         return
     args = list(args)
+    found_in_data = False
     for i, arg in enumerate(args):
         if isinstance(arg, str):
             try:
@@ -255,6 +256,13 @@ def _from_data(data, *args):
                 pass
             else:
                 args[i] = array
+                found_in_data = True
+
+    # If only one argument and it wasn't found in data, return the original scalar
+    # This prevents scalar values like "none" from becoming ["none"]
+    if len(args) == 1 and not found_in_data:
+        return args[0]
+
     return args
 
 

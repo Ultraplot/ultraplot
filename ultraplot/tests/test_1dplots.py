@@ -296,6 +296,46 @@ def test_scatter_args(rng):
 
 
 @pytest.mark.mpl_image_compare
+def test_scatter_edgecolor_single_row():
+    """
+    Test that edgecolor is properly handled for single-row DataFrame input.
+    This is a regression test for issue #324.
+    """
+    import pandas as pd
+
+    # Create test data
+    df_multi = pd.DataFrame({"x": [1, 2], "y": [1, 2], "sizes": [300, 300]})
+    df_single = pd.DataFrame({"x": [2], "y": [2], "sizes": [300]})
+
+    fig, axs = uplt.subplots(ncols=3, share=0)
+
+    # Test multiple rows with alpha
+    result1 = axs[0].scatter(
+        "x", "y", s="sizes", data=df_multi, fc="red8", ec="none", alpha=1
+    )
+
+    # Test single row with alpha (the problematic case)
+    result2 = axs[1].scatter(
+        "x", "y", s="sizes", data=df_single, fc="red8", ec="none", alpha=1
+    )
+
+    # Test single row without alpha
+    result3 = axs[2].scatter("x", "y", s="sizes", data=df_single, fc="red8", ec="none")
+
+    # Verify that edgecolors are correctly set to no edges for all cases
+    # An empty array means no edges (which is what 'none' should produce)
+    assert len(result1.get_edgecolors()) == 0, "Multiple rows should have no edges"
+    assert (
+        len(result2.get_edgecolors()) == 0
+    ), "Single row with alpha should have no edges"
+    assert (
+        len(result3.get_edgecolors()) == 0
+    ), "Single row without alpha should have no edges"
+
+    return fig
+
+
+@pytest.mark.mpl_image_compare
 def test_scatter_inbounds():
     """
     Test in-bounds scatter plots.
