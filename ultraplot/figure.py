@@ -967,7 +967,19 @@ class Figure(mfigure.Figure):
 
     def _get_align_coord(self, side, axs, align="center", includepanels=False):
         """
-        Return the figure coordinate for centering spanning axis labels or super titles.
+        Return the figure coordinate for positioning spanning axis labels or super titles.
+
+        Parameters
+        ----------
+        side : str
+            Side of the figure ('top', 'bottom', 'left', 'right').
+        axs : list
+            List of axes to align across.
+        align : str, default 'center'
+            Horizontal alignment for x-axis positioning: 'left', 'center', or 'right'.
+            For y-axis positioning, always centers regardless of this parameter.
+        includepanels : bool, default False
+            Whether to include panel axes in the alignment calculation.
         """
         # Get position in figure relative coordinates
         if not all(isinstance(ax, paxes.Axes) for ax in axs):
@@ -985,6 +997,7 @@ class Figure(mfigure.Figure):
         box_lo = ax_lo.get_subplotspec().get_position(self)
         box_hi = ax_hi.get_subplotspec().get_position(self)
         if s == "x":
+            # Calculate horizontal position based on alignment preference
             if align == "left":
                 pos = box_lo.x0
             elif align == "right":
@@ -992,6 +1005,7 @@ class Figure(mfigure.Figure):
             else:  # 'center'
                 pos = 0.5 * (box_lo.x0 + box_hi.x1)
         else:
+            # For vertical positioning, always center between axes
             pos = 0.5 * (box_lo.y1 + box_hi.y0)  # 'lo' is actually on top of figure
         ax = axs[(np.argmin(ranges[:, 0]) + np.argmax(ranges[:, 1])) // 2]
         ax = ax._panel_parent or ax  # always use main subplot for spanning labels
@@ -1546,7 +1560,10 @@ class Figure(mfigure.Figure):
 
     def _align_super_title(self, renderer):
         """
-        Adjust the position of the super title.
+        Adjust the position of the super title based on user alignment preferences.
+
+        Respects horizontal and vertical alignment settings from suptitle_kw parameters,
+        while applying sensible defaults when matplotlib defaults are detected.
         """
         if not self._suptitle.get_text():
             return
@@ -1556,23 +1573,23 @@ class Figure(mfigure.Figure):
         labs = tuple(t for t in self._suplabel_dict["top"].values() if t.get_text())
         pad = (self._suptitle_pad / 72) / self.get_size_inches()[1]
 
-        # Get current alignment settings (may have been set by user via suptitle_kw)
+        # Get current alignment settings from suptitle (may be set via suptitle_kw)
         ha = self._suptitle.get_ha()
         va = self._suptitle.get_va()
 
-        # Set default alignment if not already set by user
-        if ha == "center":  # matplotlib default, assume user wants our default
+        # Apply default alignment when matplotlib defaults are detected
+        if ha == "center":  # matplotlib default, apply our default
             ha = "center"  # default horizontal alignment
-        if va == "baseline":  # matplotlib default, assume user wants our default
+        if va == "baseline":  # matplotlib default, apply our default
             va = "bottom"  # default vertical alignment
 
-        # Use original centering behavior regardless of alignment
+        # Calculate horizontal position based on alignment preference
         x, _ = self._get_align_coord(
             "top", axs, includepanels=self._includepanels, align=ha
         )
         y = self._get_offset_coord("top", axs, renderer, pad=pad, extra=labs)
 
-        # Apply the alignment settings (preserving user's choices)
+        # Set final position and alignment on the suptitle
         self._suptitle.set_ha(ha)
         self._suptitle.set_va(va)
         self._suptitle.set_position((x, y))
