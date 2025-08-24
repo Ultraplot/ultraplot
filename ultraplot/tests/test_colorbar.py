@@ -41,7 +41,7 @@ def test_outer_align():
     ax.colorbar(
         "magma", loc="right", extend="both", label="test extensions", labelrotation=90
     )
-    fig.suptitle("Align demo")
+    fig.suptitle("Align demo", va="bottom")
     return fig
 
 

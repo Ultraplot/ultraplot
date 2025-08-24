@@ -134,3 +134,109 @@ def test_toggle_input_axis_sharing():
     fig = uplt.figure()
     with pytest.warns(uplt.internals.warnings.UltraPlotWarning):
         fig._toggle_axis_sharing(which="does not exist")
+
+
+def test_suptitle_alignment():
+    """
+    Test that suptitle uses the original centering behavior with includepanels parameter.
+    """
+    # Test 1: Default behavior uses original centering algorithm
+    fig1, ax1 = uplt.subplots(ncols=3)
+    for ax in ax1:
+        ax.panel("top", width="1em")  # Add panels
+    fig1.suptitle("Default")
+    fig1.canvas.draw()  # Trigger alignment
+    pos1 = fig1._suptitle.get_position()
+
+    # Test 2: includepanels=False should use original centering behavior
+    fig2, ax2 = uplt.subplots(ncols=3, includepanels=False)
+    for ax in ax2:
+        ax.panel("top", width="1em")  # Add panels
+    fig2.suptitle("includepanels=False")
+    fig2.canvas.draw()  # Trigger alignment
+    pos2 = fig2._suptitle.get_position()
+
+    # Test 3: includepanels=True should use original centering behavior
+    fig3, ax3 = uplt.subplots(ncols=3, includepanels=True)
+    for ax in ax3:
+        ax.panel("top", width="1em")  # Add panels
+    fig3.suptitle("includepanels=True")
+    fig3.canvas.draw()  # Trigger alignment
+    pos3 = fig3._suptitle.get_position()
+
+    # With reverted behavior, all use the same original centering algorithm
+    # Note: In the original code, includepanels didn't actually affect suptitle positioning
+    assert (
+        abs(pos1[0] - pos2[0]) < 0.001
+    ), f"Default and includepanels=False should be same: {pos1[0]} vs {pos2[0]}"
+
+    assert (
+        abs(pos2[0] - pos3[0]) < 0.001
+    ), f"includepanels=False and True should be same with reverted behavior: {pos2[0]} vs {pos3[0]}"
+
+    uplt.close("all")
+
+
+import pytest
+
+
+@pytest.mark.parametrize(
+    "suptitle, suptitle_kw, expected_ha, expected_va",
+    [
+        ("Default alignment", {}, "center", "bottom"),  # Test 1: Default alignment
+        (
+            "Left aligned",
+            {"ha": "left"},
+            "left",
+            "bottom",
+        ),  # Test 2: Custom horizontal alignment
+        (
+            "Top aligned",
+            {"va": "top"},
+            "center",
+            "top",
+        ),  # Test 3: Custom vertical alignment
+        (
+            "Custom aligned",
+            {"ha": "right", "va": "top"},
+            "right",
+            "top",
+        ),  # Test 4: Both custom alignments
+    ],
+)
+def test_suptitle_kw_alignment(suptitle, suptitle_kw, expected_ha, expected_va):
+    """
+    Test that suptitle_kw alignment parameters work correctly and are not overridden.
+    """
+    fig, ax = uplt.subplots()
+    fig.format(suptitle=suptitle, suptitle_kw=suptitle_kw)
+    fig.canvas.draw()
+    assert (
+        fig._suptitle.get_ha() == expected_ha
+    ), f"Expected ha={expected_ha}, got {fig._suptitle.get_ha()}"
+    assert (
+        fig._suptitle.get_va() == expected_va
+    ), f"Expected va={expected_va}, got {fig._suptitle.get_va()}"
+
+
+@pytest.mark.parametrize(
+    "ha, expectation",
+    [
+        ("left", 0),
+        ("center", 0.5),
+        ("right", 1),
+    ],
+)
+def test_suptitle_kw_position_reverted(ha, expectation):
+    """
+    Test that position remains the same while alignment properties differ.
+    """
+    fig, ax = uplt.subplots(ncols=3)
+    fig.format(suptitle=ha, suptitle_kw=dict(ha=ha))
+    fig.canvas.draw()  # trigger alignment
+    x, y = fig._suptitle.get_position()
+
+    # Note values are dynamic so atol is a bit wide here
+    assert np.isclose(x, expectation, atol=0.1), f"Expected x={expectation}, got {x=}"
+
+    uplt.close("all")
