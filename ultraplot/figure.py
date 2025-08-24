@@ -1579,7 +1579,7 @@ class Figure(mfigure.Figure):
 
         # Use original centering algorithm for positioning (regardless of alignment)
         x, _ = self._get_align_coord(
-            "top", axs, includepanels=self._includepanels, align="center"
+            "top", axs, includepanels=self._includepanels, align=ha
         )
         y = self._get_offset_coord("top", axs, renderer, pad=pad, extra=labs)
 
