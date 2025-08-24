@@ -138,9 +138,9 @@ def test_toggle_input_axis_sharing():
 
 def test_suptitle_alignment():
     """
-    Test that suptitle alignment works correctly with includepanels parameter.
+    Test that suptitle uses the original centering behavior with includepanels parameter.
     """
-    # Test 1: Default behavior should center at figure center (0.5)
+    # Test 1: Default behavior uses original centering algorithm
     fig1, ax1 = uplt.subplots(ncols=3)
     for ax in ax1:
         ax.panel("top", width="1em")  # Add panels
@@ -148,7 +148,7 @@ def test_suptitle_alignment():
     fig1.canvas.draw()  # Trigger alignment
     pos1 = fig1._suptitle.get_position()
 
-    # Test 2: includepanels=False should center at figure center (0.5)
+    # Test 2: includepanels=False should use original centering behavior
     fig2, ax2 = uplt.subplots(ncols=3, includepanels=False)
     for ax in ax2:
         ax.panel("top", width="1em")  # Add panels
@@ -156,7 +156,7 @@ def test_suptitle_alignment():
     fig2.canvas.draw()  # Trigger alignment
     pos2 = fig2._suptitle.get_position()
 
-    # Test 3: includepanels=True should center over content area
+    # Test 3: includepanels=True should use original centering behavior
     fig3, ax3 = uplt.subplots(ncols=3, includepanels=True)
     for ax in ax3:
         ax.panel("top", width="1em")  # Add panels
@@ -164,18 +164,15 @@ def test_suptitle_alignment():
     fig3.canvas.draw()  # Trigger alignment
     pos3 = fig3._suptitle.get_position()
 
-    # Assertions
-    assert abs(pos1[0] - 0.5) < 0.01, f"Default should center at 0.5, got {pos1[0]}"
+    # With reverted behavior, all use the same original centering algorithm
+    # Note: In the original code, includepanels didn't actually affect suptitle positioning
     assert (
-        abs(pos2[0] - 0.5) < 0.01
-    ), f"includepanels=False should center at 0.5, got {pos2[0]}"
-    assert (
-        abs(pos3[0] - 0.5) > 0.005
-    ), f"includepanels=True should be offset from 0.5, got {pos3[0]}"
+        abs(pos1[0] - pos2[0]) < 0.001
+    ), f"Default and includepanels=False should be same: {pos1[0]} vs {pos2[0]}"
 
-    # The difference between False and True should be significant
-    diff = abs(pos3[0] - pos2[0])
-    assert diff > 0.005, f"includepanels should make a difference, difference is {diff}"
+    assert (
+        abs(pos2[0] - pos3[0]) < 0.001
+    ), f"includepanels=False and True should be same with reverted behavior: {pos2[0]} vs {pos3[0]}"
 
     uplt.close("all")
 
@@ -228,7 +225,8 @@ def test_suptitle_kw_alignment():
         fig4._suptitle.get_va() == "top"
     ), f"Custom va should be top, got {fig4._suptitle.get_va()}"
 
-    # Test 5: Position should differ based on alignment
+    # Test 5: Position should be the same (reverted to original centering behavior)
+    # but alignment properties should differ
     fig5, ax5 = uplt.subplots(ncols=3)
     fig5.format(suptitle="Left", suptitle_kw={"ha": "left"})
     fig5.canvas.draw()
@@ -239,9 +237,9 @@ def test_suptitle_kw_alignment():
     fig6.canvas.draw()
     pos_right = fig6._suptitle.get_position()
 
-    # Left alignment should have smaller x coordinate than right alignment
+    # Position should be the same (original centering behavior restored)
     assert (
-        pos_left[0] < pos_right[0]
-    ), f"Left alignment x={pos_left[0]} should be < right alignment x={pos_right[0]}"
+        abs(pos_left[0] - pos_right[0]) < 1e-10
+    ), f"Position should be same with reverted centering: left x={pos_left[0]}, right x={pos_right[0]}"
 
     uplt.close("all")
