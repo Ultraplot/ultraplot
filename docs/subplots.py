@@ -45,18 +45,19 @@
 # A-b-c labels
 # ------------
 #
-# UltraPlot can quickly add "a-b-c" labels using the
-# :func:`~ultraplot.axes.Axes.number` assigned to each subplot.
-# If you add subplots one-by-one with :func:`~ultraplot.figure.Figure.add_subplot`, you can
-# manually specify the number with the `number` keyword. By default, the subplot number
-# is incremented by ``1`` each time you call :func:`~ultraplot.figure.Figure.add_subplot`.
+# UltraPlot can quickly add labels to subplots using the `abc` parameter. This parameter
+# can be a template (with a letter "a" or "A") used to format the subplot labels, such as "A.", which assigns
+# an alphabetic label based on the axis number. Alternatively, you can pass a list to
+# the `abc` parameter, where the list elements are mapped as labels for the subplots one by one.
+# If you add subplots one-by-one with :func:`~ultraplot.figure.Figure.add_subplot`,
+# you can manually specify the number with the `number` keyword. By default, the subplot
+# number is incremented by ``1`` each time you call :func:`~ultraplot.figure.Figure.add_subplot`.
 # If you draw all of your subplots at once with :func:`~ultraplot.figure.Figure.add_subplots`,
-# the numbers depend on the input arguments. If you
-# :ref:`passed an array <ug_intro>`, the subplot numbers correspond to the numbers
-# in the array. But if you used the `ncols` and `nrows` keyword arguments, the
-# number order is row-major by default and can be switched to column-major by
-# passing ``order='F'`` (note the number order also determines the list order in the
-# :class:`~ultraplot.gridspec.SubplotGrid` returned by :func:`~ultraplot.figure.Figure.add_subplots`).
+# the numbers depend on the input arguments. If you :ref:`passed an array <ug_intro>`,
+# the subplot numbers correspond to the numbers in the array. But if you used the `ncols`
+# and `nrows` keyword arguments, the number order is row-major by default and can be switched
+# to column-major by passing ``order='F'`` (note the number order also determines the list order
+# in the :class:`~ultraplot.gridspec.SubplotGrid` returned by :func:`~ultraplot.figure.Figure.add_subplots`).
 #
 # To turn on "a-b-c" labels, set :rcraw:`abc` to ``True`` or pass ``abc=True``
 # to :func:`~ultraplot.axes.Axes.format` (see :ref:`the format command <ug_format>`

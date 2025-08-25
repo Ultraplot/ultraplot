@@ -308,8 +308,7 @@ abc : bool or str or sequence, default: :rc:`abc`
     ``'a'`` is used. The ``a`` or ``A`` is replaced with the alphabetic character
     matching the `~Axes.number`. If `~Axes.number` is greater than 26, the
     characters loop around to a, ..., z, aa, ..., zz, aaa, ..., zzz, etc.
-    Can also be a sequence of strings, in which case the "a-b-c" label
-    will simply be selected from the sequence according to `~Axes.number`.
+    Can also be a sequence of strings, in which case the "a-b-c" label will be selected sequentially from the list. For example `axs.format(abc = ["X", "Y"])` for a two-panel figure, and `axes[3:5].format(abc = ["X", "Y"])` for a two-panel subset of a larger figure.
 abcloc, titleloc : str, default: :rc:`abc.loc`, :rc:`title.loc`
     Strings indicating the location for the a-b-c label and main title.
     The following locations are valid:
