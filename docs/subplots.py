@@ -49,7 +49,7 @@
 # can be a template (with a letter "a" or "A") used to format the subplot labels, such as "A.", which assigns
 # an alphabetic label based on the axis number. Alternatively, you can pass a list to
 # the `abc` parameter, where the list elements are mapped as labels for the subplots one by one.
-# the subplots. If you add subplots one-by-one with :func:`~ultraplot.figure.Figure.add_subplot`,
+# If you add subplots one-by-one with :func:`~ultraplot.figure.Figure.add_subplot`,
 # you can manually specify the number with the `number` keyword. By default, the subplot
 # number is incremented by ``1`` each time you call :func:`~ultraplot.figure.Figure.add_subplot`.
 # If you draw all of your subplots at once with :func:`~ultraplot.figure.Figure.add_subplots`,
