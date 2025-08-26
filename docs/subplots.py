@@ -193,7 +193,7 @@ for ax in axs:
     ax.imshow(colors)
 
 # Grid of cartopy projections
-fig, axs = uplt.subplots(ncols=2, nrows=3, proj="robin")
+fig, axs = uplt.subplots(ncols=2, nrows=3, proj="robin", share=0)
 axs.format(land=True, landcolor="k")
 fig.format(suptitle="Auto figure dimensions for grid of cartopy projections")
 
@@ -458,6 +458,7 @@ for span, share, title in zip(spans, shares, titles):
 # automatically share axis labels where appropriate. For more
 # complex layouts, UltraPlot will add the labels when the subplot
 # is facing and "edge" which is defined as not immediately having a subplot next to it. For example:
+# %%
 import ultraplot as uplt, numpy as np
 
 layout = [[1, 0, 2], [0, 3, 0], [4, 0, 6]]
