@@ -193,7 +193,7 @@ for ax in axs:
     ax.imshow(colors)
 
 # Grid of cartopy projections
-fig, axs = uplt.subplots(ncols=2, nrows=3, proj="robin")
+fig, axs = uplt.subplots(ncols=2, nrows=3, proj="robin", share=0)
 axs.format(land=True, landcolor="k")
 fig.format(suptitle="Auto figure dimensions for grid of cartopy projections")
 
@@ -240,7 +240,7 @@ uplt.rc.reset()
 # <https://matplotlib.org/stable/tutorials/intermediate/tight_layout_guide.html>`__.
 # In contrast to matplotlib's algorithm, UltraPlot's algorithm can :ref:`change the
 # figure size <ug_autosize>` and permits variable spacing between each subplot
-# row and column (see `ultraplot.gridspec.GridSpec` for details).
+# row and column (see :class:`ultraplot.gridspec.GridSpec` for details).
 # This algorithm can be disabled entirely by passing ``tight=False`` to
 # :class:`~ultraplot.figure.Figure` or by setting :rcraw:`subplots.tight` to ``False``, or
 # it can be partly overridden by passing any of the spacing arguments `left`, `right`,
@@ -377,20 +377,13 @@ for (name1, equal), (name2, group) in zip(equals, groups):
 #    are defined as follows:
 #
 #    * ``False`` or ``0``: Axis sharing is disabled.
-#    * ``'labels'``, ``'labs'``, or ``1``: Axis labels are shared, but nothing else. Labels will appear on the outermost
-#  plots. This implies that for left, and bottom labels (default)
-# the labels will appear on the leftmost and bottommost subplots
-#  bottommost subplots. Note that labels will be shared only for
-#  plots that are immediately adjacent in the same row or column
-#  of the :class:`~ultraplot.gridspec.GridSpec`; a space or
-#  empty plot will add the labels, but not break the limit
-#  sharing. See below for a more complex example.
-#    * ``'limits'``, ``'lims'``, or ``2``: Same as ``1``, but axis limits, axis
-#      scales, and major and minor tick locations and formatting are also shared.
-#    * ``True`` or ``3`` (default): Same as ``2``, but axis tick labels are also
-#      shared. Tick labels will appear on the leftmost and bottommost subplots.
-#    * ``'all'`` or ``4``: Same as ``3``, but axis limits, axis scales, and
-#      axis ticks are shared even between subplots not in the same row or column.
+#    * ``'labels'``, ``'labs'``, or ``1``: Axis labels are shared, but nothing else.
+#      Labels will appear on the outermost plots. This implies that for left and bottom
+#      labels (default), the labels will appear on the leftmost and bottommost subplots.
+#      Note that labels will be shared only for plots that are immediately adjacent
+#      in the same row or column of the :class:`~ultraplot.gridspec.GridSpec`; a space
+#      or empty plot will add the labels, but not break the limit sharing. See below
+#      for a more complex example.
 #
 # The below examples demonstrate the effect of various axis and label sharing
 # settings on the appearance of several subplot grids.
@@ -458,11 +451,12 @@ for span, share, title in zip(spans, shares, titles):
 # automatically share axis labels where appropriate. For more
 # complex layouts, UltraPlot will add the labels when the subplot
 # is facing and "edge" which is defined as not immediately having a subplot next to it. For example:
+# %%
 import ultraplot as uplt, numpy as np
 
 layout = [[1, 0, 2], [0, 3, 0], [4, 0, 6]]
 fig, ax = uplt.subplots(layout)
-ax.format(xticklabelloc="top", yticklabelloc="right")
+ax.format(xtickloc="top", ytickloc="right")
 # plot data to indicate that limits are still shared
 x = y = np.linspace(0, 1, 10)
 for axi in ax:
