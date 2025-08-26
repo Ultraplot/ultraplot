@@ -240,7 +240,7 @@ uplt.rc.reset()
 # <https://matplotlib.org/stable/tutorials/intermediate/tight_layout_guide.html>`__.
 # In contrast to matplotlib's algorithm, UltraPlot's algorithm can :ref:`change the
 # figure size <ug_autosize>` and permits variable spacing between each subplot
-# row and column (see `ultraplot.gridspec.GridSpec` for details).
+# row and column (see :class:`ultraplot.gridspec.GridSpec` for details).
 # This algorithm can be disabled entirely by passing ``tight=False`` to
 # :class:`~ultraplot.figure.Figure` or by setting :rcraw:`subplots.tight` to ``False``, or
 # it can be partly overridden by passing any of the spacing arguments `left`, `right`,
