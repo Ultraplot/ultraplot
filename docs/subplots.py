@@ -377,20 +377,13 @@ for (name1, equal), (name2, group) in zip(equals, groups):
 #    are defined as follows:
 #
 #    * ``False`` or ``0``: Axis sharing is disabled.
-#    * ``'labels'``, ``'labs'``, or ``1``: Axis labels are shared, but nothing else. Labels will appear on the outermost
-#  plots. This implies that for left, and bottom labels (default)
-# the labels will appear on the leftmost and bottommost subplots
-#  bottommost subplots. Note that labels will be shared only for
-#  plots that are immediately adjacent in the same row or column
-#  of the :class:`~ultraplot.gridspec.GridSpec`; a space or
-#  empty plot will add the labels, but not break the limit
-#  sharing. See below for a more complex example.
-#    * ``'limits'``, ``'lims'``, or ``2``: Same as ``1``, but axis limits, axis
-#      scales, and major and minor tick locations and formatting are also shared.
-#    * ``True`` or ``3`` (default): Same as ``2``, but axis tick labels are also
-#      shared. Tick labels will appear on the leftmost and bottommost subplots.
-#    * ``'all'`` or ``4``: Same as ``3``, but axis limits, axis scales, and
-#      axis ticks are shared even between subplots not in the same row or column.
+#    * ``'labels'``, ``'labs'``, or ``1``: Axis labels are shared, but nothing else.
+#      Labels will appear on the outermost plots. This implies that for left and bottom
+#      labels (default), the labels will appear on the leftmost and bottommost subplots.
+#      Note that labels will be shared only for plots that are immediately adjacent
+#      in the same row or column of the :class:`~ultraplot.gridspec.GridSpec`; a space
+#      or empty plot will add the labels, but not break the limit sharing. See below
+#      for a more complex example.
 #
 # The below examples demonstrate the effect of various axis and label sharing
 # settings on the appearance of several subplot grids.
