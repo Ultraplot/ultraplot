@@ -26,7 +26,6 @@ Figure class
 
 .. automodule:: ultraplot.figure
    :no-private-members:
-   :members:
 
 .. automodsumm:: ultraplot.figure
    :toctree: api
@@ -37,7 +36,6 @@ Grid classes
 
 .. automodule:: ultraplot.gridspec
    :no-private-members:
-   :members:
 
 .. automodsumm:: ultraplot.gridspec
    :toctree: api
@@ -58,7 +56,6 @@ Top-level functions
 
 .. automodule:: ultraplot.ui
     :no-private-members:
-    :members:
 
 .. automodsumm:: ultraplot.ui
    :toctree: api
@@ -69,7 +66,6 @@ Configuration tools
 
 .. automodule:: ultraplot.config
    :no-private-members:
-   :members:
 
 .. automodsumm:: ultraplot.config
    :toctree: api
