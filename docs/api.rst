@@ -37,8 +37,6 @@ Grid classes
 .. automodule:: ultraplot.gridspec
    :no-private-members:
 
-
-
 .. automodsumm:: ultraplot.gridspec
    :toctree: api
    :skip: SubplotsContainer
