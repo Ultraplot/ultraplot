@@ -456,7 +456,7 @@ import ultraplot as uplt, numpy as np
 
 layout = [[1, 0, 2], [0, 3, 0], [4, 0, 6]]
 fig, ax = uplt.subplots(layout)
-ax.format(xticklabelloc="top", yticklabelloc="right")
+ax.format(xtickloc="top", ytickloc="right")
 # plot data to indicate that limits are still shared
 x = y = np.linspace(0, 1, 10)
 for axi in ax:
