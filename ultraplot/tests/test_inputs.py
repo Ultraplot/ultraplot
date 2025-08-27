@@ -53,5 +53,8 @@ def test_projection_set_correctly(rng, transform):
         mock_imshow.assert_called_once()
         _, kwargs = mock_imshow.call_args
         assert "transform" in kwargs, "The 'transform' keyword argument is missing."
-        expectation = ax.projection if transform == [] else transform
+        if transform == []:
+            expectation = ax.projection if ax.projection is not None else PlateCarree()
+        else:
+            expectation = transform
         assert kwargs["transform"] == expectation
