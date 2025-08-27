@@ -824,6 +824,7 @@ def test_sharing_cartopy_with_colorbar(rng):
         expectation = expectations[axi.number - 1]
         for i, j in zip(state, expectation):
             assert i == j
+    uplt.show(block=1)
     return fig
 
 
@@ -878,4 +879,20 @@ def test_dms_used_for_mercator():
         b = ax[1].gridlines_major.xformatter(tick)
         assert a == expectation
         assert b == expectation
+    return fig
+
+
+@pytest.mark.mpl_image_compare
+def test_imshow_with_and_without_transform(rng):
+    data = rng.random((100, 100))
+    fig, ax = uplt.subplots(ncols=3, proj="lcc", share=0)
+    ax.format(land=True, labels=True)
+    ax[:2].format(
+        latlim=(-10, 10),
+        lonlim=(-10, 10),
+    )
+    ax[0].imshow(data, transform=ax[0].projection)
+    ax[1].imshow(data, transform=None)
+    ax[2].imshow(data, transform=uplt.axes.geo.ccrs.PlateCarree())
+    uplt.show(block=1)
     return fig

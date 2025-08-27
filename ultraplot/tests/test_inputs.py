@@ -54,3 +54,4 @@ def test_projection_set_correctly(rng, transform):
         assert (
             kwargs["transform"] is transform
         ), f"Expected transform to be {transform}, got {kwargs['transform']}"
+    uplt.close(fig)
