@@ -270,7 +270,6 @@ def test_label_sharing_top_right(layout):
         title="Test Title",
     )
     fig.canvas.draw()  # force redraw tick labels
-    uplt.show(block=1)
     for axi in ax:
         assert axi._is_ticklabel_on("labelleft") == False
         assert axi._is_ticklabel_on("labelbottom") == False
