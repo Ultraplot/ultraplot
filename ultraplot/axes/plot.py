@@ -2709,9 +2709,12 @@ class PlotAxes(base.Axes):
         norm = _not_none(norm, "div" if "diverging" in trues else "linear")
         # If using a diverging norm, fair=True, and vcenter not set, default to midpoint
         if norm in ("div", "diverging") or "diverging" in trues:
+            # When vmin or vmax is given we cannot be sure the colormap is fair
             is_fair = True if vmin is None and vmax is None else False
-            fair = norm_kw.get("fair", is_fair)  # defaults to True
+            fair = norm_kw.get("fair", is_fair)
             vcenter = norm_kw.get("vcenter", 0)
+            if vmin is not None and vmax is not None:
+                vcenter = vmax - (vmax - vmin) / 2
             if fair and vcenter is None and vmin is not None and vmax is not None:
                 vcenter = 0.5 * (vmin + vmax)
             norm_kw["vcenter"] = vcenter
