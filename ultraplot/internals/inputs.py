@@ -346,7 +346,7 @@ def _preprocess_or_redirect(*keys, keywords=None, allow_extra=True):
                     # PlateCarree if no projection is set
                     input_transform = kwargs.get("transform", None)
                     kwargs["transform"] = _not_none(
-                        input_transform, self.projection, PlateCarree()
+                        Proj(input_transform), self.projection, PlateCarree()
                     )
 
                 # Process data args
