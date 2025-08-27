@@ -51,4 +51,6 @@ def test_projection_set_correctly(rng, transform):
         mock_imshow.assert_called_once()
         _, kwargs = mock_imshow.call_args
         assert "transform" in kwargs, "The 'transform' keyword argument is missing."
-        assert (), f"Expected transform to be {transform}, got {kwargs['transform']}"
+        assert (
+            kwargs["transform"] is transform
+        ), f"Expected transform to be {transform}, got {kwargs['transform']}"
