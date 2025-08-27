@@ -341,10 +341,13 @@ def _preprocess_or_redirect(*keys, keywords=None, allow_extra=True):
                     if kwargs.get("latlon", None) is None:
                         kwargs["latlon"] = True
                 if self._name == "cartopy" and name in CARTOPY_FUNCS:
-                    if kwargs.get("transform", None) is None:
-                        kwargs["transform"] = PlateCarree()
-                    else:
-                        kwargs["transform"] = Proj(kwargs["transform"])
+                    # Check if an input transform is given
+                    # else default to axis projection or
+                    # PlateCarree if no projection is set
+                    input_transform = kwargs.get("transform", None)
+                    kwargs["transform"] = _not_none(
+                        input_transform, self.projection, PlateCarree()
+                    )
 
                 # Process data args
                 # NOTE: Raises error if there are more args than keys
