@@ -894,5 +894,5 @@ def test_imshow_with_and_without_transform(rng):
     ax[0].imshow(data, transform=ax[0].projection)
     ax[1].imshow(data, transform=None)
     ax[2].imshow(data, transform=uplt.axes.geo.ccrs.PlateCarree())
-    ax.format(title=["lcc", "No transform", "PlateCarree"])
+    ax.format(title=["LCC", "No transform", "PlateCarree"])
     return fig
