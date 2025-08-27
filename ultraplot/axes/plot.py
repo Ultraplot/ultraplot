@@ -2715,7 +2715,7 @@ class PlotAxes(base.Axes):
             fair = norm_kw.get("fair", True)
             vcenter = norm_kw.get("vcenter", 0)
             if fair and vmin and vmax:
-                vcenter = vmin = (vmax - vmin) / 2
+                vcenter = vmin + (vmax - vmin) / 2
             norm_kw["vcenter"] = vcenter
         if isinstance(norm, mcolors.Normalize):
             norm.vmin, norm.vmax = vmin, vmax
