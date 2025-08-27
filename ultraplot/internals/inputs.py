@@ -345,9 +345,10 @@ def _preprocess_or_redirect(*keys, keywords=None, allow_extra=True):
                     # else default to axis projection or
                     # PlateCarree if no projection is set
                     input_transform = kwargs.get("transform", None)
-                    kwargs["transform"] = _not_none(
-                        Proj(input_transform), self.projection, PlateCarree()
-                    )
+                    if input_transform is not None:
+                        kwargs["transform"] = Proj(input_transform)
+                    else:
+                        kwargs["transform"] = _not_none(self.projection, PlateCarree())
 
                 # Process data args
                 # NOTE: Raises error if there are more args than keys
