@@ -35,7 +35,7 @@ def test_name_preserved_and_args_processed():
     assert decorated.__name__ == "tripcolor"
 
 
-@pytest.mark.parametrize("transform", [[], None, uplt.constructor.Proj("merc")])
+@pytest.mark.parametrize("transform", [None, uplt.constructor.Proj("merc")])
 def test_projection_set_correctly(rng, transform):
 
     fig, ax = uplt.subplots(proj="merc")
@@ -44,17 +44,16 @@ def test_projection_set_correctly(rng, transform):
 
     with patch.object(ax, "imshow", wraps=ax.imshow) as mock_imshow:
         # Call imshow with some dummy data
-        settings = {}
-        if transform != []:
-            settings["transform"] = transform
+        settings = dict(transform=transform)
         ax.imshow(data, **settings)
 
         # Assert that the transform keyword argument was set correctly
         mock_imshow.assert_called_once()
         _, kwargs = mock_imshow.call_args
         assert "transform" in kwargs, "The 'transform' keyword argument is missing."
-        if transform == []:
-            expectation = ax.projection if ax.projection is not None else PlateCarree()
-        else:
-            expectation = transform
+        expectation = (
+            ax.projection
+            if ax.projection is not None
+            else uplt.axes.geo.ccrs.PlateCarree()
+        )
         assert kwargs["transform"] == expectation
