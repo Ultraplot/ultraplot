@@ -348,7 +348,16 @@ def _preprocess_or_redirect(*keys, keywords=None, allow_extra=True):
                     if input_transform is not None:
                         kwargs["transform"] = Proj(input_transform)
                     else:
-                        kwargs["transform"] = _not_none(self.projection, PlateCarree())
+                        # add projection for imshow as it
+                        # cannot be projected on particular
+                        # locations
+                        options = [
+                            self.projection if name == "imshow" else None,
+                            PlateCarree(),
+                        ]
+                        kwargs["transform"] = _not_none(
+                            *options,
+                        )
 
                 # Process data args
                 # NOTE: Raises error if there are more args than keys
