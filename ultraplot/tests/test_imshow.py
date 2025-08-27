@@ -102,5 +102,4 @@ def test_colorbar(rng):
     # Imshow
     m = axs[2].imshow(data, cmap="oslo", colorbar="b")
     axs[2].format(title="Imshow plot\ndiscrete=False (default)", yformatter="auto")
-    fig.show()
     return fig
