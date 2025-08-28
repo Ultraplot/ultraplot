@@ -824,7 +824,6 @@ def test_sharing_cartopy_with_colorbar(rng):
         expectation = expectations[axi.number - 1]
         for i, j in zip(state, expectation):
             assert i == j
-    uplt.show(block=1)
     return fig
 
 
