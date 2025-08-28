@@ -1,5 +1,5 @@
 import ultraplot as uplt, pytest, numpy as np
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 
 
 @pytest.mark.parametrize(
@@ -33,3 +33,25 @@ def test_name_preserved_and_args_processed():
 
     # Test that the decorator preserves the function name
     assert decorated.__name__ == "tripcolor"
+
+
+@pytest.mark.parametrize("transform", [None, uplt.constructor.Proj("merc")])
+def test_projection_set_correctly(rng, transform):
+
+    fig, ax = uplt.subplots(proj="merc")
+    fig.canvas.draw()
+    data = rng.random((10, 10))
+
+    with patch.object(ax, "imshow", wraps=ax.imshow) as mock_imshow:
+        # Call imshow with some dummy data
+        settings = dict(transform=transform)
+        ax.imshow(data, **settings)
+
+        # Assert that the transform keyword argument was set correctly
+        mock_imshow.assert_called_once()
+        _, kwargs = mock_imshow.call_args
+        assert "transform" in kwargs, "The 'transform' keyword argument is missing."
+        assert (
+            kwargs["transform"] is transform
+        ), f"Expected transform to be {transform}, got {kwargs['transform']}"
+    uplt.close(fig)
