@@ -11,7 +11,7 @@ jobs:
     outputs:
       run: ${{ (github.event_name == 'push' && github.ref_name == 'main') && 'true' || steps.filter.outputs.python }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: dorny/paths-filter@v3
         id: filter
         with:
@@ -28,7 +28,7 @@ jobs:
       python-versions: ${{ steps.set-versions.outputs.python-versions }}
       matplotlib-versions: ${{ steps.set-versions.outputs.matplotlib-versions }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
