@@ -479,12 +479,12 @@ fig.show()
 # -------------------
 #
 # A dictionary-like object named :func:`~ultraplot.config.rc` is created when you import
-# UltraPlot. :func:`~ultraplot.config.rc` is similar to the matplotlib `~matplotlib.rcParams`
+# UltraPlot. :func:`~ultraplot.config.rc` is similar to the matplotlib :class:`~matplotlib.rcParams`
 # dictionary, but can be used to change both `matplotlib settings
 # <https://matplotlib.org/stable/tutorials/introductory/customizing.html>`__ and
 # :ref:`ultraplot settings <ug_rcUltraPlot>`. The matplotlib-specific settings are
-# stored in :func:`~ultraplot.config.rc_matplotlib` (our name for `matplotlib.rcParams`) and
-# the UltraPlot-specific settings are stored in `~ultraplot.config.rc_UltraPlot`.
+# stored in :func:`~ultraplot.config.rc_matplotlib` (our name for :class:`~matplotlib.rcParams`) and
+# the UltraPlot-specific settings are stored in :class:`~ultraplot.config.rc_ultraplot`.
 # UltraPlot also includes a :rcraw:`style` setting that can be used to
 # switch between `matplotlib stylesheets
 # <https://matplotlib.org/stable/gallery/style_sheets/style_sheets_reference.html>`__.
