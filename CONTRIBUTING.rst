@@ -76,8 +76,8 @@ documentation files directly in the GitHub web interface without using a local c
 * The `default ReST role <https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-default_role>`__
   is ``py:obj``. Please include ``py:obj`` links whenever discussing particular
   functions or classes -- for example, if you are discussing the
-  `~ultraplot.axes.Axes.format` method, please write
-  ```~ultraplot.axes.Axes.format``` rather than ``format``. ultraplot also uses
+  :func:`~ultraplot.axes.Axes.format` method, please write
+  ```:func:`~ultraplot.axes.Axes.format` ``` rather than ``format``. ultraplot also uses
   `intersphinx <http://www.sphinx-doc.org/en/stable/ext/intersphinx.html>`__
   so you can link to external packages like matplotlib and cartopy.
 

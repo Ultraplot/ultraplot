@@ -10,16 +10,16 @@ Configuring UltraPlot
 Overview
 --------
 
-A dictionary-like object named `~ultraplot.config.rc`, belonging to the
-`~ultraplot.config.Configurator` class, is created when you import UltraPlot.
+A dictionary-like object named :obj:`~ultraplot.config.rc`, belonging to the
+:class:`~ultraplot.config.Configurator` class, is created when you import UltraPlot.
 This is your one-stop shop for working with
 `matplotlib settings <ug_rcmpl_>`_
-stored in `~ultraplot.config.rc_matplotlib`
-(our name for the `~matplotlib.rcParams` dictionary)
+stored in :obj:`~ultraplot.config.rc_matplotlib`
+(our name for the :obj:`~matplotlib.rcParams` dictionary)
 and :ref:`ultraplot settings <ug_rcUltraPlot>`
-stored in `~ultraplot.config.rc_UltraPlot`.
+stored in :obj:`~ultraplot.config.rc_ultraplot`.
 
-To change global settings on-the-fly, simply update `~ultraplot.config.rc`
+To change global settings on-the-fly, simply update :obj:`~ultraplot.config.rc`
 using either dot notation or as you would any other dictionary:
 
 .. code-block:: python
@@ -31,7 +31,7 @@ using either dot notation or as you would any other dictionary:
   uplt.rc.update({'name1': value1, 'name2': value2})
 
 To apply settings to a particular axes or figure, pass the setting
-to `ultraplot.axes.Axes.format` or `ultraplot.figure.Figure.format`:
+to :func:`~ultraplot.axes.Axes.format` or :func:`~ultraplot.figure.Figure.format`:
 
 .. code-block:: python
 
@@ -41,7 +41,7 @@ to `ultraplot.axes.Axes.format` or `ultraplot.figure.Figure.format`:
   ax.format(rc_kw={'name1': value1, 'name2': value2})
 
 To temporarily modify settings for particular figure(s), pass the setting
-to the `~ultraplot.config.Configurator.context` command:
+to the :func:`~ultraplot.config.Configurator.context` command:
 
 .. code-block:: python
 
@@ -71,10 +71,10 @@ you can simply omit the dots. For example, to change the
 Matplotlib settings
 -------------------
 
-Matplotlib settings are natively stored in the `~matplotlib.rcParams`
+Matplotlib settings are natively stored in the :obj:`~matplotlib.rcParams`
 dictionary. UltraPlot makes this dictionary available in the top-level namespace as
-`~ultraplot.config.rc_matplotlib`. All matplotlib settings can also be changed with
-`~ultraplot.config.rc`. Details on the matplotlib settings can be found on
+:obj:`~ultraplot.config.rc_matplotlib`. All matplotlib settings can also be changed with
+:obj:`~ultraplot.config.rc`. Details on the matplotlib settings can be found on
 `this page <ug_rcmpl_>`_.
 
 .. _ug_rcUltraPlot:
@@ -82,10 +82,10 @@ dictionary. UltraPlot makes this dictionary available in the top-level namespace
 UltraPlot settings
 ----------------
 
-UltraPlot settings are natively stored in the `~ultraplot.config.rc_UltraPlot` dictionary.
-They should almost always be changed with `~ultraplot.config.rc` rather than
-`~ultraplot.config.rc_UltraPlot` to ensure that :ref:`meta-settings <ug_rcmeta>` are
-synced. These settings are not found in `~matplotlib.rcParams` -- they either
+UltraPlot settings are natively stored in the :obj:`~ultraplot.config.rc_ultraplot` dictionary.
+They should almost always be changed with :obj:`~ultraplot.config.rc` rather than
+:obj:`~ultraplot.config.rc_ultraplot` to ensure that :ref:`meta-settings <ug_rcmeta>` are
+synced. These settings are not found in :obj:`~matplotlib.rcParams` -- they either
 control UltraPlot-managed features (e.g., a-b-c labels and geographic gridlines)
 or they represent existing matplotlib settings with more clear or succinct names.
 Here's a broad overview of the new settings:
@@ -99,17 +99,17 @@ Here's a broad overview of the new settings:
 * The ``suptitle``, ``leftlabel``, ``toplabel``, ``rightlabel``, and ``bottomlabel``
   categories control the figure titles and subplot row and column labels.
 * The ``formatter`` category supersedes matplotlib's ``axes.formatter``
-  and includes settings that control the `~ultraplot.ticker.AutoFormatter` behavior.
+  and includes settings that control the :class:`~ultraplot.ticker.AutoFormatter` behavior.
 * The ``cmap`` category supersedes matplotlib's ``image`` and includes
-  settings relevant to colormaps and the `~ultraplot.colors.DiscreteNorm` normalizer.
+  settings relevant to colormaps and the :class:`~ultraplot.colors.DiscreteNorm` normalizer.
 * The ``tick`` category supersedes matplotlib's ``xtick`` and ``ytick``
   to simultaneously control *x* and *y* axis tick and tick label settings.
 * The matplotlib ``grid`` category includes new settings that control the meridian
-  and parallel gridlines and gridline labels managed by `~ultraplot.axes.GeoAxes`.
+  and parallel gridlines and gridline labels managed by :class:`~ultraplot.axes.GeoAxes`.
 * The ``gridminor`` category optionally controls minor gridlines separately
   from major gridlines.
 * The ``land``, ``ocean``, ``rivers``, ``lakes``, ``borders``, and ``innerborders``
-  categories control geographic content managed by `~ultraplot.axes.GeoAxes`.
+  categories control geographic content managed by :class:`~ultraplot.axes.GeoAxes`.
 
 .. _ug_rcmeta:
 
@@ -118,8 +118,8 @@ Meta-settings
 
 Some UltraPlot settings may be more accurately described as "meta-settings",
 as they change several matplotlib and UltraPlot settings at once (note that settings
-are only synced when they are changed on the `~ultraplot.config.rc` object rather than
-the `~ultraplot.config.rc_UltraPlot` and `~ultraplot.config.rc_matplotlib` dictionaries).
+are only synced when they are changed on the :obj:`~ultraplot.config.rc` object rather than
+the :obj:`~ultraplot.config.rc_UltraPlot` and :obj:`~ultraplot.config.rc_matplotlib` dictionaries).
 Here's a broad overview of the "meta-settings":
 
 * Setting :rcraw:`font.small` (or, equivalently, :rcraw:`fontsmall`) changes
@@ -169,17 +169,17 @@ except it controls both matplotlib *and* UltraPlot settings. The syntax is essen
 the same as matplotlibrc, and the file path is very similar to matplotlibrc. On most
 platforms it is found in ``~/.UltraPlot/ultraplotrc``, but a loose hidden file in the
 home directory named ``~/.ultraplotrc`` is also allowed (use
-`~ultraplot.config.Configurator.user_file` to print the path). To update this file
+:func:`~ultraplot.config.Configurator.user_file` to print the path). To update this file
 after a version change, simply remove it and restart your python session.
 
-To change the global `~ultraplot.config.rc` settings, edit and uncomment the lines
+To change the global :obj:`~ultraplot.config.rc` settings, edit and uncomment the lines
 in the ``ultraplotrc`` file. To change the settings for a specific project, place a file
 named either ``.ultraplotrc`` or ``ultraplotrc`` in the same directory as your python
 session, or in an arbitrary parent directory. To generate a ``ultraplotrc`` file
 containing the settings you have changed during a python session, use
-`~ultraplot.config.Configurator.save` (use `~ultraplot.config.Configurator.changed`
+:func:`~ultraplot.config.Configurator.save` (use :func:`~ultraplot.config.Configurator.changed`
 to preview a dictionary of the changed settings). To explicitly load a ``ultraplotrc``
-file, use `~ultraplot.config.Configurator.load`.
+file, use :func:`~ultraplot.config.Configator.load`.
 
 As an example, a ``ultraplotrc`` file containing the default settings
 is shown below.
