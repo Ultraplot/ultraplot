@@ -35,8 +35,8 @@
 #
 # To make plots with these classes, you must start with the top-level commands
 # :func:`~ultraplot.ui.figure`, :func:`~ultraplot.ui.subplot`, or :func:`~ultraplot.ui.subplots`. These are
-# modeled after the :py:module:`~matplotlib.pyplot` commands of the same name. As in
-# :py:module:`~matplotlib.pyplot`, :func:`~ultraplot.ui.subplot` creates a figure and a single
+# modeled after the :mod:`~matplotlib.pyplot` commands of the same name. As in
+# :mod:`~matplotlib.pyplot`, :func:`~ultraplot.ui.subplot` creates a figure and a single
 # subplot, :func:`~ultraplot.ui.subplots` creates a figure and a grid of subplots, and
 # :func:`~ultraplot.ui.figure` creates an empty figure that can be subsequently filled
 # with subplots. A minimal example with just one subplot is shown below.
@@ -85,6 +85,7 @@ fig, ax = uplt.subplot(suptitle="Single subplot", xlabel="x axis", ylabel="y axi
 # fig = uplt.figure(suptitle='Single subplot')  # equivalent to above
 # ax = fig.subplot(xlabel='x axis', ylabel='y axis')
 ax.plot(data, lw=2)
+fig.show()
 
 
 # %% [raw] raw_mimetype="text/restructuredtext"
@@ -156,6 +157,7 @@ ax = fig.subplot(122)
 fig.format(
     suptitle="Simple subplot grid", title="Title", xlabel="x axis", ylabel="y axis"
 )
+fig.show()
 # fig.save('~/example1.png')  # save the figure
 # fig.savefig('~/example1.png')  # alternative
 
@@ -181,6 +183,7 @@ axs.format(
     ylabel="ylabel",
 )
 axs[2].plot(data, lw=2)
+fig.show()
 # fig.save('~/example2.png')  # save the figure
 # fig.savefig('~/example2.png')  # alternative
 
@@ -203,6 +206,7 @@ axs.format(
     suptitle="Really complex subplot grid", xlabel="xlabel", ylabel="ylabel", abc=True
 )
 axs[0].plot(data, lw=2)
+fig.show()
 # fig.save('~/example3.png')  # save the figure
 # fig.savefig('~/example3.png')  # alternative
 
@@ -222,6 +226,7 @@ ax = fig.subplot(gs[1, 1])
 fig.format(
     suptitle="Subplot grid with a GridSpec", xlabel="xlabel", ylabel="ylabel", abc=True
 )
+fig.show()
 # fig.save('~/example4.png')  # save the figure
 # fig.savefig('~/example4.png')  # alternative
 
@@ -294,6 +299,7 @@ axs[1, 1:].format(fc="blush")
 axs[1, :1].format(fc="sky blue")
 axs[-1, -1].format(fc="gray4", grid=False)
 axs[0].plot((state.rand(50, 10) - 0.5).cumsum(axis=0), cycle="Grays_r", lw=2)
+fig.show()
 
 
 # %% [raw] raw_mimetype="text/restructuredtext"
@@ -305,13 +311,13 @@ axs[0].plot((state.rand(50, 10) - 0.5).cumsum(axis=0), cycle="Grays_r", lw=2)
 # Matplotlib includes `two different interfaces
 # <https://matplotlib.org/stable/api/index.html>`__ for plotting stuff:
 # a python-style object-oriented interface with axes-level commands
-# like :method:`matplotlib.axes.Axes.plot`, and a MATLAB-style :py:module:`~matplotlib.pyplot` interface
+# like :method:`matplotlib.axes.Axes.plot`, and a MATLAB-style :mod:`~matplotlib.pyplot` interface
 # with global commands like :func:`matplotlib.pyplot.plot` that track the "current" axes.
 # UltraPlot builds upon the python-style interface using the `~ultraplot.axes.PlotAxes`
 # class. Since every axes used by UltraPlot is a child of :class:`~ultraplot.axes.PlotAxes`, we
 # are able to add features directly to the axes-level commands rather than relying
 # on a separate library of commands  (note that while some of these features may be
-# accessible via :py:module:`~matplotlib.pyplot` commands, this is not officially supported).
+# accessible via :mod:`~matplotlib.pyplot` commands, this is not officially supported).
 #
 # For the most part, the features added by :class:`~ultraplot.axes.PlotAxes` represent
 # a *superset* of matplotlib. If you are not interested, you can use the plotting
@@ -353,6 +359,7 @@ axs.format(
     suptitle="Quick plotting demo",
 )
 fig.colorbar(m, loc="b", label="label")
+fig.show()
 
 
 # %% [raw] raw_mimetype="text/restructuredtext"
@@ -463,6 +470,7 @@ axs.format(
     xtickminor=False,
     ygridminor=True,
 )
+fig.show()
 
 # %% [raw] raw_mimetype="text/restructuredtext"
 # .. _ug_rc:
@@ -530,6 +538,7 @@ axs.format(
     titleloc="r",
     titlecolor="gray7",
 )
+fig.show()
 
 # Reset persistent modifications from head of cell
 uplt.rc.reset()
@@ -554,3 +563,4 @@ styles = ("ggplot", "seaborn", "538", "bmh")
 for ax, style in zip(axs, styles):
     ax.format(style=style, xlabel="xlabel", ylabel="ylabel", title=style)
     ax.plot(data, linewidth=3)
+fig.show()
