@@ -105,7 +105,6 @@ fig.format(
     ylabel="ylabel",
     suptitle="Colorbar and legend location demo",
 )
-fig.show()
 
 # %% [raw] raw_mimetype="text/restructuredtext"
 # .. _ug_guides_plot:
@@ -182,7 +181,6 @@ ax.contour(
     legend="ul",
     legend_kw={"label": "legend from contours"},
 )
-fig.show()
 
 # %%
 import ultraplot as uplt
@@ -211,7 +209,6 @@ for j, ax in enumerate(axs):
         x, y = np.linspace(x0, x1, N + 1), np.linspace(y0, y1, N + 1)
         m = ax.pcolormesh(x, y, data, cmap=cmap, levels=np.linspace(0, scale, 11))
         ax.colorbar(m, loc="l", label=f"dataset #{i + 1}")
-fig.show()
 
 # %% [raw] raw_mimetype="text/restructuredtext"
 # .. _ug_guides_multi:
@@ -255,7 +252,6 @@ fig.colorbar(m, label="column 1", ticks=0.5, loc="b", col=1)
 fig.colorbar(m, label="columns 2 and 3", ticks=0.2, loc="b", cols=(2, 3))
 fig.colorbar(m, label="stacked colorbar", ticks=0.1, loc="b", minorticks=0.05)
 fig.colorbar(m, label="colorbar with length <1", ticks=0.1, loc="r", length=0.7)
-fig.show()
 
 # %%
 import ultraplot as uplt
@@ -286,7 +282,6 @@ fig.legend(hs, ncols=1, label="legend label", frame=False, loc="r")
 fig.format(abc="A", abcloc="ul", suptitle="Figure colorbars and legends demo")
 for ax, title in zip(axs, ("2D {} #1", "2D {} #2", "Line {} #1", "Line {} #2")):
     ax.format(xlabel="xlabel", title=title.format("dataset"))
-fig.show()
 
 
 # %% [raw] raw_mimetype="text/restructuredtext"
@@ -376,7 +371,6 @@ fig.format(
     ylabel="ylabel",
     titleabove=False,
 )
-fig.show()
 
 
 # %% [raw] raw_mimetype="text/restructuredtext"
@@ -469,4 +463,3 @@ ax.legend(hs1, loc="b", ncols=3, title="row major", order="C", facecolor="gray2"
 ax = axs[1]
 ax.legend(hs2, loc="b", ncols=3, center=True, title="centered rows")
 axs.format(xlabel="xlabel", ylabel="ylabel", suptitle="Legend formatting demo")
-fig.show()

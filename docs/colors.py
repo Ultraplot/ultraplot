@@ -57,7 +57,6 @@
 import ultraplot as uplt
 
 fig, axs = uplt.show_colors()
-fig.show()
 
 
 # %% [raw] raw_mimetype="text/restructuredtext"
@@ -116,7 +115,6 @@ for scale in (0, 1, 3):
     x, y = state.rand(2, N)
     color = uplt.scale_saturation("ocean blue", scale)
     axs[2].scatter(x, y, marker=marker, c=color, legend="b", label=fmt(scale))
-fig.show()
 
 # %% [raw] raw_mimetype="text/restructuredtext"
 # .. _ug_colors_cmaps:

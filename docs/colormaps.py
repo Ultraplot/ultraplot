@@ -148,7 +148,6 @@ for cmaps in (("magma", "rocket"), ("fire", "dusk")):
     fig, axs = uplt.show_channels(
         *cmaps, refwidth=1.5, minhue=-180, maxsat=400, rgb=False
     )
-    fig.show()
 
 
 # %% [raw] raw_mimetype="text/restructuredtext"
@@ -374,7 +373,6 @@ for ax, coord in zip(axs, (None, 0.3, 0.7)):
     ax.contourf(
         data, cmap=cmap, cmap_kw=cmap_kw, colorbar="b", colorbar_kw={"locator": "null"}
     )
-fig.show()
 
 # %%
 import ultraplot as uplt
@@ -417,7 +415,6 @@ for i, (ax, title, cut) in enumerate(zip(axs, titles, (None, None, 0.2, -0.1))):
         colorbar_kw={"locator": "null"},
         **kw,  # level edges or centers
     )
-fig.show()
 
 # %%
 import ultraplot as uplt

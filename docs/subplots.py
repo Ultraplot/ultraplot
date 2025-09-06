@@ -461,7 +461,6 @@ ax.format(xtickloc="top", ytickloc="right")
 x = y = np.linspace(0, 1, 10)
 for axi in ax:
     axi.plot(axi.number * x, axi.number * y)
-fig.show()
 
 # %% [raw] raw_mimetype="text/restructuredtext"
 # Notice how the top and right labels here are added since no
