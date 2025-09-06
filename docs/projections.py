@@ -126,7 +126,13 @@ axs[2].format(
 # has its own :meth:`~ultraplot.axes.GeoAxes.format` command. :meth:`ultraplot.axes.GeoAxes.format`
 # facilitates :ref:`geographic-specific modifications <ug_geoformat>` like meridional
 # and parallel gridlines and land mass outlines. The syntax is very similar to
-# :func:`ultraplot.axes.CartesianAxes.format`. Note that the `proj` keyword and several of
+# :func:`ultraplot.axes.CartesianAxes.format`.
+#  .. important::
+#           The internal reference system used for plotting in ultraplot is **PlateCarree**.
+#           External libraries, such as `contextily`, may use different internal reference systems,
+#           such as **EPSG:3857** (Web Mercator). When interfacing with such libraries, it is important
+#           to provide the appropriate `transform` parameter to ensure proper alignment between coordinate systems.
+# Note that the `proj` keyword and several of
 # the :func:`~ultraplot.axes.GeoAxes.format` keywords are inspired by the basemap API.
 # In the below example, we create and format a very simple geographic plot.
 
@@ -217,7 +223,7 @@ axs.format(
 #      when they are omitted (e.g., ``lon0=0`` as the default for most projections).
 #
 # .. warning::
-#    The `basemap`_ package is now being actively maintained again witha short hiatus for a few years. We originally
+#    The `basemap`_ package is now being actively maintained again with a short hiatus for a few years. We originally
 #    included basemap support because its gridline labeling was more powerful
 #    than cartopy gridline labeling. While cartopy gridline labeling has
 #    significantly improved since version 0.18, UltraPlot continues to support

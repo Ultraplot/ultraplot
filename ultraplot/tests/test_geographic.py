@@ -879,3 +879,19 @@ def test_dms_used_for_mercator():
         assert a == expectation
         assert b == expectation
     return fig
+
+
+@pytest.mark.mpl_image_compare
+def test_imshow_with_and_without_transform(rng):
+    data = rng.random((100, 100))
+    fig, ax = uplt.subplots(ncols=3, proj="lcc", share=0)
+    ax.format(land=True, labels=True)
+    ax[:2].format(
+        latlim=(-10, 10),
+        lonlim=(-10, 10),
+    )
+    ax[0].imshow(data, transform=ax[0].projection)
+    ax[1].imshow(data, transform=None)
+    ax[2].imshow(data, transform=uplt.axes.geo.ccrs.PlateCarree())
+    ax.format(title=["LCC", "No transform", "PlateCarree"])
+    return fig
