@@ -108,6 +108,7 @@ with uplt.rc.context({"cmap": "Grays", "cmap.levels": 21}):
     axs[1].pcolormesh(xedges, yedges, data)
     axs[2].contourf(x, y, data)
     axs[3].contourf(xedges, yedges, data)
+fig.show()
 
 # %%
 import ultraplot as uplt
@@ -150,6 +151,7 @@ fig.format(
     ylabel="ylabel",
     suptitle="Default vmin/vmax restricted to in-bounds data",
 )
+fig.show()
 
 # %% [raw] raw_mimetype="text/restructuredtext"
 # .. _ug_2dintegration:
@@ -236,6 +238,7 @@ ax.contourf(da, cmap=cmap, colorbar="t", lw=0.7, ec="k")
 ax = fig.subplot(122, yreverse=True)
 ax.contourf(df, cmap="YlOrRd", colorbar="t", lw=0.7, ec="k")
 ax.format(xtickminor=False, yformatter="%b", ytickminor=False)
+fig.show()
 
 # %% [raw] raw_mimetype="text/restructuredtext"
 # .. _ug_apply_cmap:
@@ -291,6 +294,7 @@ axs[3].pcolor(data, levels=uplt.arange(0, 12, 2), qualitative=True, colorbar="r"
 types = ("sequential", "diverging", "cyclic", "qualitative")
 for ax, typ in zip(axs, types):
     ax.format(title=typ.title() + " colormap")
+fig.show()
 uplt.rc.reset()
 
 # %%
@@ -321,6 +325,7 @@ ax.contourf(
     colors=["red5", "blue5", "yellow5", "gray5", "violet5"],
     colorbar="b",
 )
+fig.show()
 
 import ultraplot as uplt
 import numpy as np
@@ -339,6 +344,7 @@ ax = fig.subplot(gs[0], title="Default linear normalizer")
 ax.pcolormesh(data, cmap="magma", colorbar="b")
 ax = fig.subplot(gs[1], title="Logarithmic normalizer with norm='log'")
 ax.pcolormesh(data, cmap="magma", norm="log", colorbar="b")
+fig.show()
 
 
 # %% [raw] raw_mimetype="text/restructuredtext"
@@ -394,6 +400,7 @@ for ax, norm in zip(axs, ("linear", "segmented")):
         colorbar_kw={"ticks": ticks},
     )
     ax.format(title=norm.title() + " normalizer")
+fig.show()
 # %%
 import ultraplot as uplt
 import numpy as np
@@ -422,6 +429,7 @@ for data, mode, fair in zip(
         ax.colorbar(m, loc="b")
         ax.format(title=f"{mode.title()}-skewed + {fair} scaling")
         i += 1
+fig.show()
 
 # %% [raw] raw_mimetype="text/restructuredtext"
 # .. _ug_discrete:
@@ -483,6 +491,7 @@ axs[1].set_title("Pcolor plot\ndiscrete=False")
 # Imshow
 m = axs[2].imshow(data, cmap="oslo", colorbar="b")
 axs[2].format(title="Imshow plot\ndiscrete=False (default)", yformatter="auto")
+fig.show()
 
 # %%
 import ultraplot as uplt
@@ -520,6 +529,7 @@ for i, extend in enumerate(("min", "max", "neither", "both")):
         colorbar="b",
         colorbar_kw={"locator": 180},
     )
+fig.show()
 
 # %% [raw] raw_mimetype="text/restructuredtext" tags=[]
 # .. _ug_autonorm:
@@ -584,6 +594,7 @@ data[-1, 0] = 2e3
 for i, ax in enumerate(axs[2:]):
     ax.pcolor(data, robust=bool(i), colorbar="b")
     ax.format(title="Robust " + ("on" if i else "off"))
+fig.show()
 uplt.rc.reset()
 
 # %% [raw] raw_mimetype="text/restructuredtext"
@@ -646,6 +657,7 @@ data = 5 * (data - 0.45).cumsum(axis=0) - 2
 ax = axs[2]
 ax.contour(data, nozero=True, color="gray8", labels=True, labels_kw={"weight": "bold"})
 ax.format(title="Line contours with labels")
+fig.show()
 
 # %% [raw] raw_mimetype="text/restructuredtext"
 # .. _ug_heatmap:
@@ -701,3 +713,4 @@ ax.format(
     linewidth=0,
     tickpad=4,
 )
+fig.show()

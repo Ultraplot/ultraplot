@@ -325,7 +325,7 @@ concise figures.
   :ref:`shared and aligned <ug_share>` between subplot in the same
   :class:`~ultraplot.gridspec.GridSpec` row or column. This is controlled by the `sharex`,
   `sharey`, `spanx`, `spany`, `alignx`, and `aligny` figure keywords.
-* The figure :func:`~ultraplot.figure.Figure.colorbar` and :func:`~ultraplot.figure.Figure.legend`
+* The figure :func:`~ultraplot.figure.Figure.colorbar` and :meth:`~ultraplot.figure.Figure.legend``
   commands can easily draw colorbars and legends intended to reference more than
   one subplot in arbitrary contiguous rows and columns. See the
   :ref:`next section <why_colorbars_legends>` for details.
@@ -378,10 +378,10 @@ that reference :ref:`individual subplots <ug_guides_loc>` and
 
 * To draw a colorbar or legend on the outside of a specific subplot, pass an
   "outer" location (e.g. ``loc='l'`` or ``loc='left'``)
-  to :func:`~ultraplot.axes.Axes.colorbar` or :func:`~ultraplot.axes.Axes.legend`.
+  to :func:`~ultraplot.axes.Axes.colorbar` or :meth:`~ultraplot.axes.Axes.legend`.
 * To draw a colorbar or legend on the inside of a specific subplot, pass an
   "inner" location (e.g. ``loc='ur'`` or ``loc='upper right'``)
-  to :func:`~ultraplot.axes.Axes.colorbar` or :func:`~ultraplot.axes.Axes.legend`.
+  to :func:`~ultraplot.axes.Axes.colorbar` or :meth:`~ultraplot.axes.Axes.legend`.
 * To draw a colorbar or legend along the edge of the figure, use
   :func:`~ultraplot.figure.Figure.colorbar` and :class:`~ultraplot.figure.Figure.legend`.
   The `col`, `row`, and `span` keywords control which

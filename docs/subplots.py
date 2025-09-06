@@ -478,7 +478,7 @@ fig.show()
 # the gridspec spacing and tight layout padding keywords `left`, `right`, `bottom`,
 # `top`, `wspace`, `hspace`, `outerpad`, `innerpad`, `panelpad`, `wpad`, and `hpad`;
 # the :func:`~ultraplot.axes.Axes.colorbar` and :func:`~ultraplot.axes.Axes.panel` widths;
-# various :func:`~ultraplot.axes.Axes.legend` spacing and padding arguments; various
+# various :meth:`~ultraplot.axes.Axes.legend` spacing and padding arguments; various
 # :func:`~ultraplot.axes.Axes.format` font size and padding arguments; the line width and
 # marker size arguments passed to :class:`~ultraplot.axes.PlotAxes` commands; and all
 # applicable :func:`~ultraplot.config.rc` settings, e.g. :rcraw:`subplots.refwidth`,

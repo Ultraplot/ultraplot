@@ -115,9 +115,9 @@ functionality to existing figure and axes methods.
   :ref:`formatting subplots <ug_format>` for a broad overview, along with the
   individual sections on formatting :ref:`Cartesian plots <ug_cartesian>`,
   :ref:`geographic plots <ug_geoformat>`, and :ref:`polar plots <ug_polar>`.
-* The :func:`~ultraplot.axes.Axes.colorbar` and :func:`~ultraplot.axes.Axes.legend` commands
+* The :func:`~ultraplot.axes.Axes.colorbar` and :meth:`~ultraplot.axes.Axes.legend` commands
   draw colorbars and legends inside of subplots or along the outside edges of
-  subplots. The :func:`~ultraplot.figure.Figure.colorbar` and :func:`~ultraplot.figure.Figure.legend`
+  subplots. The :func:`~ultraplot.figure.Figure.colorbar` and :meth:`~ultraplot.figure.Figure.legend``
   commands draw colorbars or legends along the edges of figures (aligned by subplot
   boundaries). These commands considerably :ref:`simplify <ug_guides>` the
   process of drawing colorbars and legends.

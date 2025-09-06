@@ -90,6 +90,7 @@ with uplt.rc.context({"axes.prop_cycle": uplt.Cycle("Grays", N=N, left=0.3)}):
     ax.plot(y + 1, linewidth=2)
     ax.scatter(y + 2, marker="s", markersize=5**2)
     fig.format(xlabel="xlabel", ylabel="ylabel")
+fig.show()
 
 # %%
 import ultraplot as uplt
@@ -127,6 +128,7 @@ fig.format(
     ylabel="ylabel",
     suptitle="Default ylim restricted to in-bounds data",
 )
+fig.show()
 
 # %% [raw] raw_mimetype="text/restructuredtext"
 # .. _ug_1dintegration:
@@ -204,6 +206,7 @@ ax.scatter(da, cycle=cycle, lw=3, colorbar="t", colorbar_kw={"locator": 20})
 cycle = uplt.Cycle("dark green", space="hpl", N=df.shape[1])
 ax = fig.subplot(122)
 ax.plot(df, cycle=cycle, lw=3, legend="t", legend_kw={"frame": False})
+fig.show()
 
 
 # %% [raw] raw_mimetype="text/restructuredtext"
@@ -258,7 +261,7 @@ with uplt.rc.context({"lines.linewidth": 3}):
     for i in range(data1.shape[1]):
         ax.plot(data2[:, i], cycle="Blues", cycle_kw={"N": N, "left": 0.3})
     fig.format(xlabel="xlabel", ylabel="ylabel", suptitle="On-the-fly property cycles")
-
+fig.show()
 
 # %% [raw] raw_mimetype="text/restructuredtext"
 # .. _ug_lines:
@@ -320,6 +323,7 @@ ax = fig.subplot(gs[5], title="Stem plot")
 data = state.rand(20)
 ax.stem(data)
 fig.format(suptitle="Line plots demo", xlabel="xlabel", ylabel="ylabel")
+fig.show()
 
 
 # %% [raw] raw_mimetype="text/restructuredtext"
@@ -405,7 +409,7 @@ obj = ax.scatter(
     colorbar_kw={"label": "label"},
 )
 fig.format(suptitle="Scatter plot demo", xlabel="xlabel", ylabel="ylabel")
-
+fig.show()
 
 # %% [raw] raw_mimetype="text/restructuredtext"
 # .. _ug_parametric:
@@ -475,6 +479,7 @@ ax.format(
     ylabel="sine angle",
 )
 ax.colorbar(m, loc="b", locator=2, label="parametric coordinate")
+fig.show()
 
 
 # %% [raw] raw_mimetype="text/restructuredtext"
@@ -554,6 +559,7 @@ obj = ax.barh(
     stack=True,
 )
 fig.format(grid=False, suptitle="Bar plot demo")
+fig.show()
 uplt.rc.reset()
 
 # %%
@@ -594,6 +600,7 @@ ax.area(
     legend_kw={"center": True, "ncols": 2, "labels": ["z", "y", "qqqq"]},
 )
 fig.format(grid=False, xlabel="xlabel", ylabel="ylabel", suptitle="Area plot demo")
+fig.show()
 uplt.rc.reset()
 
 # %% [raw] raw_mimetype="text/restructuredtext"
@@ -648,6 +655,7 @@ ax.format(title="Bar plot")
 ax = axs[2]
 ax.area(data, negpos=True, lw=0.5, edgecolor="k")
 ax.format(title="Area plot")
+fig.show()
 
 # Reset title styles changed above
 uplt.rc.reset()

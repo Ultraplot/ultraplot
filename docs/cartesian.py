@@ -96,6 +96,7 @@ ax.format(xlim=(-10, 10), xlocator="null")
 # Tick locations that cleanly divide 60 minute/60 second intervals
 ax = fig.subplot(717, title="Degree-Minute-Second Locator (requires cartopy)")
 ax.format(xlim=(0, 2), xlocator="dms", xformatter="dms")
+fig.show()
 
 uplt.rc.reset()
 
@@ -178,6 +179,7 @@ axs[3].format(
     xlocator=1,
     ylocator=1,
 )
+fig.show()
 uplt.rc.reset()
 
 
@@ -237,6 +239,7 @@ ax.format(xlim=(0, 0.001), xlocator=0.0001, xformatter="%.E")
 ax = fig.subplot(919, title="StrMethodFormatter")
 ax.format(xlim=(0, 100), xtickminor=False, xlocator=20, xformatter="{x:.1f}")
 fig.format(ylocator="null", suptitle="Tick formatters demo")
+fig.show()
 uplt.rc.reset()
 
 # %% [raw] raw_mimetype="text/restructuredtext"
@@ -321,6 +324,7 @@ ax.format(
 )
 axs[:4].format(xrotation=0)  # no rotation for the first four examples
 fig.format(ylocator="null", suptitle="Datetime locators and formatters demo")
+fig.show()
 uplt.rc.reset()
 
 
@@ -371,6 +375,7 @@ ax.format(ylabel="labels on both sides")
 ax = fig.subplot(122, title="Zero-centered spines", titlepad="1em")
 ax.format(xlim=(-10, 10), ylim=(-3, 3), yticks=1)
 ax.format(xloc="zero", yloc="zero")
+fig.show()
 uplt.rc.reset()
 
 
@@ -490,6 +495,7 @@ for ax, iargs, title, locator in zip(axs, args, titles, locators):
         title=title,
         suptitle="Cutoff axis scales demo",
     )
+fig.show()
 
 # %%
 import ultraplot as uplt
@@ -537,6 +543,7 @@ title = "Power $x^{0.5}$ scale"
 ax.pcolormesh(x, y, data, cmap="grays", cmap_kw={"right": 0.8})
 ax.plot(x, y, lw=4, color=colors[1])
 ax.format(ymin=0.05, yscale=("power", 0.5), title=title)
+fig.show()
 
 
 # %% [raw] raw_mimetype="text/restructuredtext"
@@ -597,6 +604,7 @@ ax.linex(data, color=c0, ls="--")
 ox = ax.altx(color=c1, label="alternate xlabel", linewidth=1)
 ox.linex(altdata, color=c1)
 fig.format(xlabel="xlabel", ylabel="ylabel", suptitle="Alternate axes demo")
+fig.show()
 
 # %% [raw] raw_mimetype="text/restructuredtext"
 # .. _ug_dual:
@@ -668,6 +676,7 @@ ax.dualx(
     color=c2,
     gridcolor=c2,
 )
+fig.show()
 uplt.rc.reset()
 
 # %%
@@ -682,6 +691,7 @@ fig = uplt.figure(
     refwidth=1.8,
     suptitle="Duplicate axes with pressure and height",
 )
+fig.show()
 
 # Pressure as the linear scale, height on opposite axis (scale height 7km)
 ax = fig.subplot(121)
@@ -709,6 +719,7 @@ ax.format(
 ax.dualy(
     "pressure", label="pressure (hPa)", locator=100, color=c1, gridcolor=c1, grid=True
 )
+fig.show()
 uplt.rc.reset()
 
 # %%
@@ -739,4 +750,5 @@ ax.format(
 ax = ax.dualx(
     "inverse", locator="log", locator_kw={"subs": (1, 2, 5)}, label="period (days)"
 )
+fig.show()
 uplt.rc.reset()

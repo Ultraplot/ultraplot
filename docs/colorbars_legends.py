@@ -38,7 +38,7 @@
 # and "inset" colorbars are not possible without manually creating and positioning
 # the associated axes. UltraPlot tries to improve this behavior:
 #
-# * :func:`~ultraplot.axes.Axes.legend` can draw both "inset" legends when you request an inset
+# * :meth:`~ultraplot.axes.Axes.legend` can draw both "inset" legends when you request an inset
 #   location (e.g., ``loc='upper right'`` or the shorthand ``loc='ur'``) and "outer"
 #   legends along a subplot edge when you request a :ref:`side location <legend_table>`
 #   (e.g., ``loc='right'`` or the shorthand ``loc='r'``). If you draw multiple legends
@@ -46,7 +46,7 @@
 #   `bbox_to_anchor`, the "outer" legend position is adjusted automatically when the
 #   :ref:`tight layout algorithm <ug_tight>` is active.
 # * UltraPlot adds the axes command `ultraplot.axes.Axes.colorbar`,
-#   analogous to :func:`~ultraplot.axes.Axes.legend` and equivalent to
+#   analogous to :meth:`~ultraplot.axes.Axes.legend` and equivalent to
 #   calling :func:`~ultraplot.figure.Figure.colorbar` with an `ax` keyword.
 #   :func:`~ultraplot.axes.Axes.colorbar` can draw both "outer" colorbars when you request
 #   a side location (e.g., ``loc='right'`` or the shorthand ``loc='r'``) and "inset"
@@ -55,7 +55,7 @@
 #   colorbars have optional background "frames" that can be configured
 #   with various :func:`~ultraplot.axes.Axes.colorbar` keywords.
 
-# :func:`~ultraplot.axes.Axes.colorbar` and :func:`~ultraplot.axes.Axes.legend` also both accept
+# :func:`~ultraplot.axes.Axes.colorbar` and :meth:`~ultraplot.axes.Axes.legend` also both accept
 # `space` and `pad` keywords. `space` controls the absolute separation of the
 # "outer" colorbar or legend from the parent subplot edge and `pad` controls the
 # :ref:`tight layout <ug_tight>` padding relative to the subplot's tick and axis labels
@@ -105,6 +105,7 @@ fig.format(
     ylabel="ylabel",
     suptitle="Colorbar and legend location demo",
 )
+fig.show()
 
 # %% [raw] raw_mimetype="text/restructuredtext"
 # .. _ug_guides_plot:
@@ -181,6 +182,7 @@ ax.contour(
     legend="ul",
     legend_kw={"label": "legend from contours"},
 )
+fig.show()
 
 # %%
 import ultraplot as uplt
@@ -209,7 +211,7 @@ for j, ax in enumerate(axs):
         x, y = np.linspace(x0, x1, N + 1), np.linspace(y0, y1, N + 1)
         m = ax.pcolormesh(x, y, data, cmap=cmap, levels=np.linspace(0, scale, 11))
         ax.colorbar(m, loc="l", label=f"dataset #{i + 1}")
-
+fig.show()
 
 # %% [raw] raw_mimetype="text/restructuredtext"
 # .. _ug_guides_multi:
@@ -253,6 +255,7 @@ fig.colorbar(m, label="column 1", ticks=0.5, loc="b", col=1)
 fig.colorbar(m, label="columns 2 and 3", ticks=0.2, loc="b", cols=(2, 3))
 fig.colorbar(m, label="stacked colorbar", ticks=0.1, loc="b", minorticks=0.05)
 fig.colorbar(m, label="colorbar with length <1", ticks=0.1, loc="r", length=0.7)
+fig.show()
 
 # %%
 import ultraplot as uplt
@@ -283,6 +286,7 @@ fig.legend(hs, ncols=1, label="legend label", frame=False, loc="r")
 fig.format(abc="A", abcloc="ul", suptitle="Figure colorbars and legends demo")
 for ax, title in zip(axs, ("2D {} #1", "2D {} #2", "Line {} #1", "Line {} #2")):
     ax.format(xlabel="xlabel", title=title.format("dataset"))
+fig.show()
 
 
 # %% [raw] raw_mimetype="text/restructuredtext"
@@ -372,6 +376,7 @@ fig.format(
     ylabel="ylabel",
     titleabove=False,
 )
+fig.show()
 
 
 # %% [raw] raw_mimetype="text/restructuredtext"
@@ -380,14 +385,14 @@ fig.format(
 # Added legend features
 # ---------------------
 #
-# The :func:`~ultraplot.axes.Axes.legend` and :func:`~ultraplot.figure.Figure.legend` commands are
+# The :meth:`~ultraplot.axes.Axes.legend` and :meth:`~ultraplot.figure.Figure.legend`` commands are
 # somewhat more flexible than their matplotlib counterparts. The following core
 # features are the same as matplotlib:
 
 # * Calling ``legend`` without positional arguments will
 #   automatically fill the legend with the labeled artist in the
-#   the parent axes (when using :func:`~ultraplot.axes.Axes.legend`) or
-#   or the parent figure (when using :func:`~ultraplot.figure.Figure.legend`).
+#   the parent axes (when using :meth:`~ultraplot.axes.Axes.legend`) or
+#   or the parent figure (when using :meth:`~ultraplot.figure.Figure.legend``).
 # * Legend labels can be assigned early by calling plotting comamnds with
 #   the `label` keyword (e.g., ``ax.plot(..., label='label')``) or on-the-fly by
 #   passing two positional arguments to ``legend`` (where the first argument is the
@@ -415,7 +420,7 @@ fig.format(
 #   inferred from the objects in the group. If multiple distinct
 #   labels are found then the group is automatically expanded.
 #
-# :func:`~ultraplot.axes.Axes.legend` and :func:`ultraplot.figure.Figure.legend` include a few other
+# :meth:`~ultraplot.axes.Axes.legend` and :func:`ultraplot.figure.Figure.legend` include a few other
 # useful features. To draw legends with centered rows, pass ``center=True`` or
 # a list of lists of "handles" to ``legend`` (this stacks several single-row,
 # horizontally centered legends and adds an encompassing frame behind them).
@@ -464,3 +469,4 @@ ax.legend(hs1, loc="b", ncols=3, title="row major", order="C", facecolor="gray2"
 ax = axs[1]
 ax.legend(hs2, loc="b", ncols=3, center=True, title="centered rows")
 axs.format(xlabel="xlabel", ylabel="ylabel", suptitle="Legend formatting demo")
+fig.show()

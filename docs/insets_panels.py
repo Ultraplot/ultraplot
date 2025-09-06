@@ -143,6 +143,7 @@ for cbarloc, ploc in ("rb", "br"):
     pxs.format(title="Stdev", **kwargs)
     for px in pxs:
         px.plot(x2, y2, color="gray7", ls="--")
+fig.show()
 
 
 # %% [raw] raw_mimetype="text/restructuredtext"
@@ -192,3 +193,4 @@ ix = ax.inset(
 )
 ix.format(xlim=(2, 4), ylim=(2, 4), color="red8", linewidth=1.5, ticklabelweight="bold")
 ix.pcolormesh(data, cmap="Grays", levels=N, inbounds=False)
+fig.show()
