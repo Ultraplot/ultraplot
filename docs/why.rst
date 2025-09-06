@@ -325,7 +325,7 @@ concise figures.
   :ref:`shared and aligned <ug_share>` between subplot in the same
   :class:`~ultraplot.gridspec.GridSpec` row or column. This is controlled by the `sharex`,
   `sharey`, `spanx`, `spany`, `alignx`, and `aligny` figure keywords.
-* The figure :func:`~ultraplot.figure.Figure.colorbar` and :class:`~ultraplot.figure.Figure.legend`
+* The figure :func:`~ultraplot.figure.Figure.colorbar` and :func:`~ultraplot.figure.Figure.legend`
   commands can easily draw colorbars and legends intended to reference more than
   one subplot in arbitrary contiguous rows and columns. See the
   :ref:`next section <why_colorbars_legends>` for details.
