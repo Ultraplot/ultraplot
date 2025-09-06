@@ -259,7 +259,6 @@ with uplt.rc.context({"lines.linewidth": 3}):
         ax.plot(data2[:, i], cycle="Blues", cycle_kw={"N": N, "left": 0.3})
     fig.format(xlabel="xlabel", ylabel="ylabel", suptitle="On-the-fly property cycles")
 
-
 # %% [raw] raw_mimetype="text/restructuredtext"
 # .. _ug_lines:
 #
@@ -405,7 +404,6 @@ obj = ax.scatter(
     colorbar_kw={"label": "label"},
 )
 fig.format(suptitle="Scatter plot demo", xlabel="xlabel", ylabel="ylabel")
-
 
 # %% [raw] raw_mimetype="text/restructuredtext"
 # .. _ug_parametric:

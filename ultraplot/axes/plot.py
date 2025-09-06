@@ -187,7 +187,7 @@ legend : bool, int, or str, optional
     resulting object(s). If ``True``, the default :rc:`legend.loc` is used.
     If the same location is used in successive plotting calls, object(s)
     will be added to existing legend in that location. Valid locations
-    are shown in :class:`~ultraplot.axes.Axes.legend`.
+    are shown in :meth:`~ultraplot.axes.Axes.legend`.
 legend_kw : dict-like, optional
     Extra keyword args for the call to :class:`~ultraplot.axes.Axes.legend`.
 """

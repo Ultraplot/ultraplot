@@ -68,13 +68,13 @@ the default interface, this requires calling a series of one-liner setter method
 This workflow is quite verbose -- it tends to require "boilerplate code" that
 gets copied and pasted a hundred times. It can also be confusing -- it is
 often unclear whether properties are applied from an :class:`~matplotlib.axes.Axes`
-setter (e.g. `~matplotlib.axes.Axes.set_xlabel` and
-`~matplotlib.axes.Axes.set_xticks`), an `~matplotlib.axis.XAxis` or
-`~matplotlib.axis.YAxis` setter (e.g.
-`~matplotlib.axis.Axis.set_major_locator` and
-`~matplotlib.axis.Axis.set_major_formatter`), a :class:`~matplotlib.spines.Spine`
-setter (e.g. `~matplotlib.spines.Spine.set_bounds`), or a "bulk" property
-setter (e.g. `~matplotlib.axes.Axes.tick_params`), or whether one must dig
+setter (e.g. :func:`~matplotlib.axes.Axes.set_xlabel` and
+:func:`~matplotlib.axes.Axes.set_xticks`), an :class:`~matplotlib.axis.XAxis` or
+:class:`~matplotlib.axis.YAxis` setter (e.g.
+:func:`~matplotlib.axis.Axis.set_major_locator` and
+:func:`~matplotlib.axis.Axis.set_major_formatter`), a :class:`~matplotlib.spines.Spine`
+setter (e.g. :func:`~matplotlib.spines.Spine.set_bounds`), or a "bulk" property
+setter (e.g. :func:`~matplotlib.axes.Axes.tick_params`), or whether one must dig
 into the figure architecture and apply settings to several different objects.
 It seems like there should be a more unified, straightforward way to change
 settings without sacrificing the advantages of object-oriented design.
@@ -82,13 +82,13 @@ settings without sacrificing the advantages of object-oriented design.
 Changes
 -------
 
-UltraPlot includes the `ultraplot.axes.Axes.format` command to resolve this.
+UltraPlot includes the :func:`~ultraplot.axes.Axes.format` command to resolve this.
 Think of this as an expanded and thoroughly documented version of the
-`matplotlib.artist.Artist.update` command. :func:`~ultraplot.axes.Axes.format` can modify things
+:func:`~matplotlib.artist.Artist.update` command. :func:`~ultraplot.axes.Axes.format` can modify things
 like axis labels and titles and apply new :ref:`"rc" settings <why_rc>` to existing
 axes. It also integrates with various :ref:`constructor functions <why_constructor>`
-to help keep things succinct. Further, the `ultraplot.figure.Figure.format`
-and `ultraplot.gridspec.SubplotGrid.format` commands can be used to
+to help keep things succinct. Further, the :func:`~ultraplot.figure.Figure.format`
+and :func:`~ultraplot.gridspec.SubplotGrid.format` commands can be used to
 :func:`~ultraplot.axes.Axes.format` several subplots at once.
 
 Together, these features significantly reduce the amount of code needed to create
@@ -122,11 +122,11 @@ Links
 -----
 
 * For an introduction, see :ref:`this page <ug_format>`.
-* For `~ultraplot.axes.CartesianAxes` formatting,
+* For :class:`~ultraplot.axes.CartesianAxes` formatting,
   see :ref:`this page <ug_cartesian>`.
 * For :class:`~ultraplot.axes.PolarAxes` formatting,
   see :ref:`this page <ug_polar>`.
-* For `~ultraplot.axes.GeoAxes` formatting,
+* For :class:`~ultraplot.axes.GeoAxes` formatting,
   see :ref:`this page <ug_geoformat>`.
 
 .. _why_constructor:
@@ -138,8 +138,8 @@ Limitation
 ----------
 
 Matplotlib and `cartopy`_ define several classes with verbose names like
-`~matplotlib.ticker.MultipleLocator`, `~matplotlib.ticker.FormatStrFormatter`,
-and `~cartopy.crs.LambertAzimuthalEqualArea`. They also keep them out of the
+:class:`~matplotlib.ticker.MultipleLocator`, :class:`~matplotlib.ticker.FormatStrFormatter`,
+and :class:`~cartopy.crs.LambertAzimuthalEqualArea`. They also keep them out of the
 top-level package namespace. Since plotting code has a half life of about 30 seconds,
 typing out these extra class names and import statements can be frustrating.
 
@@ -165,9 +165,9 @@ these functions.
 
 The constructor functions also accept intuitive inputs alongside "registered"
 names. For example, a scalar passed to :class:`~ultraplot.constructor.Locator`
-returns a `~matplotlib.ticker.MultipleLocator`, a
+returns a :class:`~matplotlib.ticker.MultipleLocator`, a
 lists of strings passed to :class:`~ultraplot.constructor.Formatter` returns a
-`~matplotlib.ticker.FixedFormatter`, and :class:`~ultraplot.constructor.Cycle`
+:class:`~matplotlib.ticker.FixedFormatter`, and :class:`~ultraplot.constructor.Cycle`
 and :class:`~ultraplot.constructor.Colormap` accept colormap names, individual colors, and
 lists of colors. Passing the relevant class instance to a constructor function
 simply returns it, and all the registered classes are available in the top-level
@@ -180,10 +180,10 @@ The below table lists the constructor functions and the keyword arguments that u
 ================================  ============================================================  ==============================================================================  ================================================================================================================================================================================================
 Function                          Return type                                                   Used by                                                                         Keyword argument(s)
 ================================  ============================================================  ==============================================================================  ================================================================================================================================================================================================
-:class:`~ultraplot.constructor.Proj`       `~cartopy.crs.Projection` or `~mpl_toolkits.basemap.Basemap`  :func:`~ultraplot.figure.Figure.add_subplot` and :func:`~ultraplot.figure.Figure.add_subplots`  ``proj=``
+:class:`~ultraplot.constructor.Proj`       :class:`~cartopy.crs.Projection` or :class:`~mpl_toolkits.basemap.Basemap`  :func:`~ultraplot.figure.Figure.add_subplot` and :func:`~ultraplot.figure.Figure.add_subplots`  ``proj=``
 :class:`~ultraplot.constructor.Locator`    :class:`~matplotlib.ticker.Locator`                                  :func:`~ultraplot.axes.Axes.format` and :func:`~ultraplot.axes.Axes.colorbar`                   ``locator=``, ``xlocator=``, ``ylocator=``, ``minorlocator=``, ``xminorlocator=``, ``yminorlocator=``, ``ticks=``, ``xticks=``, ``yticks=``, ``minorticks=``, ``xminorticks=``, ``yminorticks=``
 :class:`~ultraplot.constructor.Formatter`  :class:`~matplotlib.ticker.Formatter`                                :func:`~ultraplot.axes.Axes.format` and :func:`~ultraplot.axes.Axes.colorbar`                   ``formatter=``, ``xformatter=``, ``yformatter=``, ``ticklabels=``, ``xticklabels=``, ``yticklabels=``
-:class:`~ultraplot.constructor.Scale`      `~matplotlib.scale.ScaleBase`                                 :func:`~ultraplot.axes.Axes.format`                                                     ``xscale=``, ``yscale=``
+:class:`~ultraplot.constructor.Scale`      :class:`~matplotlib.scale.ScaleBase`                                 :func:`~ultraplot.axes.Axes.format`                                                     ``xscale=``, ``yscale=``
 :class:`~ultraplot.constructor.Colormap`   :class:`~matplotlib.colors.Colormap`                                 2D :class:`~ultraplot.axes.PlotAxes` commands                                            ``cmap=``
 :class:`~ultraplot.constructor.Norm`       :class:`~matplotlib.colors.Normalize`                                2D :class:`~ultraplot.axes.PlotAxes` commands                                            ``norm=``
 :class:`~ultraplot.constructor.Cycle`      :class:`~cycler.Cycler`                                              1D :class:`~ultraplot.axes.PlotAxes` commands                                            ``cycle=``
@@ -224,7 +224,7 @@ dimensions of the figure, despite the fact that...
 #. The subplot aspect ratio is generally more relevant than the figure
    aspect ratio. A default aspect ratio of ``1`` is desirable for most plots, and
    the aspect ratio must be held fixed for :ref:`geographic and polar <ug_proj>`
-   projections and most `~matplotlib.axes.Axes.imshow` plots.
+   projections and most :func:`~matplotlib.axes.Axes.imshow` plots.
 #. The subplot width and height control the "apparent" size of lines, markers,
    text, and other plotted content. If the figure size is fixed, adding more
    subplots will decrease the average subplot size and increase the "apparent"
@@ -235,7 +235,7 @@ Matplotlib also includes `"tight layout"
 and `"constrained layout"
 <https://matplotlib.org/stable/tutorials/intermediate/constrainedlayout_guide.html>`__
 algorithms that can help users avoid having to tweak
-`~matplotlib.gridspec.GridSpec` spacing parameters like `left`, `bottom`, and `wspace`.
+:class:`~matplotlib.gridspec.GridSpec` spacing parameters like `left`, `bottom`, and `wspace`.
 However, these algorithms are disabled by default and somewhat `cumbersome to configure
 <https://matplotlib.org/stable/tutorials/intermediate/constrainedlayout_guide.html#padding-and-spacing>`__.
 They also cannot apply different amounts of spacing between different subplot row and
@@ -250,7 +250,7 @@ than the figure. The reference subplot dimensions are controlled with the `refwi
 behavior of ``refaspect=1`` and ``refwidth=2.5`` (inches). If the `data aspect ratio
 <https://matplotlib.org/stable/gallery/subplots_axes_and_figures/axis_equal_demo.html>`__
 of the reference subplot is fixed (as with :ref:`geographic <ug_geo>`,
-:ref:`polar <ug_polar>`, `~matplotlib.axes.Axes.imshow`, and
+:ref:`polar <ug_polar>`, :func:`~matplotlib.axes.Axes.imshow`, and
 :func:`~ultraplot.axes.Axes.heatmap` plots) then this is used instead of `refaspect`.
 
 Alternatively, you can independently specify the width or height of the *figure*
@@ -262,15 +262,15 @@ use the `journal` keyword.
 
 By default, UltraPlot also uses :ref:`its own tight layout algorithm <ug_tight>` --
 preventing text labels from overlapping with subplots. This algorithm works with the
-`ultraplot.gridspec.GridSpec` subclass rather than `matplotlib.gridspec.GridSpec`, which
+:class:`~ultraplot.gridspec.GridSpec` subclass rather than :class:`~matplotlib.gridspec.GridSpec`, which
 provides the following advantages:
 
-* The `ultraplot.gridspec.GridSpec` subclass interprets spacing parameters
+* The :class:`~ultraplot.gridspec.GridSpec` subclass interprets spacing parameters
   with font size-relative units rather than figure size-relative units.
   This is more consistent with the tight layout `pad` arguments
   (which, like matplotlib, are specified in font size-relative units)
   and obviates the need to adjust spaces when the figure size or font size changes.
-* The `ultraplot.gridspec.GridSpec` subclass permits variable spacing
+* The :class:`~ultraplot.gridspec.GridSpec` subclass permits variable spacing
   between rows and columns, and the tight layout algorithm takes
   this into account. Variable spacing is critical for making
   outer :ref:`colorbars and legends <ug_guides>` and
@@ -282,7 +282,7 @@ provides the following advantages:
   unspecified spacing parameters. For example, passing ``right=1`` to
   :func:`~ultraplot.figure.Figure.add_subplots` fixes the right margin
   at 1 font size-width while the others are adjusted automatically.
-* Only one `ultraplot.gridspec.GridSpec` is permitted per figure,
+* Only one :class:`~ultraplot.gridspec.GridSpec` is permitted per figure,
   considerably simplifying the tight layout algorithm calculations.
   This restriction is enforced by requiring successive
   :func:`~ultraplot.figure.Figure.add_subplot` calls to imply the same geometry and
@@ -325,7 +325,7 @@ concise figures.
   :ref:`shared and aligned <ug_share>` between subplot in the same
   :class:`~ultraplot.gridspec.GridSpec` row or column. This is controlled by the `sharex`,
   `sharey`, `spanx`, `spany`, `alignx`, and `aligny` figure keywords.
-* The figure `ultraplot.figure.Figure.colorbar` and :class:`ultraplot.figure.Figure.legend`
+* The figure :func:`~ultraplot.figure.Figure.colorbar` and :meth:`~ultraplot.figure.Figure.legend``
   commands can easily draw colorbars and legends intended to reference more than
   one subplot in arbitrary contiguous rows and columns. See the
   :ref:`next section <why_colorbars_legends>` for details.
@@ -333,10 +333,10 @@ concise figures.
   setting -- for example, ``uplt.rc['abc'] = 'A.'`` or ``axs.format(abc='A.')``.
   This is possible because :func:`~ultraplot.figure.Figure.add_subplot` assigns a unique
   :func:`~ultraplot.axes.Axes.number` to every new subplot.
-* The `ultraplot.gridspec.SubplotGrid.format` command can easily format multiple subplots
+* The :func:`~ultraplot.gridspec.SubplotGrid.format` command can easily format multiple subplots
   at once or add colorbars, legends, panels, twin axes, or inset axes to multiple
   subplots at once. A :class:`~ultraplot.gridspec.SubplotGrid` is returned by
-  `ultraplot.figure.Figure.subplots`, and can be indexed like a list or a 2D array.
+  :func:`~ultraplot.figure.Figure.subplots`, and can be indexed like a list or a 2D array.
 * The :func:`~ultraplot.axes.Axes.panel_axes` (shorthand :func:`~ultraplot.axes.Axes.panel`) commands
   draw :ref:`thin panels <ug_panels>` along the edges of subplots. This can be useful
   for plotting 1D summary statistics alongside 2D plots. You can also add twin axes and
@@ -359,11 +359,11 @@ Simpler colorbars and legends
 Limitation
 ----------
 
-In matplotlib, it can be difficult to draw `~matplotlib.figure.Figure.legend`\ s
+In matplotlib, it can be difficult to draw :func:`~matplotlib.figure.Figure.legend`\ s
 along the outside of subplots. Generally, you need to position the legend
 manually and tweak the spacing to make room for the legend.
 
-Also, `~matplotlib.figure.Figure.colorbar`\ s drawn along the outside of subplots
+Also, :func:`~matplotlib.figure.Figure.colorbar`\ s drawn along the outside of subplots
 with e.g. ``fig.colorbar(..., ax=ax)`` need to "steal" space from the parent subplot.
 This can cause asymmetry in figures with more than one subplot. It is also generally
 difficult to draw "inset" colorbars in matplotlib and to generate outer colorbars
@@ -378,12 +378,12 @@ that reference :ref:`individual subplots <ug_guides_loc>` and
 
 * To draw a colorbar or legend on the outside of a specific subplot, pass an
   "outer" location (e.g. ``loc='l'`` or ``loc='left'``)
-  to `ultraplot.axes.Axes.colorbar` or `ultraplot.axes.Axes.legend`.
+  to :func:`~ultraplot.axes.Axes.colorbar` or :meth:`~ultraplot.axes.Axes.legend`.
 * To draw a colorbar or legend on the inside of a specific subplot, pass an
   "inner" location (e.g. ``loc='ur'`` or ``loc='upper right'``)
-  to `ultraplot.axes.Axes.colorbar` or `ultraplot.axes.Axes.legend`.
+  to :func:`~ultraplot.axes.Axes.colorbar` or :meth:`~ultraplot.axes.Axes.legend`.
 * To draw a colorbar or legend along the edge of the figure, use
-  `ultraplot.figure.Figure.colorbar` and :class:`ultraplot.figure.Figure.legend`.
+  :func:`~ultraplot.figure.Figure.colorbar` and :class:`~ultraplot.figure.Figure.legend`.
   The `col`, `row`, and `span` keywords control which
   :class:`~ultraplot.gridspec.GridSpec` rows and columns are spanned
   by the colorbar or legend.
@@ -467,7 +467,7 @@ and :func:`~ultraplot.axes.PlotAxes.scatter`:
   :func:`~ultraplot.axes.PlotAxes.bar`, and :func:`~ultraplot.axes.PlotAxes.barh` commands can
   draw vertical or horizontal :ref:`error bars or "shading" <ug_errorbars>` using a
   variety of keyword arguments. This is often more convenient than working directly
-  with `~matplotlib.axes.Axes.errorbar` or `~matplotlib.axes.Axes.fill_between`.
+  with :func:`~matplotlib.axes.Axes.errorbar` or :func:`~matplotlib.axes.Axes.fill_between`.
 * The :func:`~ultraplot.axes.PlotAxes.parametric` command draws clean-looking
   :ref:`parametric lines <ug_parametric>` by encoding the parametric
   coordinate using colormap colors rather than text annotations.
@@ -494,13 +494,13 @@ like :func:`~ultraplot.axes.PlotAxes.pcolor` and :func:`~ultraplot.axes.PlotAxes
   outside the *x* and *y* axis bounds `xlim` and `ylim` if they were explicitly
   fixed. This can be disabled by setting :rcraw:`cmap.inbounds` to ``False``
   or by passing ``inbounds=False`` to :class:`~ultraplot.axes.PlotAxes` commands.
-* The `~ultraplot.colors.DiscreteNorm` normalizer is paired with most colormaps by
+* The :class:`~ultraplot.colors.DiscreteNorm` normalizer is paired with most colormaps by
   default. It can easily divide colormaps into distinct levels, similar to contour
   plots. This can be disabled by setting :rcraw:`cmap.discrete` to ``False`` or
   by passing ``discrete=False`` to :class:`~ultraplot.axes.PlotAxes` commands.
-* The `~ultraplot.colors.DivergingNorm` normalizer is perfect for data with a
+* The :class:`~ultraplot.colors.DivergingNorm` normalizer is perfect for data with a
   :ref:`natural midpoint <ug_norm>` and offers both "fair" and "unfair" scaling.
-  The `~ultraplot.colors.SegmentedNorm` normalizer can generate
+  The :class:`~ultraplot.colors.SegmentedNorm` normalizer can generate
   uneven color gradations useful for :ref:`unusual data distributions <ug_norm>`.
 * The :func:`~ultraplot.axes.PlotAxes.heatmap` command invokes
   :func:`~ultraplot.axes.PlotAxes.pcolormesh` then applies an `equal axes apect ratio
@@ -542,7 +542,7 @@ Limitation
 There are two widely-used engines for working with geographic data in
 matplotlib: `cartopy`_ and `basemap`_.  Using cartopy tends to be
 verbose and involve boilerplate code, while using basemap requires plotting
-with a separate `~mpl_toolkits.basemap.Basemap` object rather than the
+with a separate :class:`~mpl_toolkits.basemap.Basemap` object rather than the
 :class:`~matplotlib.axes.Axes`. They both require separate import statements and extra
 lines of code to configure the projection.
 
@@ -562,16 +562,16 @@ basemap as "backends". By default, cartopy is used, but basemap can be used by p
 name to an axes-creation command, e.g. ``fig, ax = uplt.subplots(proj='pcarree')``
 or ``fig.add_subplot(proj='pcarree')``. Alternatively, use the
 :class:`~ultraplot.constructor.Proj` constructor function to quickly generate
-a `cartopy.crs.Projection` or `~mpl_toolkits.basemap.Basemap` instance.
+a :class:`~cartopy.crs.Projection` or :class:`~mpl_toolkits.basemap.Basemap` instance.
 
-Requesting geographic projections creates a `ultraplot.axes.GeoAxes`
+Requesting geographic projections creates a :class:`~ultraplot.axes.GeoAxes`
 with unified support for `cartopy`_ and `basemap`_ features via the
-`ultraplot.axes.GeoAxes.format` command. This lets you quickly modify geographic
+:func:`~ultraplot.axes.GeoAxes.format` command. This lets you quickly modify geographic
 plot features like latitude and longitude gridlines, gridline labels, continents,
 coastlines, and political boundaries. The syntax is conveniently analogous to the
-syntax used for :func:`ultraplot.axes.CartesianAxes.format` and `ultraplot.axes.PolarAxes.format`.
+syntax used for :func:`~ultraplot.axes.CartesianAxes.format` and :func:`~ultraplot.axes.PolarAxes.format`.
 
-The `~ultraplot.axes.GeoAxes` subclass also makes longitude-latitude coordinates
+The :class:`~ultraplot.axes.GeoAxes` subclass also makes longitude-latitude coordinates
 the "default" coordinate system by passing ``transform=ccrs.PlateCarree()``
 or ``latlon=True`` to :class:`~ultraplot.axes.PlotAxes` commands (depending on whether cartopy
 or basemap is the backend). And to enforce global coverage over the poles and across
@@ -585,11 +585,11 @@ Links
   see :ref:`this page <ug_geo>`.
 * For more on cartopy and basemap as backends,
   see :ref:`this page <ug_backends>`.
-* For plotting in `~ultraplot.axes.GeoAxes`,
+* For plotting in :class:`~ultraplot.axes.GeoAxes`,
   see :ref:`this page <ug_geoplot>`.
-* For formatting `~ultraplot.axes.GeoAxes`,
+* For formatting :class:`~ultraplot.axes.GeoAxes`,
   see :ref:`this page <ug_geoformat>`.
-* For changing the `~ultraplot.axes.GeoAxes` bounds,
+* For changing the :class:`~ultraplot.axes.GeoAxes` bounds,
   see :ref:`this page <ug_zoom>`.
 
 .. _why_xarray_pandas:
@@ -601,23 +601,23 @@ Limitation
 ----------
 
 Scientific data is commonly stored in array-like containers
-that include metadata -- namely, `xarray.DataArray`\ s, `pandas.DataFrame`\ s,
-and `pandas.Series`. When matplotlib receives these objects, it ignores
+that include metadata -- namely, :class:`~xarray.DataArray`\ s, :class:`~pandas.DataFrame`\ s,
+and :class:`~pandas.Series`. When matplotlib receives these objects, it ignores
 the associated metadata. To create plots that are labeled with the metadata,
-you must use the `xarray.DataArray.plot`, `pandas.DataFrame.plot`,
-and `pandas.Series.plot` commands instead.
+you must use the :func:`~xarray.DataArray.plot`, :func:`~pandas.DataFrame.plot`,
+and :func:`~pandas.Series.plot` commands instead.
 
 This approach is fine for quick plots, but not ideal for complex ones. It requires
 learning a different syntax from matplotlib, and tends to encourage using the
-`~matplotlib.pyplot` interface rather than the object-oriented interface. The
+:obj:`~matplotlib.pyplot` interface rather than the object-oriented interface. The
 ``plot`` commands also include features that would be useful additions to matplotlib
 in their own right, without requiring special containers and a separate interface.
 
 Changes
 -------
 
-UltraPlot reproduces many of the `xarray.DataArray.plot`,
-`pandas.DataFrame.plot`, and `pandas.Series.plot`
+UltraPlot reproduces many of the :func:`~xarray.DataArray.plot`,
+:func:`~pandas.DataFrame.plot`, and :func:`~pandas.Series.plot`
 features directly on the :class:`~ultraplot.axes.PlotAxes` commands.
 This includes :ref:`grouped or stacked <ug_bar>` bar plots
 and :ref:`layered or stacked <ug_bar>` area plots from two-dimensional
@@ -626,14 +626,14 @@ application of diverging colormaps and normalizers, and
 :ref:`on-the-fly colorbars and legends <ug_guides_loc>` using `colorbar`
 and `legend` keywords.
 
-UltraPlot also handles metadata associated with `xarray.DataArray`, `pandas.DataFrame`,
-`pandas.Series`, and `pint.Quantity` objects. When a plotting command receives these
+UltraPlot also handles metadata associated with :class:`~xarray.DataArray`, :class:`~pandas.DataFrame`,
+:class:`~pandas.Series`, and :class:`~pint.Quantity` objects. When a plotting command receives these
 objects, it updates the axis tick labels, axis labels, subplot title, and
-colorbar and legend labels from the metadata. For `~pint.Quantity` arrays (including
-`~pint.Quantity` those stored inside :class:`~xarray.DataArray` containers), a unit string
+colorbar and legend labels from the metadata. For :class:`~pint.Quantity` arrays (including
+:class:`~pint.Quantity` those stored inside :class:`~xarray.DataArray` containers), a unit string
 is generated from the `pint.Unit` according to the :rcraw:`unitformat` setting
-(note UltraPlot also automatically calls `pint.UnitRegistry.setup_matplotlib`
-whenever a `~pint.Quantity` is used for *x* and *y* coordinates and removes the
+(note UltraPlot also automatically calls :func:`~pint.UnitRegistry.setup_matplotlib`
+whenever a :class:`~pint.Quantity` is used for *x* and *y* coordinates and removes the
 units from *z* coordinates to avoid the stripped-units warning message).
 These features can be disabled by setting :rcraw:`autoformat` to ``False``
 or passing ``autoformat=False`` to any plotting command.
@@ -729,8 +729,8 @@ Limitation
 ----------
 
 In matplotlib, colormaps are implemented with the
-`~matplotlib.colors.LinearSegmentedColormap` class (representing "smooth"
-color gradations) and the `~matplotlib.colors.ListedColormap` class (representing
+:class:`~matplotlib.colors.LinearSegmentedColormap` class (representing "smooth"
+color gradations) and the :class:`~matplotlib.colors.ListedColormap` class (representing
 "categorical" color sets). They are somewhat cumbersome to modify or create from
 scratch. Meanwhile, property cycles used for individual plot elements are implemented
 with the :class:`~cycler.Cycler` class. They are easier to modify but they cannot be
@@ -747,14 +747,14 @@ UltraPlot tries to make it easy to manipulate colormaps and property cycles.
 
 * All colormaps in UltraPlot are replaced with the :class:`~ultraplot.colors.ContinuousColormap`
   and :class:`~ultraplot.colors.DiscreteColormap` subclasses of
-  `~matplotlib.colors.LinearSegmentedColormap` and `~matplotlib.colors.ListedColormap`.
+  :class:`~matplotlib.colors.LinearSegmentedColormap` and :class:`~matplotlib.colors.ListedColormap`.
   These classes include several useful features leveraged by the
   :ref:`constructor functions <why_constructor>`
   :class:`~ultraplot.constructor.Colormap` and :class:`~ultraplot.constructor.Cycle`.
 * The :class:`~ultraplot.constructor.Colormap` function can merge, truncate, and
   modify existing colormaps or generate brand new colormaps. It can also
   create new :class:`~ultraplot.colors.PerceptualColormap`\ s -- a type of
-  `ultraplot.colors.ContinuousColormap` with linear transitions in the
+  :class:`~ultraplot.colors.ContinuousColormap` with linear transitions in the
   :ref:`perceptually uniform-like <ug_perceptual>` hue, saturation,
   and luminance channels rather then the red, blue, and green channels.
 * The :class:`~ultraplot.constructor.Cycle` function can make property cycles from
@@ -766,7 +766,7 @@ UltraPlot tries to make it easy to manipulate colormaps and property cycles.
 UltraPlot also makes all colormap and color cycle names case-insensitive, and
 colormaps are automatically reversed or cyclically shifted 180 degrees if you
 append ``'_r'`` or ``'_s'`` to any colormap name. These features are powered by
-`~ultraplot.colors.ColormapDatabase`, which replaces matplotlib's native
+:class:`~ultraplot.colors.ColormapDatabase`, which replaces matplotlib's native
 colormap database.
 
 Links
@@ -816,7 +816,7 @@ pixels, `points <https://en.wikipedia.org/wiki/Point_(typography)>`__, and `pica
 <https://en.wikipedia.org/wiki/Pica_(typography)>`__ (a table of acceptable
 units is found :ref:`here <units_table>`). Note the :func:`~ultraplot.utils.units` engine
 also translates rc settings assigned to :func:`~ultraplot.config.rc_matplotlib` and
-`~ultraplot.config.rc_UltraPlot`, e.g. :rcraw:`subplots.refwidth`,
+:obj:`~ultraplot.config.rc_UltraPlot`, e.g. :rcraw:`subplots.refwidth`,
 :rcraw:`legend.columnspacing`, and :rcraw:`axes.labelpad`.
 
 Links
@@ -839,7 +839,7 @@ Flexible global settings
 Limitation
 ----------
 
-In matplotlib, there are several `~matplotlib.rcParams` that would be
+In matplotlib, there are several :obj:`~matplotlib.rcParams` that would be
 useful to set all at once, like spine and label colors. It might also
 be useful to change these settings for individual subplots rather
 than globally.
@@ -847,17 +847,17 @@ than globally.
 Changes
 -------
 
-In UltraPlot, you can use the :func:`~ultraplot.config.rc` object to change both native
-matplotlib settings (found in :func:`~ultraplot.config.rc_matplotlib`) and added UltraPlot
-settings (found in `~ultraplot.config.rc_UltraPlot`). Assigned settings are always
+In UltraPlot, you can use the :obj:`~ultraplot.config.rc` object to change both native
+matplotlib settings (found in :obj:`~ultraplot.config.rc_matplotlib`) and added UltraPlot
+settings (found in :obj:`~ultraplot.config.rc_UltraPlot`). Assigned settings are always
 validated, and "meta" settings like ``meta.edgecolor``, ``meta.linewidth``, and
 ``font.smallsize`` can be used to update many settings all at once. Settings can
 be changed with ``uplt.rc.key = value``, ``uplt.rc[key] = value``,
-``uplt.rc.update(key=value)``, using `ultraplot.axes.Axes.format`, or using
-`ultraplot.config.Configurator.context`. Settings that have changed during the
-python session can be saved to a file with `ultraplot.config.Configurator.save`
+``uplt.rc.update(key=value)``, using :func:`~ultraplot.axes.Axes.format`, or using
+:func:`~ultraplot.config.Configurator.context`. Settings that have changed during the
+python session can be saved to a file with :func:`~ultraplot.config.Configurator.save`
 (see :func:`~ultraplot.config.Configurator.changed`), and settings can be loaded from
-files with `ultraplot.config.Configurator.load`.
+files with :func:`~ultraplot.config.Configurator.load`.
 
 Links
 -----
@@ -881,8 +881,8 @@ Loading stuff
 Limitation
 ----------
 
-Matplotlib `~matplotlib.rcParams` can be changed persistently by placing
-`matplotlibrc :ref:`ug_mplrc` files in the same directory as your python script.
+Matplotlib :obj:`~matplotlib.rcParams` can be changed persistently by placing
+`matplotlibrc` :ref:`ug_mplrc` files in the same directory as your python script.
 But it can be difficult to design and store your own colormaps and color cycles for
 future use. It is also difficult to get matplotlib to use custom ``.ttf`` and
 ``.otf`` font files, which may be desirable when you are working on

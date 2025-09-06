@@ -25,18 +25,18 @@ Background
 
 UltraPlot is an object-oriented matplotlib wrapper. The "wrapper" part means
 that UltraPlot's features are largely a *superset* of matplotlib.  You can use
-plotting commands like :func:`~matplotlib.axes.Axes.plot`, `~matplotlib.axes.Axes.scatter`,
-`~matplotlib.axes.Axes.contour`, and `~matplotlib.axes.Axes.pcolor` like you always
+plotting commands like :func:`~matplotlib.axes.Axes.plot`, :func:`~matplotlib.axes.Axes.scatter`,
+:func:`~matplotlib.axes.Axes.contour`, and :func:`~matplotlib.axes.Axes.pcolor` like you always
 have. The "object-oriented" part means that UltraPlot's features are implemented with
 *subclasses* of the :class:`~matplotlib.figure.Figure` and :class:`~matplotlib.axes.Axes` classes.
 
-If you tend to use `~matplotlib.pyplot` and are not familiar with the figure and axes
+If you tend to use :obj:`~matplotlib.pyplot` and are not familiar with the figure and axes
 classes, check out `this guide <https://matplotlib.org/stable/api/index.html>`__.
 Directly working with matplotlib classes tends to be more clear and concise than
-`~matplotlib.pyplot`, makes things easier when working with multiple figures and axes,
+:obj:`~matplotlib.pyplot`, makes things easier when working with multiple figures and axes,
 and is certainly more "`pythonic <https://www.python.org/dev/peps/pep-0020/>`__".
 Therefore, although many UltraPlot features may still work, we do not officially
-support the `~matplotlib.pyplot` interface.
+support the :obj:`~matplotlib.pyplot` interface.
 
 .. _usage_import:
 
@@ -55,7 +55,7 @@ We recommend importing UltraPlot as follows:
    import ultraplot as uplt
 
 This differentiates UltraPlot from the usual ``plt`` abbreviation reserved for
-the `~matplotlib.pyplot` module.
+the :obj:`~matplotlib.pyplot` module.
 
 .. _usage_classes:
 
@@ -93,35 +93,35 @@ and images). All sizing arguments take :ref:`arbitrary units <ug_units>`,
 including metric units like ``cm`` and ``mm``.
 
 Instead of the native `matplotlib.figure.Figure` and `matplotlib.axes.Axes`
-classes, UltraPlot uses the `ultraplot.figure.Figure`, `ultraplot.axes.Axes`, and
-`ultraplot.axes.PlotAxes` subclasses. UltraPlot figures are saved with
+classes, UltraPlot uses the :class:`~ultraplot.figure.Figure`, :class:`~ultraplot.axes.Axes`, and
+:class:`~ultraplot.axes.PlotAxes` subclasses. UltraPlot figures are saved with
 :func:`~ultraplot.figure.Figure.save` or `~matplotlib.figure.Figure.savefig`,
 and UltraPlot axes belong to one of the following three child classes:
 
-* `ultraplot.axes.CartesianAxes`:
+* :class:`~ultraplot.axes.CartesianAxes`:
   For ordinary plots with *x* and *y* coordinates.
-* `ultraplot.axes.GeoAxes`:
+* :class:`~ultraplot.axes.GeoAxes`:
   For geographic plots with *longitude* and *latitude* coordinates.
-* `ultraplot.axes.PolarAxes`:
+* :class:`~ultraplot.axes.PolarAxes`:
   For polar plots with *azimuth* and *radius* coordinates.
 
 Most of UltraPlot's features are implemented using these subclasses.
 They include several new figure and axes methods and added
 functionality to existing figure and axes methods.
 
-* The `ultraplot.axes.Axes.format` and `ultraplot.figure.Figure.format` commands fine-tunes
+* The :func:`~ultraplot.axes.Axes.format` and :func:`~ultraplot.figure.Figure.format` commands fine-tunes
   various axes and figure settings.  Think of this as a dedicated
   `~matplotlib.artist.Artist.update` method for axes and figures. See
   :ref:`formatting subplots <ug_format>` for a broad overview, along with the
   individual sections on formatting :ref:`Cartesian plots <ug_cartesian>`,
   :ref:`geographic plots <ug_geoformat>`, and :ref:`polar plots <ug_polar>`.
-* The `ultraplot.axes.Axes.colorbar` and `ultraplot.axes.Axes.legend` commands
+* The :func:`~ultraplot.axes.Axes.colorbar` and :meth:`~ultraplot.axes.Axes.legend` commands
   draw colorbars and legends inside of subplots or along the outside edges of
-  subplots. The `ultraplot.figure.Figure.colorbar` and :class:`ultraplot.figure.Figure.legend`
+  subplots. The :func:`~ultraplot.figure.Figure.colorbar` and :meth:`~ultraplot.figure.Figure.legend``
   commands draw colorbars or legends along the edges of figures (aligned by subplot
   boundaries). These commands considerably :ref:`simplify <ug_guides>` the
   process of drawing colorbars and legends.
-* The `ultraplot.axes.PlotAxes` subclass (used for all UltraPlot axes)
+* The :class:`~ultraplot.axes.PlotAxes` subclass (used for all UltraPlot axes)
   adds many, many useful features to virtually every plotting command
   (including :func:`~ultraplot.axes.PlotAxes.plot`, :func:`~ultraplot.axes.PlotAxes.scatter`,
   :func:`~ultraplot.axes.PlotAxes.bar`, :func:`~ultraplot.axes.PlotAxes.area`,
@@ -140,19 +140,19 @@ packages: the `pandas`_ and `xarray`_ packages, used for working with annotated
 tables and arrays, and the `cartopy`_ and `basemap`_ geographic
 plotting packages.
 
-* The `~ultraplot.axes.GeoAxes` class uses the `cartopy`_ or
+* The :class:`~ultraplot.axes.GeoAxes` class uses the `cartopy`_ or
   `basemap`_ packages to :ref:`plot geophysical data <ug_geoplot>`,
   :ref:`add geographic features <ug_geoformat>`, and
-  :ref:`format projections <ug_geoformat>`. `~ultraplot.axes.GeoAxes` provides
+  :ref:`format projections <ug_geoformat>`. :class:`~ultraplot.axes.GeoAxes` provides
   provides a simpler, cleaner interface than the original `cartopy`_ and `basemap`_
-  interfaces. Figures can be filled with `~ultraplot.axes.GeoAxes` by passing the
+  interfaces. Figures can be filled with :class:`~ultraplot.axes.GeoAxes` by passing the
   `proj` keyword to :func:`~ultraplot.ui.subplots`.
-* If you pass a `pandas.Series`, `pandas.DataFrame`, or `xarray.DataArray`
+* If you pass a :class:`~pandas.Series`, :class:`~pandas.DataFrame`, or :class:`~xarray.DataArray`
   to any plotting command, the axis labels, tick labels, titles, colorbar
   labels, and legend labels are automatically applied from the metadata. If
   you did not supply the *x* and *y* coordinates, they are also inferred from
-  the metadata. This works just like the native `xarray.DataArray.plot` and
-  `pandas.DataFrame.plot` commands. See the sections on :ref:`1D plotting
+  the metadata. This works just like the native :func:`~xarray.DataArray.plot` and
+  :func:`~pandas.DataFrame.plot` commands. See the sections on :ref:`1D plotting
   <ug_1dintegration>` and :ref:`2D plotting <ug_2dintegration>` for a demonstration.
 
 Since these features are optional,
@@ -163,8 +163,8 @@ UltraPlot can be used without installing any of these packages.
 Additional features
 ===================
 
-Outside of the features provided by the `ultraplot.figure.Figure` and
-`ultraplot.axes.Axes` subclasses, UltraPlot includes several useful
+Outside of the features provided by the :class:`~ultraplot.figure.Figure` and
+:class:`~ultraplot.axes.Axes` subclasses, UltraPlot includes several useful
 classes and :ref:`constructor functions <why_constructor>`.
 
 * The :class:`~ultraplot.constructor.Colormap` and :class:`~ultraplot.constructor.Cycle`
@@ -185,9 +185,9 @@ classes and :ref:`constructor functions <why_constructor>`.
   :ref:`inspect individual colormaps <ug_perceptual>`.
 * The :class:`~ultraplot.constructor.Norm` constructor function generates colormap
   normalizers from shorthand names. The new
-  `~ultraplot.colors.SegmentedNorm` normalizer scales colors evenly
+  :class:`~ultraplot.colors.SegmentedNorm` normalizer scales colors evenly
   w.r.t. index for arbitrarily spaced monotonic levels, and the new
-  `~ultraplot.colors.DiscreteNorm` meta-normalizer is used to
+  :class:`~ultraplot.colors.DiscreteNorm` meta-normalizer is used to
   :ref:`break up colormap colors into discrete levels <ug_discrete>`.
 * The :class:`~ultraplot.constructor.Locator`, :class:`~ultraplot.constructor.Formatter`, and
   :class:`~ultraplot.constructor.Scale` constructor functions return corresponding class
